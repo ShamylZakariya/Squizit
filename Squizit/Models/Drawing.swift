@@ -46,7 +46,7 @@ class Drawing {
 			return .Failure(Error(message: "unable to get file size from \(path)"))
 		}
 
-		let buffer = ByteBuffer(order: LittleEndian(), capacity: Int(size.value))
+		let buffer = ByteBuffer(order: BigEndian(), capacity: Int(size.value))
 		let readResult = file.readBuffer(buffer)
 
 		if let error = readResult.error {
@@ -110,7 +110,7 @@ class Drawing {
 	}
 
 	func serialize() -> ByteBuffer? {
-		var buffer = ByteBuffer(order: LittleEndian(), capacity: requiredStorageToSerialize())
+		var buffer = ByteBuffer(order: BigEndian(), capacity: requiredStorageToSerialize())
 		if serialize(buffer) {
 			buffer.flip()
 			return buffer
