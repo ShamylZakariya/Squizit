@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>DF0405F8-08F1-4525-805B-0EACCC92CDFF</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Squizit</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>EA8CCA9B72AAC3B7C1F34B59E92318F9A6C5D712</key>
+		<string>https://github.com/ShamylZakariya/Squizit.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Squizit.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>EA8CCA9B72AAC3B7C1F34B59E92318F9A6C5D712</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/ShamylZakariya/Squizit.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>EA8CCA9B72AAC3B7C1F34B59E92318F9A6C5D712</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>EA8CCA9B72AAC3B7C1F34B59E92318F9A6C5D712</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Squizit</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -8,7 +8,10 @@
 
 import Foundation
 import UIKit
+import Lilliput
 
+let DrawingSerializationCookie:[UInt8] = [73, 71, 64, 72]
+let DrawingSerializationVersion_V0:Int32 = 0
 
 
 class Drawing {
@@ -28,6 +31,125 @@ class Drawing {
 		_lastDrawnStrokeIndex = -1
 		backgroundColor = UIColor.whiteColor()
 	}
+
+	class func load( path:String ) -> Result<Drawing> {
+		let openResult = BinaryFile.openForReading(path)
+
+		if let error = openResult.error {
+			return .Failure(Error(message: "unable to open \(path)"))
+		}
+
+		let file = openResult.value
+		let size = file.size()
+
+		if let error = size.error {
+			return .Failure(Error(message: "unable to get file size from \(path)"))
+		}
+
+		let buffer = ByteBuffer(order: LittleEndian(), capacity: Int(size.value))
+		let readResult = file.readBuffer(buffer)
+
+		if let error = readResult.error {
+			return .Failure(Error(message: "unable to read from \(path)"))
+		}
+
+		buffer.flip()
+		return load(buffer)
+	}
+
+	class func load( buffer:ByteBuffer ) -> Result<Drawing> {
+		let cookie:[UInt8] = buffer.getUInt8(4)
+		let version:Int32 = buffer.getInt32()
+
+		if cookie[0] != DrawingSerializationCookie[0] ||
+			cookie[1] != DrawingSerializationCookie[1] ||
+			cookie[2] != DrawingSerializationCookie[2] ||
+			cookie[3] != DrawingSerializationCookie[3] {
+
+			return .Failure(Error(message: "Cookie mismatch expected: \(DrawingSerializationCookie) got: \(cookie)"))
+		}
+
+		var drawing:Drawing? = nil
+
+		if version == DrawingSerializationVersion_V0 {
+			let width = buffer.getInt32()
+			let height = buffer.getInt32()
+			drawing = Drawing( width: Int(width), height: Int(height) )
+
+			let strokesCount = buffer.getInt32()
+			for i in 0 ..< strokesCount {
+				drawing!.addStroke( buffer.getStroke() )
+			}
+		} else {
+			return .Failure(Error(message: "version # mismatch, expected: \(DrawingSerializationVersion_V0) got: \(version)"))
+		}
+
+		return .Success(drawing!)
+	}
+
+	func save( path:String ) -> Result<Int> {
+
+		if let buffer = serialize() {
+			var fileOpenResult = BinaryFile.openForWriting(path, create: true)
+			if let error = fileOpenResult.error {
+				return .Failure(Error(message: "unable to open file \(path)"))
+			}
+
+			var file = fileOpenResult.value
+			var fileWriteResult = file.writeBuffer(buffer)
+
+			if let error = fileWriteResult.error {
+				return .Failure(Error(message: "unable to write buffer to file \(path)"))
+			}
+
+			return .Success(fileWriteResult.value)
+
+		} else {
+			return .Failure(Error(message: "unable to serialize to buffer - probably under capacity"))
+		}
+	}
+
+	func serialize() -> ByteBuffer? {
+		var buffer = ByteBuffer(order: LittleEndian(), capacity: requiredStorageToSerialize())
+		if serialize(buffer) {
+			buffer.flip()
+			return buffer
+		}
+
+		return nil
+	}
+
+	private func requiredStorageToSerialize() -> Int {
+
+		let headerSize = sizeof(UInt8)*DrawingSerializationCookie.count // #cookie
+			+ 4*sizeof(Int32) // version # + width + height + #strokes
+
+		var strokeSize = 0
+		for stroke in _strokes {
+			strokeSize += ByteBuffer.requiredSizeForStroke(stroke)
+		}
+
+		return headerSize + strokeSize
+	}
+
+	private func serialize(buffer: ByteBuffer) -> Bool {
+
+		buffer.putUInt8(DrawingSerializationCookie)
+		buffer.putInt32(Int32(DrawingSerializationVersion_V0))
+		buffer.putInt32(Int32(_width))
+		buffer.putInt32(Int32(_height))
+
+		buffer.putInt32(Int32(_strokes.count))
+		for stroke in _strokes {
+			if !buffer.putStroke(stroke) {
+				return false
+			}
+		}
+
+		return true;
+	}
+
+	
 
 	var backgroundColor:UIColor {
 		didSet {
@@ -283,5 +405,11 @@ class Drawing {
 			handles.stroke()
 		}
 	}
+}
+
+
+
+extension Drawing  {
+
 
 }

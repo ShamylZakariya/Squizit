@@ -16,6 +16,7 @@
 		63BBECBA19967B0400F6E2B3 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB919967B0400F6E2B3 /* Util.swift */; };
 		63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBB19967B0C00F6E2B3 /* Stroke.swift */; };
 		63BBECBE19967B3600F6E2B3 /* SimpleDrawingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBD19967B3600F6E2B3 /* SimpleDrawingViewController.swift */; };
+		63FDE7321998249A0006B7E4 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,6 +26,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 63BBEC8919967A2300F6E2B3;
 			remoteInfo = Squizit;
+		};
+		63BBECCD1996F8A200F6E2B3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63BBECC81996F8A200F6E2B3 /* Lilliput.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E5BDC5C1196F698B001ABC11;
+			remoteInfo = Lilliput;
+		};
+		63BBECCF1996F8A200F6E2B3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63BBECC81996F8A200F6E2B3 /* Lilliput.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E5BDC5CC196F698C001ABC11;
+			remoteInfo = LilliputTests;
+		};
+		63BBECD11996F8A800F6E2B3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63BBECC81996F8A200F6E2B3 /* Lilliput.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = E5BDC5C0196F698B001ABC11;
+			remoteInfo = Lilliput;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -42,6 +64,8 @@
 		63BBECB919967B0400F6E2B3 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		63BBECBB19967B0C00F6E2B3 /* Stroke.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stroke.swift; sourceTree = "<group>"; };
 		63BBECBD19967B3600F6E2B3 /* SimpleDrawingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleDrawingViewController.swift; sourceTree = "<group>"; };
+		63BBECC81996F8A200F6E2B3 /* Lilliput.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Lilliput.xcodeproj; path = "../../3rd Party/Lilliput/Lilliput.xcodeproj"; sourceTree = "<group>"; };
+		63FDE7311998249A0006B7E4 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +89,7 @@
 		63BBEC8119967A2300F6E2B3 = {
 			isa = PBXGroup;
 			children = (
+				63BBECC81996F8A200F6E2B3 /* Lilliput.xcodeproj */,
 				63BBEC8C19967A2300F6E2B3 /* Squizit */,
 				63BBECA319967A2300F6E2B3 /* SquizitTests */,
 				63BBEC8B19967A2300F6E2B3 /* Products */,
@@ -125,6 +150,7 @@
 			children = (
 				63BBECBB19967B0C00F6E2B3 /* Stroke.swift */,
 				63BBECB519967ACC00F6E2B3 /* Drawing.swift */,
+				63FDE7311998249A0006B7E4 /* Result.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -145,6 +171,15 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		63BBECC91996F8A200F6E2B3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				63BBECCE1996F8A200F6E2B3 /* Lilliput.framework */,
+				63BBECD01996F8A200F6E2B3 /* LilliputTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -159,6 +194,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				63BBECD21996F8A800F6E2B3 /* PBXTargetDependency */,
 			);
 			name = Squizit;
 			productName = Squizit;
@@ -212,6 +248,12 @@
 			mainGroup = 63BBEC8119967A2300F6E2B3;
 			productRefGroup = 63BBEC8B19967A2300F6E2B3 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 63BBECC91996F8A200F6E2B3 /* Products */;
+					ProjectRef = 63BBECC81996F8A200F6E2B3 /* Lilliput.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				63BBEC8919967A2300F6E2B3 /* Squizit */,
@@ -219,6 +261,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		63BBECCE1996F8A200F6E2B3 /* Lilliput.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Lilliput.framework;
+			remoteRef = 63BBECCD1996F8A200F6E2B3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		63BBECD01996F8A200F6E2B3 /* LilliputTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = LilliputTests.xctest;
+			remoteRef = 63BBECCF1996F8A200F6E2B3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		63BBEC8819967A2300F6E2B3 /* Resources */ = {
@@ -248,6 +307,7 @@
 				63BBECB819967AFB00F6E2B3 /* DrawingView.swift in Sources */,
 				63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */,
 				63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */,
+				63FDE7321998249A0006B7E4 /* Result.swift in Sources */,
 				63BBECB619967ACC00F6E2B3 /* Drawing.swift in Sources */,
 				63BBECBA19967B0400F6E2B3 /* Util.swift in Sources */,
 			);
@@ -268,6 +328,11 @@
 			isa = PBXTargetDependency;
 			target = 63BBEC8919967A2300F6E2B3 /* Squizit */;
 			targetProxy = 63BBECA119967A2300F6E2B3 /* PBXContainerItemProxy */;
+		};
+		63BBECD21996F8A800F6E2B3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Lilliput;
+			targetProxy = 63BBECD11996F8A800F6E2B3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -437,6 +502,7 @@
 				63BBECAC19967A2300F6E2B3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		63BBECAD19967A2300F6E2B3 /* Build configuration list for PBXNativeTarget "SquizitTests" */ = {
 			isa = XCConfigurationList;
@@ -445,6 +511,7 @@
 				63BBECAF19967A2300F6E2B3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

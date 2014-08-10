@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Lilliput
 
 enum Fill {
 
@@ -36,16 +37,42 @@ enum Fill {
 		}
 	}
 
+	// TODO: Make this work with Swift enum's toRaw / fromRaw
+	func serialize( buffer:ByteBuffer ) {
+		switch self {
+			case .Pencil:
+				buffer.putUInt8(0)
+
+			case .Eraser:
+				buffer.putUInt8(1)
+		}
+	}
+
+	mutating func inflate( buffer:ByteBuffer ){
+		let v = buffer.getUInt8()
+		switch( v ) {
+			case 0: self = .Pencil
+			case 1: self = .Eraser
+			default: self = .Pencil
+		}
+	}
 }
+
 
 struct ControlPoint:Printable {
 	let position:CGPoint
 	let control:CGPoint
 
+	init( position:CGPoint, control:CGPoint ) {
+		self.position = position
+		self.control = control
+	}
+
 	var description:String {
 		return "ControlPoint p:(\(position.x),\(position.y)) c:(\(control.x),\(control.y))"
 	}
 }
+
 
 struct ControlPointCubicBezierInterpolator {
 
@@ -113,3 +140,92 @@ class Stroke {
 		self.fill = fill
 	}
 }
+
+extension ByteBuffer {
+
+	class func requiredSizeForFill() -> Int {
+		return sizeof(UInt8)
+	}
+
+	func putFill( fill:Fill ) -> Bool {
+		if remaining >= ByteBuffer.requiredSizeForFill() {
+			switch fill {
+				case .Pencil:
+					putUInt8(0)
+
+				case .Eraser:
+					putUInt8(1)
+			}
+			return true
+		}
+
+		return false
+	}
+
+	func getFill() -> Fill {
+		switch( getUInt8() ) {
+			case 0: return .Pencil
+			case 1: return .Eraser
+			default: return .Pencil
+		}
+	}
+
+	class func requiredSizeForControlPoint() -> Int {
+		return 4*sizeof(Float64)
+	}
+
+	func putControlPoint( cp:ControlPoint ) -> Bool {
+		if remaining >= ByteBuffer.requiredSizeForControlPoint() {
+			putFloat64(Float64(cp.position.x))
+			putFloat64(Float64(cp.position.y))
+			putFloat64(Float64(cp.control.x))
+			putFloat64(Float64(cp.control.y))
+			return true
+		}
+
+		return false
+	}
+
+	func getControlPoint() -> ControlPoint {
+		return ControlPoint(
+			position: CGPoint( x:CGFloat(getFloat64()), y: CGFloat(getFloat64()) ),
+			control: CGPoint( x:CGFloat(getFloat64()), y: CGFloat(getFloat64()) ))
+	}
+
+	class func requiredSizeForStroke( stroke:Stroke ) -> Int {
+		return requiredSizeForFill() + sizeof(Int32) +
+			stroke.spars.count * 2 * requiredSizeForControlPoint()
+	}
+
+	func putStroke( stroke:Stroke ) -> Bool {
+
+		if !putFill(stroke.fill) {
+			return false
+		}
+
+		if remaining < sizeof(Int32) {
+			return false
+		}
+
+		putInt32(Int32(stroke.spars.count))
+
+		for spar in stroke.spars {
+			if !putControlPoint(spar.a) || !putControlPoint(spar.b) {
+				return false
+			}
+		}
+
+		return true
+	}
+
+	func getStroke() -> Stroke {
+		var stroke = Stroke( fill: getFill() )
+		let count = getInt32()
+		for i in 0 ..< count {
+			stroke.spars.append( Stroke.Spar( a: getControlPoint(), b: getControlPoint() ) )
+		}
+
+		return stroke
+	}
+}
+

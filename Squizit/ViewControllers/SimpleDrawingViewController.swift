@@ -32,7 +32,9 @@ class SimpleDrawingViewController: UIViewController {
 
 		self.navigationItem.leftBarButtonItems = [
 			UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Undo, target: self, action: "undo:"),
-			UIBarButtonItem(title: "Toggle Debug", style: UIBarButtonItemStyle.Plain, target: self, action: "toggleDebugRendering:")
+			UIBarButtonItem(title: "Toggle Debug", style: UIBarButtonItemStyle.Plain, target: self, action: "toggleDebugRendering:"),
+			UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.Plain, target: self, action: "save:"),
+			UIBarButtonItem(title: "Load", style: UIBarButtonItemStyle.Plain, target: self, action: "load:"),
 		]
 
 		self.navigationItem.rightBarButtonItems = [
@@ -48,6 +50,43 @@ class SimpleDrawingViewController: UIViewController {
 	}
 
 	// MARK: Actions
+
+	var saveFileName:String? {
+
+		var fm = NSFileManager.defaultManager()
+		var maybeDocsURL:NSURL? = fm.URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).first as? NSURL
+
+		if let docsURL = maybeDocsURL {
+			return docsURL.path.stringByAppendingPathComponent("drawing.bin")
+		}
+
+		return nil
+	}
+
+	func save( sender:AnyObject ) {
+		if let saveFileName = self.saveFileName {
+			println("saving to \(saveFileName)")
+			let drawingSaveResult = drawingView.drawing.save( saveFileName )
+
+			if let error = drawingSaveResult.error {
+				println(error.message)
+				return
+			}
+
+		}
+	}
+
+	func load( sender:AnyObject ) {
+		if let saveFileName = self.saveFileName {
+			let drawingLoadResult = Drawing.load( saveFileName )
+			if let error = drawingLoadResult.error {
+				println(error.message)
+				return
+			}
+
+			drawingView.drawing = drawingLoadResult.value
+		}
+	}
 
 	func toggleDebugRendering(sender: AnyObject) {
 		drawingView.drawing.debugRender = !drawingView.drawing.debugRender
