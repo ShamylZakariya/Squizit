@@ -26,11 +26,11 @@ class SquizitTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
+		NSFileManager.defaultManager().removeItemAtPath(drawingSaveFile, error: nil)
+	}
+
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+		NSFileManager.defaultManager().removeItemAtPath(drawingSaveFile, error: nil)
         super.tearDown()
     }
 
@@ -67,8 +67,7 @@ class SquizitTests: XCTestCase {
 		XCTAssertEqual(strokeA, strokeAPrime, "Deserialized Stroke should equal original")
     }
 
-	func testDrawingSerialization() {
-
+	func newDrawing() -> Drawing {
 		var drawing = Drawing(width: 512, height: 512)
 
 		// draw a circle
@@ -98,6 +97,15 @@ class SquizitTests: XCTestCase {
 			drawing.addStroke(stroke)
 		}
 
+		return drawing
+	}
+
+	var drawingSaveFile:String = NSTemporaryDirectory().stringByAppendingPathComponent("test-drawing.bin")
+
+	func testDrawingSerialization() {
+
+		var drawing = newDrawing()
+
 		var buffer:ByteBuffer? = drawing.serialize()
 		XCTAssert(buffer != nil, "Expect to serialize drawing to buffer")
 
@@ -115,6 +123,28 @@ class SquizitTests: XCTestCase {
 		for (i,stroke) in enumerate(drawing.strokes){
 			XCTAssertEqual(stroke, drawingPrime.strokes[i], "Expect strokes to be equal")
 		}
+
+		var drawingImage = drawing.render()
+		var drawingImagePrime = drawingPrimeResult.value.render()
+
+		var drawingImageData = UIImagePNGRepresentation(drawingImage)
+		var drawingImageDataPrime = UIImagePNGRepresentation(drawingImagePrime)
+
+		XCTAssert(drawingImageData.length > 0, "Expect rendered drawing's PNG data rep to have > 0 length")
+		XCTAssert(drawingImageDataPrime.length > 0, "Expect deserialized rendered drawing's PNG data rep to have > 0 length")
+
+		// now check bytes, see if ==
+		XCTAssert(drawingImageData.isEqualToData(drawingImageDataPrime), "Expect deserialized drawing's rendered image data to equal source")
+	}
+
+	func testDrawingSavingAndLoading() {
+
+		var drawing = newDrawing()
+		drawing.save(drawingSaveFile)
+
+		var drawingPrimeResult = Drawing.load(drawingSaveFile)
+
+		println("saving to \(drawingSaveFile)")
 
 		var drawingImage = drawing.render()
 		var drawingImagePrime = drawingPrimeResult.value.render()
