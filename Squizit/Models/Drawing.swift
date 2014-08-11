@@ -186,7 +186,7 @@ class Drawing {
 		invalidate()
 	}
 
-	func strokes() ->[Stroke] {
+	var strokes:[Stroke] {
 		return _strokes
 	}
 

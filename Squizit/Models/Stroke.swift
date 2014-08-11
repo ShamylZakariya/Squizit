@@ -59,7 +59,7 @@ enum Fill {
 }
 
 
-struct ControlPoint:Printable {
+struct ControlPoint:Printable,Equatable {
 	let position:CGPoint
 	let control:CGPoint
 
@@ -71,6 +71,11 @@ struct ControlPoint:Printable {
 	var description:String {
 		return "ControlPoint p:(\(position.x),\(position.y)) c:(\(control.x),\(control.y))"
 	}
+}
+
+func == (left:ControlPoint, right:ControlPoint) -> Bool {
+	return CGPointEqualToPoint( left.position, right.position ) &&
+		CGPointEqualToPoint(left.control, right.control)
 }
 
 
@@ -117,19 +122,15 @@ struct ControlPointCubicBezierInterpolator {
 	}
 }
 
-class Stroke {
+class Stroke : Equatable {
 
-	struct Spar:Printable {
+	struct Spar:Equatable {
 		let a:ControlPoint
 		let b:ControlPoint
 
 		init(a:ControlPoint, b:ControlPoint){
 			self.a = a
 			self.b = b
-		}
-
-		var description:String {
-			return "Spar a:\(a) b:\(b)"
 		}
 	}
 
@@ -139,6 +140,28 @@ class Stroke {
 	init( fill:Fill ) {
 		self.fill = fill
 	}
+}
+
+func == (left:Stroke.Spar, right:Stroke.Spar) -> Bool {
+	return left.a == right.a && left.b == right.b
+}
+
+func == (left:Stroke, right:Stroke) -> Bool {
+	if left.fill != right.fill {
+		return false
+	}
+
+	if left.spars.count != right.spars.count {
+		return false
+	}
+
+	for (i,spar) in enumerate(left.spars) {
+		if spar != right.spars[i] {
+			return false
+		}
+	}
+
+	return true
 }
 
 extension ByteBuffer {

@@ -60,7 +60,7 @@ class DrawingView: UIView {
 			_pts[0] = viewToDrawing(touch.locationInView(self))
 			_isFirstTouchPoint = true
 
-			_undoPoints.append(drawing.strokes().count)
+			_undoPoints.append(drawing.strokes.count)
 		}
 	}
 

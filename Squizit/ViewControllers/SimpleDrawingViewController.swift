@@ -15,8 +15,6 @@ class SimpleDrawingViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		println("drawingView: \(drawingView)")
-
 		let paperColor = UIColor( patternImage: UIImage(named: "paper-bg"))
 		drawingView.backgroundColor = paperColor
 
