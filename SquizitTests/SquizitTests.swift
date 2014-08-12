@@ -18,6 +18,14 @@ func randRange( var min:CGFloat, var max: CGFloat ) -> CGFloat {
 	return min + (CGFloat(drand48()) * (max - min))
 }
 
+func randomColor() -> UIColor {
+	let red = drand48()
+	let green = fract(red + drand48() * 0.5)
+	let blue = fract( green + drand48() * 0.5)
+	let alpha = drand48()
+	return UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alpha))
+}
+
 func randomPoint() -> CGPoint {
 	return CGPoint(x: randRange(-100, 100), y: randRange(-100, 100))
 }
@@ -66,6 +74,36 @@ class SquizitTests: XCTestCase {
 
 		XCTAssertEqual(strokeA, strokeAPrime, "Deserialized Stroke should equal original")
     }
+
+	func testColorSerialization() {
+		let count = 33
+
+		// make buffer big enough for our random colors
+		var buffer:ByteBuffer = ByteBuffer(order: BigEndian(), capacity: count * ByteBuffer.requiredSpaceForColor())
+
+		var colors:[UIColor] = []
+		for i in 0 ..< count {
+			let color = randomColor()
+			colors.append(color)
+			buffer.putColor(color)
+		}
+
+		buffer.flip()
+
+		for i in 0 ..< count {
+			var maybeColorPrime = buffer.getColor()
+			XCTAssertNotNil(maybeColorPrime, "Expect to deserialize a color")
+
+			if let colorPrime:UIColor = maybeColorPrime {
+				XCTAssert(colorPrime.hasRGBComponents, "Expect deserialized color to have RGB components")
+				let color = colors[i]
+				XCTAssertEqual(color.redComponent!, colorPrime.redComponent!, "Expect equal red components")
+				XCTAssertEqual(color.greenComponent!, colorPrime.greenComponent!, "Expect equal green components")
+				XCTAssertEqual(color.blueComponent!, colorPrime.blueComponent!, "Expect equal blue components")
+				XCTAssertEqual(color.alphaComponent!, colorPrime.alphaComponent!, "Expect equal alpha components")
+			}
+		}
+	}
 
 	func newDrawing() -> Drawing {
 		var drawing = Drawing(width: 512, height: 512)

@@ -44,23 +44,23 @@ extension ByteBuffer {
 
 extension UIColor {
 
-	private var hasRGBComponents:Bool {
+	var hasRGBComponents:Bool {
 		var m:CGColorSpaceModel = CGColorSpaceGetModel(CGColorGetColorSpace(self.CGColor))
 		return ( m.value == kCGColorSpaceModelMonochrome.value || m.value == kCGColorSpaceModelRGB.value )
 	}
 
-	private var isMonochrome:Bool {
+	var isMonochrome:Bool {
 		var m:CGColorSpaceModel = CGColorSpaceGetModel(CGColorGetColorSpace(self.CGColor))
 		return m.value == kCGColorSpaceModelMonochrome.value
 	}
 
-	private func colorComponentAtIndex( var i:Int ) -> CGFloat {
+	func colorComponentAtIndex( var i:Int ) -> CGFloat {
 		i = min( max( i, 0 ), Int(CGColorGetNumberOfComponents(self.CGColor)))
 		let components = CGColorGetComponents(self.CGColor)
 		return components[i]
 	}
 
-	private var redComponent:CGFloat? {
+	var redComponent:CGFloat? {
 		if hasRGBComponents {
 			return self.colorComponentAtIndex( 0)
 		}
@@ -68,7 +68,7 @@ extension UIColor {
 		return nil
 	}
 
-	private var greenComponent:CGFloat? {
+	var greenComponent:CGFloat? {
 		if hasRGBComponents {
 			return self.colorComponentAtIndex( self.isMonochrome ? 0 : 1 )
 		}
@@ -76,7 +76,7 @@ extension UIColor {
 		return nil
 	}
 
-	private var blueComponent:CGFloat? {
+	var blueComponent:CGFloat? {
 		if hasRGBComponents {
 			return self.colorComponentAtIndex( self.isMonochrome ? 0 : 2 )
 		}
@@ -84,7 +84,7 @@ extension UIColor {
 		return nil
 	}
 
-	private var alphaComponent:CGFloat? {
+	var alphaComponent:CGFloat? {
 		return self.colorComponentAtIndex( CGColorGetNumberOfComponents(self.CGColor) - 1 )
 	}
 
