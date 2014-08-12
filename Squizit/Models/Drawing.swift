@@ -74,7 +74,12 @@ class Drawing {
 		if version == DrawingSerializationVersion_V0 {
 			let width = buffer.getInt32()
 			let height = buffer.getInt32()
+
 			drawing = Drawing( width: Int(width), height: Int(height) )
+
+			if let color = buffer.getColor() {
+				drawing?.backgroundColor = color
+			}
 
 			let strokesCount = buffer.getInt32()
 			for i in 0 ..< strokesCount {
@@ -123,6 +128,7 @@ class Drawing {
 
 		let headerSize = sizeof(UInt8)*DrawingSerializationCookie.count // #cookie
 			+ 4*sizeof(Int32) // version # + width + height + #strokes
+			+ ByteBuffer.requiredSpaceForColor()
 
 		var strokeSize = 0
 		for stroke in _strokes {
@@ -138,6 +144,7 @@ class Drawing {
 		buffer.putInt32(Int32(DrawingSerializationVersion_V0))
 		buffer.putInt32(Int32(_width))
 		buffer.putInt32(Int32(_height))
+		buffer.putColor(self.backgroundColor)
 
 		buffer.putInt32(Int32(_strokes.count))
 		for stroke in _strokes {

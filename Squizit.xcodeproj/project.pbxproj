@@ -11,6 +11,8 @@
 		63B44AF519990DA100AE7B62 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBB19967B0C00F6E2B3 /* Stroke.swift */; };
 		63B44AF619990DA100AE7B62 /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB519967ACC00F6E2B3 /* Drawing.swift */; };
 		63B44AF719990DA100AE7B62 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
+		63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */; };
+		63B44AFD199A66B400AE7B62 /* UIColor_Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */; };
 		63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBEC8F19967A2300F6E2B3 /* AppDelegate.swift */; };
 		63BBEC9919967A2300F6E2B3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63BBEC9719967A2300F6E2B3 /* Main.storyboard */; };
 		63BBEC9B19967A2300F6E2B3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63BBEC9A19967A2300F6E2B3 /* Images.xcassets */; };
@@ -55,6 +57,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor_Serialization.swift; sourceTree = "<group>"; };
 		63BBEC8A19967A2300F6E2B3 /* Squizit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Squizit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63BBEC8E19967A2300F6E2B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63BBEC8F19967A2300F6E2B3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -90,6 +93,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		63B44AF9199A5DEE00AE7B62 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		63BBEC8119967A2300F6E2B3 = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				63BBECB919967B0400F6E2B3 /* Util.swift */,
+				63B44AF9199A5DEE00AE7B62 /* Extensions */,
 				63BBECB019967A9900F6E2B3 /* Models */,
 				63BBECB119967A9900F6E2B3 /* ViewControllers */,
 				63BBECB219967A9900F6E2B3 /* Views */,
@@ -307,6 +319,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */,
 				63BBECBE19967B3600F6E2B3 /* SimpleDrawingViewController.swift in Sources */,
 				63BBECB819967AFB00F6E2B3 /* DrawingView.swift in Sources */,
 				63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */,
@@ -321,6 +334,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63B44AFD199A66B400AE7B62 /* UIColor_Serialization.swift in Sources */,
 				63B44AF419990DA100AE7B62 /* Util.swift in Sources */,
 				63B44AF519990DA100AE7B62 /* Stroke.swift in Sources */,
 				63B44AF619990DA100AE7B62 /* Drawing.swift in Sources */,
