@@ -10,7 +10,7 @@ import UIKit
 
 class SimpleDrawingViewController: UIViewController {
 
-	@IBOutlet var drawingView: DrawingView!
+	@IBOutlet var drawingView: SimplifiedDrawingView!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -92,7 +92,7 @@ class SimpleDrawingViewController: UIViewController {
 	}
 
 	func undo(sender: AnyObject) {
-		drawingView.undo()
+		drawingView.drawingInputAdapter.undo()
 	}
 
 	func eraseDrawing( t:UITapGestureRecognizer ) {
@@ -101,11 +101,11 @@ class SimpleDrawingViewController: UIViewController {
 	}
 
 	func usePencil( t:AnyObject ) {
-		drawingView.fill = Fill.Pencil
+		drawingView.drawingInputAdapter.fill = Fill.Pencil
 	}
 
 	func useEraser( t:AnyObject ) {
-		drawingView.fill = Fill.Eraser
+		drawingView.drawingInputAdapter.fill = Fill.Eraser
 	}
 
 	func swipeLeft( t:UISwipeGestureRecognizer ) {
@@ -119,8 +119,8 @@ class SimpleDrawingViewController: UIViewController {
 		//	part of a swipe gesture.
 		//
 
-		drawingView.undo()
-		drawingView.undo()
+		drawingView.drawingInputAdapter.undo()
+		drawingView.drawingInputAdapter.undo()
 
 	}
 

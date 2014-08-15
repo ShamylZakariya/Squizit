@@ -324,7 +324,7 @@ class Drawing {
 		}
 
 		if !_debugRender {
-			stroke.fill.set()
+			stroke.fill.set( self.backgroundColor )
 		} else {
 			nextRandomColor(stroke.fill).set()
 		}

@@ -12,13 +12,13 @@
                         <viewControllerLayoutGuide type="top" id="8aa-yV-Osq"/>
                         <viewControllerLayoutGuide type="bottom" id="qHh-Mt-9TT"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="3se-qz-xqx" customClass="DrawingView" customModule="Squizit" customModuleProvider="target">
+                    <view key="view" contentMode="scaleToFill" id="3se-qz-xqx" customClass="SimplifiedDrawingView" customModule="Squizit" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </view>
                     <navigationItem key="navigationItem" id="OfT-p7-drc"/>
                     <connections>
-                        <outlet property="drawingView" destination="3se-qz-xqx" id="xLx-Bp-nWo"/>
+                        <outlet property="drawingView" destination="3se-qz-xqx" id="3dz-iR-rtY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>

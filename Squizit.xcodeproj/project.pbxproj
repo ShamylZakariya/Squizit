@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		636CEA24199E586400BEBF53 /* DrawingInputAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA23199E586400BEBF53 /* DrawingInputAdapter.swift */; };
+		636CEA27199E5F1D00BEBF53 /* SimplifiedDrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA26199E5F1D00BEBF53 /* SimplifiedDrawingView.swift */; };
 		63B44AF419990DA100AE7B62 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB919967B0400F6E2B3 /* Util.swift */; };
 		63B44AF519990DA100AE7B62 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBB19967B0C00F6E2B3 /* Stroke.swift */; };
 		63B44AF619990DA100AE7B62 /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB519967ACC00F6E2B3 /* Drawing.swift */; };
@@ -18,7 +20,6 @@
 		63BBEC9B19967A2300F6E2B3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63BBEC9A19967A2300F6E2B3 /* Images.xcassets */; };
 		63BBECA719967A2300F6E2B3 /* SquizitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECA619967A2300F6E2B3 /* SquizitTests.swift */; };
 		63BBECB619967ACC00F6E2B3 /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB519967ACC00F6E2B3 /* Drawing.swift */; };
-		63BBECB819967AFB00F6E2B3 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB719967AFB00F6E2B3 /* DrawingView.swift */; };
 		63BBECBA19967B0400F6E2B3 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB919967B0400F6E2B3 /* Util.swift */; };
 		63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBB19967B0C00F6E2B3 /* Stroke.swift */; };
 		63BBECBE19967B3600F6E2B3 /* SimpleDrawingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBD19967B3600F6E2B3 /* SimpleDrawingViewController.swift */; };
@@ -57,6 +58,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		636CEA23199E586400BEBF53 /* DrawingInputAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingInputAdapter.swift; sourceTree = "<group>"; };
+		636CEA26199E5F1D00BEBF53 /* SimplifiedDrawingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimplifiedDrawingView.swift; sourceTree = "<group>"; };
 		63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor_Serialization.swift; sourceTree = "<group>"; };
 		63BBEC8A19967A2300F6E2B3 /* Squizit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Squizit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63BBEC8E19967A2300F6E2B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -67,7 +70,6 @@
 		63BBECA519967A2300F6E2B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63BBECA619967A2300F6E2B3 /* SquizitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquizitTests.swift; sourceTree = "<group>"; };
 		63BBECB519967ACC00F6E2B3 /* Drawing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drawing.swift; sourceTree = "<group>"; };
-		63BBECB719967AFB00F6E2B3 /* DrawingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
 		63BBECB919967B0400F6E2B3 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		63BBECBB19967B0C00F6E2B3 /* Stroke.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stroke.swift; sourceTree = "<group>"; };
 		63BBECBD19967B3600F6E2B3 /* SimpleDrawingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleDrawingViewController.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				63BBECBB19967B0C00F6E2B3 /* Stroke.swift */,
 				63BBECB519967ACC00F6E2B3 /* Drawing.swift */,
 				63FDE7311998249A0006B7E4 /* Result.swift */,
+				636CEA23199E586400BEBF53 /* DrawingInputAdapter.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -182,7 +185,7 @@
 		63BBECB219967A9900F6E2B3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				63BBECB719967AFB00F6E2B3 /* DrawingView.swift */,
+				636CEA26199E5F1D00BEBF53 /* SimplifiedDrawingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -321,12 +324,13 @@
 			files = (
 				63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */,
 				63BBECBE19967B3600F6E2B3 /* SimpleDrawingViewController.swift in Sources */,
-				63BBECB819967AFB00F6E2B3 /* DrawingView.swift in Sources */,
+				636CEA24199E586400BEBF53 /* DrawingInputAdapter.swift in Sources */,
 				63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */,
 				63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */,
 				63FDE7321998249A0006B7E4 /* Result.swift in Sources */,
 				63BBECB619967ACC00F6E2B3 /* Drawing.swift in Sources */,
 				63BBECBA19967B0400F6E2B3 /* Util.swift in Sources */,
+				636CEA27199E5F1D00BEBF53 /* SimplifiedDrawingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

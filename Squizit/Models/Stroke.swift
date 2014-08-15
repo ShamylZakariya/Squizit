@@ -15,13 +15,14 @@ enum Fill {
 	case Pencil
 	case Eraser
 
-	func set() {
+	func set( backgroundColor:UIColor? ) {
 		switch self {
 			case .Pencil:
 				UIColor.blackColor().set()
 
 			case .Eraser:
-				UIColor.whiteColor().colorWithAlphaComponent(0.8).set()
+				let c = backgroundColor != nil ? backgroundColor : UIColor.whiteColor()
+				c.colorWithAlphaComponent(0.8).set()
 		}
 	}
 
