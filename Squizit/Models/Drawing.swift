@@ -266,12 +266,12 @@ class Drawing {
 		Render on background queue, calling `done on main queue when complete, passing the rendered image
 	*/
 
-	func render(done maybeDone: ((image:UIImage) -> ())?) {
+	func render( done: ((image:UIImage)->Void)? ) {
 		dispatch_async( _renderQueue ) {
 			let image = self.render();
-			if let done = maybeDone {
+			if let d = done {
 				dispatch_async( dispatch_get_main_queue()) {
-					done( image:image )
+					d( image:image )
 				}
 			}
 		}

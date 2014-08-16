@@ -35,7 +35,7 @@ class SimplifiedDrawingView : UIView {
 	}
 
 	override func drawRect(rect: CGRect) {
-		drawingInputAdapter.draw()
+		drawingInputAdapter.draw(UIGraphicsGetCurrentContext())
 	}
 
 	override func layoutSubviews() {

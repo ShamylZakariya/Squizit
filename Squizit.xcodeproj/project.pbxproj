@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		636CEA24199E586400BEBF53 /* DrawingInputAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA23199E586400BEBF53 /* DrawingInputAdapter.swift */; };
 		636CEA27199E5F1D00BEBF53 /* SimplifiedDrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA26199E5F1D00BEBF53 /* SimplifiedDrawingView.swift */; };
+		636CEA29199F251200BEBF53 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA28199F251200BEBF53 /* Match.swift */; };
+		636CEA2B199F25F000BEBF53 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA2A199F25F000BEBF53 /* MatchView.swift */; };
 		63B44AF419990DA100AE7B62 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB919967B0400F6E2B3 /* Util.swift */; };
 		63B44AF519990DA100AE7B62 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBB19967B0C00F6E2B3 /* Stroke.swift */; };
 		63B44AF619990DA100AE7B62 /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB519967ACC00F6E2B3 /* Drawing.swift */; };
@@ -60,6 +62,8 @@
 /* Begin PBXFileReference section */
 		636CEA23199E586400BEBF53 /* DrawingInputAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingInputAdapter.swift; sourceTree = "<group>"; };
 		636CEA26199E5F1D00BEBF53 /* SimplifiedDrawingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimplifiedDrawingView.swift; sourceTree = "<group>"; };
+		636CEA28199F251200BEBF53 /* Match.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		636CEA2A199F25F000BEBF53 /* MatchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchView.swift; sourceTree = "<group>"; };
 		63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor_Serialization.swift; sourceTree = "<group>"; };
 		63BBEC8A19967A2300F6E2B3 /* Squizit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Squizit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63BBEC8E19967A2300F6E2B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -170,6 +174,7 @@
 				63BBECB519967ACC00F6E2B3 /* Drawing.swift */,
 				63FDE7311998249A0006B7E4 /* Result.swift */,
 				636CEA23199E586400BEBF53 /* DrawingInputAdapter.swift */,
+				636CEA28199F251200BEBF53 /* Match.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -186,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				636CEA26199E5F1D00BEBF53 /* SimplifiedDrawingView.swift */,
+				636CEA2A199F25F000BEBF53 /* MatchView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -325,12 +331,14 @@
 				63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */,
 				63BBECBE19967B3600F6E2B3 /* SimpleDrawingViewController.swift in Sources */,
 				636CEA24199E586400BEBF53 /* DrawingInputAdapter.swift in Sources */,
+				636CEA29199F251200BEBF53 /* Match.swift in Sources */,
 				63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */,
 				63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */,
 				63FDE7321998249A0006B7E4 /* Result.swift in Sources */,
 				63BBECB619967ACC00F6E2B3 /* Drawing.swift in Sources */,
 				63BBECBA19967B0400F6E2B3 /* Util.swift in Sources */,
 				636CEA27199E5F1D00BEBF53 /* SimplifiedDrawingView.swift in Sources */,
+				636CEA2B199F25F000BEBF53 /* MatchView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -47,20 +47,17 @@ class DrawingInputAdapter {
 
 	init(){}
 
-	func draw() {
+	func draw( context:CGContextRef ) {
 		assert(view != nil, "Expect non-nil view")
 
 		if let drawing = self.drawing {
-			let ctx = UIGraphicsGetCurrentContext()
-			assert(ctx != nil, "Expect to be called in a view's drawRect()")
-
-			CGContextSaveGState(ctx)
-			CGContextConcatCTM(ctx, transform)
+			CGContextSaveGState(context)
+			CGContextConcatCTM(context, transform)
 
 			let image = drawing.render()
 			image.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
 
-			CGContextRestoreGState(ctx)
+			CGContextRestoreGState(context)
 		}
 	}
 
@@ -86,9 +83,11 @@ class DrawingInputAdapter {
 
 				renderStroke()
 
-				drawing.render { [unowned self]	(image) -> () in
-					print(".") // adding this line seems to work around a compiler bug!?
+				drawing.render {
+					[unowned self]
+					(image:UIImage) in
 					self.view?.setNeedsDisplay()
+					return
 				}
 			}
 		}
