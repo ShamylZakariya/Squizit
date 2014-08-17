@@ -14,11 +14,11 @@ class SimplifiedDrawingView : UIView {
 
 	var drawing:Drawing = Drawing(width: 512, height: 512) {
 		didSet {
-			drawingInputAdapter.drawing = drawing
+			DrawingInputController.drawing = drawing
 		}
 	}
 
-	var drawingInputAdapter = DrawingInputAdapter()
+	var DrawingInputController = DrawingInputController()
 
 	private var tracking:Bool = false
 
@@ -30,12 +30,12 @@ class SimplifiedDrawingView : UIView {
 
 
 		drawing.backgroundColor = UIColor.yellowColor()
-		drawingInputAdapter.drawing = drawing
-		drawingInputAdapter.view = self
+		DrawingInputController.drawing = drawing
+		DrawingInputController.view = self
 	}
 
 	override func drawRect(rect: CGRect) {
-		drawingInputAdapter.draw(UIGraphicsGetCurrentContext())
+		DrawingInputController.draw(UIGraphicsGetCurrentContext())
 	}
 
 	override func layoutSubviews() {
@@ -45,7 +45,7 @@ class SimplifiedDrawingView : UIView {
 		let viewCenter = CGPointMake( self.bounds.midX, self.bounds.midY )
 		let topLeftCorner = CGPointMake( floor(viewCenter.x - size.width/2), floor(viewCenter.y - size.height/2) )
 
-		drawingInputAdapter.transform = CGAffineTransformMakeTranslation(topLeftCorner.x, topLeftCorner.y)
+		DrawingInputController.transform = CGAffineTransformMakeTranslation(topLeftCorner.x, topLeftCorner.y)
 	}
 
 	override func touchesBegan(touches: NSSet!, withEvent event: UIEvent!) {
@@ -56,7 +56,7 @@ class SimplifiedDrawingView : UIView {
 
 		if let touch = touches.anyObject() as? UITouch {
 			tracking = true
-			drawingInputAdapter.touchBegan(touch.locationInView(self))
+			DrawingInputController.touchBegan(touch.locationInView(self))
 		}
 	}
 
@@ -66,13 +66,13 @@ class SimplifiedDrawingView : UIView {
 		}
 
 		if let touch = touches.anyObject() as? UITouch {
-			drawingInputAdapter.touchMoved(touch.locationInView(self))
+			DrawingInputController.touchMoved(touch.locationInView(self))
 		}
 	}
 
 	override func touchesEnded(touches: NSSet!, withEvent event: UIEvent!) {
 		tracking = false
-		drawingInputAdapter.touchEnded()
+		DrawingInputController.touchEnded()
 	}
 
 	override func touchesCancelled(touches: NSSet!, withEvent event: UIEvent!) {

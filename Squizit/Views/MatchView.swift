@@ -20,10 +20,10 @@ class MatchView : UIView {
 
 	var player:Int?
 
-	private var _adapters:[DrawingInputAdapter] = []
+	private var _adapters:[DrawingInputController] = []
 	private var _tracking:Bool = false
 
-	var adapters:[DrawingInputAdapter] { return _adapters }
+	var adapters:[DrawingInputController] { return _adapters }
 
 	required init(coder aDecoder: NSCoder!) {
 		super.init( coder: aDecoder )
@@ -127,7 +127,7 @@ class MatchView : UIView {
 		_adapters = []
 		if let match = self.match {
 			for (i,drawing) in enumerate(match.drawings) {
-				let adapter = DrawingInputAdapter()
+				let adapter = DrawingInputController()
 				adapter.drawing = drawing
 				adapter.view = self
 				adapter.transform = match.transforms[i]

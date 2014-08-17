@@ -1,5 +1,5 @@
 //
-//  DrawingInputAdapter.swift
+//  DrawingInputController.swift
 //  Squizit
 //
 //  Created by Shamyl Zakariya on 8/15/14.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class DrawingInputAdapter {
+class DrawingInputController {
 
 	private var _points = [CGPoint](count: 5, repeatedValue: CGPoint())
 	private var _pointsTop = 0
