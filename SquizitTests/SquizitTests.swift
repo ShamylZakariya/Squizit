@@ -144,10 +144,12 @@ class SquizitTests: XCTestCase {
 
 		var drawing = newDrawing()
 
-		var buffer:ByteBuffer? = drawing.serialize()
-		XCTAssert(buffer != nil, "Expect to serialize drawing to buffer")
+		var buffer = ByteBuffer(order: BigEndian(), capacity: ByteBuffer.requiredSizeForDrawing(drawing))
+		XCTAssert( buffer.putDrawing(drawing), "Expect to serialize drawing" )
 
-		var drawingPrimeResult = Drawing.load(buffer!)
+
+		buffer.flip()
+		var drawingPrimeResult = buffer.getDrawing()
 		XCTAssert(drawingPrimeResult.error == nil, "Expect to successfully deserialize drawing from buffer")
 
 		var drawingPrime = drawingPrimeResult.value
@@ -161,28 +163,6 @@ class SquizitTests: XCTestCase {
 		for (i,stroke) in enumerate(drawing.strokes){
 			XCTAssertEqual(stroke, drawingPrime.strokes[i], "Expect strokes to be equal")
 		}
-
-		var drawingImage = drawing.render()
-		var drawingImagePrime = drawingPrimeResult.value.render()
-
-		var drawingImageData = UIImagePNGRepresentation(drawingImage)
-		var drawingImageDataPrime = UIImagePNGRepresentation(drawingImagePrime)
-
-		XCTAssert(drawingImageData.length > 0, "Expect rendered drawing's PNG data rep to have > 0 length")
-		XCTAssert(drawingImageDataPrime.length > 0, "Expect deserialized rendered drawing's PNG data rep to have > 0 length")
-
-		// now check bytes, see if ==
-		XCTAssert(drawingImageData.isEqualToData(drawingImageDataPrime), "Expect deserialized drawing's rendered image data to equal source")
-	}
-
-	func testDrawingSavingAndLoading() {
-
-		var drawing = newDrawing()
-		drawing.save(drawingSaveFile)
-
-		var drawingPrimeResult = Drawing.load(drawingSaveFile)
-
-		println("saving to \(drawingSaveFile)")
 
 		var drawingImage = drawing.render()
 		var drawingImagePrime = drawingPrimeResult.value.render()

@@ -167,7 +167,7 @@ func == (left:Stroke, right:Stroke) -> Bool {
 
 extension ByteBuffer {
 
-	class func requiredSizeForFill() -> Int {
+	public class func requiredSizeForFill() -> Int {
 		return sizeof(UInt8)
 	}
 
@@ -251,5 +251,39 @@ extension ByteBuffer {
 
 		return stroke
 	}
+
+	class func requiredSizeForCGAffineTransform() -> Int {
+		return 6 * sizeof(Float64)
+	}
+
+	func putCGAffineTransform( t:CGAffineTransform ) -> Bool {
+		if remaining < ByteBuffer.requiredSizeForCGAffineTransform() {
+			return false
+		}
+
+		putFloat64( Float64(t.a))
+		putFloat64( Float64(t.b))
+		putFloat64( Float64(t.c))
+		putFloat64( Float64(t.d))
+		putFloat64( Float64(t.tx))
+		putFloat64( Float64(t.ty))
+
+		return true
+	}
+
+	func getCGAffineTransform() -> CGAffineTransform? {
+		if remaining < ByteBuffer.requiredSizeForCGAffineTransform() {
+			return nil
+		}
+
+		return CGAffineTransformMake(
+			CGFloat(getFloat64()),
+			CGFloat(getFloat64()),
+			CGFloat(getFloat64()),
+			CGFloat(getFloat64()),
+			CGFloat(getFloat64()),
+			CGFloat(getFloat64()))
+	}
+
 }
 

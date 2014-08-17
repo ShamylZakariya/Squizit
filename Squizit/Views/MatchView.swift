@@ -18,12 +18,26 @@ class MatchView : UIView {
 		}
 	}
 
+	var player:Int?
+
 	private var _adapters:[DrawingInputAdapter] = []
-	private var _trackingIndex:Int?
+	private var _tracking:Bool = false
+
+	var adapters:[DrawingInputAdapter] { return _adapters }
 
 	required init(coder aDecoder: NSCoder!) {
 		super.init( coder: aDecoder )
 	}
+
+	// MARK: Public API
+
+	func undo() {
+		if let player = self.player {
+			_adapters[player].undo()
+		}
+	}
+
+	// MARK: UIView Overrides
 
 	override func drawRect(rect: CGRect) {
 		let ctx = UIGraphicsGetCurrentContext()
@@ -33,7 +47,6 @@ class MatchView : UIView {
 				_adapters[i].draw(ctx)
 			}
 		}
-
 	}
 
 	override func touchesBegan(touches: NSSet!, withEvent event: UIEvent!) {
@@ -42,32 +55,38 @@ class MatchView : UIView {
 			return
 		}
 
-		_trackingIndex = nil
-		if let touch = touches.anyObject() as? UITouch {
-			let location = touch.locationInView(self)
-			if let idx = drawingIndexForPoint(location) {
-				_trackingIndex = idx
-				_adapters[_trackingIndex!].touchBegan(location)
+
+		self.player = drawingIndexForPoint(touches.anyObject().locationInView(self))
+
+		if let player = self.player {
+			if let rect = rectForPlayer(player) {
+				let location = touches.anyObject().locationInView(self)
+				if rect.contains(location) {
+					_adapters[player].touchBegan(location)
+					_tracking = true
+				}
 			}
 		}
 	}
 
 	override func touchesMoved(touches: NSSet!, withEvent event: UIEvent!) {
 
-		if let trackingIndex = _trackingIndex {
-			if let touch = touches.anyObject() as? UITouch {
-				_adapters[_trackingIndex!].touchMoved(touch.locationInView(self))
-			}
+		if !_tracking {
+			return
 		}
+
+		let location = touches.anyObject().locationInView(self)
+		_adapters[player!].touchMoved(location)
 	}
 
 	override func touchesEnded(touches: NSSet!, withEvent event: UIEvent!) {
 
-		if let trackingIndex = _trackingIndex {
-			_adapters[_trackingIndex!].touchEnded()
+		if !_tracking {
+			return
 		}
 
-		_trackingIndex = nil
+		_adapters[player!].touchEnded()
+		_tracking = false
 	}
 
 	override func touchesCancelled(touches: NSSet!, withEvent event: UIEvent!) {
@@ -76,6 +95,17 @@ class MatchView : UIView {
 
 
 	// MARK: Private
+
+	private func rectForPlayer( index:Int ) -> CGRect? {
+
+		if match == nil {
+			return nil
+		}
+
+		let firstDrawing = match!.drawings.first!
+		let firstRect = CGRect(x: 0, y: 0, width: firstDrawing.size.width, height: firstDrawing.size.height)
+		return CGRectApplyAffineTransform(firstRect, match!.transforms[index])
+	}
 
 	private func drawingIndexForPoint( point:CGPoint ) -> Int? {
 		if let match = self.match {
