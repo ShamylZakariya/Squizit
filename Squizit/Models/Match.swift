@@ -25,17 +25,19 @@ class Match {
 
 	init(){}
 
-	init( players:Int, stageSize:CGSize ){
+	init( players:Int, stageSize:CGSize, overlap:CGFloat = 40 ){
 
 		let rowHeight:CGFloat = CGFloat(round(stageSize.height / CGFloat(players)))
-		_stageSize = CGSize(width: stageSize.width, height: rowHeight )
+		_stageSize = stageSize
+
+		let drawingSize = CGSize(width: stageSize.width, height: rowHeight + 2*overlap )
 		let t:CGAffineTransform = CGAffineTransformMakeTranslation(0, 0)
 
 		for i in 0 ..< players {
-			_drawings.append(Drawing(width: Int(_stageSize.width), height: Int(_stageSize.height)))
-			_transforms.append(CGAffineTransformMakeTranslation( 0, rowHeight * CGFloat(i) ))
+			_drawings.append(Drawing(width: Int(drawingSize.width), height: Int(drawingSize.height)))
+			_transforms.append(CGAffineTransformMakeTranslation( 0, rowHeight * CGFloat(i) - overlap ))
 
-			_drawings.last?.backgroundColor = UIColor(red: CGFloat(drand48()), green: CGFloat(drand48()), blue: CGFloat(drand48()), alpha: 1)
+			_drawings.last?.backgroundColor = UIColor(red: CGFloat(0.5 + 0.5*drand48()), green: CGFloat(0.5+0.5*drand48()), blue: CGFloat(0.5+0.5*drand48()), alpha: 1)
 		}
 	}
 
