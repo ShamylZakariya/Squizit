@@ -13,12 +13,16 @@ import Lilliput
 enum Fill {
 
 	case Pencil
+	case Brush
 	case Eraser
 
 	func set( backgroundColor:UIColor? ) {
 		switch self {
 			case .Pencil:
 				UIColor.blackColor().set()
+
+			case .Brush:
+				UIColor.blackColor().colorWithAlphaComponent(0.0625).set()
 
 			case .Eraser:
 				let c = backgroundColor != nil ? backgroundColor : UIColor.whiteColor()
@@ -32,29 +36,12 @@ enum Fill {
 				case .Pencil:
 					return (0.5,2.0)
 
+				case .Brush:
+					return (1.0,40.0)
+
 				case .Eraser:
 					return (20.0,20.0)
 			}
-		}
-	}
-
-	// TODO: Make this work with Swift enum's toRaw / fromRaw
-	func serialize( buffer:ByteBuffer ) {
-		switch self {
-			case .Pencil:
-				buffer.putUInt8(0)
-
-			case .Eraser:
-				buffer.putUInt8(1)
-		}
-	}
-
-	mutating func inflate( buffer:ByteBuffer ){
-		let v = buffer.getUInt8()
-		switch( v ) {
-			case 0: self = .Pencil
-			case 1: self = .Eraser
-			default: self = .Pencil
 		}
 	}
 }
@@ -177,8 +164,11 @@ extension ByteBuffer {
 				case .Pencil:
 					putUInt8(0)
 
-				case .Eraser:
+				case .Brush:
 					putUInt8(1)
+
+				case .Eraser:
+					putUInt8(2)
 			}
 			return true
 		}
@@ -189,7 +179,8 @@ extension ByteBuffer {
 	func getFill() -> Fill {
 		switch( getUInt8() ) {
 			case 0: return .Pencil
-			case 1: return .Eraser
+			case 1: return .Brush
+			case 2: return .Eraser
 			default: return .Pencil
 		}
 	}

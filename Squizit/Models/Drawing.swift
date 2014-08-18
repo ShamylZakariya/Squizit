@@ -177,7 +177,7 @@ class Drawing {
 		var blue:Double
 
 		switch fill {
-			case Fill.Pencil:
+			case Fill.Pencil,Fill.Brush:
 				red = drand48()
 				green = fract(red + drand48() * 0.5)
 				blue = fract( green + drand48() * 0.5)
@@ -263,6 +263,9 @@ class Drawing {
 			switch stroke.fill {
 				case .Pencil:
 					UIColor.blackColor().setStroke()
+
+				case .Brush:
+					UIColor.greenColor().setStroke()
 
 				case .Eraser:
 					UIColor.redColor().setStroke()

@@ -47,6 +47,16 @@ class DrawingInputController {
 
 	init(){}
 
+	func undo() {
+		if let drawing = self.drawing {
+			if !_undoStrokeIndexes.isEmpty {
+				let mark = _undoStrokeIndexes.removeLast()
+				drawing.popStrokesTo(mark)
+				view?.setNeedsDisplay()
+			}
+		}
+	}
+
 	func draw( context:CGContextRef ) {
 		assert(view != nil, "Expect non-nil view")
 
@@ -95,16 +105,6 @@ class DrawingInputController {
 
 	func touchEnded() {
 		view?.setNeedsDisplay()
-	}
-
-	func undo() {
-		if let drawing = self.drawing {
-			if !_undoStrokeIndexes.isEmpty {
-				let mark = _undoStrokeIndexes.removeLast()
-				drawing.popStrokesTo(mark)
-				view?.setNeedsDisplay()
-			}
-		}
 	}
 
 	// MARK: Private API

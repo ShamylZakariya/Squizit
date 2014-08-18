@@ -20,21 +20,13 @@ class MatchView : UIView {
 
 	var player:Int?
 
-	private var _adapters:[DrawingInputController] = []
+	private var _controllers:[DrawingInputController] = []
 	private var _tracking:Bool = false
 
-	var adapters:[DrawingInputController] { return _adapters }
+	var controllers:[DrawingInputController] { return _controllers }
 
 	required init(coder aDecoder: NSCoder!) {
 		super.init( coder: aDecoder )
-	}
-
-	// MARK: Public API
-
-	func undo() {
-		if let player = self.player {
-			_adapters[player].undo()
-		}
 	}
 
 	// MARK: UIView Overrides
@@ -44,7 +36,7 @@ class MatchView : UIView {
 		if let match = self.match {
 			for (i,drawing) in enumerate(match.drawings) {
 				let transform = match.transforms[i]
-				_adapters[i].draw(ctx)
+				_controllers[i].draw(ctx)
 			}
 		}
 	}
@@ -55,14 +47,11 @@ class MatchView : UIView {
 			return
 		}
 
-
-		self.player = drawingIndexForPoint(touches.anyObject().locationInView(self))
-
 		if let player = self.player {
 			if let rect = rectForPlayer(player) {
 				let location = touches.anyObject().locationInView(self)
 				if rect.contains(location) {
-					_adapters[player].touchBegan(location)
+					_controllers[player].touchBegan(location)
 					_tracking = true
 				}
 			}
@@ -76,7 +65,7 @@ class MatchView : UIView {
 		}
 
 		let location = touches.anyObject().locationInView(self)
-		_adapters[player!].touchMoved(location)
+		_controllers[player!].touchMoved(location)
 	}
 
 	override func touchesEnded(touches: NSSet!, withEvent event: UIEvent!) {
@@ -85,7 +74,7 @@ class MatchView : UIView {
 			return
 		}
 
-		_adapters[player!].touchEnded()
+		_controllers[player!].touchEnded()
 		_tracking = false
 	}
 
@@ -107,24 +96,8 @@ class MatchView : UIView {
 		return CGRectApplyAffineTransform(firstRect, match!.transforms[index])
 	}
 
-	private func drawingIndexForPoint( point:CGPoint ) -> Int? {
-		if let match = self.match {
-			if let firstDrawing = match.drawings.first {
-				let rect = CGRect(x: 0, y: 0, width: firstDrawing.size.width, height: firstDrawing.size.height)
-				for (i,transform) in enumerate(match.transforms) {
-					let transformedRect = CGRectApplyAffineTransform(rect, transform)
-					if transformedRect.contains(point) {
-						return i
-					}
-				}
-			}
-		}
-
-		return nil
-	}
-
 	private func configure(){
-		_adapters = []
+		_controllers = []
 		if let match = self.match {
 			for (i,drawing) in enumerate(match.drawings) {
 				let adapter = DrawingInputController()
@@ -132,7 +105,7 @@ class MatchView : UIView {
 				adapter.view = self
 				adapter.transform = match.transforms[i]
 
-				_adapters.append(adapter)
+				_controllers.append(adapter)
 			}
 		}
 	}
