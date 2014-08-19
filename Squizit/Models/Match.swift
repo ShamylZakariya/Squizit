@@ -51,14 +51,14 @@ class Match {
 			return .Failure(Error(message: "unable to open \(path)"))
 		}
 
-		let file = openResult.value
+		let file = openResult.binaryFile
 		let size = file.size()
 
 		if let error = size.error {
 			return .Failure(Error(message: "unable to get file size from \(path)"))
 		}
 
-		let buffer = ByteBuffer(order: BigEndian(), capacity: Int(size.value))
+		let buffer = ByteBuffer(order: BigEndian(), capacity: Int(size.fileSize))
 		let readResult = file.readBuffer(buffer)
 
 		if let error = readResult.error {
@@ -82,14 +82,14 @@ class Match {
 				return .Failure(Error(message: "unable to open file \(path)"))
 			}
 
-			var file = fileOpenResult.value
+			var file = fileOpenResult.binaryFile
 			var fileWriteResult = file.writeBuffer(buffer)
 
 			if let error = fileWriteResult.error {
 				return .Failure(Error(message: "unable to write buffer to file \(path)"))
 			}
 
-			return .Success(fileWriteResult.value)
+			return .Success(fileWriteResult.byteCount)
 
 		} else {
 			return .Failure(Error(message: "unable to serialize to buffer - probably under capacity"))

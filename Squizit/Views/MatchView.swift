@@ -25,7 +25,7 @@ class MatchView : UIView {
 
 	var controllers:[DrawingInputController] { return _controllers }
 
-	required init(coder aDecoder: NSCoder!) {
+	required init(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
 	}
 

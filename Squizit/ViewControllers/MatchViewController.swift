@@ -39,7 +39,7 @@ class MatchViewController : UIViewController {
 		}
 	}
 
-	required init(coder aDecoder: NSCoder!) {
+	required init(coder aDecoder: NSCoder) {
 		self.fill = Fill.Pencil
 		super.init(coder: aDecoder)
 		edgesForExtendedLayout = UIRectEdge.None
