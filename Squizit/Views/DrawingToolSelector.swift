@@ -115,7 +115,7 @@ class DrawingToolSelector : UIControl {
 		var y = height/2 - contentHeight/2
 
 		for button in _tiles {
-			button.frame = CGRectIntegral(CGRect(x: x, y: y, width: size, height: size))
+			button.frame = CGRect(x: x, y: y, width: size, height: size).integerRect
 			y += margin + size
 		}
 	}
@@ -128,7 +128,7 @@ class DrawingToolSelector : UIControl {
 		var y = bounds.height/2 - size/2
 
 		for button in _tiles {
-			button.frame = CGRectIntegral(CGRect(x: x, y: y, width: size, height: size))
+			button.frame = CGRect(x: x, y: y, width: size, height: size).integerRect
 			x += margin + size
 		}
 	}
