@@ -19,7 +19,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oz0-iv-EOF">
                                 <rect key="frame" x="156" y="219" width="289" height="161"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yyH-xU-eFZ">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yyH-xU-eFZ" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
                                         <rect key="frame" x="20" y="111" width="249" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="1X3-CA-XeN"/>
@@ -29,7 +29,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ppa-Nb-wo9">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ppa-Nb-wo9" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
                                         <rect key="frame" x="20" y="58" width="249" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="249" id="i14-BX-Wkv"/>
@@ -42,7 +42,7 @@
                                             <segue destination="2Yj-yc-FrP" kind="presentation" modalPresentationStyle="fullScreen" id="wMr-kO-UNO"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LcU-F2-TBW">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LcU-F2-TBW" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
                                         <rect key="frame" x="20" y="20" width="249" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="k6s-nJ-dbw"/>
@@ -56,7 +56,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="ppa-Nb-wo9" firstAttribute="top" secondItem="LcU-F2-TBW" secondAttribute="bottom" constant="8" id="6Mc-MR-VD9"/>
                                     <constraint firstAttribute="height" constant="161" id="Bnn-vp-BKO"/>
@@ -73,7 +73,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="oz0-iv-EOF" secondAttribute="centerX" id="LM2-xG-xGQ"/>
                             <constraint firstAttribute="centerY" secondItem="oz0-iv-EOF" secondAttribute="centerY" id="okW-0y-lDh"/>

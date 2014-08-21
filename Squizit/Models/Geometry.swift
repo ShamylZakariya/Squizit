@@ -1,8 +1,8 @@
 //
-//  Util.swift
-//  FreehandSwift
+//  Geometry.swift
+//  Squizit
 //
-//  Created by Shamyl Zakariya on 7/13/14.
+//  Created by Shamyl Zakariya on 8/21/14.
 //  Copyright (c) 2014 Shamyl Zakariya. All rights reserved.
 //
 

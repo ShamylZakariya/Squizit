@@ -16,6 +16,10 @@ class RootViewController : UIViewController {
 	@IBOutlet weak var threePlayersButton: UIButton!
 	@IBOutlet weak var galleryButton: UIButton!
 
+	override func viewDidLoad() {
+		view.tintColor = UIColor.whiteColor()
+	}
+
 	override func viewWillAppear(animated: Bool) {
 		UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: UIStatusBarAnimation.Fade)
 	}

@@ -152,15 +152,15 @@ class MatchViewController : UIViewController {
 
 		// create the turn-finished button
 
-		turnFinishedButton = UIButton.buttonWithType(UIButtonType.Custom) as UIButton
+		turnFinishedButton = SquizitThemeButton.buttonWithType(UIButtonType.Custom) as UIButton
 		turnFinishedButton.setTitle(NSLocalizedString("Next", comment: "UserFinishedRound" ).uppercaseString, forState: UIControlState.Normal)
-		turnFinishedButton.titleLabel.font = UIFont(name: "Avenir-Light", size: UIFont.buttonFontSize())
 		turnFinishedButton.tintColor = UIColor.whiteColor()
 		turnFinishedButton.addTarget(self, action: "turnFinished:", forControlEvents: UIControlEvents.TouchUpInside)
-		turnFinishedButton.layer.cornerRadius = 0
-		turnFinishedButton.layer.borderWidth = 1
-		turnFinishedButton.layer.borderColor = UIColor.whiteColor().CGColor
 		turnFinishedButton.frame = CGRect(x: 0, y: 0, width: 200, height: 44)
+//		turnFinishedButton.titleLabel.font = UIFont(name: "Avenir-Light", size: UIFont.buttonFontSize())
+//		turnFinishedButton.layer.cornerRadius = 0
+//		turnFinishedButton.layer.borderWidth = 1
+//		turnFinishedButton.layer.borderColor = UIColor.whiteColor().CGColor
 		view.addSubview(turnFinishedButton)
 
 		matchView.match = match
