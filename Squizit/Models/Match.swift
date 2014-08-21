@@ -22,13 +22,15 @@ class Match {
 	private var _drawings:[Drawing] = []
 	private var _transforms:[CGAffineTransform] = []
 	private var _stageSize = CGSize(width: 0, height: 0)
+	private var _overlap:CGFloat = 0
 
 	init(){}
 
-	init( players:Int, stageSize:CGSize, overlap:CGFloat = 40 ){
+	init( players:Int, stageSize:CGSize, overlap:CGFloat = 10 ){
 
 		let rowHeight:CGFloat = CGFloat(round(stageSize.height / CGFloat(players)))
 		_stageSize = stageSize
+		_overlap = overlap
 
 		let drawingSize = CGSize(width: stageSize.width, height: rowHeight + 2*overlap )
 		let t:CGAffineTransform = CGAffineTransformMakeTranslation(0, 0)
@@ -37,12 +39,18 @@ class Match {
 			_drawings.append(Drawing(width: Int(drawingSize.width), height: Int(drawingSize.height)))
 			_transforms.append(CGAffineTransformMakeTranslation( 0, rowHeight * CGFloat(i) - overlap ))
 
-			_drawings.last?.backgroundColor = UIColor(red: CGFloat(0.5 + 0.5*drand48()), green: CGFloat(0.5+0.5*drand48()), blue: CGFloat(0.5+0.5*drand48()), alpha: 1)
+//			_drawings.last?.backgroundColor = UIColor(red: CGFloat(0.5 + 0.5*drand48()), green: CGFloat(0.5+0.5*drand48()), blue: CGFloat(0.5+0.5*drand48()), alpha: 1)
 		}
 	}
 
 	var drawings:[Drawing] { return _drawings }
 	var transforms:[CGAffineTransform] { return _transforms }
+
+	func rectForPlayer( player:Int ) -> CGRect {
+		let rowHeight:CGFloat = CGFloat(round(_stageSize.height / CGFloat(_drawings.count)))
+		let drawingSize = CGSize(width: _stageSize.width, height: rowHeight + 2*_overlap )
+		return CGRect(x: 0, y: rowHeight * CGFloat(player) - _overlap, width: drawingSize.width, height: drawingSize.height )
+	}
 
 	class func load( path:String ) -> Result<Match> {
 		let openResult = BinaryFile.openForReading(path)
@@ -103,6 +111,7 @@ extension ByteBuffer {
 		let headerSize = sizeof(UInt8)*MatchSerializationCookie.count // #cookie
 			+ 1*sizeof(Int32) // version #
 			+ 2*sizeof(Float64) // width + height
+			+ 1*sizeof(Float64) // overlap
 			+ sizeof(Int32) // count of drawings & transforms
 			+ match.drawings.count * ByteBuffer.requiredSizeForCGAffineTransform()
 
@@ -119,6 +128,7 @@ extension ByteBuffer {
 		putInt32(MatchSerializationVersion_V0)
 		putFloat64(Float64(match._stageSize.width))
 		putFloat64(Float64(match._stageSize.height))
+		putFloat64(Float64(match._overlap))
 		putInt32(Int32(match.drawings.count))
 
 		for i in 0 ..< match.drawings.count {
@@ -153,6 +163,7 @@ extension ByteBuffer {
 
 		let stageSize = CGSize(width: CGFloat(getFloat64()), height: CGFloat(getFloat64()))
 		match._stageSize = stageSize
+		match._overlap = CGFloat(getFloat64())
 
 		let count = getInt32()
 		for i in 0 ..< count {

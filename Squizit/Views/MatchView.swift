@@ -18,7 +18,11 @@ class MatchView : UIView {
 		}
 	}
 
-	var player:Int?
+	var player:Int? {
+		didSet {
+			setNeedsDisplay()
+		}
+	}
 
 	private var _controllers:[DrawingInputController] = []
 	private var _tracking:Bool = false
@@ -29,14 +33,39 @@ class MatchView : UIView {
 		super.init( coder: aDecoder )
 	}
 
+	func rectForPlayer( maybeIndex:Int? ) -> CGRect? {
+
+		if let match = self.match {
+			if let index = maybeIndex {
+				return match.rectForPlayer(index)
+			}
+		}
+
+		return nil
+	}
+
 	// MARK: UIView Overrides
 
 	override func drawRect(rect: CGRect) {
 		let ctx = UIGraphicsGetCurrentContext()
 		if let match = self.match {
-			for (i,drawing) in enumerate(match.drawings) {
+			let drawings = enumerate(match.drawings)
+
+			// paint each drawing
+			for (i,drawing) in drawings {
 				let transform = match.transforms[i]
 				_controllers[i].draw(ctx)
+			}
+
+			// now paint shields
+			if let player = self.player {
+				UIColor.redColor().colorWithAlphaComponent(0.75).set()
+				for (i,drawing) in drawings {
+					if i != player {
+						let r = rectForPlayer(i)!
+						UIBezierPath(rect: r).fill()
+					}
+				}
 			}
 		}
 	}
@@ -48,13 +77,9 @@ class MatchView : UIView {
 		}
 
 		if let player = self.player {
-			if let rect = rectForPlayer(player) {
-				let location = touches.anyObject().locationInView(self)
-				if rect.contains(location) {
-					_controllers[player].touchBegan(location)
-					_tracking = true
-				}
-			}
+			let location = touches.anyObject().locationInView(self)
+			_controllers[player].touchBegan(location)
+			_tracking = true
 		}
 	}
 
@@ -84,17 +109,6 @@ class MatchView : UIView {
 
 
 	// MARK: Private
-
-	private func rectForPlayer( index:Int ) -> CGRect? {
-
-		if match == nil {
-			return nil
-		}
-
-		let firstDrawing = match!.drawings.first!
-		let firstRect = CGRect(x: 0, y: 0, width: firstDrawing.size.width, height: firstDrawing.size.height)
-		return CGRectApplyAffineTransform(firstRect, match!.transforms[index])
-	}
 
 	private func configure(){
 		_controllers = []
