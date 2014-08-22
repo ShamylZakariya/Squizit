@@ -20,13 +20,16 @@ class DrawingToolSelector : UIControl {
 	}
 
 	private var _tiles:[UIView] = []
+	private var _highlighter:UIView!
 
 	required init(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
+		commonInit()
 	}
 
 	override init(frame: CGRect) {
 		super.init(frame: frame)
+		commonInit()
 	}
 
 	var margin:CGFloat = 10 {
@@ -85,14 +88,11 @@ class DrawingToolSelector : UIControl {
 				layoutHorizontal()
 		}
 
-		// cause tile's layer to appear circular when a background color is applied
-		for tile in _tiles {
-			tile.layer.cornerRadius = min( tile.bounds.width, tile.bounds.height ) / 2
-		}
+		positionHighlighter()
 	}
 
 	override func tintColorDidChange() {
-		updateTileAppearance()
+		_highlighter.layer.backgroundColor = tintColor.colorWithAlphaComponent(0.25).CGColor
 	}
 
 	override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
@@ -133,6 +133,16 @@ class DrawingToolSelector : UIControl {
 		}
 	}
 
+	func positionHighlighter() {
+		if let idx = selectedToolIndex {
+			_highlighter.frame = _tiles[idx].frame
+			_highlighter.alpha = 1
+			_highlighter.layer.cornerRadius = min( _highlighter.frame.width, _highlighter.frame.height ) / 2
+		} else {
+			_highlighter.alpha = 0
+		}
+	}
+
 	func tileTapped( tgr:UITapGestureRecognizer ) {
 
 		for (i,tile) in enumerate(_tiles) {
@@ -147,29 +157,31 @@ class DrawingToolSelector : UIControl {
 	}
 
 	func selectedToolIndexDidChange() {
-		updateTileAppearance()
+
+		let duration:NSTimeInterval = 0.25
+		let delay:NSTimeInterval = 0
+		let damping:CGFloat = 0.4
+		let initialSpringVelocity:CGFloat = 0
+		let options:UIViewAnimationOptions = UIViewAnimationOptions(0)
+
+		UIView.animateWithDuration(duration,
+			delay: delay,
+			usingSpringWithDamping: damping,
+			initialSpringVelocity: initialSpringVelocity,
+			options: options,
+			animations: { [unowned self] () -> Void in
+				self.positionHighlighter()
+			},
+			completion: nil)
+
 		sendActionsForControlEvents( UIControlEvents.ValueChanged )
 	}
 
-	func updateTileAppearance() {
-		if let idx = selectedToolIndex {
-			for (i,tile) in enumerate(_tiles) {
-				setTileHighlighted(tile, highlighted: i == idx)
-			}
-		} else {
-			for tile in _tiles {
-				setTileHighlighted(tile, highlighted: false)
-			}
-		}
+	private func commonInit() {
+		_highlighter = UIView(frame: CGRectZero)
+		_highlighter.opaque = false
+		_highlighter.alpha = 1
+		addSubview(_highlighter)
 	}
-
-	func setTileHighlighted( tile:UIView, highlighted:Bool ) {
-		if highlighted {
-			tile.layer.backgroundColor = tintColor.colorWithAlphaComponent(0.25).CGColor
-		} else {
-			tile.layer.backgroundColor = UIColor.clearColor().CGColor
-		}
-	}
-
 
 }

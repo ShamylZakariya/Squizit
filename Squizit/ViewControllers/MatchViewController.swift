@@ -9,6 +9,22 @@
 import Foundation
 import UIKit
 
+extension CGRect {
+
+	func rectByAddingTopMargin( m:CGFloat ) ->CGRect {
+		return CGRect(x: origin.x, y: origin.y + m, width: size.width, height: size.height - m )
+	}
+
+	func rectByAddingBottomMargin( m:CGFloat ) ->CGRect {
+		return CGRect(x: origin.x, y: origin.y, width: size.width, height: size.height - m )
+	}
+
+	func rectByAddingMargins( topMargin:CGFloat, bottomMargin:CGFloat ) ->CGRect {
+		return CGRect(x: origin.x, y: origin.y + topMargin, width: size.width, height: size.height - topMargin - bottomMargin )
+	}
+
+}
+
 class MatchViewController : UIViewController {
 
 	@IBOutlet var matchView: MatchView!
@@ -84,9 +100,21 @@ class MatchViewController : UIViewController {
 				matchDone()
 			}
 
-			UIView.animateWithDuration(0.3, animations: { [unowned self] () -> Void in
-				self.layoutSubviewsForCurrentMatchState()
-			})
+			let duration:NSTimeInterval = 0.7
+			let delay:NSTimeInterval = 0
+			let damping:CGFloat = 0.7
+			let initialSpringVelocity:CGFloat = 0
+			let options:UIViewAnimationOptions = UIViewAnimationOptions(0)
+
+			UIView.animateWithDuration(duration,
+				delay: delay,
+				usingSpringWithDamping: damping,
+				initialSpringVelocity: initialSpringVelocity,
+				options: options,
+				animations: { [unowned self] () -> Void in
+					self.layoutSubviewsForCurrentMatchState()
+				},
+				completion: nil)
 		}
 	}
 
@@ -231,22 +259,20 @@ class MatchViewController : UIViewController {
 			shieldViews[0].hidden = false
 			shieldViews[1].hidden = true
 			shieldViews[1].frame = CGRectZero
-			shieldViews[0].topMargin = 0
-			shieldViews[0].bottomMargin = 0
 
 			switch currentPlayer {
 
 				case 0:
 					toolSelectorRect = CGRect(x: 0, y: bounds.midY, width: bounds.width, height: bounds.height/4)
 					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: bounds.midY + bounds.height/4 + bounds.height/8 )
-					shieldViews[0].frame = matchView.rectForPlayer(1)!
-					shieldViews[0].topMargin = margin
+					shieldViews[0].frame = matchView.rectForPlayer(1)!.rectByAddingTopMargin(margin)
+					//shieldViews[0].topMargin = margin
 
 				case 1:
 					toolSelectorRect = CGRect(x: 0, y: bounds.midY/2, width: bounds.width, height: bounds.height/4)
 					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: bounds.height/8 )
-					shieldViews[0].frame = matchView.rectForPlayer(0)!
-					shieldViews[0].bottomMargin = margin
+					shieldViews[0].frame = matchView.rectForPlayer(0)!.rectByAddingBottomMargin(margin)
+					//shieldViews[0].bottomMargin = margin
 
 				default: break;
 			}
@@ -270,10 +296,6 @@ class MatchViewController : UIViewController {
 
 			shieldViews[0].hidden = false
 			shieldViews[1].hidden = false
-			shieldViews[0].topMargin = 0
-			shieldViews[0].bottomMargin = 0
-			shieldViews[1].topMargin = 0
-			shieldViews[1].bottomMargin = 0
 
 			switch currentPlayer {
 
@@ -281,26 +303,26 @@ class MatchViewController : UIViewController {
 					// place controls over middle third
 					toolSelectorRect = CGRect(x: 0, y: thirdHeight, width: bounds.width, height: sixthHeight)
 					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: thirdHeight + 1.5 * sixthHeight )
-					shieldViews[0].frame = matchView.rectForPlayer(1)!
-					shieldViews[0].topMargin = margin
+					shieldViews[0].frame = matchView.rectForPlayer(1)!.rectByAddingTopMargin(margin)
+					//shieldViews[0].topMargin = margin
 					shieldViews[1].frame = matchView.rectForPlayer(2)!
 
 				case 1:
 					// place controls over bottom third
 					toolSelectorRect = CGRect(x: 0, y: twoThirdsHeight, width: bounds.width, height: sixthHeight)
 					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: twoThirdsHeight + 1.5 * sixthHeight )
-					shieldViews[0].frame = matchView.rectForPlayer(0)!
-					shieldViews[0].bottomMargin = margin
-					shieldViews[1].frame = matchView.rectForPlayer(2)!
-					shieldViews[1].topMargin = margin
+					shieldViews[0].frame = matchView.rectForPlayer(0)!.rectByAddingBottomMargin(margin)
+					//shieldViews[0].bottomMargin = margin
+					shieldViews[1].frame = matchView.rectForPlayer(2)!.rectByAddingTopMargin(margin)
+					//shieldViews[1].topMargin = margin
 
 				case 2:
 					// place controls over middle third
 					toolSelectorRect = CGRect(x: 0, y: thirdHeight, width: bounds.width, height: sixthHeight)
 					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: thirdHeight + 1.5 * sixthHeight )
 					shieldViews[0].frame = matchView.rectForPlayer(0)!
-					shieldViews[1].frame = matchView.rectForPlayer(1)!
-					shieldViews[1].bottomMargin = margin
+					shieldViews[1].frame = matchView.rectForPlayer(1)!.rectByAddingBottomMargin(margin)
+					//shieldViews[1].bottomMargin = margin
 
 				default: break;
 			}
