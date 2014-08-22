@@ -41,7 +41,7 @@ class RootViewController : UIViewController {
 
 			let matchVC = segue.destinationViewController as MatchViewController
 			let screenBounds = UIScreen.mainScreen().bounds
-			matchVC.match = Match(players: players, stageSize: CGSize(width: screenBounds.width, height: screenBounds.height), overlap: 8)
+			matchVC.match = Match(players: players, stageSize: CGSize(width: screenBounds.width, height: screenBounds.height), overlap: 4)
 			matchVC.player = 0
 			matchVC.fill = Fill.Pencil
 		}

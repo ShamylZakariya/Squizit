@@ -26,7 +26,7 @@ class Match {
 
 	init(){}
 
-	init( players:Int, stageSize:CGSize, overlap:CGFloat = 10 ){
+	init( players:Int, stageSize:CGSize, overlap:CGFloat ){
 
 		let rowHeight:CGFloat = CGFloat(round(stageSize.height / CGFloat(players)))
 		_stageSize = stageSize
@@ -45,6 +45,7 @@ class Match {
 
 	var drawings:[Drawing] { return _drawings }
 	var transforms:[CGAffineTransform] { return _transforms }
+	var overlap:CGFloat { return _overlap }
 
 	func rectForPlayer( player:Int ) -> CGRect {
 		let rowHeight:CGFloat = CGFloat(round(_stageSize.height / CGFloat(_drawings.count)))

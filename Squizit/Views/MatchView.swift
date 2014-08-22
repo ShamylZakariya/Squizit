@@ -56,17 +56,6 @@ class MatchView : UIView {
 				let transform = match.transforms[i]
 				_controllers[i].draw(ctx)
 			}
-
-			// now paint shields
-			if let player = self.player {
-				UIColor.redColor().colorWithAlphaComponent(0.75).set()
-				for (i,drawing) in drawings {
-					if i != player {
-						let r = rectForPlayer(i)!
-						UIBezierPath(rect: r).fill()
-					}
-				}
-			}
 		}
 	}
 
