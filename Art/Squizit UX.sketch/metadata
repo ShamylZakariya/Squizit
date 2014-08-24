@@ -9,9 +9,13 @@
 	<key>commit</key>
 	<string>104f8b8798002207eebbbee810c02306c5ce85c9</string>
 	<key>fonts</key>
-	<array/>
+	<array>
+		<string>Baskerville-Italic</string>
+		<string>NeutraText-Book</string>
+		<string>Avenir-Light</string>
+	</array>
 	<key>length</key>
-	<integer>3348</integer>
+	<integer>1087767</integer>
 	<key>version</key>
 	<integer>37</integer>
 </dict>

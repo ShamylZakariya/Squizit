@@ -48,7 +48,8 @@ class SquizitThemeButton : UIButton {
 		titleLabel.font = UIFont(name: "Avenir-Light", size: UIFont.buttonFontSize())
 		layer.cornerRadius = 0
 		layer.borderWidth = 1
-		layer.borderColor = self.tintColor.CGColor
+		layer.backgroundColor = UIColor(white: 0.19, alpha: 0.2).CGColor
+		layer.borderColor = self.tintColor.colorWithAlphaComponent(0.2).CGColor
 	}
 
 }

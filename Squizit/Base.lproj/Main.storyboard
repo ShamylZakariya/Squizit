@@ -12,78 +12,74 @@
                         <viewControllerLayoutGuide type="top" id="cPC-3C-GVa"/>
                         <viewControllerLayoutGuide type="bottom" id="nOw-Ll-IFc"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="dYp-Yh-uXK">
+                    <view key="view" contentMode="scaleToFill" id="dYp-Yh-uXK" customClass="RootView" customModule="Squizit" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oz0-iv-EOF">
-                                <rect key="frame" x="156" y="219" width="289" height="161"/>
+                            <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="root-border" translatesAutoresizingMaskIntoConstraints="NO" id="9d5-o7-f32">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            </imageView>
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iAQ-zh-NXo">
+                                <rect key="frame" x="24" y="58" width="552" height="483"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yyH-xU-eFZ" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="111" width="249" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="1X3-CA-XeN"/>
-                                            <constraint firstAttribute="width" constant="249" id="mQj-bP-Hww"/>
-                                        </constraints>
-                                        <state key="normal" title="Gallery">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ppa-Nb-wo9" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="58" width="249" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="249" id="i14-BX-Wkv"/>
-                                            <constraint firstAttribute="height" constant="30" id="sO1-vl-VOe"/>
-                                        </constraints>
-                                        <state key="normal" title="Three Players">
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="91w-da-Nqx" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="152" y="191" width="256" height="65"/>
+                                        <state key="normal" title="FOR TWO">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="2Yj-yc-FrP" kind="presentation" modalPresentationStyle="fullScreen" id="wMr-kO-UNO"/>
+                                            <segue destination="2Yj-yc-FrP" kind="presentation" id="7sc-b3-6yH"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LcU-F2-TBW" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="20" width="249" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="k6s-nJ-dbw"/>
-                                            <constraint firstAttribute="width" constant="249" id="uaQ-Ef-oGj"/>
-                                        </constraints>
-                                        <state key="normal" title="Two Players">
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rGO-wl-LMv" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="152" y="276" width="256" height="65"/>
+                                        <state key="normal" title="OR THREE">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="2Yj-yc-FrP" kind="presentation" modalPresentationStyle="fullScreen" id="dQe-Zm-D19"/>
+                                            <segue destination="2Yj-yc-FrP" kind="presentation" id="fbA-qo-xxm"/>
                                         </connections>
                                     </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="root-or" translatesAutoresizingMaskIntoConstraints="NO" id="rHq-0U-mAh">
+                                        <rect key="frame" x="179" y="371" width="195" height="13"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NFM-Zv-8Ul" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="148" y="413" width="256" height="65"/>
+                                        <state key="normal" title="PERUSE THE GALLERY">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="root-title" translatesAutoresizingMaskIntoConstraints="NO" id="eyv-id-0vb">
+                                        <rect key="frame" x="132" y="27" width="289" height="61"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="root-subhead" translatesAutoresizingMaskIntoConstraints="NO" id="IxX-g1-QXr">
+                                        <rect key="frame" x="196" y="148" width="161" height="19"/>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="ppa-Nb-wo9" firstAttribute="top" secondItem="LcU-F2-TBW" secondAttribute="bottom" constant="8" id="6Mc-MR-VD9"/>
-                                    <constraint firstAttribute="height" constant="161" id="Bnn-vp-BKO"/>
-                                    <constraint firstItem="LcU-F2-TBW" firstAttribute="leading" secondItem="oz0-iv-EOF" secondAttribute="leading" constant="20" id="EW2-Ue-MjU"/>
-                                    <constraint firstItem="yyH-xU-eFZ" firstAttribute="top" secondItem="ppa-Nb-wo9" secondAttribute="bottom" constant="23" id="Nnd-R0-cEh"/>
-                                    <constraint firstAttribute="trailing" secondItem="ppa-Nb-wo9" secondAttribute="trailing" constant="20" id="QUp-MN-kSG"/>
-                                    <constraint firstAttribute="width" constant="289" id="R7Y-xD-dPr"/>
-                                    <constraint firstItem="LcU-F2-TBW" firstAttribute="top" secondItem="oz0-iv-EOF" secondAttribute="top" constant="20" id="RN3-pO-kuQ"/>
-                                    <constraint firstAttribute="trailing" secondItem="yyH-xU-eFZ" secondAttribute="trailing" constant="20" id="WeD-eW-g3A"/>
-                                    <constraint firstAttribute="trailing" secondItem="LcU-F2-TBW" secondAttribute="trailing" constant="20" id="dgS-HA-8ee"/>
-                                    <constraint firstItem="yyH-xU-eFZ" firstAttribute="leading" secondItem="oz0-iv-EOF" secondAttribute="leading" constant="20" id="eQH-6x-FWu"/>
-                                    <constraint firstAttribute="bottom" secondItem="yyH-xU-eFZ" secondAttribute="bottom" constant="20" id="uL2-ul-hmL"/>
-                                    <constraint firstItem="ppa-Nb-wo9" firstAttribute="leading" secondItem="oz0-iv-EOF" secondAttribute="leading" constant="20" id="zid-hh-AEN"/>
+                                    <constraint firstAttribute="width" constant="552" id="PzZ-EM-duB"/>
+                                    <constraint firstAttribute="height" constant="483" id="ktL-G8-0SV"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="oz0-iv-EOF" secondAttribute="centerX" id="LM2-xG-xGQ"/>
-                            <constraint firstAttribute="centerY" secondItem="oz0-iv-EOF" secondAttribute="centerY" id="okW-0y-lDh"/>
+                            <constraint firstItem="nOw-Ll-IFc" firstAttribute="top" secondItem="9d5-o7-f32" secondAttribute="bottom" id="JbL-Sa-cur"/>
+                            <constraint firstAttribute="trailing" secondItem="9d5-o7-f32" secondAttribute="trailing" id="JuI-ed-Y61"/>
+                            <constraint firstAttribute="centerY" secondItem="iAQ-zh-NXo" secondAttribute="centerY" id="N22-A9-rLe"/>
+                            <constraint firstItem="9d5-o7-f32" firstAttribute="leading" secondItem="dYp-Yh-uXK" secondAttribute="leading" id="XfZ-TZ-bKn"/>
+                            <constraint firstAttribute="centerX" secondItem="iAQ-zh-NXo" secondAttribute="centerX" id="eGv-dj-LfV"/>
+                            <constraint firstItem="9d5-o7-f32" firstAttribute="top" secondItem="dYp-Yh-uXK" secondAttribute="top" id="xnJ-4w-836"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="1PA-Il-3I5"/>
                     <connections>
-                        <outlet property="galleryButton" destination="yyH-xU-eFZ" id="AeQ-Xm-UtR"/>
-                        <outlet property="threePlayersButton" destination="ppa-Nb-wo9" id="tMF-fd-tBd"/>
-                        <outlet property="twoPlayersButton" destination="LcU-F2-TBW" id="eT9-tU-oW8"/>
+                        <outlet property="borderView" destination="9d5-o7-f32" id="iqS-tT-VKV"/>
+                        <outlet property="contentView" destination="iAQ-zh-NXo" id="7ZL-yX-Aju"/>
+                        <outlet property="galleryButton" destination="NFM-Zv-8Ul" id="2dV-KS-jND"/>
+                        <outlet property="threePlayersButton" destination="rGO-wl-LMv" id="uwr-7G-ObW"/>
+                        <outlet property="twoPlayersButton" destination="91w-da-Nqx" id="wXJ-Y5-FmO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hj4-9L-CMp" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -125,7 +121,13 @@
             <point key="canvasLocation" x="1819" y="698"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="root-border" width="768" height="1024"/>
+        <image name="root-or" width="195" height="13"/>
+        <image name="root-subhead" width="161" height="19"/>
+        <image name="root-title" width="289" height="61"/>
+    </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="wMr-kO-UNO"/>
+        <segue reference="fbA-qo-xxm"/>
     </inferredMetricsTieBreakers>
 </document>
