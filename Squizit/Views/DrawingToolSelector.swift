@@ -9,6 +9,32 @@
 import Foundation
 import UIKit
 
+class InactiveTileBackgroundView : UIView {
+
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		self.opaque = false
+	}
+
+	required init(coder aDecoder: NSCoder) {
+		super.init( coder: aDecoder )
+		self.opaque = false
+	}
+
+	override func tintColorDidChange() {
+		setNeedsDisplay()
+	}
+
+	override func drawRect(rect: CGRect) {
+		tintColor.colorWithAlphaComponent(0.5).set()
+		let border = UIBezierPath(ovalInRect: self.bounds.rectByInsetting(dx: 1, dy: 1).rectByOffsetting(dx: 0.5, dy: 0.5))
+		border.lineWidth = 1
+		border.setLineDash([3,3], count: 2, phase: 0)
+		border.stroke()
+	}
+
+}
+
 /**
 	Emits UIControlEvents.ValueChanged when selectedToolIndex changes
 */
@@ -20,6 +46,7 @@ class DrawingToolSelector : UIControl {
 	}
 
 	private var _tiles:[UIView] = []
+	private var _inactiveTileBackgrounds:[InactiveTileBackgroundView] = []
 	private var _highlighter:UIView!
 
 	required init(coder aDecoder: NSCoder) {
@@ -32,7 +59,7 @@ class DrawingToolSelector : UIControl {
 		commonInit()
 	}
 
-	var margin:CGFloat = 10 {
+	var margin:CGFloat = 40 {
 		didSet {
 			setNeedsLayout()
 		}
@@ -57,6 +84,11 @@ class DrawingToolSelector : UIControl {
 	}
 
 	func addTool( name:String, icon:UIImage ) {
+
+		var bg = InactiveTileBackgroundView(frame: CGRectZero)
+		bg.userInteractionEnabled = false
+		addSubview(bg)
+		_inactiveTileBackgrounds.append(bg)
 
 		var tile = UIImageView(frame: CGRectZero)
 		tile.image = icon.imageWithRenderingMode(.AlwaysTemplate)
@@ -90,7 +122,7 @@ class DrawingToolSelector : UIControl {
 		}
 
 		UIView.performWithoutAnimation { () -> Void in
-			self.positionHighlighter()
+			self.updateHighlightState()
 		}
 	}
 
@@ -117,8 +149,9 @@ class DrawingToolSelector : UIControl {
 		var x = bounds.width / 2 - size/2
 		var y = height/2 - contentHeight/2
 
-		for button in _tiles {
-			button.frame = CGRect(x: x, y: y, width: size, height: size).integerRect
+		for (i,tile) in enumerate(_tiles) {
+			tile.frame = CGRect(x: x, y: y, width: size, height: size).integerRect
+			_inactiveTileBackgrounds[i].frame = tile.frame
 			y += margin + size
 		}
 	}
@@ -130,19 +163,28 @@ class DrawingToolSelector : UIControl {
 		var x = width/2 - contentWidth/2
 		var y = bounds.height/2 - size/2
 
-		for button in _tiles {
-			button.frame = CGRect(x: x, y: y, width: size, height: size).integerRect
+		for (i,tile) in enumerate(_tiles) {
+			tile.frame = CGRect(x: x, y: y, width: size, height: size).integerRect
+			_inactiveTileBackgrounds[i].frame = tile.frame
 			x += margin + size
 		}
 	}
 
-	func positionHighlighter() {
+	func updateHighlightState() {
 		if let idx = selectedToolIndex {
 			_highlighter.frame = _tiles[idx].frame
 			_highlighter.alpha = 1
 			_highlighter.layer.cornerRadius = min( _highlighter.frame.width, _highlighter.frame.height ) / 2
+
+			for ( i,bg ) in enumerate(_inactiveTileBackgrounds) {
+				bg.alpha = i==idx ? 0 : 1
+			}
+
 		} else {
 			_highlighter.alpha = 0
+			for bg in _inactiveTileBackgrounds {
+				bg.alpha = 1
+			}
 		}
 	}
 
@@ -173,7 +215,7 @@ class DrawingToolSelector : UIControl {
 			initialSpringVelocity: initialSpringVelocity,
 			options: options,
 			animations: { [unowned self] () -> Void in
-				self.positionHighlighter()
+				self.updateHighlightState()
 			},
 			completion: nil)
 
