@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "tool-brush-icon.png"
+      "filename" : "tool-brush.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "tool-brush-icon@2x.png"
+      "filename" : "tool-brush@2x.png"
     }
   ],
   "info" : {

@@ -201,9 +201,9 @@ class MatchViewController : UIViewController {
 
 		toolSelector = DrawingToolSelector(frame: CGRectZero)
 		toolSelector.orientation = .Horizontal
-		toolSelector.addTool("Pencil", icon: UIImage(named: "tool-pen-icon"))
-		toolSelector.addTool("Brush", icon: UIImage(named: "tool-brush-icon"))
-		toolSelector.addTool("Eraser", icon: UIImage(named: "tool-eraser-icon"))
+		toolSelector.addTool("Pencil", icon: UIImage(named: "tool-pencil"))
+		toolSelector.addTool("Brush", icon: UIImage(named: "tool-brush"))
+		toolSelector.addTool("Eraser", icon: UIImage(named: "tool-eraser"))
 		toolSelector.addTarget(self, action: "toolSelected:", forControlEvents: UIControlEvents.ValueChanged)
 		toolSelector.tintColor = UIColor.whiteColor()
 		view.addSubview(toolSelector)
@@ -296,6 +296,8 @@ class MatchViewController : UIViewController {
 
 			shieldViews[0].hidden = false
 			shieldViews[1].hidden = false
+			shieldViews[0].alpha = 1
+			shieldViews[1].alpha = 1
 
 			switch currentPlayer {
 
@@ -303,18 +305,23 @@ class MatchViewController : UIViewController {
 					// place controls over middle third
 					toolSelectorRect = CGRect(x: 0, y: thirdHeight, width: bounds.width, height: sixthHeight)
 					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: thirdHeight + 1.5 * sixthHeight )
-					shieldViews[0].frame = matchView.rectForPlayer(1)!.rectByAddingTopMargin(margin)
-					//shieldViews[0].topMargin = margin
-					shieldViews[1].frame = matchView.rectForPlayer(2)!
+
+					// hide shield 1 off top of screen - it will slide down in case 1
+					var r = matchView.rectForPlayer(0)!
+					r.offset(dx: 0, dy: -r.height )
+					shieldViews[0].frame = r
+
+					// shield 2 takes up bottom 2/3
+					let r1 = matchView.rectForPlayer(1)!.rectByAddingTopMargin(margin)
+					let r2 = matchView.rectForPlayer(2)!
+					shieldViews[1].frame = r1.rectByUnion(r2)
 
 				case 1:
-					// place controls over bottom third
-					toolSelectorRect = CGRect(x: 0, y: twoThirdsHeight, width: bounds.width, height: sixthHeight)
-					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: twoThirdsHeight + 1.5 * sixthHeight )
+					// place controls over top third
+					toolSelectorRect = CGRect(x: 0, y: 0, width: bounds.width, height: sixthHeight)
+					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: sixthHeight + 0.5 * sixthHeight )
 					shieldViews[0].frame = matchView.rectForPlayer(0)!.rectByAddingBottomMargin(margin)
-					//shieldViews[0].bottomMargin = margin
 					shieldViews[1].frame = matchView.rectForPlayer(2)!.rectByAddingTopMargin(margin)
-					//shieldViews[1].topMargin = margin
 
 				case 2:
 					// place controls over middle third
@@ -322,7 +329,16 @@ class MatchViewController : UIViewController {
 					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: thirdHeight + 1.5 * sixthHeight )
 					shieldViews[0].frame = matchView.rectForPlayer(0)!
 					shieldViews[1].frame = matchView.rectForPlayer(1)!.rectByAddingBottomMargin(margin)
-					//shieldViews[1].bottomMargin = margin
+
+					// shield 1 takes up top 2/3
+					let r1 = matchView.rectForPlayer(0)!.rectByAddingTopMargin(margin)
+					let r2 = matchView.rectForPlayer(1)!
+					shieldViews[0].frame = r1.rectByUnion(r2)
+
+					// slide shield 2 off bottom of screen
+					var r = matchView.rectForPlayer(2)!.rectByAddingTopMargin(margin)
+					r.offset(dx: 0, dy: r.height )
+					shieldViews[1].frame = r
 
 				default: break;
 			}
@@ -333,21 +349,9 @@ class MatchViewController : UIViewController {
 	}
 
 	private func layoutSubviewsForEndOfMatch() {
-		if let match = self.match {
-			switch match.drawings.count {
-				case 2:
-					let height = shieldViews[0].frame.height
-					shieldViews[0].frame = shieldViews[0].frame.rectByOffsetting(dx: 0, dy: -height)
 
-				case 3:
-					let height = shieldViews[0].frame.height + shieldViews[1].frame.height
-					shieldViews[0].frame = shieldViews[0].frame.rectByOffsetting(dx: 0, dy: -height)
-					shieldViews[1].frame = shieldViews[1].frame.rectByOffsetting(dx: 0, dy: -height)
-
-				default: break;
-			}
-		}
-
+		shieldViews[0].alpha = 0
+		shieldViews[1].alpha = 0
 		toolSelector.alpha = 0
 		turnFinishedButton.alpha = 0
 	}

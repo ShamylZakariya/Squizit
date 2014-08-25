@@ -38,7 +38,7 @@ class DrawingToolSelector : UIControl {
 		}
 	}
 
-	var buttonSize:CGFloat = 44 {
+	var buttonSize:CGFloat = 88 {
 		didSet {
 			setNeedsLayout()
 		}
@@ -62,6 +62,7 @@ class DrawingToolSelector : UIControl {
 		tile.image = icon.imageWithRenderingMode(.AlwaysTemplate)
 		tile.userInteractionEnabled = true
 		tile.multipleTouchEnabled = false
+		tile.contentMode = UIViewContentMode.Center
 
 		var tgr = UITapGestureRecognizer(target: self, action: "tileTapped:")
 		tgr.numberOfTapsRequired = 1
@@ -92,7 +93,7 @@ class DrawingToolSelector : UIControl {
 	}
 
 	override func tintColorDidChange() {
-		_highlighter.layer.backgroundColor = tintColor.colorWithAlphaComponent(0.25).CGColor
+		_highlighter.layer.backgroundColor = tintColor.CGColor
 	}
 
 	override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
@@ -158,9 +159,9 @@ class DrawingToolSelector : UIControl {
 
 	func selectedToolIndexDidChange() {
 
-		let duration:NSTimeInterval = 0.25
+		let duration:NSTimeInterval = 0.5
 		let delay:NSTimeInterval = 0
-		let damping:CGFloat = 0.4
+		let damping:CGFloat = 0.7
 		let initialSpringVelocity:CGFloat = 0
 		let options:UIViewAnimationOptions = UIViewAnimationOptions(0)
 
@@ -173,6 +174,20 @@ class DrawingToolSelector : UIControl {
 				self.positionHighlighter()
 			},
 			completion: nil)
+
+		if let idx = selectedToolIndex {
+			for (i,tile) in enumerate(_tiles) {
+				if i == idx {
+					tile.tintColor = UIColor.blackColor()
+				} else {
+					tile.tintColor = nil
+				}
+			}
+		} else {
+			for tile in _tiles {
+				tile.tintColor = nil
+			}
+		}
 
 		sendActionsForControlEvents( UIControlEvents.ValueChanged )
 	}
