@@ -11,7 +11,7 @@ import UIKit
 
 class MatchShieldView : UIView {
 
-	private var _pattern = UIColor(patternImage: UIImage(named: "cube-background"))
+	private var _pattern = SquizitTheme.gameBackgroundColorPattern()
 	private var _color = UIColor(white: 0.12, alpha: 0.8)
 
 	override init(frame: CGRect) {

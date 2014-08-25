@@ -15,6 +15,14 @@ class SquizitTheme {
 
 	init() {}
 
+	class func gameBackgroundImage() -> UIImage {
+		return UIImage(named: "cube-background")
+	}
+
+	class func gameBackgroundColorPattern() -> UIColor {
+		return UIColor( patternImage: self.gameBackgroundImage() )
+	}
+
 }
 
 class SquizitThemeButton : UIButton {
@@ -50,6 +58,10 @@ class SquizitThemeButton : UIButton {
 		layer.borderWidth = 1
 		layer.backgroundColor = UIColor(white: 0.19, alpha: 0.2).CGColor
 		layer.borderColor = self.tintColor.colorWithAlphaComponent(0.2).CGColor
+	}
+
+	override func intrinsicContentSize() -> CGSize {
+		return CGSize(width: UIViewNoIntrinsicMetric, height: 65)
 	}
 
 }

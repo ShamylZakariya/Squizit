@@ -89,7 +89,9 @@ class DrawingToolSelector : UIControl {
 				layoutHorizontal()
 		}
 
-		positionHighlighter()
+		UIView.performWithoutAnimation { () -> Void in
+			self.positionHighlighter()
+		}
 	}
 
 	override func tintColorDidChange() {

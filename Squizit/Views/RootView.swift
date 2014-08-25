@@ -15,6 +15,6 @@ class RootView : UIView {
 		super.init(coder: aDecoder)
 
 		tintColor = UIColor.whiteColor()
-		backgroundColor = UIColor(patternImage: UIImage(named: "cube-background"))
+		backgroundColor = SquizitTheme.gameBackgroundColorPattern()
 	}
 }

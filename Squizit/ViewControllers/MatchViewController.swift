@@ -28,22 +28,32 @@ extension CGRect {
 class MatchViewController : UIViewController {
 
 	@IBOutlet var matchView: MatchView!
+
 	var toolSelector:DrawingToolSelector!
-	var turnFinishedButton:UIButton!
+	var stepForwardButton:UIButton!
 	var shieldViews:[MatchShieldView] = []
 	var endOfMatchGestureRecognizer:UITapGestureRecognizer!
 
-	var match:Match? {
-		didSet {
-			if matchView != nil {
-				matchView.match = self.match
-			}
-		}
-	}
+	var match:Match?
 
-	var player:Int? {
+	/*
+		current game step
+		if step < numPlayers the match is active ( see matchActive:Bool )
+		if step == numPlayers we're presenting the final drawing to the player
+		if step == numPlayers+1 we're showing the save dialog and exiting
+	*/
+	var step:Int = 0 {
 		didSet {
-			syncToPlayer()
+			if matchActive {
+				matchView.player = self.step
+			} else if step == numPlayers {
+				// enable the
+				endOfMatchGestureRecognizer.enabled = true
+			} else {
+				presentingViewController.dismissViewControllerAnimated(true, completion: nil)
+			}
+
+			syncToMatchState_Animate()
 		}
 	}
 
@@ -55,16 +65,14 @@ class MatchViewController : UIViewController {
 		return 0
 	}
 
-	var fill:Fill = Fill.Pencil {
-		didSet {
-			syncToPlayer()
-		}
+	var matchActive:Bool {
+		return step < numPlayers
 	}
 
 	func undo() {
 		if let match = self.match {
-			if let player = self.player {
-				matchView.controllers[player].undo()
+			if matchActive {
+				matchView.controllers[step].undo()
 			}
 		}
 	}
@@ -72,17 +80,12 @@ class MatchViewController : UIViewController {
 	func clear() {
 
 		if let match = matchView.match {
-			if let player = matchView.player {
-				match.drawings[player].clear()
+			if matchActive {
+				match.drawings[step].clear()
 			}
 		}
 
 		matchView.setNeedsDisplay()
-	}
-
-	func matchDone() {
-		println("Match done!")
-		endOfMatchGestureRecognizer.enabled = true
 	}
 
 	// MARK: Actions & Gestures
@@ -91,31 +94,8 @@ class MatchViewController : UIViewController {
 		clear()
 	}
 
-	dynamic func turnFinished( t:AnyObject ) {
-		if let player = self.player {
-			if player < self.numPlayers - 1 {
-				self.player = player+1
-			} else {
-				self.player = nil
-				matchDone()
-			}
-
-			let duration:NSTimeInterval = 0.7
-			let delay:NSTimeInterval = 0
-			let damping:CGFloat = 0.7
-			let initialSpringVelocity:CGFloat = 0
-			let options:UIViewAnimationOptions = UIViewAnimationOptions(0)
-
-			UIView.animateWithDuration(duration,
-				delay: delay,
-				usingSpringWithDamping: damping,
-				initialSpringVelocity: initialSpringVelocity,
-				options: options,
-				animations: { [unowned self] () -> Void in
-					self.layoutSubviewsForCurrentMatchState()
-				},
-				completion: nil)
-		}
+	dynamic func stepForward( t:AnyObject ) {
+		step++
 	}
 
 	dynamic func swipeLeft( t:UISwipeGestureRecognizer ) {
@@ -135,17 +115,18 @@ class MatchViewController : UIViewController {
 
 	dynamic func toolSelected( sender:DrawingToolSelector ) {
 		if let idx = sender.selectedToolIndex {
+			var fill = Fill.Pencil
 			switch idx {
-				case 0: self.fill = Fill.Pencil
-				case 1: self.fill = Fill.Brush
-				case 2: self.fill = Fill.Eraser
+				case 0: fill = Fill.Pencil
+				case 1: fill = Fill.Brush
+				case 2: fill = Fill.Eraser
 				default: break;
 			}
-		}
-	}
 
-	dynamic func exitMatch( sender:UITapGestureRecognizer ) {
-		presentingViewController.dismissViewControllerAnimated(true, completion: nil)
+			for controller in matchView.controllers {
+				controller.fill = fill
+			}
+		}
 	}
 
 	// MARK: UIKit Overrides
@@ -159,6 +140,13 @@ class MatchViewController : UIViewController {
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		endOfMatchGestureRecognizer.enabled = false
+		matchView.match = match
+		matchView.player = step
+		toolSelector.selectedToolIndex = 0
+	}
+
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
 	}
 
 	override func prefersStatusBarHidden() -> Bool {
@@ -168,8 +156,14 @@ class MatchViewController : UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		view.backgroundColor = SquizitTheme.gameBackgroundColorPattern()
+
 		let paperColor = UIColor( patternImage: UIImage(named: "paper-bg"))
 		matchView.backgroundColor = paperColor
+		matchView.layer.shadowOffset = CGSize(width: 0, height: 3)
+		matchView.layer.shadowColor = UIColor.blackColor().CGColor
+		matchView.layer.shadowOpacity = 0
+		matchView.layer.shadowRadius = 10
 
 		var tgr = UITapGestureRecognizer(target: self, action: "eraseDrawing:")
 		tgr.numberOfTapsRequired = 2
@@ -177,7 +171,7 @@ class MatchViewController : UIViewController {
 		matchView.addGestureRecognizer(tgr)
 
 		// this will be enabled only when the match is complete
-		endOfMatchGestureRecognizer = UITapGestureRecognizer(target: self, action: "exitMatch:")
+		endOfMatchGestureRecognizer = UITapGestureRecognizer(target: self, action: "stepForward:")
 		endOfMatchGestureRecognizer.numberOfTapsRequired = 1
 		endOfMatchGestureRecognizer.enabled = false
 		matchView.addGestureRecognizer(endOfMatchGestureRecognizer)
@@ -210,40 +204,74 @@ class MatchViewController : UIViewController {
 
 		// create the turn-finished button
 
-		turnFinishedButton = SquizitThemeButton.buttonWithType(UIButtonType.Custom) as UIButton
-		turnFinishedButton.setTitle(NSLocalizedString("Next", comment: "UserFinishedRound" ).uppercaseString, forState: UIControlState.Normal)
-		turnFinishedButton.addTarget(self, action: "turnFinished:", forControlEvents: UIControlEvents.TouchUpInside)
-		turnFinishedButton.frame = CGRect(x: 0, y: 0, width: 200, height: 44)
-		turnFinishedButton.tintColor = UIColor.whiteColor()
-		view.addSubview(turnFinishedButton)
-
+		stepForwardButton = SquizitThemeButton.buttonWithType(UIButtonType.Custom) as UIButton
+		stepForwardButton.setTitle(NSLocalizedString("Next", comment: "UserFinishedRound" ).uppercaseString, forState: UIControlState.Normal)
+		stepForwardButton.addTarget(self, action: "stepForward:", forControlEvents: UIControlEvents.TouchUpInside)
+		stepForwardButton.frame = CGRect(x: 0, y: 0, width: 200, height: 44)
+		stepForwardButton.tintColor = UIColor.whiteColor()
+		view.addSubview(stepForwardButton)
 
 		matchView.match = match
-		matchView.player = player
-		toolSelector.selectedToolIndex = 0
+		matchView.player = 0
 	}
 
 	override func viewWillLayoutSubviews() {
-		layoutSubviewsForCurrentMatchState()
+		self.syncToMatchState()
 	}
 
 	// MARK: Private
 
-	private func layoutSubviewsForCurrentMatchState() {
-		if let match = self.match {
-			if let player = self.player {
+	private func syncToMatchState_Animate() {
+		let duration:NSTimeInterval = 0.7
+		let delay:NSTimeInterval = 0
+		let damping:CGFloat = 0.7
+		let initialSpringVelocity:CGFloat = 0
+		let options:UIViewAnimationOptions = UIViewAnimationOptions(0)
 
-				toolSelector.alpha = 1
-				turnFinishedButton.alpha = 1
+		UIView.animateWithDuration(duration,
+			delay: delay,
+			usingSpringWithDamping: damping,
+			initialSpringVelocity: initialSpringVelocity,
+			options: options,
+			animations: { [unowned self] () -> Void in
+				self.syncToMatchState()
+			},
+			completion: nil)
+	}
 
-				switch match.drawings.count {
-					case 2: layoutSubviewsForTwoPlayers(player)
-					case 3: layoutSubviewsForThreePlayers(player)
-					default: break;
-				}
-			} else {
-				layoutSubviewsForEndOfMatch()
+	private func syncToMatchState() {
+
+		if matchActive {
+
+			toolSelector.alpha = 1
+			stepForwardButton.alpha = 1
+			matchView.layer.shadowOpacity = 0
+			matchView.layer.shouldRasterize = false
+
+			switch numPlayers {
+				case 2: layoutSubviewsForTwoPlayers(step)
+				case 3: layoutSubviewsForThreePlayers(step)
+				default: break;
 			}
+
+		} else if step == numPlayers {
+
+			shieldViews[0].alpha = 0
+			shieldViews[1].alpha = 0
+			toolSelector.alpha = 0
+			stepForwardButton.alpha = 0
+
+			let angleRange = drand48() * 2.0 - 1.0
+			let angle = M_PI * 0.00625 * angleRange
+			let scale = CATransform3DMakeScale(0.9, 0.9, 1.0)
+			let rotation = CATransform3DMakeRotation(CGFloat(angle), 0, 0, 1)
+			matchView.layer.transform = CATransform3DConcat(scale, rotation)
+			matchView.layer.shouldRasterize = true
+
+			matchView.layer.shadowOpacity = 1
+
+		} else {
+
 		}
 	}
 
@@ -253,7 +281,7 @@ class MatchViewController : UIViewController {
 			let bounds = view.bounds
 			let margin = 2 * match.overlap
 			var toolSelectorRect = CGRectZero
-			var turnFinishedButtonCenter = CGPointZero
+			var stepForwardButtonCenter = CGPointZero
 
 			// two player game only needs one shield view
 			shieldViews[0].hidden = false
@@ -264,13 +292,13 @@ class MatchViewController : UIViewController {
 
 				case 0:
 					toolSelectorRect = CGRect(x: 0, y: bounds.midY, width: bounds.width, height: bounds.height/4)
-					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: bounds.midY + bounds.height/4 + bounds.height/8 )
+					stepForwardButtonCenter = CGPoint( x: bounds.midX, y: bounds.midY + bounds.height/4 + bounds.height/8 )
 					shieldViews[0].frame = matchView.rectForPlayer(1)!.rectByAddingTopMargin(margin)
 					//shieldViews[0].topMargin = margin
 
 				case 1:
 					toolSelectorRect = CGRect(x: 0, y: bounds.midY/2, width: bounds.width, height: bounds.height/4)
-					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: bounds.height/8 )
+					stepForwardButtonCenter = CGPoint( x: bounds.midX, y: bounds.height/8 )
 					shieldViews[0].frame = matchView.rectForPlayer(0)!.rectByAddingBottomMargin(margin)
 					//shieldViews[0].bottomMargin = margin
 
@@ -278,7 +306,7 @@ class MatchViewController : UIViewController {
 			}
 
 			toolSelector.frame = toolSelectorRect
-			turnFinishedButton.center = turnFinishedButtonCenter
+			stepForwardButton.center = stepForwardButtonCenter
 
 		}
 	}
@@ -289,7 +317,7 @@ class MatchViewController : UIViewController {
 			let bounds = view.bounds
 			let margin = 2 * match.overlap
 			var toolSelectorRect = CGRectZero
-			var turnFinishedButtonCenter = CGPointZero
+			var stepForwardButtonCenter = CGPointZero
 			var thirdHeight = bounds.size.height / 3.0
 			var twoThirdsHeight = bounds.size.height * 2.0 / 3.0
 			var sixthHeight = thirdHeight / 2.0
@@ -304,7 +332,7 @@ class MatchViewController : UIViewController {
 				case 0:
 					// place controls over middle third
 					toolSelectorRect = CGRect(x: 0, y: thirdHeight, width: bounds.width, height: sixthHeight)
-					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: thirdHeight + 1.5 * sixthHeight )
+					stepForwardButtonCenter = CGPoint( x: bounds.midX, y: thirdHeight + 1.5 * sixthHeight )
 
 					// hide shield 1 off top of screen - it will slide down in case 1
 					var r = matchView.rectForPlayer(0)!
@@ -319,14 +347,14 @@ class MatchViewController : UIViewController {
 				case 1:
 					// place controls over top third
 					toolSelectorRect = CGRect(x: 0, y: 0, width: bounds.width, height: sixthHeight)
-					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: sixthHeight + 0.5 * sixthHeight )
+					stepForwardButtonCenter = CGPoint( x: bounds.midX, y: sixthHeight + 0.5 * sixthHeight )
 					shieldViews[0].frame = matchView.rectForPlayer(0)!.rectByAddingBottomMargin(margin)
 					shieldViews[1].frame = matchView.rectForPlayer(2)!.rectByAddingTopMargin(margin)
 
 				case 2:
 					// place controls over middle third
 					toolSelectorRect = CGRect(x: 0, y: thirdHeight, width: bounds.width, height: sixthHeight)
-					turnFinishedButtonCenter = CGPoint( x: bounds.midX, y: thirdHeight + 1.5 * sixthHeight )
+					stepForwardButtonCenter = CGPoint( x: bounds.midX, y: thirdHeight + 1.5 * sixthHeight )
 					shieldViews[0].frame = matchView.rectForPlayer(0)!
 					shieldViews[1].frame = matchView.rectForPlayer(1)!.rectByAddingBottomMargin(margin)
 
@@ -344,26 +372,7 @@ class MatchViewController : UIViewController {
 			}
 
 			toolSelector.frame = toolSelectorRect
-			turnFinishedButton.center = turnFinishedButtonCenter
+			stepForwardButton.center = stepForwardButtonCenter
 		}
 	}
-
-	private func layoutSubviewsForEndOfMatch() {
-
-		shieldViews[0].alpha = 0
-		shieldViews[1].alpha = 0
-		toolSelector.alpha = 0
-		turnFinishedButton.alpha = 0
-	}
-
-	private func syncToPlayer() {
-		if matchView != nil {
-			matchView.player = self.player
-
-			for controller in matchView.controllers {
-				controller.fill = self.fill
-			}
-		}
-	}
-
 }
