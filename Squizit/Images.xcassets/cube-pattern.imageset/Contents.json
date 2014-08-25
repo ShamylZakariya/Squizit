@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "paper-bg.png"
+      "filename" : "cube-pattern.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "paper-bg@2x.png"
+      "filename" : "cube-pattern@2x.png"
     }
   ],
   "info" : {

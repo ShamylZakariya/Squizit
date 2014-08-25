@@ -156,10 +156,9 @@ class MatchViewController : UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		view.backgroundColor = SquizitTheme.gameBackgroundColorPattern()
+		view.backgroundColor = SquizitTheme.matchBackgroundColor()
 
-		let paperColor = UIColor( patternImage: UIImage(named: "paper-bg"))
-		matchView.backgroundColor = paperColor
+		matchView.backgroundColor = SquizitTheme.paperBackgroundColor()
 		matchView.layer.shadowOffset = CGSize(width: 0, height: 3)
 		matchView.layer.shadowColor = UIColor.blackColor().CGColor
 		matchView.layer.shadowOpacity = 0

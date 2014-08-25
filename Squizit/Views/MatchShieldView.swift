@@ -11,9 +11,6 @@ import UIKit
 
 class MatchShieldView : UIView {
 
-	private var _pattern = SquizitTheme.gameBackgroundColorPattern()
-	private var _color = UIColor(white: 0.12, alpha: 0.8)
-
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		commonInit()
@@ -30,17 +27,10 @@ class MatchShieldView : UIView {
 		return false
 	}
 
-	override func drawRect(rect: CGRect) {
-		_pattern.set()
-		UIRectFillUsingBlendMode(self.bounds, kCGBlendModeNormal)
-
-		_color.set()
-		UIRectFillUsingBlendMode(self.bounds, kCGBlendModeNormal)
-	}
-
 	// MARK: Private
 
 	private func commonInit() {
+		backgroundColor = SquizitTheme.matchShieldBackgroundColor()
 		opaque = true
 		contentMode = UIViewContentMode.Redraw
 		self.layer.shadowOffset = CGSize(width: 0, height: 0)

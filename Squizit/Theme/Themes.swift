@@ -10,17 +10,36 @@ import Foundation
 import UIKit
 
 
-
 class SquizitTheme {
 
 	init() {}
 
-	class func gameBackgroundImage() -> UIImage {
-		return UIImage(named: "cube-background")
+	class func cubeBackgroundImage() -> UIImage {
+		return UIImage(named: "cube-pattern")
 	}
 
-	class func gameBackgroundColorPattern() -> UIColor {
-		return UIColor( patternImage: self.gameBackgroundImage() )
+	class func leatherBackgroundImage() -> UIImage {
+		return UIImage(named: "leather-pattern")
+	}
+
+	class func paperBackgroundImage() -> UIImage {
+		return UIImage(named: "paper-pattern")
+	}
+
+	class func rootScreenBackgroundColor() -> UIColor {
+		return UIColor( patternImage: self.cubeBackgroundImage() )
+	}
+
+	class func paperBackgroundColor() -> UIColor {
+		return UIColor( patternImage: self.paperBackgroundImage() )
+	}
+
+	class func matchBackgroundColor() -> UIColor {
+		return UIColor( patternImage: self.leatherBackgroundImage() )
+	}
+
+	class func matchShieldBackgroundColor() -> UIColor {
+		return UIColor( patternImage: self.leatherBackgroundImage() )
 	}
 
 }
