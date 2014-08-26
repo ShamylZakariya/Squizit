@@ -18,11 +18,8 @@ enum Fill {
 
 	func set( backgroundColor:UIColor? ) {
 		switch self {
-			case .Pencil:
+			case .Pencil, .Brush:
 				UIColor.blackColor().set()
-
-			case .Brush:
-				UIColor.blackColor().colorWithAlphaComponent(0.0625).set()
 
 			case .Eraser:
 				let c = backgroundColor != nil ? backgroundColor : UIColor.whiteColor()
@@ -34,10 +31,10 @@ enum Fill {
 		get {
 			switch self {
 				case .Pencil:
-					return (0.5,2.0)
+					return (0.5,4.0)
 
 				case .Brush:
-					return (1.0,40.0)
+					return (1.0,16.0)
 
 				case .Eraser:
 					return (20.0,20.0)
