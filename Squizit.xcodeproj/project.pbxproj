@@ -29,7 +29,7 @@
 		63EBB83819A65C45003C3EC2 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EF19A65B4500581DE8 /* Geometry.swift */; };
 		63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB83A19A78BAA003C3EC2 /* MatchShieldView.swift */; };
 		63EBB83D19A97BFE003C3EC2 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB83C19A97BFD003C3EC2 /* RootView.swift */; };
-		63EBB83F19AB821D003C3EC2 /* Notes.md in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB83E19AB821D003C3EC2 /* Notes.md */; };
+		63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */; };
 		63FDE7321998249A0006B7E4 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +88,7 @@
 		63EBB83A19A78BAA003C3EC2 /* MatchShieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchShieldView.swift; sourceTree = "<group>"; };
 		63EBB83C19A97BFD003C3EC2 /* RootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		63EBB83E19AB821D003C3EC2 /* Notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Notes.md; sourceTree = "<group>"; };
+		63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToGalleryViewController.swift; sourceTree = "<group>"; };
 		63FDE7311998249A0006B7E4 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -204,6 +205,7 @@
 			children = (
 				6350C5E919A1727B008CE4F5 /* MatchViewController.swift */,
 				6350C5EB19A24790008CE4F5 /* RootViewController.swift */,
+				63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -352,7 +354,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63EBB83F19AB821D003C3EC2 /* Notes.md in Sources */,
 				63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */,
 				636CEA24199E586400BEBF53 /* DrawingInputController.swift in Sources */,
 				636CEA29199F251200BEBF53 /* Match.swift in Sources */,
@@ -368,6 +369,7 @@
 				63BBECB619967ACC00F6E2B3 /* Drawing.swift in Sources */,
 				636CEA2B199F25F000BEBF53 /* MatchView.swift in Sources */,
 				63EBB83D19A97BFE003C3EC2 /* RootView.swift in Sources */,
+				63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

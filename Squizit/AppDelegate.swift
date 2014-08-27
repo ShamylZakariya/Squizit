@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		// fire up the theme
 		theme = SquizitTheme()
+		window?.tintColor = SquizitTheme.tintColor()
 
 		return true
 	}

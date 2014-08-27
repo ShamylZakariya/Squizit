@@ -1,6 +1,9 @@
-#Refactoring
+#TODO
 
-MatchViewController should drop the player:Int property for step:Int, which maps as such:
-	- 0 ..< numPlayers -> sets active player
-	- numPlayers -> presents final drawing
-	- numPlayers+1 shows the save dialog and exits
+Drawing lines at 90% opacity looks great... but there's a hairline crack between stroke segments. And since we're drawing at partial opacity we can't stroke, because the stroke would darken the line. Should strokes be slightly outset at edges?
+
+Make SaveToGalleryViewController's view transparent.
+	- setting opaque = false on view and view.superview don't seem to help
+	- setting view.superview.backgroundColor = UIColor.clearColor() doesn't seem to help
+	- when hitting the Next key in name entry fields, I get an ever so brief line-return!
+	

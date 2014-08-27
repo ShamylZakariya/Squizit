@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.8" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7U9-N8-2K1">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
+        <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Root View Controller-->
@@ -98,8 +99,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ycd-Fs-v1p" customClass="MatchView" customModule="Squizit" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ycd-Fs-v1p" customClass="MatchView" customModule="Squizit" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
@@ -120,12 +121,129 @@
             </objects>
             <point key="canvasLocation" x="1819" y="698"/>
         </scene>
+        <!--Save To Gallery View Controller-->
+        <scene sceneID="4gf-ia-vho">
+            <objects>
+                <viewController storyboardIdentifier="SaveToGallery" id="7Eu-Im-FY7" customClass="SaveToGalleryViewController" customModule="Squizit" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="I4e-E1-zFg"/>
+                        <viewControllerLayoutGuide type="bottom" id="D6I-oV-UyA"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="qYH-Gg-4ZW">
+                        <rect key="frame" x="0.0" y="0.0" width="328" height="468"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="save-to-gallery-dialog-title" translatesAutoresizingMaskIntoConstraints="NO" id="RfD-7v-KLm">
+                                <rect key="frame" x="90" y="56" width="149" height="61"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="149" id="JtJ-ba-n9g"/>
+                                    <constraint firstAttribute="height" constant="61" id="TmZ-ub-HYK"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Do you want to mark down who played?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="08W-p7-jUF">
+                                <rect key="frame" x="20" y="137" width="288" height="20"/>
+                                <fontDescription key="fontDescription" name="Avenir-MediumOblique" family="Avenir" pointSize="14"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player one..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ju1-Ai-NgK" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
+                                <rect key="frame" x="16" y="177" width="296" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="7Eu-Im-FY7" id="gXR-va-FB5"/>
+                                    <outlet property="nextField" destination="Xea-rQ-9Ao" id="UVl-ZJ-1Sh"/>
+                                </connections>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player two..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xea-rQ-9Ao" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
+                                <rect key="frame" x="16" y="215" width="296" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="7Eu-Im-FY7" id="Bpn-uU-MJQ"/>
+                                    <outlet property="nextField" destination="oPi-fY-7gf" id="7i7-19-Lrm"/>
+                                </connections>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player three..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oPi-fY-7gf" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
+                                <rect key="frame" x="16" y="253" width="296" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="7Eu-Im-FY7" id="B3W-yH-mzh"/>
+                                    <outlet property="nextField" destination="ju1-Ai-NgK" id="Rhe-dZ-SCD"/>
+                                </connections>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PF3-zP-FSb" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                <rect key="frame" x="36" y="367" width="256" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="65" id="iAt-qe-eua"/>
+                                </constraints>
+                                <state key="normal" title="DISCARD">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="discard:" destination="7Eu-Im-FY7" eventType="touchUpInside" id="oMn-KU-61e"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ap7-zN-M7S" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                <rect key="frame" x="36" y="284" width="256" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="65" id="GDN-Kw-JaP"/>
+                                </constraints>
+                                <state key="normal" title="ADD TO GALLERY">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="addToGallery:" destination="7Eu-Im-FY7" eventType="touchUpInside" id="eUd-O8-nel"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.13725490196078433" green="0.13725490196078433" blue="0.13725490196078433" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="Xea-rQ-9Ao" firstAttribute="leading" secondItem="qYH-Gg-4ZW" secondAttribute="leading" constant="16" id="1sa-Xv-722"/>
+                            <constraint firstItem="oPi-fY-7gf" firstAttribute="top" secondItem="Xea-rQ-9Ao" secondAttribute="bottom" constant="8" id="22h-7h-VlN"/>
+                            <constraint firstItem="D6I-oV-UyA" firstAttribute="top" secondItem="PF3-zP-FSb" secondAttribute="bottom" constant="36" id="7PM-pX-P1U"/>
+                            <constraint firstItem="ju1-Ai-NgK" firstAttribute="leading" secondItem="qYH-Gg-4ZW" secondAttribute="leading" constant="16" id="7Ul-9W-jE5"/>
+                            <constraint firstAttribute="trailing" secondItem="oPi-fY-7gf" secondAttribute="trailing" constant="16" id="DRK-qu-OyU"/>
+                            <constraint firstAttribute="trailing" secondItem="ap7-zN-M7S" secondAttribute="trailing" constant="36" id="ITv-Cf-ae6"/>
+                            <constraint firstItem="08W-p7-jUF" firstAttribute="leading" secondItem="qYH-Gg-4ZW" secondAttribute="leadingMargin" id="TTh-xI-yG2"/>
+                            <constraint firstItem="ap7-zN-M7S" firstAttribute="leading" secondItem="qYH-Gg-4ZW" secondAttribute="leading" constant="36" id="V49-tJ-bGD"/>
+                            <constraint firstItem="08W-p7-jUF" firstAttribute="top" secondItem="RfD-7v-KLm" secondAttribute="bottom" constant="20" id="ZeR-74-Not"/>
+                            <constraint firstItem="08W-p7-jUF" firstAttribute="trailing" secondItem="qYH-Gg-4ZW" secondAttribute="trailingMargin" id="cCC-GX-bOO"/>
+                            <constraint firstItem="PF3-zP-FSb" firstAttribute="top" secondItem="ap7-zN-M7S" secondAttribute="bottom" constant="18" id="efc-iA-Jmn"/>
+                            <constraint firstItem="RfD-7v-KLm" firstAttribute="top" secondItem="I4e-E1-zFg" secondAttribute="bottom" constant="36" id="egH-Pk-LDa"/>
+                            <constraint firstAttribute="centerX" secondItem="RfD-7v-KLm" secondAttribute="centerX" id="h5Y-oU-GAO"/>
+                            <constraint firstAttribute="trailing" secondItem="ju1-Ai-NgK" secondAttribute="trailing" constant="16" id="jbk-wF-RdM"/>
+                            <constraint firstItem="Xea-rQ-9Ao" firstAttribute="top" secondItem="ju1-Ai-NgK" secondAttribute="bottom" constant="8" id="kIN-VZ-rLO"/>
+                            <constraint firstItem="ju1-Ai-NgK" firstAttribute="top" secondItem="08W-p7-jUF" secondAttribute="bottom" constant="20" id="kuW-X6-MTT"/>
+                            <constraint firstItem="oPi-fY-7gf" firstAttribute="leading" secondItem="qYH-Gg-4ZW" secondAttribute="leading" constant="16" id="ncJ-DI-7fb"/>
+                            <constraint firstItem="PF3-zP-FSb" firstAttribute="leading" secondItem="qYH-Gg-4ZW" secondAttribute="leading" constant="36" id="txl-lu-duC"/>
+                            <constraint firstAttribute="trailing" secondItem="Xea-rQ-9Ao" secondAttribute="trailing" constant="16" id="yOk-Dt-Bjd"/>
+                            <constraint firstAttribute="trailing" secondItem="PF3-zP-FSb" secondAttribute="trailing" constant="36" id="zO4-T1-cSB"/>
+                        </constraints>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="328" height="468"/>
+                    <connections>
+                        <outlet property="addToGalleryButton" destination="ap7-zN-M7S" id="5uI-cD-MMa"/>
+                        <outlet property="discardButton" destination="PF3-zP-FSb" id="SEc-yN-fVC"/>
+                        <outlet property="playerOneNameInputField" destination="ju1-Ai-NgK" id="Yd8-4V-TzV"/>
+                        <outlet property="playerThreeNameInputField" destination="oPi-fY-7gf" id="lS0-lz-OYT"/>
+                        <outlet property="playerTwoNameInputField" destination="Xea-rQ-9Ao" id="b1t-fF-5Yb"/>
+                        <outlet property="questionLabel" destination="08W-p7-jUF" id="C8w-xF-u36"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Qt2-yW-UU1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2548" y="698"/>
+        </scene>
     </scenes>
     <resources>
         <image name="root-border" width="768" height="1024"/>
         <image name="root-or" width="195" height="13"/>
         <image name="root-subhead" width="161" height="19"/>
         <image name="root-title" width="289" height="61"/>
+        <image name="save-to-gallery-dialog-title" width="149" height="61"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="fbA-qo-xxm"/>

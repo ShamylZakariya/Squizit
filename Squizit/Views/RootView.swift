@@ -13,8 +13,6 @@ class RootView : UIView {
 
 	required init(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
-
-		tintColor = UIColor.whiteColor()
 		backgroundColor = SquizitTheme.rootScreenBackgroundColor()
 	}
 }

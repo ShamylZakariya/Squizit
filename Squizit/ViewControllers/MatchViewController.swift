@@ -25,9 +25,10 @@ extension CGRect {
 
 }
 
-class MatchViewController : UIViewController {
+class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	@IBOutlet var matchView: MatchView!
+	
 
 	var toolSelector:DrawingToolSelector!
 	var stepForwardButton:UIButton!
@@ -50,7 +51,7 @@ class MatchViewController : UIViewController {
 				// enable the
 				endOfMatchGestureRecognizer.enabled = true
 			} else {
-				presentingViewController.dismissViewControllerAnimated(true, completion: nil)
+				showSaveToGalleryQuery()
 			}
 
 			syncToMatchState_Animate()
@@ -198,7 +199,6 @@ class MatchViewController : UIViewController {
 		toolSelector.addTool("Brush", icon: UIImage(named: "tool-brush"))
 		toolSelector.addTool("Eraser", icon: UIImage(named: "tool-eraser"))
 		toolSelector.addTarget(self, action: "toolSelected:", forControlEvents: UIControlEvents.ValueChanged)
-		toolSelector.tintColor = UIColor.whiteColor()
 		view.addSubview(toolSelector)
 
 		// create the turn-finished button
@@ -207,7 +207,6 @@ class MatchViewController : UIViewController {
 		stepForwardButton.setTitle(NSLocalizedString("Next", comment: "UserFinishedRound" ).uppercaseString, forState: UIControlState.Normal)
 		stepForwardButton.addTarget(self, action: "stepForward:", forControlEvents: UIControlEvents.TouchUpInside)
 		stepForwardButton.frame = CGRect(x: 0, y: 0, width: 200, height: 44)
-		stepForwardButton.tintColor = UIColor.whiteColor()
 		view.addSubview(stepForwardButton)
 
 		matchView.match = match
@@ -374,4 +373,36 @@ class MatchViewController : UIViewController {
 			stepForwardButton.center = stepForwardButtonCenter
 		}
 	}
+
+	private func showSaveToGalleryQuery() {
+
+		//
+		//	Load from storyboard and present
+		//
+
+		let storyboard = UIStoryboard(name: "Main", bundle: nil)
+		var vc = storyboard.instantiateViewControllerWithIdentifier("SaveToGallery") as SaveToGalleryViewController
+		vc.modalPresentationStyle = UIModalPresentationStyle.FormSheet
+		vc.nameCount = numPlayers
+		vc.delegate = self
+
+		presentViewController(vc, animated: true, completion: nil)
+	}
+
+	func didDismissSaveToGallery() {
+		println("didDismiss" )
+		dismissViewControllerAnimated(true) {
+			self.presentingViewController.dismissViewControllerAnimated(true, completion: nil)
+			return
+		}
+	}
+
+	func didSaveToGalleryWithNames(names: [String]? ) {
+		println( "didSave names: \(names)")
+		dismissViewControllerAnimated(true) {
+			self.presentingViewController.dismissViewControllerAnimated(true, completion: nil)
+			return
+		}
+	}
+
 }
