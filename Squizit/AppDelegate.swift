@@ -13,6 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             
 	var window: UIWindow?
 	var theme:SquizitTheme!
+	lazy var galleryStore:GalleryStore = GalleryStore()
 
 
 	func application(application: UIApplication!, didFinishLaunchingWithOptions launchOptions: NSDictionary!) -> Bool {

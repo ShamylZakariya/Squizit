@@ -35,6 +35,8 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	var shieldViews:[MatchShieldView] = []
 	var endOfMatchGestureRecognizer:UITapGestureRecognizer!
 
+	private var exportQueue = dispatch_queue_create("com.zakariya.squizit.ExportQueue", nil)
+
 	var match:Match?
 
 	/*
@@ -399,10 +401,90 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	func didSaveToGalleryWithNames(names: [String]? ) {
 		println( "didSave names: \(names)")
+
+		let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+		let galleryStore = appDelegate.galleryStore
+		if let moc = galleryStore.managedObjectContext {
+
+			export( match! ) {
+				[weak self]
+				( matchData: NSData?, thumbnailData:NSData? ) -> Void in
+
+				// create the gallery drawing entity
+				let drawingEntity = GalleryDrawing.newInstanceInManagedObjectContext(moc)
+				drawingEntity.match = matchData
+				drawingEntity.thumbnail = thumbnailData
+
+				// lookup the artists referenced ( if any ) creating them if they're new
+				var artists:[GalleryArtist] = []
+				if let names = names {
+					for name in names {
+						if let artist = galleryStore.loadArtist(name, create: true) {
+							artists.append( artist )
+						}
+					}
+				}
+
+				// link up artists and the drawing
+				for artist in artists {
+					artist.addDrawingsObject(drawingEntity)
+					drawingEntity.addArtistsObject(artist)
+				}
+
+				// finish up
+				galleryStore.save()
+			}
+
+			let matchDataResult = match?.serialize()
+			if let error = matchDataResult?.error {
+				println("unable to save match to data, \(error.message)")
+				abort()
+			}
+		}
+
+		//
+		// we can dismiss this VC immediately since it's no longer needed
+		//
+
 		dismissViewControllerAnimated(true) {
 			self.presentingViewController.dismissViewControllerAnimated(true, completion: nil)
 			return
 		}
+	}
+
+	/*
+		serializes match to NSData and saves a thumbnail PNG rep to NSData as well, in a background queue,
+		calling done() on main queue when complete
+	*/
+
+	private func export( match:Match, done:((matchData:NSData?, thumbnailData:NSData?) -> Void)) {
+
+			dispatch_async(exportQueue) { [unowned self] in
+
+				let matchDataResult = match.serialize()
+				if let error = matchDataResult.error {
+					println("unable to save match to data, \(error.message)")
+					abort()
+				}
+
+				var rendering = match.render(SquizitTheme.paperBackgroundColor())
+
+				let thumbnailSize = CGSize( width: rendering.size.width/4, height: rendering.size.height/4 )
+				rendering = rendering.imageByScalingToSize(thumbnailSize)
+				var thumbnailData:NSData? = UIImagePNGRepresentation(rendering)
+
+				dispatch_async(dispatch_get_main_queue()) {
+					done( matchData: matchDataResult.value, thumbnailData: thumbnailData )
+				}
+			}
+	}
+
+	private func DEBUG_saveImage( image:UIImage, path:String ) {
+	    let folderURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as NSURL
+		let targetURL = folderURL.URLByAppendingPathComponent(path, isDirectory: false)
+
+		println("saving image to \(targetURL)")
+		UIImagePNGRepresentation(image).writeToURL(targetURL, atomically: true)
 	}
 
 }

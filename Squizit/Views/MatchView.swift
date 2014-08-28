@@ -49,10 +49,7 @@ class MatchView : UIView {
 	override func drawRect(rect: CGRect) {
 		let ctx = UIGraphicsGetCurrentContext()
 		if let match = self.match {
-			let drawings = enumerate(match.drawings)
-
-			// paint each drawing
-			for (i,drawing) in drawings {
+			for (i,drawing) in enumerate(match.drawings) {
 				let transform = match.transforms[i]
 				_controllers[i].draw(ctx)
 			}

@@ -38,8 +38,6 @@ class Match {
 		for i in 0 ..< players {
 			_drawings.append(Drawing(width: Int(drawingSize.width), height: Int(drawingSize.height)))
 			_transforms.append(CGAffineTransformMakeTranslation( 0, rowHeight * CGFloat(i) - overlap ))
-
-//			_drawings.last?.backgroundColor = UIColor(red: CGFloat(0.5 + 0.5*drand48()), green: CGFloat(0.5+0.5*drand48()), blue: CGFloat(0.5+0.5*drand48()), alpha: 1)
 		}
 	}
 
@@ -79,6 +77,15 @@ class Match {
 		return buffer.getMatch()
 	}
 
+	func serialize() -> Result<NSData> {
+		var buffer = ByteBuffer(order: BigEndian(), capacity: ByteBuffer.requiredSizeForMatch(self))
+		if buffer.putMatch(self) {
+			return .Success( buffer.toNSData() )
+		} else {
+			return .Failure(Error(message: "unable to serialize to buffer - probably under capacity"))
+		}
+	}
+
 	func save( path:String ) -> Result<Int> {
 
 		var buffer = ByteBuffer(order: BigEndian(), capacity: ByteBuffer.requiredSizeForMatch(self))
@@ -103,6 +110,32 @@ class Match {
 		} else {
 			return .Failure(Error(message: "unable to serialize to buffer - probably under capacity"))
 		}
+	}
+
+	func render( backgroundColor:UIColor ) -> UIImage {
+
+		UIGraphicsBeginImageContextWithOptions(_stageSize, true, 0)
+		let context = UIGraphicsGetCurrentContext()
+
+		backgroundColor.set()
+		UIRectFillUsingBlendMode(CGRect(x: 0, y: 0, width: _stageSize.width, height: _stageSize.height), kCGBlendModeNormal)
+
+		for (i,drawing) in enumerate(_drawings) {
+			let transform = _transforms[i]
+
+			CGContextSaveGState(context)
+			CGContextConcatCTM(context, transform)
+
+			let image = drawing.render()
+			image.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
+
+			CGContextRestoreGState(context)
+		}
+
+		var image = UIGraphicsGetImageFromCurrentImageContext()
+		UIGraphicsEndImageContext()
+
+		return image
 	}
 }
 

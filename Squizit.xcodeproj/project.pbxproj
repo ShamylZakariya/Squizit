@@ -30,6 +30,11 @@
 		63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB83A19A78BAA003C3EC2 /* MatchShieldView.swift */; };
 		63EBB83D19A97BFE003C3EC2 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB83C19A97BFD003C3EC2 /* RootView.swift */; };
 		63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */; };
+		63EBB87319AEC0DD003C3EC2 /* GalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87219AEC0DD003C3EC2 /* GalleryStore.swift */; };
+		63EBB87619AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87419AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld */; };
+		63EBB87D19AEC49C003C3EC2 /* GalleryStoreEntities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87C19AEC49C003C3EC2 /* GalleryStoreEntities.m */; };
+		63EBB87F19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87E19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift */; };
+		63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */; };
 		63FDE7321998249A0006B7E4 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
 /* End PBXBuildFile section */
 
@@ -89,6 +94,13 @@
 		63EBB83C19A97BFD003C3EC2 /* RootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		63EBB83E19AB821D003C3EC2 /* Notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Notes.md; sourceTree = "<group>"; };
 		63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToGalleryViewController.swift; sourceTree = "<group>"; };
+		63EBB87219AEC0DD003C3EC2 /* GalleryStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryStore.swift; sourceTree = "<group>"; };
+		63EBB87519AEC2C7003C3EC2 /* GalleryStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GalleryStore.xcdatamodel; sourceTree = "<group>"; };
+		63EBB87719AEC49A003C3EC2 /* Squizit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Squizit-Bridging-Header.h"; sourceTree = "<group>"; };
+		63EBB87B19AEC49C003C3EC2 /* GalleryStoreEntities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GalleryStoreEntities.h; sourceTree = "<group>"; };
+		63EBB87C19AEC49C003C3EC2 /* GalleryStoreEntities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GalleryStoreEntities.m; sourceTree = "<group>"; };
+		63EBB87E19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBuffer_NSData.swift; sourceTree = "<group>"; };
+		63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage_sizing.swift; sourceTree = "<group>"; };
 		63FDE7311998249A0006B7E4 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +134,8 @@
 			isa = PBXGroup;
 			children = (
 				63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */,
+				63EBB87E19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift */,
+				63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -196,6 +210,11 @@
 				636CEA23199E586400BEBF53 /* DrawingInputController.swift */,
 				636CEA28199F251200BEBF53 /* Match.swift */,
 				638576EF19A65B4500581DE8 /* Geometry.swift */,
+				63EBB87219AEC0DD003C3EC2 /* GalleryStore.swift */,
+				63EBB87419AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld */,
+				63EBB87B19AEC49C003C3EC2 /* GalleryStoreEntities.h */,
+				63EBB87C19AEC49C003C3EC2 /* GalleryStoreEntities.m */,
+				63EBB87719AEC49A003C3EC2 /* Squizit-Bridging-Header.h */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -354,6 +373,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */,
 				63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */,
 				636CEA24199E586400BEBF53 /* DrawingInputController.swift in Sources */,
 				636CEA29199F251200BEBF53 /* Match.swift in Sources */,
@@ -362,13 +382,17 @@
 				63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */,
 				63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */,
 				63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */,
+				63EBB87319AEC0DD003C3EC2 /* GalleryStore.swift in Sources */,
 				63FDE7321998249A0006B7E4 /* Result.swift in Sources */,
 				63B7B70D19A4EB1A00F280AB /* DrawingToolSelector.swift in Sources */,
 				638576EC19A6481500581DE8 /* Themes.swift in Sources */,
 				6350C5EA19A1727B008CE4F5 /* MatchViewController.swift in Sources */,
 				63BBECB619967ACC00F6E2B3 /* Drawing.swift in Sources */,
+				63EBB87D19AEC49C003C3EC2 /* GalleryStoreEntities.m in Sources */,
+				63EBB87619AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld in Sources */,
 				636CEA2B199F25F000BEBF53 /* MatchView.swift in Sources */,
 				63EBB83D19A97BFE003C3EC2 /* RootView.swift in Sources */,
+				63EBB87F19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift in Sources */,
 				63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -497,10 +521,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Squizit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Squizit/Models/Squizit-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -509,10 +536,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Squizit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Squizit/Models/Squizit-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -581,6 +610,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		63EBB87419AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				63EBB87519AEC2C7003C3EC2 /* GalleryStore.xcdatamodel */,
+			);
+			currentVersion = 63EBB87519AEC2C7003C3EC2 /* GalleryStore.xcdatamodel */;
+			path = GalleryStore.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 63BBEC8219967A2300F6E2B3 /* Project object */;
 }
