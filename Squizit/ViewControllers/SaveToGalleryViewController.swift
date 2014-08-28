@@ -93,19 +93,27 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 			// collect names
 			var names:[String] = []
-			var nameCount = 0
-			for nameField in [playerOneNameInputField,playerTwoNameInputField,playerThreeNameInputField] {
-				var name = nameField.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+			var namesEnteredByUser = 0
+
+			var fields:[UITextField] = []
+			switch nameCount {
+				case 2:	fields = [playerOneNameInputField,playerTwoNameInputField]
+				case 3:	fields = [playerOneNameInputField,playerTwoNameInputField,playerThreeNameInputField]
+				default: break;
+			}
+
+			for nameField in fields {
+				var name = sanitize(nameField.text)
 				if countElements(name) == 0 {
 					name = NSLocalizedString("Anonymous", comment: "AnonymousPlayerIdentifier")
 				} else {
-					nameCount++
+					namesEnteredByUser++
 				}
 
 				names.append( name )
 			}
 
-			delegate?.didSaveToGalleryWithNames( nameCount > 0 ? names : nil )
+			delegate?.didSaveToGalleryWithNames( namesEnteredByUser > 0 ? names : nil )
 		}
 	}
 
@@ -136,7 +144,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	// MARK: UITextFieldDelegate
 
 	func textFieldShouldEndEditing(textField: UITextField!) -> Bool {
-		textField.text = textField.text.capitalizedStringWithLocale(NSLocale.currentLocale())
+		textField.text = sanitize(textField.text)
 		return true
 	}
 
@@ -152,6 +160,10 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	}
 
 	// MARK: Private
+
+	private func sanitize( name:String ) -> String {
+		return name.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).capitalizedStringWithLocale(NSLocale.currentLocale())
+	}
 
 	private func animateLayout() {
 		UIView.animateWithDuration(0.7,
