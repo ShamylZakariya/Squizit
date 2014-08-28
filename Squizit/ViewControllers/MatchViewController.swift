@@ -402,43 +402,48 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	func didSaveToGalleryWithNames(names: [String]? ) {
 		println( "didSave names: \(names)")
 
-		let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-		let galleryStore = appDelegate.galleryStore
-		if let moc = galleryStore.managedObjectContext {
+		if let match = self.match {
 
-			export( match! ) {
-				[weak self]
-				( matchData: NSData?, thumbnailData:NSData? ) -> Void in
+			let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+			let galleryStore = appDelegate.galleryStore
+			if let moc = galleryStore.managedObjectContext {
 
-				// create the gallery drawing entity
-				let drawingEntity = GalleryDrawing.newInstanceInManagedObjectContext(moc)
-				drawingEntity.match = matchData
-				drawingEntity.thumbnail = thumbnailData
+				export( match ) {
+					[weak self]
+					( matchData: NSData?, thumbnailData:NSData? ) -> Void in
 
-				// lookup the artists referenced ( if any ) creating them if they're new
-				var artists:[GalleryArtist] = []
-				if let names = names {
-					for name in names {
-						if let artist = galleryStore.loadArtist(name, create: true) {
-							artists.append( artist )
+					// create the gallery drawing entity
+					let drawingEntity = GalleryDrawing.newInstanceInManagedObjectContext(moc)
+					drawingEntity.match = matchData
+					drawingEntity.thumbnail = thumbnailData
+					drawingEntity.numPlayers = Int16(match.drawings.count)
+					drawingEntity.date = NSDate().timeIntervalSinceReferenceDate
+
+					// lookup the artists referenced ( if any ) creating them if they're new
+					var artists:[GalleryArtist] = []
+					if let names = names {
+						for name in names {
+							if let artist = galleryStore.loadArtist(name, create: true) {
+								artists.append( artist )
+							}
 						}
 					}
+
+					// link up artists and the drawing
+					for artist in artists {
+						artist.addDrawingsObject(drawingEntity)
+						drawingEntity.addArtistsObject(artist)
+					}
+
+					// finish up
+					galleryStore.save()
 				}
 
-				// link up artists and the drawing
-				for artist in artists {
-					artist.addDrawingsObject(drawingEntity)
-					drawingEntity.addArtistsObject(artist)
+				let matchDataResult = match.serialize()
+				if let error = matchDataResult.error {
+					println("unable to save match to data, \(error.message)")
+					abort()
 				}
-
-				// finish up
-				galleryStore.save()
-			}
-
-			let matchDataResult = match?.serialize()
-			if let error = matchDataResult?.error {
-				println("unable to save match to data, \(error.message)")
-				abort()
 			}
 		}
 

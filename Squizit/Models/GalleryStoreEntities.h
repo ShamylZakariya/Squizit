@@ -43,6 +43,7 @@
 @property (nonatomic) BOOL starred;
 @property (nonatomic) NSTimeInterval date;
 @property (nonatomic, retain) NSSet *artists;
+@property (nonatomic, retain) NSString * uuid;
 @end
 
 @interface GalleryDrawing (CoreDataGeneratedAccessors)

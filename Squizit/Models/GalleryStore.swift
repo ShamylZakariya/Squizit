@@ -51,6 +51,53 @@ class GalleryStore {
 		return nil
 	}
 
+	/**
+		Return an array of all GalleryArtists added to this store
+		NOTE: This is for testing purposes, a UI should use a NSFetchedResultsController
+		to page result batch sizes efficiently
+	*/
+	func allArtists() -> [GalleryArtist] {
+
+		var fr = NSFetchRequest()
+		fr.entity = NSEntityDescription.entityForName(GalleryArtist.entityName(), inManagedObjectContext: self.managedObjectContext)
+
+		var sd = NSSortDescriptor(key: "name", ascending: true)
+		fr.sortDescriptors = [sd]
+
+		var error: NSError? = nil
+		if let results = self.managedObjectContext?.executeFetchRequest(fr, error: &error ) {
+
+			if !results.isEmpty {
+				return results as [GalleryArtist]
+			}
+		}
+
+		return []
+	}
+
+	/**
+		Return an array of all GalleryDrawings added to this store
+		NOTE: This is for testing purposes, a UI should use a NSFetchedResultsController
+		to page result batch sizes efficiently
+	*/
+	func allDrawings() -> [GalleryDrawing] {
+		var fr = NSFetchRequest()
+		fr.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: self.managedObjectContext)
+
+		var sd = NSSortDescriptor(key: "date", ascending: true)
+		fr.sortDescriptors = [sd]
+
+		var error: NSError? = nil
+		if let results = self.managedObjectContext?.executeFetchRequest(fr, error: &error ) {
+
+			if !results.isEmpty {
+				return results as [GalleryDrawing]
+			}
+		}
+
+		return []
+	}
+
 	lazy var managedObjectModel: NSManagedObjectModel = {
 	    let modelURL = NSBundle.mainBundle().URLForResource("GalleryStore", withExtension: "momd")
 	    return NSManagedObjectModel(contentsOfURL: modelURL)
