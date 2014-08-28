@@ -135,6 +135,11 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 	// MARK: UITextFieldDelegate
 
+	func textFieldShouldEndEditing(textField: UITextField!) -> Bool {
+		textField.text = textField.text.capitalizedStringWithLocale(NSLocale.currentLocale())
+		return true
+	}
+
 	func textFieldShouldReturn(textField: UITextField!) -> Bool {
 
 		if let tf = textField as? SquizitThemeNameInputField {
