@@ -414,8 +414,8 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 					// create the gallery drawing entity
 					let drawingEntity = GalleryDrawing.newInstanceInManagedObjectContext(moc)
-					drawingEntity.match = matchData
-					drawingEntity.thumbnail = thumbnailData
+					drawingEntity.match = matchData!
+					drawingEntity.thumbnail = thumbnailData!
 					drawingEntity.numPlayers = Int16(match.drawings.count)
 					drawingEntity.date = NSDate().timeIntervalSinceReferenceDate
 
@@ -430,9 +430,9 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 					}
 
 					// link up artists and the drawing
-					for artist in artists {
-						artist.addDrawingsObject(drawingEntity)
-						drawingEntity.addArtistsObject(artist)
+					for artistEntity in artists {
+						artistEntity.addDrawingsObject(drawingEntity)
+						drawingEntity.addArtistsObject(artistEntity)
 					}
 
 					// finish up
