@@ -19,26 +19,28 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 	class func identifier() -> String { return "GalleryCollectionViewCell" }
 
+
+	@IBOutlet weak var containerView: UIView!
 	@IBOutlet weak var imageView: UIImageView!
 	@IBOutlet weak var namesLabel: UILabel!
 	@IBOutlet weak var dateLabel: UILabel!
 
 	override func awakeFromNib() {
 		self.clipsToBounds = false
-
-		imageView.backgroundColor = SquizitTheme.thumbnailBackgroundColor()
 		imageView.layer.shadowColor = UIColor.blackColor().CGColor
 		imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
 		imageView.layer.shadowOpacity = 1
 		imageView.layer.shadowRadius = 5
 	}
-
 }
 
 class GalleryCollectionViewController : UICollectionViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
 	var store:GalleryStore!
 	weak var delegate:GalleryCollectionViewControllerDelegate?
+
+	private var _thumbnailCompositorQueue = dispatch_queue_create("com.zakariya.squizit.GalleryThumbnailCompositorQueue", nil)
+	private var _thumbnailBackgroundColor = SquizitTheme.thumbnailBackgroundColor()
 
 	private var _dateFormatter:NSDateFormatter?
 	var dateFormatter:NSDateFormatter {
@@ -153,10 +155,40 @@ class GalleryCollectionViewController : UICollectionViewController, UICollection
 				artistNames.append(artist.name)
 			}
 
-			cell.imageView.image = UIImage(data: drawing.thumbnail)
+			cell.containerView.alpha = 0
 			cell.namesLabel.text = (artistNames as NSArray).componentsJoinedByString(", ")
 			cell.dateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
 
+			//
+			//	Now, we have to render the thumbnail - it comes from the store as a transparent PNG, 
+			//	with pen/brush strokes in black, and eraser in white. We need to multiply composite
+			//	it over the paper texture to make a viable thumbnail image
+			//
+
+			dispatch_async( _thumbnailCompositorQueue ) {
+
+				var thumbnail = UIImage( data: drawing.thumbnail )
+				let size = thumbnail.size
+				let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+				UIGraphicsBeginImageContextWithOptions(size, true, 0)
+
+				self._thumbnailBackgroundColor.set()
+				UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
+
+				thumbnail.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
+
+				thumbnail = UIGraphicsGetImageFromCurrentImageContext()
+				UIGraphicsEndImageContext()
+
+				dispatch_async(dispatch_get_main_queue() ) {
+
+					cell.imageView.image = thumbnail
+					UIView.animateWithDuration(0.2, animations: { () -> Void in
+						cell.containerView.alpha = 1
+					})
+
+				}
+			}
 
 		} else {
 			assertionFailure("Unable to vend a GalleryDrawing for index path")
