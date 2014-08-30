@@ -19,7 +19,9 @@ extension UIImage {
 
 		UIGraphicsBeginImageContextWithOptions(size, false, scale)
 
-		self.drawInRect(CGRect(x: 0, y: 0, width: size.width, height: size.height), blendMode: kCGBlendModeNormal, alpha: 1)
+		let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+		CGContextClearRect(UIGraphicsGetCurrentContext(), rect)
+		self.drawInRect(rect, blendMode: kCGBlendModeNormal, alpha: 1)
 
 		let newImage = UIGraphicsGetImageFromCurrentImageContext()
 		UIGraphicsEndImageContext()

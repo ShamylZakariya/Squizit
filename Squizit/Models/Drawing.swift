@@ -87,9 +87,17 @@ class Drawing {
 		}
 	}
 
-	func draw() {
-		backgroundColor.set()
-		UIRectFillUsingBlendMode(CGRect(x: 0, y: 0, width: _width, height: _height), kCGBlendModeNormal)
+	func draw(overrideBackgroundColor:UIColor? = nil) {
+		let rect = CGRect(x: 0, y: 0, width: _width, height: _height)
+		if let bgc = overrideBackgroundColor {
+			if bgc.alphaComponent > 0 {
+				bgc.set()
+				UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
+			}
+		} else {
+			backgroundColor.set()
+			UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
+		}
 
 		if _debugRender {
 			seedRandomColorGenerator()

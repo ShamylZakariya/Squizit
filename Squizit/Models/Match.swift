@@ -114,20 +114,25 @@ class Match {
 
 	func render( backgroundColor:UIColor ) -> UIImage {
 
-		UIGraphicsBeginImageContextWithOptions(_stageSize, true, 0)
+		UIGraphicsBeginImageContextWithOptions( _stageSize, false, 0 )
 		let context = UIGraphicsGetCurrentContext()
+		let rect = CGRect(x: 0, y: 0, width: _stageSize.width, height: _stageSize.height)
 
-		backgroundColor.set()
-		UIRectFillUsingBlendMode(CGRect(x: 0, y: 0, width: _stageSize.width, height: _stageSize.height), kCGBlendModeNormal)
+		if backgroundColor.alphaComponent > 0 {
+			backgroundColor.set()
+			UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
+		} else {
+			CGContextClearRect( context, rect )
+		}
 
 		for (i,drawing) in enumerate(_drawings) {
 			let transform = _transforms[i]
 
 			CGContextSaveGState(context)
 			CGContextConcatCTM(context, transform)
+			CGContextClipToRect(context, CGRect(x: 0, y: 0, width: drawing.size.width, height: drawing.size.height))
 
-			let image = drawing.render()
-			image.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
+			drawing.draw( overrideBackgroundColor: backgroundColor )
 
 			CGContextRestoreGState(context)
 		}

@@ -26,6 +26,10 @@ class SquizitTheme {
 		return UIImage(named: "paper-pattern")
 	}
 
+	class func thumbnailPaperBackgroundImage() -> UIImage {
+		return UIImage(named: "thumbnail-paper-pattern")
+	}
+
 	class func rootScreenBackgroundColor() -> UIColor {
 		return UIColor( patternImage: self.cubeBackgroundImage() )
 	}
@@ -44,6 +48,10 @@ class SquizitTheme {
 
 	class func galleryBackgroundColor() -> UIColor {
 		return UIColor( patternImage: self.leatherBackgroundImage() )
+	}
+
+	class func thumbnailBackgroundColor() -> UIColor {
+		return UIColor( patternImage: self.thumbnailPaperBackgroundImage() )
 	}
 
 	class func tintColor() -> UIColor {

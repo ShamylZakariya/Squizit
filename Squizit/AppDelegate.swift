@@ -8,6 +8,8 @@
 
 import UIKit
 
+let PrintArtistsAndDrawingsOnStartup = false
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
                             
@@ -22,16 +24,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		theme = SquizitTheme()
 		window?.tintColor = SquizitTheme.tintColor()
 
-//		println("TESTING GALLERYSTORE\nDrawings:")
-//		for (i,drawing) in enumerate(galleryStore.allDrawings()) {
-//			NSLog("drawing \(i) -> %@", drawing )
-//		}
-//
-//		println("artists:")
-//		for (i,artist) in enumerate(galleryStore.allArtists()) {
-//			NSLog("artist \(i) -> %@", artist )
-//		}
+		if PrintArtistsAndDrawingsOnStartup {
+			println("TESTING GALLERYSTORE\nDrawings:")
+			for (i,drawing) in enumerate(galleryStore.allDrawings()) {
+				NSLog("drawing \(i) -> %@", drawing )
+			}
 
+			println("artists:")
+			for (i,artist) in enumerate(galleryStore.allArtists()) {
+				NSLog("artist \(i) -> %@", artist )
+			}
+		}
 
 		return true
 	}

@@ -26,6 +26,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	override func awakeFromNib() {
 		self.clipsToBounds = false
 
+		imageView.backgroundColor = SquizitTheme.thumbnailBackgroundColor()
 		imageView.layer.shadowColor = UIColor.blackColor().CGColor
 		imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
 		imageView.layer.shadowOpacity = 1

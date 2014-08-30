@@ -1,5 +1,8 @@
 #TODO
 
+Don't save paper texture in screenshots, save just clear with alpha channel
+then composite a scaled-down paper texture as background of imageView showing the image'
+
 Drawing lines at 90% opacity looks great... but there's a hairline crack between stroke segments. And since we're drawing at partial opacity we can't stroke, because the stroke would darken the line. Should strokes be slightly outset at edges?
 
 Make SaveToGalleryViewController's view transparent.
