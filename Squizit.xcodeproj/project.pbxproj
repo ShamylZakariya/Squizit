@@ -35,6 +35,7 @@
 		63EBB87D19AEC49C003C3EC2 /* GalleryStoreEntities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87C19AEC49C003C3EC2 /* GalleryStoreEntities.m */; };
 		63EBB87F19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87E19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift */; };
 		63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */; };
+		63EBB88319B0CBE6003C3EC2 /* GalleryCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88219B0CBE6003C3EC2 /* GalleryCollectionViewController.swift */; };
 		63FDE7321998249A0006B7E4 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
 /* End PBXBuildFile section */
 
@@ -101,6 +102,7 @@
 		63EBB87C19AEC49C003C3EC2 /* GalleryStoreEntities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GalleryStoreEntities.m; sourceTree = "<group>"; };
 		63EBB87E19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBuffer_NSData.swift; sourceTree = "<group>"; };
 		63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage_sizing.swift; sourceTree = "<group>"; };
+		63EBB88219B0CBE6003C3EC2 /* GalleryCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryCollectionViewController.swift; sourceTree = "<group>"; };
 		63FDE7311998249A0006B7E4 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -225,6 +227,7 @@
 				6350C5E919A1727B008CE4F5 /* MatchViewController.swift */,
 				6350C5EB19A24790008CE4F5 /* RootViewController.swift */,
 				63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */,
+				63EBB88219B0CBE6003C3EC2 /* GalleryCollectionViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 				63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */,
 				63EBB87319AEC0DD003C3EC2 /* GalleryStore.swift in Sources */,
 				63FDE7321998249A0006B7E4 /* Result.swift in Sources */,
+				63EBB88319B0CBE6003C3EC2 /* GalleryCollectionViewController.swift in Sources */,
 				63B7B70D19A4EB1A00F280AB /* DrawingToolSelector.swift in Sources */,
 				638576EC19A6481500581DE8 /* Themes.swift in Sources */,
 				6350C5EA19A1727B008CE4F5 /* MatchViewController.swift in Sources */,

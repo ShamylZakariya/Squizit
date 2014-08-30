@@ -49,6 +49,9 @@
                                         <state key="normal" title="PERUSE THE GALLERY">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <segue destination="Sk5-Tq-1WP" kind="presentation" id="2q0-tS-IoT"/>
+                                        </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="root-title" translatesAutoresizingMaskIntoConstraints="NO" id="eyv-id-0vb">
                                         <rect key="frame" x="132" y="27" width="289" height="61"/>
@@ -236,6 +239,102 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qt2-yW-UU1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2548" y="698"/>
+        </scene>
+        <!--Gallery Collection View Controller-->
+        <scene sceneID="mkc-AW-AN1">
+            <objects>
+                <collectionViewController id="VSN-97-iZW" customClass="GalleryCollectionViewController" customModule="Squizit" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="P2B-uE-ciE">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="40" minimumInteritemSpacing="20" id="fyx-IT-XHW">
+                            <size key="itemSize" width="192" height="320"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="20" minY="20" maxX="20" maxY="20"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="GalleryCollectionViewCell" id="H26-jk-vLH" customClass="GalleryCollectionViewCell" customModule="Squizit" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="192" height="320"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OUT-S9-wJY">
+                                            <rect key="frame" x="0.0" y="0.0" width="192" height="256"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="256" id="CL5-QG-eKg"/>
+                                                <constraint firstAttribute="width" constant="192" id="lAM-DJ-tbW"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QCF-CR-WyC">
+                                            <rect key="frame" x="8" y="264" width="176" height="19"/>
+                                            <fontDescription key="fontDescription" name="Didot-Italic" family="Didot" pointSize="15"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uMg-mf-Lrg">
+                                            <rect key="frame" x="8" y="282" width="176" height="15"/>
+                                            <fontDescription key="fontDescription" name="Didot-Italic" family="Didot" pointSize="12"/>
+                                            <color key="textColor" white="1" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="centerX" secondItem="OUT-S9-wJY" secondAttribute="centerX" id="3gB-YB-XQE"/>
+                                    <constraint firstItem="QCF-CR-WyC" firstAttribute="leading" secondItem="H26-jk-vLH" secondAttribute="leadingMargin" id="7Qr-zW-s3y"/>
+                                    <constraint firstItem="uMg-mf-Lrg" firstAttribute="leading" secondItem="H26-jk-vLH" secondAttribute="leadingMargin" id="Gyc-pM-MCY"/>
+                                    <constraint firstItem="uMg-mf-Lrg" firstAttribute="top" secondItem="QCF-CR-WyC" secondAttribute="bottom" constant="-1" id="HTr-QO-pAt"/>
+                                    <constraint firstItem="uMg-mf-Lrg" firstAttribute="trailing" secondItem="H26-jk-vLH" secondAttribute="trailingMargin" id="Ltk-Rj-dmT"/>
+                                    <constraint firstItem="QCF-CR-WyC" firstAttribute="top" secondItem="OUT-S9-wJY" secondAttribute="bottom" constant="8" id="b53-zY-vPZ"/>
+                                    <constraint firstAttribute="trailingMargin" secondItem="QCF-CR-WyC" secondAttribute="trailing" id="g5q-R3-t6v"/>
+                                    <constraint firstItem="OUT-S9-wJY" firstAttribute="top" secondItem="H26-jk-vLH" secondAttribute="top" id="mk1-m2-alp"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="dateLabel" destination="uMg-mf-Lrg" id="kci-OW-Kt0"/>
+                                    <outlet property="imageView" destination="OUT-S9-wJY" id="MgL-xF-5my"/>
+                                    <outlet property="namesLabel" destination="QCF-CR-WyC" id="YUs-up-aQR"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="VSN-97-iZW" id="zlt-5D-ZEc"/>
+                            <outlet property="delegate" destination="VSN-97-iZW" id="ii9-Y1-ua9"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" id="Fh8-q2-5nt">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="D87-Zi-EHk">
+                            <connections>
+                                <action selector="onDone:" destination="VSN-97-iZW" id="vfq-ll-02l"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kvj-Je-l3d" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2631" y="1503"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="2j9-Kl-n7I">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Sk5-Tq-1WP" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="5oO-7k-Pgv">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="VSN-97-iZW" kind="relationship" relationship="rootViewController" id="t5k-NY-5Pi"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="580-83-CO5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1819" y="1503"/>
         </scene>
     </scenes>
     <resources>

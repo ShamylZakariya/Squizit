@@ -42,6 +42,10 @@ class SquizitTheme {
 		return UIColor( patternImage: self.leatherBackgroundImage() )
 	}
 
+	class func galleryBackgroundColor() -> UIColor {
+		return UIColor( patternImage: self.leatherBackgroundImage() )
+	}
+
 	class func tintColor() -> UIColor {
 		return UIColor.whiteColor()
 	}

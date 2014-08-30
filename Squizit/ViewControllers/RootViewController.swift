@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class RootViewController : UIViewController {
+class RootViewController : UIViewController, GalleryCollectionViewControllerDelegate {
 
 
 	@IBOutlet weak var twoPlayersButton: UIButton!
@@ -50,7 +50,13 @@ class RootViewController : UIViewController {
 
 		if sender === galleryButton {
 
-			// no gallery, yet
+			let navVC = segue.destinationViewController as UINavigationController
+			if let galleryVC = navVC.childViewControllers.first as? GalleryCollectionViewController {
+				galleryVC.store = (UIApplication.sharedApplication().delegate as? AppDelegate)!.galleryStore
+				galleryVC.delegate = self
+			} else {
+				assertionFailure("Unable to extract GalleryCollectionViewController from segue")
+			}
 
 		} else {
 
@@ -65,5 +71,11 @@ class RootViewController : UIViewController {
 			let screenBounds = UIScreen.mainScreen().bounds
 			matchVC.match = Match(players: players, stageSize: CGSize(width: screenBounds.width, height: screenBounds.height), overlap: 4)
 		}
+	}
+
+	// MARK: GalleryCollectionViewControllerDelegate
+
+	func galleryCollectionViewDidDismiss(galleryCollectionView: GalleryCollectionViewController) {
+		dismissViewControllerAnimated(true, completion: nil)
 	}
 }
