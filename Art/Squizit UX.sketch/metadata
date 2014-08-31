@@ -13,9 +13,10 @@
 		<string>Baskerville-Italic</string>
 		<string>NeutraText-Book</string>
 		<string>Avenir-Light</string>
+		<string>Baskerville</string>
 	</array>
 	<key>length</key>
-	<integer>4598048</integer>
+	<integer>5049981</integer>
 	<key>version</key>
 	<integer>37</integer>
 </dict>

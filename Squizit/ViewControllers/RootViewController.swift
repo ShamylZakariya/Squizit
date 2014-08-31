@@ -34,12 +34,19 @@ class RootViewController : UIViewController, GalleryCollectionViewControllerDele
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
 
-		UIView.animateWithDuration(1.5, delay: 0.0, usingSpringWithDamping: CGFloat(0.4), initialSpringVelocity: CGFloat(0.0), options: UIViewAnimationOptions(0), animations: { [unowned self] () -> Void in
-			self.contentView.layer.opacity = 1
-			self.contentView.layer.transform = CATransform3DMakeScale(1, 1, 1)
-			self.borderView.layer.opacity = 1
-			self.borderView.layer.transform = CATransform3DMakeScale(1, 1, 1)
-		}, completion: nil)
+		UIView.animateWithDuration(1.5,
+			delay: 0.0,
+			usingSpringWithDamping: CGFloat(0.4),
+			initialSpringVelocity: CGFloat(0.0),
+			options: UIViewAnimationOptions.AllowUserInteraction,
+			animations: {
+				[unowned self] () -> Void in
+				self.contentView.layer.opacity = 1
+				self.contentView.layer.transform = CATransform3DMakeScale(1, 1, 1)
+				self.borderView.layer.opacity = 1
+				self.borderView.layer.transform = CATransform3DMakeScale(1, 1, 1)
+			},
+			completion: nil)
 	}
 
 	override func preferredStatusBarStyle() -> UIStatusBarStyle {

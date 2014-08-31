@@ -8,7 +8,7 @@
 
 import UIKit
 
-let PrintArtistsAndDrawingsOnStartup = false
+let PrintArtistsAndDrawingsOnStartup = true
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
