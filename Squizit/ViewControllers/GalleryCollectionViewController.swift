@@ -9,11 +9,15 @@
 import Foundation
 import UIKit
 
-protocol GalleryCollectionViewControllerDelegate : class {
+// MARK: - GalleryViewControllerDelegate
 
-	func galleryCollectionViewDidDismiss( galleryCollectionView:GalleryCollectionViewController )
+protocol GalleryViewControllerDelegate : class {
+
+	func galleryDidDismiss( galleryViewController:AnyObject )
 
 }
+
+// MARK: - GalleryCollectionViewCell
 
 class GalleryCollectionViewCell : UICollectionViewCell {
 
@@ -84,12 +88,8 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 			self.deleteButton.alpha = 1
 		})
 
-		delay( drand48() * _wiggleCycleDuration ) {
-			[weak self] in
-			if let s = self {
-				s.wiggleCycle()
-			}
-		}
+		_wiggleDelay = drand48() * _wiggleCycleDuration
+		self.wiggleCycle()
 	}
 
 	private func hideDeleteButton() {
@@ -109,6 +109,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		self.wiggleCycle() // returns to zero point
 	}
 
+	private var _wiggleDelay:NSTimeInterval = 0
 	private let _wiggleCycleDuration = 0.25
 	private var _wiggling = false
 	private func wiggleCycle() {
@@ -121,7 +122,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 			if !_wiggling {
 				_wiggling = true
 				UIView.animateKeyframesWithDuration( wiggleDuration,
-					delay: 0,
+					delay: _wiggleDelay,
 					options: UIViewKeyframeAnimationOptions.AllowUserInteraction | UIViewKeyframeAnimationOptions.CalculationModeCubic,
 					animations: {
 						() -> Void in
@@ -140,6 +141,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 					completion: {
 						[weak self] ( complete:Bool ) -> Void in
 						if let sself = self {
+							sself._wiggleDelay = 0
 							sself._wiggling = false
 							sself.wiggleCycle()
 						}
@@ -154,65 +156,64 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	}
 }
 
-class GalleryCollectionViewController : UICollectionViewController, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate {
+// MARK: - GalleryCollectionViewDataSource
 
-	var store:GalleryStore!
-	weak var delegate:GalleryCollectionViewControllerDelegate?
+class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate {
 
+	private var _store:GalleryStore
+	private var _collectionView:UICollectionView
 	private var _thumbnailCompositorQueue = dispatch_queue_create("com.zakariya.squizit.GalleryThumbnailCompositorQueue", nil)
 	private var _thumbnailBackgroundColor = SquizitTheme.thumbnailBackgroundColor()
 
-	private var _dateFormatter:NSDateFormatter?
-	var dateFormatter:NSDateFormatter {
-		if _dateFormatter != nil {
-			return _dateFormatter!
+	init( store:GalleryStore, collectionView:UICollectionView ) {
+		_store = store
+		_collectionView = collectionView
+
+		super.init()
+
+		_collectionView.dataSource = self
+		_collectionView.delegate = self
+	}
+
+	var editMode:Bool = false {
+		didSet {
+			for cell in _collectionView.visibleCells() {
+				(cell as GalleryCollectionViewCell).deleteButtonVisible = editMode
+			}
+
+			if let emc = editModeChanged {
+				emc( inEditMode: editMode )
+			}
 		}
-
-		_dateFormatter = NSDateFormatter()
-		_dateFormatter!.timeStyle = NSDateFormatterStyle.ShortStyle
-		_dateFormatter!.dateStyle = NSDateFormatterStyle.ShortStyle
-		return _dateFormatter!
 	}
 
-	// MARK: UICollectionViewController
+	var editModeChanged:((inEditMode:Bool)->Void)?
 
-	required init(coder aDecoder: NSCoder) {
-		super.init( coder: aDecoder )
-		self.title = "Gallery"
-	}
-
-	override func viewDidLoad() {
-		collectionView.backgroundColor = SquizitTheme.galleryBackgroundColor()
-		collectionView.delegate = self
-		collectionView.dataSource = self
-	}
-
-	override func didReceiveMemoryWarning() {
+	func didReceiveMemoryWarning() {
 		_fetchedResultsController = nil
 	}
 
-
 	// MARK: UICollectionViewDataSource
 
-	override func numberOfSectionsInCollectionView(collectionView: UICollectionView!) -> Int {
+	func numberOfSectionsInCollectionView(collectionView: UICollectionView!) -> Int {
 		return 1
 	}
 
-	override func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell! {
+	func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell! {
 		let cell = collectionView.dequeueReusableCellWithReuseIdentifier(GalleryCollectionViewCell.identifier(), forIndexPath: indexPath) as GalleryCollectionViewCell
 
 		configureCell( cell, atIndexPath: indexPath )
 		return cell
 	}
 
-	override func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int {
+	func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int {
 		let info = self.fetchedResultsController.sections[section] as NSFetchedResultsSectionInfo
 		return info.numberOfObjects
 	}
 
 	// MARK: UICollectionViewDelegate
 
-	override func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!) {
+	func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!) {
 		collectionView.deselectItemAtIndexPath(indexPath, animated: true)
 
 		if !editMode {
@@ -229,7 +230,7 @@ class GalleryCollectionViewController : UICollectionViewController, UICollection
 		}
 
 		var fetchRequest = NSFetchRequest()
-		fetchRequest.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: store.managedObjectContext )
+		fetchRequest.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: _store.managedObjectContext )
 
 		fetchRequest.sortDescriptors = self.sortDescriptors
 
@@ -239,7 +240,7 @@ class GalleryCollectionViewController : UICollectionViewController, UICollection
 
 		fetchRequest.fetchBatchSize = 4 * 4
 
-		_fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: store.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+		_fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: _store.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
 
 		_fetchedResultsController!.delegate = self
 
@@ -267,9 +268,9 @@ class GalleryCollectionViewController : UICollectionViewController, UICollection
 	func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
 		switch type {
 			case .Insert:
-				self.collectionView.insertSections(NSIndexSet( index: sectionIndex ))
+				_collectionView.insertSections(NSIndexSet( index: sectionIndex ))
 			case .Delete:
-				self.collectionView.deleteSections(NSIndexSet(index: sectionIndex))
+				_collectionView.deleteSections(NSIndexSet(index: sectionIndex))
 			default:
 				return
 		}
@@ -278,15 +279,15 @@ class GalleryCollectionViewController : UICollectionViewController, UICollection
 	func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath) {
 		switch type {
 			case .Insert:
-				collectionView.insertItemsAtIndexPaths([newIndexPath])
+				_collectionView.insertItemsAtIndexPaths([newIndexPath])
 			case .Delete:
-				collectionView.deleteItemsAtIndexPaths([indexPath])
+				_collectionView.deleteItemsAtIndexPaths([indexPath])
 			case .Update:
-				if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? GalleryCollectionViewCell {
+				if let cell = _collectionView.cellForItemAtIndexPath(indexPath) as? GalleryCollectionViewCell {
 					configureCell(cell, atIndexPath: indexPath)
 				}
 			case .Move:
-				collectionView.moveItemAtIndexPath(indexPath, toIndexPath: newIndexPath)
+				_collectionView.moveItemAtIndexPath(indexPath, toIndexPath: newIndexPath)
 			default:
 				return
 		}
@@ -295,38 +296,8 @@ class GalleryCollectionViewController : UICollectionViewController, UICollection
 
 	func controllerDidChangeContent(controller: NSFetchedResultsController) {}
 
-	// MARK: IBActions
-
-	@IBAction func onDone(sender: AnyObject) {
-		delegate?.galleryCollectionViewDidDismiss(self)
-	}
-
-	// MARK: Private
-
-	private var editMode:Bool = false {
-		didSet {
-
-			if editMode {
-				NSLog( "entered editMode" )
-				var doneBBI = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Done, target: self, action: "exitEditMode:")
-				self.navigationItem.rightBarButtonItem = doneBBI
-			} else {
-				NSLog( "leaving editMode" )
-				self.navigationItem.rightBarButtonItem = nil
-			}
-
-			for cell in collectionView.visibleCells() {
-				(cell as GalleryCollectionViewCell).deleteButtonVisible = editMode
-			}
-		}
-	}
-
-	dynamic private func exitEditMode( sender:AnyObject ) {
-		editMode = false
-	}
-
 	private func configureCell( cell:GalleryCollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
-		let galleryStore = self.store
+		let store = _store
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
 			var artistNames:[String] = []
@@ -355,8 +326,8 @@ class GalleryCollectionViewController : UICollectionViewController, UICollection
 				(cell:GalleryCollectionViewCell)->() in
 				if let sself = self {
 
-					galleryStore.managedObjectContext?.deleteObject(drawing)
-					galleryStore.save()
+					store.managedObjectContext?.deleteObject(drawing)
+					store.save()
 
 				}
 			}
@@ -396,4 +367,70 @@ class GalleryCollectionViewController : UICollectionViewController, UICollection
 			assertionFailure("Unable to vend a GalleryDrawing for index path")
 		}
 	}
+
+	private var _dateFormatter:NSDateFormatter?
+	private var dateFormatter:NSDateFormatter {
+		if _dateFormatter != nil {
+			return _dateFormatter!
+		}
+
+		_dateFormatter = NSDateFormatter()
+		_dateFormatter!.timeStyle = NSDateFormatterStyle.ShortStyle
+		_dateFormatter!.dateStyle = NSDateFormatterStyle.ShortStyle
+		return _dateFormatter!
+	}
+}
+
+// MARK: - GalleryCollectionViewController
+
+class GalleryCollectionViewController : UICollectionViewController {
+
+	var store:GalleryStore!
+	weak var delegate:GalleryViewControllerDelegate?
+	private var _dataSource:GalleryCollectionViewDataSource!
+
+
+	// MARK: UICollectionViewController
+
+	required init(coder aDecoder: NSCoder) {
+		super.init( coder: aDecoder )
+		self.title = "Gallery"
+	}
+
+	override func viewDidLoad() {
+		collectionView.backgroundColor = SquizitTheme.galleryBackgroundColor()
+
+		_dataSource = GalleryCollectionViewDataSource(store: store, collectionView: collectionView)
+		_dataSource.editModeChanged = {
+			[unowned self] ( inEditMode:Bool ) -> Void in
+
+			if inEditMode {
+				NSLog( "entered editMode" )
+				var doneBBI = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Done, target: self, action: "exitEditMode:")
+				self.navigationItem.rightBarButtonItem = doneBBI
+			} else {
+				NSLog( "leaving editMode" )
+				self.navigationItem.rightBarButtonItem = nil
+			}
+		}
+	}
+
+	override func didReceiveMemoryWarning() {
+		_dataSource.didReceiveMemoryWarning()
+	}
+
+
+	// MARK: IBActions
+
+	@IBAction func onDone(sender: AnyObject) {
+		delegate?.galleryDidDismiss(self)
+	}
+
+	// MARK: Private
+
+	dynamic private func exitEditMode( sender:AnyObject ) {
+		_dataSource.editMode = false
+	}
+
+
 }

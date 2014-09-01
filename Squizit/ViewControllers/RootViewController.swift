@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class RootViewController : UIViewController, GalleryCollectionViewControllerDelegate {
+class RootViewController : UIViewController, GalleryViewControllerDelegate {
 
 
 	@IBOutlet weak var twoPlayersButton: UIButton!
@@ -80,9 +80,9 @@ class RootViewController : UIViewController, GalleryCollectionViewControllerDele
 		}
 	}
 
-	// MARK: GalleryCollectionViewControllerDelegate
+	// MARK: GalleryViewControllerDelegate
 
-	func galleryCollectionViewDidDismiss(galleryCollectionView: GalleryCollectionViewController) {
+	func galleryDidDismiss( galleryViewController:AnyObject ) {
 		dismissViewControllerAnimated(true, completion: nil)
 	}
 }
