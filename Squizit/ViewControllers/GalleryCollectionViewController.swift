@@ -9,15 +9,6 @@
 import Foundation
 import UIKit
 
-func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-        dispatch_time(
-            DISPATCH_TIME_NOW,
-            Int64(delay * Double(NSEC_PER_SEC))
-        ),
-        dispatch_get_main_queue(), closure)
-}
-
 protocol GalleryCollectionViewControllerDelegate : class {
 
 	func galleryCollectionViewDidDismiss( galleryCollectionView:GalleryCollectionViewController )
@@ -93,7 +84,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 			self.deleteButton.alpha = 1
 		})
 
-		delay( drand48() ) {
+		delay( drand48() * _wiggleCycleDuration ) {
 			[weak self] in
 			if let s = self {
 				s.wiggleCycle()
@@ -118,17 +109,18 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		self.wiggleCycle() // returns to zero point
 	}
 
+	private let _wiggleCycleDuration = 0.25
 	private var _wiggling = false
 	private func wiggleCycle() {
 
 		let angle = M_PI * 0.00625
-		let duration = 0.125 + drand48() * 0.0625
+		let wiggleDuration = _wiggleCycleDuration + (drand48()*2-1) * (_wiggleCycleDuration*0.1)
 		let layer = self.layer
 
 		if self.deleteButtonVisible {
 			if !_wiggling {
 				_wiggling = true
-				UIView.animateKeyframesWithDuration( duration*2,
+				UIView.animateKeyframesWithDuration( wiggleDuration,
 					delay: 0,
 					options: UIViewKeyframeAnimationOptions.AllowUserInteraction | UIViewKeyframeAnimationOptions.CalculationModeCubic,
 					animations: {
@@ -155,7 +147,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 			}
 		} else {
 			_wiggling = false
-			UIView.animateWithDuration( duration, animations: {
+			UIView.animateWithDuration( _wiggleCycleDuration/2, animations: {
 				layer.transform = CATransform3DIdentity
 			})
 		}
@@ -180,46 +172,6 @@ class GalleryCollectionViewController : UICollectionViewController, UICollection
 		_dateFormatter!.timeStyle = NSDateFormatterStyle.ShortStyle
 		_dateFormatter!.dateStyle = NSDateFormatterStyle.ShortStyle
 		return _dateFormatter!
-	}
-
-	private var _fetchedResultsController:NSFetchedResultsController?
-	var fetchedResultsController:NSFetchedResultsController {
-		if _fetchedResultsController != nil {
-			return _fetchedResultsController!
-		}
-
-		var fetchRequest = NSFetchRequest()
-		fetchRequest.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: store.managedObjectContext )
-
-		fetchRequest.sortDescriptors = self.sortDescriptors
-
-		if let predicate = self.filterPredicate {
-			fetchRequest.predicate = predicate
-		}
-
-		fetchRequest.fetchBatchSize = 4 * 4
-
-		_fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: store.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
-
-		_fetchedResultsController!.delegate = self
-
-		var error:NSError? = nil
-		if !_fetchedResultsController!.performFetch(&error) {
-			NSLog("Unable to execute fetch, error: %@", error!.localizedDescription )
-			abort()
-		}
-
-		return _fetchedResultsController!
-	}
-
-	var sortDescriptors:[NSSortDescriptor] {
-		return [
-			NSSortDescriptor(key: "date", ascending: true)
-		]
-	}
-
-	var filterPredicate:NSPredicate? {
-		return nil
 	}
 
 	// MARK: UICollectionViewController
@@ -261,11 +213,54 @@ class GalleryCollectionViewController : UICollectionViewController, UICollection
 	// MARK: UICollectionViewDelegate
 
 	override func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!) {
-		NSLog("didSelectItemAtIndexPath: %@", indexPath )
 		collectionView.deselectItemAtIndexPath(indexPath, animated: true)
+
+		if !editMode {
+			NSLog("didSelectItemAtIndexPath: %@", indexPath )
+		}
 	}
 
-	// MARK: NSFetchedResultsControllerDelegate
+	// MARK: FetchedResultsController
+
+	private var _fetchedResultsController:NSFetchedResultsController?
+	var fetchedResultsController:NSFetchedResultsController {
+		if _fetchedResultsController != nil {
+			return _fetchedResultsController!
+		}
+
+		var fetchRequest = NSFetchRequest()
+		fetchRequest.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: store.managedObjectContext )
+
+		fetchRequest.sortDescriptors = self.sortDescriptors
+
+		if let predicate = self.filterPredicate {
+			fetchRequest.predicate = predicate
+		}
+
+		fetchRequest.fetchBatchSize = 4 * 4
+
+		_fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: store.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+
+		_fetchedResultsController!.delegate = self
+
+		var error:NSError? = nil
+		if !_fetchedResultsController!.performFetch(&error) {
+			NSLog("Unable to execute fetch, error: %@", error!.localizedDescription )
+			abort()
+		}
+
+		return _fetchedResultsController!
+	}
+
+	var sortDescriptors:[NSSortDescriptor] {
+		return [
+			NSSortDescriptor(key: "date", ascending: true)
+		]
+	}
+
+	var filterPredicate:NSPredicate? {
+		return nil
+	}
 
 	func controllerWillChangeContent(controller: NSFetchedResultsController) {}
 
