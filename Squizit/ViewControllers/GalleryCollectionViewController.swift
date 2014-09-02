@@ -37,13 +37,17 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		didSet {
 			if deleteButtonVisible {
 				self.showDeleteButton()
+				self.wiggleCycle( .Start )
 			} else {
 				self.hideDeleteButton()
+				self.wiggleCycle( .End )
 			}
 		}
 	}
 
 	override func awakeFromNib() {
+		super.awakeFromNib()
+
 		self.clipsToBounds = false
 		deleteButton.alpha = 0
 		deleteButton.hidden = true
@@ -65,6 +69,11 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		deleteButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "deleteButtonTapped:"))
 	}
 
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		//wiggleCycle(.Restart) // this doesn't work
+	}
+
 	dynamic private func longPress( gr:UILongPressGestureRecognizer ) {
 		switch gr.state {
 			case UIGestureRecognizerState.Began:
@@ -83,13 +92,11 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	}
 
 	private func showDeleteButton() {
+		let deleteButton = self.deleteButton
 		UIView.animateWithDuration(0.2, animations: { () -> Void in
-			self.deleteButton.hidden = false
-			self.deleteButton.alpha = 1
+			deleteButton.hidden = false
+			deleteButton.alpha = 1
 		})
-
-		_wiggleDelay = drand48() * _wiggleCycleDuration
-		self.wiggleCycle()
 	}
 
 	private func hideDeleteButton() {
@@ -105,53 +112,85 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 					deleteButton.hidden = true
 				}
 			})
-
-		self.wiggleCycle() // returns to zero point
 	}
 
-	private var _wiggleDelay:NSTimeInterval = 0
-	private let _wiggleCycleDuration = 0.75
+	private let _wiggleVariance:NSTimeInterval = drand48()
+	private let _wiggleCycleDuration:NSTimeInterval = 0.5
 	private var _wiggling = false
 
-	private func wiggleCycle() {
+	private enum WiggleCycle {
+		case Start
+		case Continue
+		case End
+		case Restart
+	}
+
+	private func wiggleCycle( phase:WiggleCycle ) {
 
 		let wiggleAngle = M_PI * 0.00625
 		let layer = self.layer
+		let duration = _wiggleCycleDuration/2
 
-		if self.deleteButtonVisible {
-			if !_wiggling {
+		let nextCycle = { [weak self] ()->() in
+			if let sself = self {
+				sself.wiggleCycle(.Continue)
+			}
+		}
+
+		switch phase {
+
+			case .Start:
+				if _wiggling {
+					return
+				}
+
 				_wiggling = true
-				UIView.animateKeyframesWithDuration( _wiggleCycleDuration,
-					delay: _wiggleDelay,
-					options: UIViewKeyframeAnimationOptions.AllowUserInteraction | UIViewKeyframeAnimationOptions.CalculationModeCubic,
-					animations: {
-						() -> Void in
+				delay(_wiggleVariance * duration, nextCycle )
 
-						UIView.addKeyframeWithRelativeStartTime(0, relativeDuration: 0.5, animations: {
-							() -> Void in
-							layer.transform = CATransform3DMakeRotation(CGFloat(-wiggleAngle), 0, 0, 1)
-						})
+			case .Continue:
+				if !_wiggling {
+					return
+				}
 
-						UIView.addKeyframeWithRelativeStartTime(0.5, relativeDuration: 0.5, animations: {
-							() -> Void in
-							layer.transform = CATransform3DMakeRotation(CGFloat(+wiggleAngle), 0, 0, 1)
-						})
-
+				UIView.animateWithDuration( duration,
+					delay: 0,
+					options: UIViewAnimationOptions.AllowUserInteraction,
+					animations: { () -> Void in
+						layer.transform = CATransform3DMakeRotation(CGFloat(-wiggleAngle), 0, 0, 1)
+						return
 					},
 					completion: {
-						[weak self] ( complete:Bool ) -> Void in
-						if let sself = self {
-							sself._wiggleDelay = 0
-							sself._wiggling = false
-							sself.wiggleCycle()
-						}
-					});
-			}
-		} else {
-			_wiggling = false
-			UIView.animateWithDuration( _wiggleCycleDuration/2, animations: {
-				layer.transform = CATransform3DIdentity
-			})
+						(complete:Bool) -> Void in
+
+						UIView.animateWithDuration( duration,
+							delay: 0,
+							options: UIViewAnimationOptions.AllowUserInteraction,
+							animations: { () -> Void in
+								layer.transform = CATransform3DMakeRotation(CGFloat(+wiggleAngle), 0, 0, 1)
+								return
+							},
+							completion: {
+								(complete:Bool) -> Void in
+								nextCycle()
+							})
+
+					})
+
+
+			case .End:
+				if !_wiggling {
+					return
+				}
+
+				_wiggling = false
+				UIView.animateWithDuration( duration, animations: {
+					layer.transform = CATransform3DIdentity
+				})
+
+			case .Restart:
+				_wiggling = false
+				layer.removeAllAnimations()
+				wiggleCycle(.Start)
 		}
 	}
 }
