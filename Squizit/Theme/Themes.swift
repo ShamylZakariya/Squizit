@@ -12,7 +12,22 @@ import UIKit
 
 class SquizitTheme {
 
-	init() {}
+	init() {
+
+		let navAppearance = UINavigationBar.appearance()
+		navAppearance.barStyle = UIBarStyle.Black
+		navAppearance.translucent = true
+		navAppearance.titleTextAttributes = [
+			NSFontAttributeName: UIFont(name: "Baskerville-Bold", size: 21),
+			NSForegroundColorAttributeName: UIColor.whiteColor()
+		]
+
+		let bbiAppearance = UIBarButtonItem.appearance()
+		bbiAppearance.setTitleTextAttributes([
+			NSFontAttributeName: UIFont(name: "Baskerville", size: 18),
+		], forState: UIControlState.Normal)
+
+	}
 
 	class func cubeBackgroundImage() -> UIImage {
 		return UIImage(named: "cube-pattern")

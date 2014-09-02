@@ -110,18 +110,18 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	}
 
 	private var _wiggleDelay:NSTimeInterval = 0
-	private let _wiggleCycleDuration = 0.25
+	private let _wiggleCycleDuration = 0.75
 	private var _wiggling = false
+
 	private func wiggleCycle() {
 
-		let angle = M_PI * 0.00625
-		let wiggleDuration = _wiggleCycleDuration + (drand48()*2-1) * (_wiggleCycleDuration*0.1)
+		let wiggleAngle = M_PI * 0.00625
 		let layer = self.layer
 
 		if self.deleteButtonVisible {
 			if !_wiggling {
 				_wiggling = true
-				UIView.animateKeyframesWithDuration( wiggleDuration,
+				UIView.animateKeyframesWithDuration( _wiggleCycleDuration,
 					delay: _wiggleDelay,
 					options: UIViewKeyframeAnimationOptions.AllowUserInteraction | UIViewKeyframeAnimationOptions.CalculationModeCubic,
 					animations: {
@@ -129,12 +129,12 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 						UIView.addKeyframeWithRelativeStartTime(0, relativeDuration: 0.5, animations: {
 							() -> Void in
-							layer.transform = CATransform3DMakeRotation(CGFloat(-angle), 0, 0, 1)
+							layer.transform = CATransform3DMakeRotation(CGFloat(-wiggleAngle), 0, 0, 1)
 						})
 
 						UIView.addKeyframeWithRelativeStartTime(0.5, relativeDuration: 0.5, animations: {
 							() -> Void in
-							layer.transform = CATransform3DMakeRotation(CGFloat(+angle), 0, 0, 1)
+							layer.transform = CATransform3DMakeRotation(CGFloat(+wiggleAngle), 0, 0, 1)
 						})
 
 					},
@@ -398,6 +398,8 @@ class GalleryCollectionViewController : UICollectionViewController {
 	}
 
 	override func viewDidLoad() {
+		super.viewDidLoad()
+
 		collectionView.backgroundColor = SquizitTheme.galleryBackgroundColor()
 
 		_dataSource = GalleryCollectionViewDataSource(store: store, collectionView: collectionView)
@@ -405,11 +407,8 @@ class GalleryCollectionViewController : UICollectionViewController {
 			[unowned self] ( inEditMode:Bool ) -> Void in
 
 			if inEditMode {
-				NSLog( "entered editMode" )
-				var doneBBI = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Done, target: self, action: "exitEditMode:")
-				self.navigationItem.rightBarButtonItem = doneBBI
+				self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "onDoneEditing:")
 			} else {
-				NSLog( "leaving editMode" )
 				self.navigationItem.rightBarButtonItem = nil
 			}
 		}
@@ -419,18 +418,17 @@ class GalleryCollectionViewController : UICollectionViewController {
 		_dataSource.didReceiveMemoryWarning()
 	}
 
+	override func preferredStatusBarStyle() -> UIStatusBarStyle {
+		return UIStatusBarStyle.LightContent
+	}
 
 	// MARK: IBActions
 
-	@IBAction func onDone(sender: AnyObject) {
+	@IBAction func onClose(sender: AnyObject) {
 		delegate?.galleryDidDismiss(self)
 	}
 
-	// MARK: Private
-
-	dynamic private func exitEditMode( sender:AnyObject ) {
+	@IBAction func onDoneEditing( sender:AnyObject ) {
 		_dataSource.editMode = false
 	}
-
-
 }

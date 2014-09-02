@@ -240,10 +240,10 @@
             </objects>
             <point key="canvasLocation" x="2548" y="698"/>
         </scene>
-        <!--Gallery Collection View Controller-->
+        <!--Gallery-->
         <scene sceneID="mkc-AW-AN1">
             <objects>
-                <collectionViewController id="VSN-97-iZW" customClass="GalleryCollectionViewController" customModule="Squizit" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController title="Gallery" id="VSN-97-iZW" customClass="GalleryCollectionViewController" customModule="Squizit" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" indicatorStyle="white" dataMode="prototypes" id="P2B-uE-ciE">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -333,10 +333,10 @@
                             <outlet property="delegate" destination="VSN-97-iZW" id="ii9-Y1-ua9"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="Fh8-q2-5nt">
-                        <barButtonItem key="leftBarButtonItem" title="Exit" id="D87-Zi-EHk">
+                    <navigationItem key="navigationItem" title="Gallery" id="Fh8-q2-5nt">
+                        <barButtonItem key="leftBarButtonItem" title="Close" style="done" id="ffs-EF-yb7">
                             <connections>
-                                <action selector="onDone:" destination="VSN-97-iZW" id="vfq-ll-02l"/>
+                                <action selector="onClose:" destination="VSN-97-iZW" id="ifO-Vm-Ff2"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -345,14 +345,17 @@
             </objects>
             <point key="canvasLocation" x="2631" y="1503"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Gallery Nav Controller-->
         <scene sceneID="2j9-Kl-n7I">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Sk5-Tq-1WP" sceneMemberID="viewController">
+                <navigationController title="Gallery Nav Controller" automaticallyAdjustsScrollViewInsets="NO" id="Sk5-Tq-1WP" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="5oO-7k-Pgv">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <textAttributes key="titleTextAttributes">
+                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="1"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
