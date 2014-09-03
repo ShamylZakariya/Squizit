@@ -22,8 +22,12 @@ enum Fill {
 				UIColor.blackColor().colorWithAlphaComponent(0.9).set()
 
 			case .Eraser:
-				let c = backgroundColor != nil ? backgroundColor : UIColor.whiteColor()
-				c.colorWithAlphaComponent(0.8).set()
+				let Opacity:CGFloat = 0.8
+				if let c = backgroundColor {
+					c.colorWithAlphaComponent(Opacity).set()
+				} else {
+					UIColor.whiteColor().colorWithAlphaComponent(Opacity).set()
+				}
 		}
 	}
 

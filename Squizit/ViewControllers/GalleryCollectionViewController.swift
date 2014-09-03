@@ -183,6 +183,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 				}
 
 				_wiggling = false
+				layer.removeAllAnimations()
 				UIView.animateWithDuration( duration, animations: {
 					layer.transform = CATransform3DIdentity
 				})
@@ -234,21 +235,23 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 
 	// MARK: UICollectionViewDataSource
 
-	func numberOfSectionsInCollectionView(collectionView: UICollectionView!) -> Int {
-		return 1
+	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		let info = self.fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
+		return info.numberOfObjects
 	}
 
-	func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell! {
+	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCellWithReuseIdentifier(GalleryCollectionViewCell.identifier(), forIndexPath: indexPath) as GalleryCollectionViewCell
 
 		configureCell( cell, atIndexPath: indexPath )
 		return cell
 	}
 
-	func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int {
-		let info = self.fetchedResultsController.sections[section] as NSFetchedResultsSectionInfo
-		return info.numberOfObjects
+	func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+		return 1
 	}
+
+
 
 	// MARK: UICollectionViewDelegate
 
@@ -269,7 +272,7 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 		}
 
 		var fetchRequest = NSFetchRequest()
-		fetchRequest.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: _store.managedObjectContext )
+		fetchRequest.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: _store.managedObjectContext! )
 
 		fetchRequest.sortDescriptors = self.sortDescriptors
 
@@ -279,7 +282,7 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 
 		fetchRequest.fetchBatchSize = 4 * 4
 
-		_fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: _store.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+		_fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: _store.managedObjectContext!, sectionNameKeyPath: nil, cacheName: nil)
 
 		_fetchedResultsController!.delegate = self
 
@@ -420,16 +423,18 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 	}
 }
 
-// MARK: - GalleryCollectionViewController
+// MARK: - GalleryViewController
 
-class GalleryCollectionViewController : UICollectionViewController {
+class GalleryViewController : UIViewController {
+
+	@IBOutlet weak var collectionView: UICollectionView!
 
 	var store:GalleryStore!
 	weak var delegate:GalleryViewControllerDelegate?
 	private var _dataSource:GalleryCollectionViewDataSource!
 
-
-	// MARK: UICollectionViewController
+	private var _fixedHeaderView: UIView!
+	private let _fixedHeaderHeight:CGFloat = 80
 
 	required init(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
@@ -451,6 +456,27 @@ class GalleryCollectionViewController : UICollectionViewController {
 				self.navigationItem.rightBarButtonItem = nil
 			}
 		}
+
+		self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close", style: .Done, target: self, action: "onClose:")
+
+
+		//
+		//	Create the fixed header view
+		//
+
+		_fixedHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
+		view.addSubview(_fixedHeaderView)
+
+		//
+		//	Make room for fixed header
+		//
+
+		collectionView.contentInset = UIEdgeInsets(top: _fixedHeaderHeight, left: 0, bottom: 0, right: 0)
+	}
+
+	override func viewWillLayoutSubviews() {
+		super.viewWillLayoutSubviews()
+		_fixedHeaderView.frame = CGRect(x:0, y: self.topLayoutGuide.length, width: self.view.bounds.width, height: _fixedHeaderHeight)
 	}
 
 	override func didReceiveMemoryWarning() {
@@ -463,11 +489,13 @@ class GalleryCollectionViewController : UICollectionViewController {
 
 	// MARK: IBActions
 
-	@IBAction func onClose(sender: AnyObject) {
+	dynamic private func onClose(sender: AnyObject) {
 		delegate?.galleryDidDismiss(self)
 	}
 
-	@IBAction func onDoneEditing( sender:AnyObject ) {
+	dynamic private func onDoneEditing( sender:AnyObject ) {
 		_dataSource.editMode = false
 	}
+
+
 }

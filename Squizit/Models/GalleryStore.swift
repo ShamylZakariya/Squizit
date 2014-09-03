@@ -23,7 +23,7 @@ class GalleryStore {
 
 	func loadArtist( name:String, create:Bool ) -> GalleryArtist? {
 		var fr = NSFetchRequest()
-		fr.entity = NSEntityDescription.entityForName(GalleryArtist.entityName(), inManagedObjectContext: self.managedObjectContext)
+		fr.entity = NSEntityDescription.entityForName(GalleryArtist.entityName(), inManagedObjectContext: self.managedObjectContext!)
 		fr.predicate = NSPredicate(format: "name like[cd] \"\(name)\"")
 
 		var sd = NSSortDescriptor(key: "name", ascending: true)
@@ -59,7 +59,7 @@ class GalleryStore {
 	func allArtists() -> [GalleryArtist] {
 
 		var fr = NSFetchRequest()
-		fr.entity = NSEntityDescription.entityForName(GalleryArtist.entityName(), inManagedObjectContext: self.managedObjectContext)
+		fr.entity = NSEntityDescription.entityForName(GalleryArtist.entityName(), inManagedObjectContext: self.managedObjectContext!)
 
 		var sd = NSSortDescriptor(key: "name", ascending: true)
 		fr.sortDescriptors = [sd]
@@ -82,7 +82,7 @@ class GalleryStore {
 	*/
 	func allDrawings() -> [GalleryDrawing] {
 		var fr = NSFetchRequest()
-		fr.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: self.managedObjectContext)
+		fr.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: self.managedObjectContext!)
 
 		var sd = NSSortDescriptor(key: "date", ascending: true)
 		fr.sortDescriptors = [sd]
@@ -100,7 +100,7 @@ class GalleryStore {
 
 	lazy var managedObjectModel: NSManagedObjectModel = {
 	    let modelURL = NSBundle.mainBundle().URLForResource("GalleryStore", withExtension: "momd")
-	    return NSManagedObjectModel(contentsOfURL: modelURL)
+	    return NSManagedObjectModel(contentsOfURL: modelURL!)
 	}()
 
 	lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {

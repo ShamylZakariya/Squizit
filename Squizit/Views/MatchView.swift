@@ -56,30 +56,30 @@ class MatchView : UIView {
 		}
 	}
 
-	override func touchesBegan(touches: NSSet!, withEvent event: UIEvent!) {
+	override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
 
 		if touches.count > 1 {
 			return
 		}
 
 		if let player = self.player {
-			let location = touches.anyObject().locationInView(self)
+			let location = touches.anyObject()!.locationInView(self)
 			_controllers[player].touchBegan(location)
 			_tracking = true
 		}
 	}
 
-	override func touchesMoved(touches: NSSet!, withEvent event: UIEvent!) {
+	override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
 
 		if !_tracking {
 			return
 		}
 
-		let location = touches.anyObject().locationInView(self)
+		let location = touches.anyObject()!.locationInView(self)
 		_controllers[player!].touchMoved(location)
 	}
 
-	override func touchesEnded(touches: NSSet!, withEvent event: UIEvent!) {
+	override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
 
 		if !_tracking {
 			return
@@ -89,7 +89,7 @@ class MatchView : UIView {
 		_tracking = false
 	}
 
-	override func touchesCancelled(touches: NSSet!, withEvent event: UIEvent!) {
+	override func touchesCancelled(touches: NSSet, withEvent event: UIEvent) {
 		touchesEnded(touches, withEvent: event)
 	}
 

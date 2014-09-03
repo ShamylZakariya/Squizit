@@ -394,7 +394,9 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	func didDismissSaveToGallery() {
 		println("didDismiss" )
 		dismissViewControllerAnimated(true) {
-			self.presentingViewController.dismissViewControllerAnimated(true, completion: nil)
+			if let presenter = self.presentingViewController {
+				presenter.dismissViewControllerAnimated(true, completion: nil)
+			}
 			return
 		}
 	}
@@ -452,7 +454,9 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		//
 
 		dismissViewControllerAnimated(true) {
-			self.presentingViewController.dismissViewControllerAnimated(true, completion: nil)
+			if let presenter = self.presentingViewController {
+				presenter.dismissViewControllerAnimated(true, completion: nil)
+			}
 			return
 		}
 	}

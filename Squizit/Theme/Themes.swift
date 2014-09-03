@@ -114,11 +114,11 @@ class SquizitThemeButton : UIButton {
 	}
 
 	private func update() {
-		titleLabel.font = UIFont(name: "Avenir-Light", size: UIFont.buttonFontSize())
+		titleLabel!.font = UIFont(name: "Avenir-Light", size: UIFont.buttonFontSize())
 		layer.cornerRadius = 0
 		layer.borderWidth = 1
 		layer.backgroundColor = UIColor(white: 0.19, alpha: 0.2).CGColor
-		layer.borderColor = self.tintColor.colorWithAlphaComponent(0.2).CGColor
+		layer.borderColor = self.tintColor!.colorWithAlphaComponent(0.2).CGColor
 	}
 
 	override func intrinsicContentSize() -> CGSize {
@@ -162,7 +162,7 @@ class SquizitThemeNameInputField : UITextField {
 		font = UIFont(name: "Baskerville-Italic", size: UIFont.labelFontSize() )
 		textAlignment = NSTextAlignment.Center
 
-		attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [
+		attributedPlaceholder = NSAttributedString(string: placeholder!, attributes: [
 			NSForegroundColorAttributeName: tintColor.colorWithAlphaComponent(0.5)
 		])
 	}

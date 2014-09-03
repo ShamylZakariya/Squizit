@@ -53,16 +53,16 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 		return UIStatusBarStyle.LightContent
 	}
 	
-	override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 
 		if sender === galleryButton {
 
 			let navVC = segue.destinationViewController as UINavigationController
-			if let galleryVC = navVC.childViewControllers.first as? GalleryCollectionViewController {
+			if let galleryVC = navVC.childViewControllers.first as? GalleryViewController {
 				galleryVC.store = (UIApplication.sharedApplication().delegate as? AppDelegate)!.galleryStore
 				galleryVC.delegate = self
 			} else {
-				assertionFailure("Unable to extract GalleryCollectionViewController from segue")
+				assertionFailure("Unable to extract GalleryViewController from segue")
 			}
 
 		} else {
