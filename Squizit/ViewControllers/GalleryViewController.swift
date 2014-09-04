@@ -198,18 +198,16 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 // MARK: - GalleryCollectionViewDataSource
 
-class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate, UISearchBarDelegate, UIScrollViewDelegate {
+class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate, UIScrollViewDelegate {
 
 	private var _store:GalleryStore
 	private var _collectionView:UICollectionView
-	private weak var _viewController:UIViewController?
 	private var _thumbnailCompositorQueue = dispatch_queue_create("com.zakariya.squizit.GalleryThumbnailCompositorQueue", nil)
 	private var _thumbnailBackgroundColor = SquizitTheme.thumbnailBackgroundColor()
 
-	init( store:GalleryStore, collectionView:UICollectionView, viewController:UIViewController ) {
+	init( store:GalleryStore, collectionView:UICollectionView ) {
 		_store = store
 		_collectionView = collectionView
-		_viewController = viewController
 
 		super.init()
 
@@ -293,23 +291,37 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 		return _fetchedResultsController!
 	}
 
-	var sortDescriptors:[NSSortDescriptor] {
+	/*
+		setting artistNameFilter will update the filter predicate on the fetch request
+	*/
+	var artistNameFilter:String? {
+		didSet {
+			if artistNameFilter != oldValue {
+				fetchedResultsController.fetchRequest.predicate = self.filterPredicate
+				performFetch()
+				_collectionView.reloadData()
+			}
+		}
+	}
+
+	private var sortDescriptors:[NSSortDescriptor] {
 		return [
 			NSSortDescriptor(key: "date", ascending: false)
 		]
 	}
 
-	var filterPredicate:NSPredicate? {
-		if let filter = _searchFilterString {
-
-			// find artists whos names start with filter
-			return NSPredicate(format: "SUBQUERY(artists, $artist, $artist.name BEGINSWITH[cd] \"\(filter)\").@count > 0")
+	private var filterPredicate:NSPredicate? {
+		if let filter = artistNameFilter {
+			if countElements(filter) > 0 {
+				// find artists whos names start with filter
+				return NSPredicate(format: "SUBQUERY(artists, $artist, $artist.name BEGINSWITH[cd] \"\(filter)\").@count > 0")
+			}
 		}
 
 		return nil
 	}
 
-	func performFetch() {
+	private func performFetch() {
 		var error:NSError? = nil
 		if !fetchedResultsController.performFetch(&error) {
 			NSLog("Unable to execute fetch, error: %@", error!.localizedDescription )
@@ -348,27 +360,6 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 	}
 
 	func controllerDidChangeContent(controller: NSFetchedResultsController) {}
-
-	// MARK: UISearchBarDelegate
-
-	private var _searchFilterString:String? {
-		didSet {
-			fetchedResultsController.fetchRequest.predicate = self.filterPredicate
-			performFetch()
-			_collectionView.reloadData()
-		}
-	}
-
-	func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-		_searchFilterString = countElements(searchText) > 0 ? searchText : nil
-	}
-
-	func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-		println("searchBarShouldEndEditing")
-		if let view = _viewController?.view {
-			view.endEditing(true)
-		}
-	}
 
 	// MARK: UIScrollViewDelegate
 
@@ -468,7 +459,7 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 
 // MARK: - GalleryViewController
 
-class GalleryViewController : UIViewController {
+class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 	@IBOutlet weak var collectionView: UICollectionView!
 
@@ -476,7 +467,7 @@ class GalleryViewController : UIViewController {
 	weak var delegate:GalleryViewControllerDelegate?
 	private var _dataSource:GalleryCollectionViewDataSource!
 
-	private var _searchBar = UISearchBar(frame: CGRect.zeroRect )
+	private var _searchField = SquizitThemeSearchField(frame: CGRect.zeroRect )
 	private var _fixedHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
 	private let _fixedHeaderHeightRange = (min: CGFloat(60), max:CGFloat(60))
 	private var _fixedHeaderHeight:CGFloat = 60
@@ -492,8 +483,7 @@ class GalleryViewController : UIViewController {
 		collectionView.backgroundColor = SquizitTheme.galleryBackgroundColor()
 
 
-		_dataSource = GalleryCollectionViewDataSource(store: store, collectionView: collectionView, viewController: self)
-		_searchBar.delegate = _dataSource
+		_dataSource = GalleryCollectionViewDataSource(store: store, collectionView: collectionView )
 
 		_dataSource.editModeChanged = {
 			[weak self] ( inEditMode:Bool ) -> Void in
@@ -522,13 +512,13 @@ class GalleryViewController : UIViewController {
 		//	Create the fixed header view
 		//
 
-		_fixedHeaderView.addSubview(_searchBar)
+		_searchField.delegate = self
+		_searchField.placeholder = "Who drew..."
+		_searchField.addTarget(self, action: "searchTextChanged:", forControlEvents: UIControlEvents.EditingChanged)
+
+		_fixedHeaderView.addSubview(_searchField)
 		view.addSubview(_fixedHeaderView)
 
-		_searchBar.placeholder = "Who drew..."
-		_searchBar.barStyle = UIBarStyle.Default
-		_searchBar.searchBarStyle = UISearchBarStyle.Minimal
-		_searchBar.translucent = true
 
 		//
 		//	Make room for fixed header
@@ -561,7 +551,62 @@ class GalleryViewController : UIViewController {
 		_dataSource.editMode = false
 	}
 
+	// MARK: UITextFieldDelegate
+
+	dynamic private func searchTextChanged( sender:UITextField ) {
+		if sender === _searchField {
+			setArtistFilter(_searchField.text)
+		}
+	}
+
+	func textFieldShouldEndEditing(textField: UITextField) -> Bool {
+		if textField === _searchField {}
+		return true
+	}
+
+	func textFieldShouldReturn(textField: UITextField) -> Bool {
+		if textField == _searchField {
+			textField.resignFirstResponder()
+		}
+		return true
+	}
+
+	func textFieldDidEndEditing(textField: UITextField) {
+		if textField == _searchField {
+			textField.resignFirstResponder()
+		}
+	}
+
+	func textFieldShouldClear(textField: UITextField) -> Bool {
+		if textField == _searchField {
+			textField.resignFirstResponder()
+		}
+		return true
+	}
+
 	// MARK: Private
+
+	private var _currentArtistFilter:String = ""
+	private var _debouncedArtistFilterApplicator:((()->())?)
+
+	private func setArtistFilter( partialName:String ) {
+
+		_currentArtistFilter = partialName
+			.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+			.capitalizedStringWithLocale(NSLocale.currentLocale())
+
+		if _debouncedArtistFilterApplicator == nil {
+			_debouncedArtistFilterApplicator = debounce(0.5) {
+				[weak self] () -> () in
+				if let sself = self {
+					sself._dataSource.artistNameFilter = sself._currentArtistFilter
+				}
+			}
+		}
+
+		_debouncedArtistFilterApplicator!()
+	}
+
 
 	private func layoutFixedHeaderView() {
 		let headerFrame = CGRect(x:0, y: self.topLayoutGuide.length, width: self.view.bounds.width, height: _fixedHeaderHeight)
@@ -569,10 +614,10 @@ class GalleryViewController : UIViewController {
 
 		let bounds = _fixedHeaderView.bounds
 		let margin:CGFloat = 20
-		let searchFieldHeight:CGFloat = _searchBar.intrinsicContentSize().height
+		let searchFieldHeight:CGFloat = _searchField.intrinsicContentSize().height
 		let searchFieldFrame = CGRect(x: margin, y: bounds.midY - searchFieldHeight/2, width: bounds.width-2*margin, height: searchFieldHeight)
 
-		_searchBar.frame = searchFieldFrame
+		_searchField.frame = searchFieldFrame
 	}
 
 	private func scrollViewDidScroll( scrollView:UIScrollView ) {

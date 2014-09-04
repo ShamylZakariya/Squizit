@@ -14,9 +14,10 @@
 		<string>NeutraText-Book</string>
 		<string>Avenir-Light</string>
 		<string>Baskerville</string>
+		<string>Baskerville-Bold</string>
 	</array>
 	<key>length</key>
-	<integer>5049981</integer>
+	<integer>5064168</integer>
 	<key>version</key>
 	<integer>37</integer>
 </dict>
