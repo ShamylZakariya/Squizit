@@ -24,7 +24,7 @@ class GalleryStore {
 	func loadArtist( name:String, create:Bool ) -> GalleryArtist? {
 		var fr = NSFetchRequest()
 		fr.entity = NSEntityDescription.entityForName(GalleryArtist.entityName(), inManagedObjectContext: self.managedObjectContext!)
-		fr.predicate = NSPredicate(format: "name like[cd] \"\(name)\"")
+		fr.predicate = NSPredicate(format: "name BEGINSWITH[cd] \"\(name)\"")
 
 		var sd = NSSortDescriptor(key: "name", ascending: true)
 		fr.sortDescriptors = [sd]
@@ -49,6 +49,22 @@ class GalleryStore {
 		}
 
 		return nil
+	}
+
+	/*
+		return an array of GalleryArtist whos names start with `partialName
+	*/
+	func artists( partialName:String ) -> [GalleryArtist] {
+		var fr = NSFetchRequest()
+		fr.entity = NSEntityDescription.entityForName(GalleryArtist.entityName(), inManagedObjectContext: self.managedObjectContext!)
+		fr.predicate = NSPredicate(format: "name BEGINSWITH[cd] \"\(partialName)\"")
+
+		var error: NSError? = nil
+		if let results = self.managedObjectContext?.executeFetchRequest(fr, error: &error ) {
+			return results as [GalleryArtist]
+		}
+
+		return []
 	}
 
 	/**

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6350C5EA19A1727B008CE4F5 /* MatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350C5E919A1727B008CE4F5 /* MatchViewController.swift */; };
 		6350C5EC19A24790008CE4F5 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350C5EB19A24790008CE4F5 /* RootViewController.swift */; };
+		635DFA8119B76B6900102B6A /* Appearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 635DFA8019B76B6900102B6A /* Appearance.m */; };
 		636BFA9719B3DDD100A90A75 /* GCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636BFA9619B3DDD100A90A75 /* GCD.swift */; };
 		636CEA24199E586400BEBF53 /* DrawingInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA23199E586400BEBF53 /* DrawingInputController.swift */; };
 		636CEA29199F251200BEBF53 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA28199F251200BEBF53 /* Match.swift */; };
@@ -74,6 +75,8 @@
 /* Begin PBXFileReference section */
 		6350C5E919A1727B008CE4F5 /* MatchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchViewController.swift; sourceTree = "<group>"; };
 		6350C5EB19A24790008CE4F5 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		635DFA7F19B76B5900102B6A /* Appearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Appearance.h; sourceTree = "<group>"; };
+		635DFA8019B76B6900102B6A /* Appearance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Appearance.m; sourceTree = "<group>"; };
 		636BFA9619B3DDD100A90A75 /* GCD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCD.swift; sourceTree = "<group>"; };
 		636CEA23199E586400BEBF53 /* DrawingInputController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingInputController.swift; sourceTree = "<group>"; };
 		636CEA28199F251200BEBF53 /* Match.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
@@ -99,7 +102,7 @@
 		63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToGalleryViewController.swift; sourceTree = "<group>"; };
 		63EBB87219AEC0DD003C3EC2 /* GalleryStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryStore.swift; sourceTree = "<group>"; };
 		63EBB87519AEC2C7003C3EC2 /* GalleryStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GalleryStore.xcdatamodel; sourceTree = "<group>"; };
-		63EBB87719AEC49A003C3EC2 /* Squizit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Squizit-Bridging-Header.h"; sourceTree = "<group>"; };
+		63EBB87719AEC49A003C3EC2 /* Squizit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Squizit-Bridging-Header.h"; path = "Models/Squizit-Bridging-Header.h"; sourceTree = "<group>"; };
 		63EBB87B19AEC49C003C3EC2 /* GalleryStoreEntities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GalleryStoreEntities.h; sourceTree = "<group>"; };
 		63EBB87C19AEC49C003C3EC2 /* GalleryStoreEntities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GalleryStoreEntities.m; sourceTree = "<group>"; };
 		63EBB87E19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBuffer_NSData.swift; sourceTree = "<group>"; };
@@ -130,6 +133,8 @@
 			isa = PBXGroup;
 			children = (
 				638576EB19A6481500581DE8 /* Themes.swift */,
+				635DFA7F19B76B5900102B6A /* Appearance.h */,
+				635DFA8019B76B6900102B6A /* Appearance.m */,
 			);
 			path = Theme;
 			sourceTree = "<group>";
@@ -173,6 +178,7 @@
 				63BBECB119967A9900F6E2B3 /* ViewControllers */,
 				63BBECB219967A9900F6E2B3 /* Views */,
 				63BBEC8F19967A2300F6E2B3 /* AppDelegate.swift */,
+				63EBB87719AEC49A003C3EC2 /* Squizit-Bridging-Header.h */,
 				63BBEC9719967A2300F6E2B3 /* Main.storyboard */,
 				63BBEC9A19967A2300F6E2B3 /* Images.xcassets */,
 				63BBEC8D19967A2300F6E2B3 /* Supporting Files */,
@@ -219,7 +225,6 @@
 				63EBB87419AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld */,
 				63EBB87B19AEC49C003C3EC2 /* GalleryStoreEntities.h */,
 				63EBB87C19AEC49C003C3EC2 /* GalleryStoreEntities.m */,
-				63EBB87719AEC49A003C3EC2 /* Squizit-Bridging-Header.h */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -386,6 +391,7 @@
 				6350C5EC19A24790008CE4F5 /* RootViewController.swift in Sources */,
 				638576F019A65B4500581DE8 /* Geometry.swift in Sources */,
 				63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */,
+				635DFA8119B76B6900102B6A /* Appearance.m in Sources */,
 				63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */,
 				63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */,
 				63EBB87319AEC0DD003C3EC2 /* GalleryStore.swift in Sources */,

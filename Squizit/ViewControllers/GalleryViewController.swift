@@ -198,16 +198,18 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 // MARK: - GalleryCollectionViewDataSource
 
-class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate {
+class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate, UISearchBarDelegate, UIScrollViewDelegate {
 
 	private var _store:GalleryStore
 	private var _collectionView:UICollectionView
+	private weak var _viewController:UIViewController?
 	private var _thumbnailCompositorQueue = dispatch_queue_create("com.zakariya.squizit.GalleryThumbnailCompositorQueue", nil)
 	private var _thumbnailBackgroundColor = SquizitTheme.thumbnailBackgroundColor()
 
-	init( store:GalleryStore, collectionView:UICollectionView ) {
+	init( store:GalleryStore, collectionView:UICollectionView, viewController:UIViewController ) {
 		_store = store
 		_collectionView = collectionView
+		_viewController = viewController
 
 		super.init()
 
@@ -286,23 +288,33 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 
 		_fetchedResultsController!.delegate = self
 
-		var error:NSError? = nil
-		if !_fetchedResultsController!.performFetch(&error) {
-			NSLog("Unable to execute fetch, error: %@", error!.localizedDescription )
-			abort()
-		}
+		performFetch()
 
 		return _fetchedResultsController!
 	}
 
 	var sortDescriptors:[NSSortDescriptor] {
 		return [
-			NSSortDescriptor(key: "date", ascending: true)
+			NSSortDescriptor(key: "date", ascending: false)
 		]
 	}
 
 	var filterPredicate:NSPredicate? {
+		if let filter = _searchFilterString {
+
+			// find artists whos names start with filter
+			return NSPredicate(format: "SUBQUERY(artists, $artist, $artist.name BEGINSWITH[cd] \"\(filter)\").@count > 0")
+		}
+
 		return nil
+	}
+
+	func performFetch() {
+		var error:NSError? = nil
+		if !fetchedResultsController.performFetch(&error) {
+			NSLog("Unable to execute fetch, error: %@", error!.localizedDescription )
+			abort()
+		}
 	}
 
 	func controllerWillChangeContent(controller: NSFetchedResultsController) {}
@@ -335,8 +347,39 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 		}
 	}
 
-
 	func controllerDidChangeContent(controller: NSFetchedResultsController) {}
+
+	// MARK: UISearchBarDelegate
+
+	private var _searchFilterString:String? {
+		didSet {
+			fetchedResultsController.fetchRequest.predicate = self.filterPredicate
+			performFetch()
+			_collectionView.reloadData()
+		}
+	}
+
+	func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+		_searchFilterString = countElements(searchText) > 0 ? searchText : nil
+	}
+
+	func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+		println("searchBarShouldEndEditing")
+		if let view = _viewController?.view {
+			view.endEditing(true)
+		}
+	}
+
+	// MARK: UIScrollViewDelegate
+
+	var onScrollViewDidScroll:(((scrollView:UIScrollView)->())?)
+	func scrollViewDidScroll(scrollView: UIScrollView) {
+		if let handler = onScrollViewDidScroll {
+			handler( scrollView: scrollView )
+		}
+	}
+
+	// MARK: Private
 
 	private func configureCell( cell:GalleryCollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
 		let store = _store
@@ -433,8 +476,10 @@ class GalleryViewController : UIViewController {
 	weak var delegate:GalleryViewControllerDelegate?
 	private var _dataSource:GalleryCollectionViewDataSource!
 
-	private var _fixedHeaderView: UIView!
-	private let _fixedHeaderHeight:CGFloat = 80
+	private var _searchBar = UISearchBar(frame: CGRect.zeroRect )
+	private var _fixedHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
+	private let _fixedHeaderHeightRange = (min: CGFloat(60), max:CGFloat(60))
+	private var _fixedHeaderHeight:CGFloat = 60
 
 	required init(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
@@ -446,14 +491,27 @@ class GalleryViewController : UIViewController {
 
 		collectionView.backgroundColor = SquizitTheme.galleryBackgroundColor()
 
-		_dataSource = GalleryCollectionViewDataSource(store: store, collectionView: collectionView)
-		_dataSource.editModeChanged = {
-			[unowned self] ( inEditMode:Bool ) -> Void in
 
-			if inEditMode {
-				self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "onDoneEditing:")
-			} else {
-				self.navigationItem.rightBarButtonItem = nil
+		_dataSource = GalleryCollectionViewDataSource(store: store, collectionView: collectionView, viewController: self)
+		_searchBar.delegate = _dataSource
+
+		_dataSource.editModeChanged = {
+			[weak self] ( inEditMode:Bool ) -> Void in
+			if let sself = self {
+				if inEditMode {
+					sself.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: sself, action: "onDoneEditing:")
+				} else {
+					sself.navigationItem.rightBarButtonItem = nil
+				}
+			}
+		}
+
+		if _fixedHeaderHeightRange.max > _fixedHeaderHeightRange.min {
+			_dataSource.onScrollViewDidScroll = {
+				[weak self] ( scrollView:UIScrollView) in
+				if let sself = self {
+					sself.scrollViewDidScroll( scrollView )
+				}
 			}
 		}
 
@@ -464,19 +522,25 @@ class GalleryViewController : UIViewController {
 		//	Create the fixed header view
 		//
 
-		_fixedHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
+		_fixedHeaderView.addSubview(_searchBar)
 		view.addSubview(_fixedHeaderView)
+
+		_searchBar.placeholder = "Who drew..."
+		_searchBar.barStyle = UIBarStyle.Default
+		_searchBar.searchBarStyle = UISearchBarStyle.Minimal
+		_searchBar.translucent = true
 
 		//
 		//	Make room for fixed header
 		//
 
-		collectionView.contentInset = UIEdgeInsets(top: _fixedHeaderHeight, left: 0, bottom: 0, right: 0)
+		collectionView.contentInset = UIEdgeInsets(top: _fixedHeaderHeight + 20, left: 0, bottom: 0, right: 0)
 	}
 
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-		_fixedHeaderView.frame = CGRect(x:0, y: self.topLayoutGuide.length, width: self.view.bounds.width, height: _fixedHeaderHeight)
+		layoutFixedHeaderView()
+		scrollViewDidScroll(collectionView)
 	}
 
 	override func didReceiveMemoryWarning() {
@@ -497,5 +561,27 @@ class GalleryViewController : UIViewController {
 		_dataSource.editMode = false
 	}
 
+	// MARK: Private
+
+	private func layoutFixedHeaderView() {
+		let headerFrame = CGRect(x:0, y: self.topLayoutGuide.length, width: self.view.bounds.width, height: _fixedHeaderHeight)
+		_fixedHeaderView.frame = headerFrame
+
+		let bounds = _fixedHeaderView.bounds
+		let margin:CGFloat = 20
+		let searchFieldHeight:CGFloat = _searchBar.intrinsicContentSize().height
+		let searchFieldFrame = CGRect(x: margin, y: bounds.midY - searchFieldHeight/2, width: bounds.width-2*margin, height: searchFieldHeight)
+
+		_searchBar.frame = searchFieldFrame
+	}
+
+	private func scrollViewDidScroll( scrollView:UIScrollView ) {
+		let minScroll = -(self.topLayoutGuide.length + _fixedHeaderHeight)
+		let offset = scrollView.contentOffset.y - minScroll
+		let maxScroll = _fixedHeaderHeight
+		let scale = 1 - min(max( offset/maxScroll, 0 ), 1 )
+		_fixedHeaderHeight = _fixedHeaderHeightRange.min + scale * ( _fixedHeaderHeightRange.max - _fixedHeaderHeightRange.min )
+		layoutFixedHeaderView()
+	}
 
 }

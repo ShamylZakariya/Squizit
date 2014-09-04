@@ -14,6 +14,10 @@ class SquizitTheme {
 
 	init() {
 
+		//
+		//	UINavbar
+		//
+
 		let navAppearance = UINavigationBar.appearance()
 		navAppearance.barStyle = UIBarStyle.Black
 		navAppearance.translucent = true
@@ -22,10 +26,20 @@ class SquizitTheme {
 			NSForegroundColorAttributeName: UIColor.whiteColor()
 		]
 
+		//
+		//	UIBarButtonItem
+		//
+
 		let bbiAppearance = UIBarButtonItem.appearance()
 		bbiAppearance.setTitleTextAttributes([
 			NSFontAttributeName: UIFont(name: "Baskerville", size: 18),
 		], forState: UIControlState.Normal)
+
+		//
+		//	Swift doesn't support appearanceWhenContainedIn... so we need to bridge to ObjC
+		//
+
+		SquizitTheme_ConfigureAppearanceProxies()
 
 	}
 
