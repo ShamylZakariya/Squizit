@@ -381,11 +381,9 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 				artistNames.append(artist.name)
 			}
 
-			cell.alpha = 0
 			cell.namesLabel.text = (artistNames as NSArray).componentsJoinedByString(", ")
 			cell.dateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
 			cell.deleteButtonVisible = self.editMode
-
 
 			cell.onLongPress = {
 				[weak self]
@@ -430,12 +428,7 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 				UIGraphicsEndImageContext()
 
 				dispatch_async(dispatch_get_main_queue() ) {
-
 					cell.imageView.image = thumbnail
-					UIView.animateWithDuration(0.2, animations: { () -> Void in
-						cell.alpha = 1
-					})
-
 				}
 			}
 
