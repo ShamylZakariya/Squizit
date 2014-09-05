@@ -208,9 +208,7 @@ class Drawing {
 		}
 
 		if !_debugRender {
-			CGContextBeginTransparencyLayer(context, nil)
 			stroke.fill.set( self.backgroundColor )
-			CGContextSetAlpha(context, 0.9)
 		} else {
 			nextRandomColor(stroke.fill).set()
 		}
@@ -291,10 +289,6 @@ class Drawing {
 			UIColor.greenColor().set()
 			handles.setLineDash(dashes, count: dashes.count, phase: 0)
 			handles.stroke()
-		} else {
-
-			// non-debug rendering is done into a transparency layer so we need to end it
-			CGContextEndTransparencyLayer(context)
 		}
 	}
 }

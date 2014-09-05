@@ -19,13 +19,14 @@ enum Fill {
 	func set( backgroundColor:UIColor? ) {
 		switch self {
 			case .Pencil, .Brush:
-				UIColor.blackColor().set()
+				UIColor.blackColor().colorWithAlphaComponent(0.8).set()
 
 			case .Eraser:
+				let EraserOpacity:CGFloat = 0.8
 				if let c = backgroundColor {
-					c.set()
+					c.colorWithAlphaComponent(EraserOpacity).set()
 				} else {
-					UIColor.whiteColor().set()
+					UIColor.whiteColor().colorWithAlphaComponent(EraserOpacity).set()
 				}
 		}
 	}
