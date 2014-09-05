@@ -198,7 +198,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 // MARK: - GalleryOverviewCollectionViewDataSource
 
-class GalleryOverviewCollectionViewDataSource : GalleryCollectionViewDataSource {
+class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 	private var _thumbnailCompositorQueue = dispatch_queue_create("com.zakariya.squizit.GalleryThumbnailCompositorQueue", nil)
 	private var _thumbnailBackgroundColor = SquizitTheme.thumbnailBackgroundColor()
@@ -336,7 +336,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 	var store:GalleryStore!
 	weak var delegate:GalleryViewControllerDelegate?
-	private var _dataSource:GalleryOverviewCollectionViewDataSource!
+	private var _dataSource:GalleryCollectionViewDataSource!
 
 	private var _searchField = SquizitThemeSearchField(frame: CGRect.zeroRect )
 	private var _fixedHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
@@ -353,7 +353,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		collectionView.backgroundColor = SquizitTheme.galleryBackgroundColor()
 
 
-		_dataSource = GalleryOverviewCollectionViewDataSource(store: store, collectionView: collectionView )
+		_dataSource = GalleryCollectionViewDataSource(store: store, collectionView: collectionView )
 
 		_dataSource.editModeChanged = {
 			[weak self] ( inEditMode:Bool ) -> Void in
