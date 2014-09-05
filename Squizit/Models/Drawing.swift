@@ -103,8 +103,9 @@ class Drawing {
 			seedRandomColorGenerator()
 		}
 
+		let ctx = UIGraphicsGetCurrentContext()
 		for i in 0 ..< _strokes.count {
-			renderStroke(_strokes[i])
+			renderStroke(ctx, stroke: _strokes[i])
 		}
 	}
 
@@ -116,6 +117,7 @@ class Drawing {
 		}
 
 		UIGraphicsBeginImageContextWithOptions(CGSize(width: _width, height: _height), true, 0)
+		let ctx = UIGraphicsGetCurrentContext()
 
 		if _cachedImage == nil {
 			backgroundColor.set()
@@ -133,7 +135,7 @@ class Drawing {
 
 		//	render from _cachedImageStrokeIndex to end of _strokes
 		for i in _lastDrawnStrokeIndex + 1 ..< _strokes.count {
-			renderStroke(_strokes[i])
+			renderStroke(ctx, stroke: _strokes[i])
 		}
 
 		//	We're done
@@ -199,14 +201,16 @@ class Drawing {
 		return UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: 1)
 	}
 
-	private func renderStroke( stroke:Stroke ) {
+	private func renderStroke( context:CGContext, stroke:Stroke ) {
 
 		if stroke.spars.isEmpty {
 			return
 		}
 
 		if !_debugRender {
+			CGContextBeginTransparencyLayer(context, nil)
 			stroke.fill.set( self.backgroundColor )
+			CGContextSetAlpha(context, 0.9)
 		} else {
 			nextRandomColor(stroke.fill).set()
 		}
@@ -287,6 +291,10 @@ class Drawing {
 			UIColor.greenColor().set()
 			handles.setLineDash(dashes, count: dashes.count, phase: 0)
 			handles.stroke()
+		} else {
+
+			// non-debug rendering is done into a transparency layer so we need to end it
+			CGContextEndTransparencyLayer(context)
 		}
 	}
 }
