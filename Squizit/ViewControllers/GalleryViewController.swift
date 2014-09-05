@@ -196,28 +196,20 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	}
 }
 
-// MARK: - GalleryCollectionViewDataSource
+// MARK: - GalleryOverviewCollectionViewDataSource
 
-class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate, UIScrollViewDelegate {
+class GalleryOverviewCollectionViewDataSource : GalleryCollectionViewDataSource {
 
-	private var _store:GalleryStore
-	private var _collectionView:UICollectionView
 	private var _thumbnailCompositorQueue = dispatch_queue_create("com.zakariya.squizit.GalleryThumbnailCompositorQueue", nil)
 	private var _thumbnailBackgroundColor = SquizitTheme.thumbnailBackgroundColor()
 
-	init( store:GalleryStore, collectionView:UICollectionView ) {
-		_store = store
-		_collectionView = collectionView
-
-		super.init()
-
-		_collectionView.dataSource = self
-		_collectionView.delegate = self
+	override init( store:GalleryStore, collectionView:UICollectionView ) {
+		super.init(store: store, collectionView:collectionView)
 	}
 
 	var editMode:Bool = false {
 		didSet {
-			for cell in _collectionView.visibleCells() {
+			for cell in collectionView.visibleCells() {
 				(cell as GalleryCollectionViewCell).deleteButtonVisible = editMode
 			}
 
@@ -229,30 +221,6 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 
 	var editModeChanged:((inEditMode:Bool)->Void)?
 
-	func didReceiveMemoryWarning() {
-		_fetchedResultsController = nil
-	}
-
-	// MARK: UICollectionViewDataSource
-
-	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		let info = self.fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
-		return info.numberOfObjects
-	}
-
-	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier(GalleryCollectionViewCell.identifier(), forIndexPath: indexPath) as GalleryCollectionViewCell
-
-		configureCell( cell, atIndexPath: indexPath )
-		return cell
-	}
-
-	func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-		return 1
-	}
-
-
-
 	// MARK: UICollectionViewDelegate
 
 	func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!) {
@@ -263,117 +231,8 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 		}
 	}
 
-	// MARK: FetchedResultsController
-
-	private var _fetchedResultsController:NSFetchedResultsController?
-	var fetchedResultsController:NSFetchedResultsController {
-		if _fetchedResultsController != nil {
-			return _fetchedResultsController!
-		}
-
-		var fetchRequest = NSFetchRequest()
-		fetchRequest.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: _store.managedObjectContext! )
-
-		fetchRequest.sortDescriptors = self.sortDescriptors
-
-		if let predicate = self.filterPredicate {
-			fetchRequest.predicate = predicate
-		}
-
-		fetchRequest.fetchBatchSize = 4 * 4
-
-		_fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: _store.managedObjectContext!, sectionNameKeyPath: nil, cacheName: nil)
-
-		_fetchedResultsController!.delegate = self
-
-		performFetch()
-
-		return _fetchedResultsController!
-	}
-
-	/*
-		setting artistNameFilter will update the filter predicate on the fetch request
-	*/
-	var artistNameFilter:String? {
-		didSet {
-			if artistNameFilter != oldValue {
-				fetchedResultsController.fetchRequest.predicate = self.filterPredicate
-				performFetch()
-				_collectionView.reloadData()
-			}
-		}
-	}
-
-	private var sortDescriptors:[NSSortDescriptor] {
-		return [
-			NSSortDescriptor(key: "date", ascending: false)
-		]
-	}
-
-	private var filterPredicate:NSPredicate? {
-		if let filter = artistNameFilter {
-			if countElements(filter) > 0 {
-				// find artists whos names start with filter
-				return NSPredicate(format: "SUBQUERY(artists, $artist, $artist.name BEGINSWITH[cd] \"\(filter)\").@count > 0")
-			}
-		}
-
-		return nil
-	}
-
-	private func performFetch() {
-		var error:NSError? = nil
-		if !fetchedResultsController.performFetch(&error) {
-			NSLog("Unable to execute fetch, error: %@", error!.localizedDescription )
-			abort()
-		}
-	}
-
-	func controllerWillChangeContent(controller: NSFetchedResultsController) {}
-
-	func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-		switch type {
-			case .Insert:
-				_collectionView.insertSections(NSIndexSet( index: sectionIndex ))
-			case .Delete:
-				_collectionView.deleteSections(NSIndexSet(index: sectionIndex))
-			default:
-				return
-		}
-	}
-
-	func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath) {
-		switch type {
-			case .Insert:
-				_collectionView.insertItemsAtIndexPaths([newIndexPath])
-			case .Delete:
-				_collectionView.deleteItemsAtIndexPaths([indexPath])
-			case .Update:
-				if let cell = _collectionView.cellForItemAtIndexPath(indexPath) as? GalleryCollectionViewCell {
-					configureCell(cell, atIndexPath: indexPath)
-				}
-			case .Move:
-				_collectionView.moveItemAtIndexPath(indexPath, toIndexPath: newIndexPath)
-			default:
-				return
-		}
-	}
-
-	func controllerDidChangeContent(controller: NSFetchedResultsController) {}
-
-	// MARK: UIScrollViewDelegate
-
-	var onScrollViewDidScroll:(((scrollView:UIScrollView)->())?)
-	func scrollViewDidScroll(scrollView: UIScrollView) {
-		if let handler = onScrollViewDidScroll {
-			handler( scrollView: scrollView )
-		}
-	}
-
-	// MARK: Private
-
-	private func configureCell( cell:GalleryCollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
-		let store = _store
+	override func configureCell( cell:GalleryCollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
+		let store = self.store
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
 			var artistNames:[String] = []
@@ -458,12 +317,11 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 	var store:GalleryStore!
 	weak var delegate:GalleryViewControllerDelegate?
-	private var _dataSource:GalleryCollectionViewDataSource!
+	private var _dataSource:GalleryOverviewCollectionViewDataSource!
 
 	private var _searchField = SquizitThemeSearchField(frame: CGRect.zeroRect )
 	private var _fixedHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
-	private let _fixedHeaderHeightRange = (min: CGFloat(60), max:CGFloat(60))
-	private var _fixedHeaderHeight:CGFloat = 60
+	private let _fixedHeaderHeight:CGFloat = 60
 
 	required init(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
@@ -476,7 +334,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		collectionView.backgroundColor = SquizitTheme.galleryBackgroundColor()
 
 
-		_dataSource = GalleryCollectionViewDataSource(store: store, collectionView: collectionView )
+		_dataSource = GalleryOverviewCollectionViewDataSource(store: store, collectionView: collectionView )
 
 		_dataSource.editModeChanged = {
 			[weak self] ( inEditMode:Bool ) -> Void in
@@ -485,15 +343,6 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 					sself.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: sself, action: "onDoneEditing:")
 				} else {
 					sself.navigationItem.rightBarButtonItem = nil
-				}
-			}
-		}
-
-		if _fixedHeaderHeightRange.max > _fixedHeaderHeightRange.min {
-			_dataSource.onScrollViewDidScroll = {
-				[weak self] ( scrollView:UIScrollView) in
-				if let sself = self {
-					sself.scrollViewDidScroll( scrollView )
 				}
 			}
 		}
@@ -522,8 +371,17 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-		layoutFixedHeaderView()
-		scrollViewDidScroll(collectionView)
+
+		//	Layout the fixed-position header containing the search field
+		let headerFrame = CGRect(x:0, y: self.topLayoutGuide.length, width: self.view.bounds.width, height: _fixedHeaderHeight)
+		_fixedHeaderView.frame = headerFrame
+
+		let bounds = _fixedHeaderView.bounds
+		let margin:CGFloat = 20
+		let searchFieldHeight:CGFloat = _searchField.intrinsicContentSize().height
+		let searchFieldFrame = CGRect(x: margin, y: bounds.midY - searchFieldHeight/2, width: bounds.width-2*margin, height: searchFieldHeight)
+
+		_searchField.frame = searchFieldFrame
 	}
 
 	override func didReceiveMemoryWarning() {
@@ -548,7 +406,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 	dynamic private func searchTextChanged( sender:UITextField ) {
 		if sender === _searchField {
-			setArtistFilter(_searchField.text)
+			artistFilter = _searchField.text
 		}
 	}
 
@@ -579,47 +437,23 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 	// MARK: Private
 
-	private var _currentArtistFilter:String = ""
-	private var _debouncedArtistFilterApplicator:((()->())?)
+	var artistFilter:String = "" {
+		didSet {
 
-	private func setArtistFilter( partialName:String ) {
-
-		_currentArtistFilter = partialName
-			.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-			.capitalizedStringWithLocale(NSLocale.currentLocale())
-
-		if _debouncedArtistFilterApplicator == nil {
-			_debouncedArtistFilterApplicator = debounce(0.5) {
-				[weak self] () -> () in
-				if let sself = self {
-					sself._dataSource.artistNameFilter = sself._currentArtistFilter
+			if _debouncedArtistFilterApplicator == nil {
+				_debouncedArtistFilterApplicator = debounce(0.5) {
+					[weak self] () -> () in
+					if let sself = self {
+						sself._dataSource.artistNameFilter = sself.artistFilter
+							.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+							.capitalizedStringWithLocale(NSLocale.currentLocale())
+					}
 				}
 			}
+
+			_debouncedArtistFilterApplicator!()
 		}
-
-		_debouncedArtistFilterApplicator!()
 	}
 
-
-	private func layoutFixedHeaderView() {
-		let headerFrame = CGRect(x:0, y: self.topLayoutGuide.length, width: self.view.bounds.width, height: _fixedHeaderHeight)
-		_fixedHeaderView.frame = headerFrame
-
-		let bounds = _fixedHeaderView.bounds
-		let margin:CGFloat = 20
-		let searchFieldHeight:CGFloat = _searchField.intrinsicContentSize().height
-		let searchFieldFrame = CGRect(x: margin, y: bounds.midY - searchFieldHeight/2, width: bounds.width-2*margin, height: searchFieldHeight)
-
-		_searchField.frame = searchFieldFrame
-	}
-
-	private func scrollViewDidScroll( scrollView:UIScrollView ) {
-		let minScroll = -(self.topLayoutGuide.length + _fixedHeaderHeight)
-		let offset = scrollView.contentOffset.y - minScroll
-		let maxScroll = _fixedHeaderHeight
-		let scale = 1 - min(max( offset/maxScroll, 0 ), 1 )
-		_fixedHeaderHeight = _fixedHeaderHeightRange.min + scale * ( _fixedHeaderHeightRange.max - _fixedHeaderHeightRange.min )
-		layoutFixedHeaderView()
-	}
-
+	private var _debouncedArtistFilterApplicator:((()->())?)
 }
