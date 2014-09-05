@@ -61,12 +61,10 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 		fetchRequest.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: _store.managedObjectContext! )
 
 		fetchRequest.sortDescriptors = self.sortDescriptors
-
+		fetchRequest.fetchBatchSize = fetchBatchSize
 		if let predicate = self.filterPredicate {
 			fetchRequest.predicate = predicate
 		}
-
-		fetchRequest.fetchBatchSize = 4 * 4
 
 		_fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: _store.managedObjectContext!, sectionNameKeyPath: nil, cacheName: nil)
 
@@ -77,34 +75,29 @@ class GalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UI
 		return _fetchedResultsController!
 	}
 
-	/*
-		setting artistNameFilter will update the filter predicate on the fetch request
-	*/
-	var artistNameFilter:String? {
+	var fetchBatchSize:Int {
+		assertionFailure("Subclasses must override fetchBatchSize" )
+		return 0
+	}
+
+	var sortDescriptors:[NSSortDescriptor] = [NSSortDescriptor(key: "date", ascending: false)] {
 		didSet {
-			if artistNameFilter != oldValue {
-				fetchedResultsController.fetchRequest.predicate = self.filterPredicate
+			if _fetchedResultsController != nil {
+				fetchedResultsController.fetchRequest.sortDescriptors = sortDescriptors
 				performFetch()
 				_collectionView.reloadData()
 			}
 		}
 	}
 
-	var sortDescriptors:[NSSortDescriptor] {
-		return [
-			NSSortDescriptor(key: "date", ascending: false)
-		]
-	}
-
 	var filterPredicate:NSPredicate? {
-		if let filter = artistNameFilter {
-			if countElements(filter) > 0 {
-				// find artists whos names start with filter
-				return NSPredicate(format: "SUBQUERY(artists, $artist, $artist.name BEGINSWITH[cd] \"\(filter)\").@count > 0")
+		didSet {
+			if _fetchedResultsController != nil {
+				fetchedResultsController.fetchRequest.predicate = filterPredicate?
+				performFetch()
+				_collectionView.reloadData()
 			}
 		}
-
-		return nil
 	}
 
 	private func performFetch() {

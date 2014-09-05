@@ -221,6 +221,25 @@ class GalleryOverviewCollectionViewDataSource : GalleryCollectionViewDataSource 
 
 	var editModeChanged:((inEditMode:Bool)->Void)?
 
+	override var fetchBatchSize:Int {
+		return 16
+	}
+
+	var artistNameFilter:String? {
+		didSet {
+			var predicate:NSPredicate? = nil
+			if artistNameFilter != oldValue {
+				if let filter = artistNameFilter {
+					if countElements(filter) > 0 {
+						predicate = NSPredicate(format: "SUBQUERY(artists, $artist, $artist.name BEGINSWITH[cd] \"\(filter)\").@count > 0")
+					}
+				}
+			}
+			self.filterPredicate = predicate
+		}
+	}
+
+
 	// MARK: UICollectionViewDelegate
 
 	func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!) {
