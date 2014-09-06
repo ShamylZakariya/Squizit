@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.9" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7U9-N8-2K1">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -348,11 +349,85 @@
                     <navigationItem key="navigationItem" id="arM-D2-Nmg"/>
                     <connections>
                         <outlet property="collectionView" destination="grp-i7-Kyl" id="99L-WS-27h"/>
+                        <segue destination="HZd-vC-M4c" kind="show" identifier="showDetail" id="CPF-t5-mjf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3AS-mU-xbE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2631" y="1435"/>
+        </scene>
+        <!--Gallery Detail View Controller-->
+        <scene sceneID="LaS-QD-ESz">
+            <objects>
+                <collectionViewController id="HZd-vC-M4c" customClass="GalleryDetailViewController" customModule="Squizit" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" indicatorStyle="white" dataMode="prototypes" id="2y8-89-AWb">
+                        <rect key="frame" x="0.0" y="64" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="ryo-20-vlB">
+                            <size key="itemSize" width="600" height="600"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="GalleryDetailCollectionViewCell" id="1h0-2g-UOC" customClass="GalleryDetailCollectionViewCell" customModule="Squizit" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dNK-Nt-MuK">
+                                            <rect key="frame" x="188" y="150" width="225" height="300"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="300" id="gZ1-Vf-CKQ"/>
+                                                <constraint firstAttribute="width" secondItem="dNK-Nt-MuK" secondAttribute="height" multiplier="3:4" id="v41-7J-kVR"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player Names" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8TL-r4-RiL">
+                                            <rect key="frame" x="188" y="460" width="225" height="19"/>
+                                            <fontDescription key="fontDescription" name="Didot" family="Didot" pointSize="15"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Match Date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3P1-PS-qc6">
+                                            <rect key="frame" x="188" y="484" width="225" height="15"/>
+                                            <fontDescription key="fontDescription" name="Didot-Italic" family="Didot" pointSize="12"/>
+                                            <color key="textColor" white="1" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="8TL-r4-RiL" firstAttribute="width" secondItem="dNK-Nt-MuK" secondAttribute="width" id="1sM-IU-bEI"/>
+                                    <constraint firstItem="8TL-r4-RiL" firstAttribute="top" secondItem="dNK-Nt-MuK" secondAttribute="bottom" constant="10" id="UwB-48-ypr"/>
+                                    <constraint firstAttribute="centerX" secondItem="8TL-r4-RiL" secondAttribute="centerX" id="YID-rH-BIn"/>
+                                    <constraint firstItem="3P1-PS-qc6" firstAttribute="top" secondItem="8TL-r4-RiL" secondAttribute="bottom" constant="5" id="csF-Qi-Q2U"/>
+                                    <constraint firstAttribute="centerX" secondItem="dNK-Nt-MuK" secondAttribute="centerX" id="eLe-hW-80T"/>
+                                    <constraint firstAttribute="centerY" secondItem="dNK-Nt-MuK" secondAttribute="centerY" id="jHs-Pa-6uT"/>
+                                    <constraint firstItem="3P1-PS-qc6" firstAttribute="width" secondItem="8TL-r4-RiL" secondAttribute="width" id="kYD-Fp-m4d"/>
+                                    <constraint firstAttribute="centerX" secondItem="3P1-PS-qc6" secondAttribute="centerX" id="okS-1t-GBz"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="imageView" destination="dNK-Nt-MuK" id="zGz-kZ-c6l"/>
+                                    <outlet property="imageViewCenterYAlignmentConstraint" destination="jHs-Pa-6uT" id="Jgk-HQ-dPQ"/>
+                                    <outlet property="imageViewHeightConstraint" destination="gZ1-Vf-CKQ" id="1GF-3s-khn"/>
+                                    <outlet property="matchDateLabel" destination="3P1-PS-qc6" id="V74-rH-2cC"/>
+                                    <outlet property="playerNamesLabel" destination="8TL-r4-RiL" id="yFt-JS-kNt"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="HZd-vC-M4c" id="zy4-lA-eEW"/>
+                            <outlet property="delegate" destination="HZd-vC-M4c" id="06v-sa-MF6"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="a3d-3y-N3T" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3472" y="1435"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="dAx-11-0sC">

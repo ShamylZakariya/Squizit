@@ -8,10 +8,12 @@
 
 import UIKit
 
-class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate {
+class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate, UIScrollViewDelegate {
 
 	private var _store:GalleryStore
 	private var _collectionView:UICollectionView
+
+	weak var scrollDelegate:UIScrollViewDelegate?
 
 	init( store:GalleryStore, collectionView:UICollectionView ) {
 		_store = store
@@ -30,6 +32,10 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 
 	var store:GalleryStore { return _store }
 	var collectionView:UICollectionView { return _collectionView }
+	var cellIdentifier:String {
+		assertionFailure("Subclasses must override cellIdentifier")
+		return ""
+	}
 
 	// MARK: UICollectionViewDataSource
 
@@ -39,8 +45,7 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 	}
 
 	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier(GalleryCollectionViewCell.identifier(), forIndexPath: indexPath) as GalleryCollectionViewCell
-
+		let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) as UICollectionViewCell
 		configureCell( cell, atIndexPath: indexPath )
 		return cell
 	}
@@ -128,7 +133,7 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 			case .Delete:
 				_collectionView.deleteItemsAtIndexPaths([indexPath])
 			case .Update:
-				if let cell = _collectionView.cellForItemAtIndexPath(indexPath) as? GalleryCollectionViewCell {
+				if let cell = _collectionView.cellForItemAtIndexPath(indexPath) {
 					configureCell(cell, atIndexPath: indexPath)
 				}
 			case .Move:
@@ -140,9 +145,23 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 
 	func controllerDidChangeContent(controller: NSFetchedResultsController) {}
 
+	// UIScrollViewDelegate
+
+	func scrollViewDidScroll(scrollView: UIScrollView) {
+		if let sd = scrollDelegate {
+			sd.scrollViewDidScroll?(scrollView)
+		}
+	}
+
+	func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+		if let sd = scrollDelegate {
+			sd.scrollViewDidEndDecelerating?(scrollView)
+		}
+	}
+
 	// MARK: Methods for subclasses to override
 
-	func configureCell( cell:GalleryCollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
+	func configureCell( cell:UICollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
 		assertionFailure("Subclasses must implement configureCell")
 	}
 }

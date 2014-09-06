@@ -221,6 +221,10 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 	var editModeChanged:((inEditMode:Bool)->Void)?
 
+	override var cellIdentifier:String {
+		return GalleryCollectionViewCell.identifier()
+	}
+
 	override var fetchBatchSize:Int {
 		return 16
 	}
@@ -242,15 +246,21 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 	// MARK: UICollectionViewDelegate
 
+	var galleryDrawingTapped:((drawing:GalleryDrawing,indexPath:NSIndexPath)->Void)?
+
 	func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!) {
 		collectionView.deselectItemAtIndexPath(indexPath, animated: true)
 
 		if !editMode {
-			NSLog("didSelectItemAtIndexPath: %@", indexPath )
+			if let handler = galleryDrawingTapped {
+				if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
+					handler( drawing: drawing, indexPath: indexPath )
+				}
+			}
 		}
 	}
 
-	override func configureCell( cell:GalleryCollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
+	override func configureCell( cell:UICollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
 		let store = self.store
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
@@ -259,11 +269,12 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 				artistNames.append(artist.name)
 			}
 
-			cell.namesLabel.text = (artistNames as NSArray).componentsJoinedByString(", ")
-			cell.dateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
-			cell.deleteButtonVisible = self.editMode
+			var galleryCell = cell as GalleryCollectionViewCell
+			galleryCell.namesLabel.text = (artistNames as NSArray).componentsJoinedByString(", ")
+			galleryCell.dateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
+			galleryCell.deleteButtonVisible = self.editMode
 
-			cell.onLongPress = {
+			galleryCell.onLongPress = {
 				[weak self]
 				(cell:GalleryCollectionViewCell)->() in
 				if let sself = self {
@@ -273,7 +284,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 				}
 			}
 
-			cell.onDeleteButtonTapped = {
+			galleryCell.onDeleteButtonTapped = {
 				[weak self]
 				(cell:GalleryCollectionViewCell)->() in
 				if let sself = self {
@@ -306,7 +317,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 				UIGraphicsEndImageContext()
 
 				dispatch_async(dispatch_get_main_queue() ) {
-					cell.imageView.image = thumbnail
+					galleryCell.imageView.image = thumbnail
 				}
 			}
 
@@ -347,6 +358,10 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		self.title = "Gallery"
 	}
 
+	deinit {
+		NSNotificationCenter.defaultCenter().removeObserver(self)
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -366,6 +381,13 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 			}
 		}
 
+		_dataSource.galleryDrawingTapped = {
+			[weak self] ( drawing:GalleryDrawing, indexPath:NSIndexPath ) in
+			if let sself = self {
+				sself.showDetail( drawing, indexPath:indexPath )
+			}
+		}
+
 		self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close", style: .Done, target: self, action: "onClose:")
 
 
@@ -375,6 +397,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 		_searchField.delegate = self
 		_searchField.placeholder = "Who drew..."
+		_searchField.returnKeyType = UIReturnKeyType.Search
 		_searchField.addTarget(self, action: "searchTextChanged:", forControlEvents: UIControlEvents.EditingChanged)
 
 		_fixedHeaderView.addSubview(_searchField)
@@ -386,6 +409,14 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		//
 
 		collectionView.contentInset = UIEdgeInsets(top: _fixedHeaderHeight + 20, left: 0, bottom: 0, right: 0)
+
+
+		//
+		//	Listen for keyboard did dismiss to resign first responder - this handles when user hits the 
+		//	keyboard dismiss key. I want the search field to lose focus
+		//
+
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardDidDismiss:", name: UIKeyboardDidHideNotification, object: nil)
 	}
 
 	override func viewWillLayoutSubviews() {
@@ -409,6 +440,22 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 	override func preferredStatusBarStyle() -> UIStatusBarStyle {
 		return UIStatusBarStyle.LightContent
+	}
+
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+		if segue.identifier == "showDetail" {
+			if let detailVC = segue.destinationViewController as? GalleryDetailViewController {
+				if let indexPath = sender as? NSIndexPath {
+					detailVC.store = store
+					detailVC.filterPredicate = _dataSource.filterPredicate
+					detailVC.initialIndexPath = indexPath
+				} else {
+					assertionFailure("Didn't pass indexPath")
+				}
+			} else {
+				assertionFailure("coun't grab the detail vc from segue")
+			}
+		}
 	}
 
 	// MARK: IBActions
@@ -454,9 +501,19 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		return true
 	}
 
+	// MARK: Keyboard Handling
+
+	dynamic func keyboardDidDismiss( note:NSNotification ) {
+		view.endEditing(true)
+	}
+
 	// MARK: Private
 
-	var artistFilter:String = "" {
+	private func showDetail( drawing:GalleryDrawing, indexPath:NSIndexPath ) {
+		self.performSegueWithIdentifier("showDetail", sender: indexPath)
+	}
+
+	private var artistFilter:String = "" {
 		didSet {
 
 			if _debouncedArtistFilterApplicator == nil {

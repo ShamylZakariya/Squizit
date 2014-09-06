@@ -9,6 +9,11 @@
 		
 		The problem is that my drawing lines are made of numerous strokes. I had trouble with joining strokes before, and I'm guessing it's the source of my trouble here.
 
+#FIXME
+
+	GalleryDetailViewController::updateItemSize
+		The viewController's topLayoutGuide.length is zero, so I'm manually setting a fudge factor of 44 to accommodate the navbar height so UICollectionViewFlowLayout doesn't complain about inadequate room to layout cells. 
+
 #PROBLEMS
 
 	Can't Make SaveToGalleryViewController's view transparent:
