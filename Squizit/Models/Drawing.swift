@@ -213,47 +213,71 @@ class Drawing {
 			nextRandomColor(stroke.fill).set()
 		}
 
-		var rects = UIBezierPath()
+		var shapes = UIBezierPath()
+		let OneBigShape = true
 
-		var spar = stroke.spars[0]
-		for i in 1 ..< stroke.spars.count {
+		if OneBigShape && stroke.spars.count > 2 {
+			var cp:ControlPoint = stroke.spars[0].a
 
-			let nextSpar = stroke.spars[i]
-			let interpolator1 = ControlPointCubicBezierInterpolator(a: spar.a, b: nextSpar.a )
-			let interpolator2 = ControlPointCubicBezierInterpolator(a: spar.b, b: nextSpar.b )
-			let subdivisions = interpolator1.recommendedSubdivisions()
-
-			if subdivisions > 1 {
-
-				var p0 = interpolator1.a.position
-				var p1 = interpolator2.a.position
-
-				for s in 1 ... subdivisions {
-
-					let T = CGFloat(s) / CGFloat(subdivisions)
-					let p2 = interpolator2.bezierPoint(T)
-					let p3 = interpolator1.bezierPoint(T)
-
-					let rect = UIBezierPath()
-					rect.moveToPoint(p0)
-					rect.addLineToPoint(p1)
-					rect.addLineToPoint(p2)
-					rect.addLineToPoint(p3)
-					rect.closePath()
-
-					rects.appendPath(rect)
-					p1 = p2;
-					p0 = p3;
-				}
+			shapes.moveToPoint( cp.position )
+			for i in 1 ..< stroke.spars.count {
+				let ncp = stroke.spars[i].a
+				shapes.addCurveToPoint(ncp.position, controlPoint1: cp.control, controlPoint2: ncp.control)
+				cp = ncp
 			}
 
-			spar = nextSpar
+			cp = stroke.spars.last!.b
+			shapes.addLineToPoint(cp.position)
+			for var i = stroke.spars.count - 2; i >= 0; i-- {
+				let ncp = stroke.spars[i].b
+				shapes.addCurveToPoint(ncp.position, controlPoint1: cp.control, controlPoint2: ncp.control)
+				cp = ncp
+			}
+
+			shapes.addLineToPoint(stroke.spars.first!.a.position)
+
+		} else {
+			var spar = stroke.spars[0]
+			for i in 1 ..< stroke.spars.count {
+
+				let nextSpar = stroke.spars[i]
+				let interpolator1 = ControlPointCubicBezierInterpolator(a: spar.a, b: nextSpar.a )
+				let interpolator2 = ControlPointCubicBezierInterpolator(a: spar.b, b: nextSpar.b )
+				let subdivisions = interpolator1.recommendedSubdivisions()
+
+				if subdivisions > 1 {
+
+					var p0 = interpolator1.a.position
+					var p1 = interpolator2.a.position
+
+					for s in 1 ... subdivisions {
+
+						let T = CGFloat(s) / CGFloat(subdivisions)
+						let p2 = interpolator2.bezierPoint(T)
+						let p3 = interpolator1.bezierPoint(T)
+
+						let rect = UIBezierPath()
+						rect.moveToPoint(p0)
+						rect.addLineToPoint(p1)
+						rect.addLineToPoint(p2)
+						rect.addLineToPoint(p3)
+						rect.closePath()
+
+						shapes.appendPath(rect)
+						p1 = p2;
+						p0 = p3;
+					}
+				}
+
+				spar = nextSpar
+			}
 		}
 
-		rects.fill()
+
+		shapes.fill()
 
 		if _debugRender {
-			rects.stroke()
+			shapes.stroke()
 
 			var spars = UIBezierPath()
 			var handles = UIBezierPath()
