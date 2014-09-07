@@ -30,12 +30,13 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	@IBOutlet var matchView: MatchView!
 	
 
+	var quitGameButton:QuitGameButton!
 	var toolSelector:DrawingToolSelector!
 	var stepForwardButton:UIButton!
 	var shieldViews:[MatchShieldView] = []
 	var endOfMatchGestureRecognizer:UITapGestureRecognizer!
 
-	private var exportQueue = dispatch_queue_create("com.zakariya.squizit.ExportQueue", nil)
+	internal var exportQueue = dispatch_queue_create("com.zakariya.squizit.ExportQueue", nil)
 
 	var match:Match?
 
@@ -101,6 +102,39 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		step++
 	}
 
+	dynamic func quitMatch( t:AnyObject ) {
+		NSLog("quitMatch")
+
+		var alert = UIAlertController(
+			title: NSLocalizedString("Quit?", comment:"QuitMatchAlertTitle"),
+			message: NSLocalizedString("Are you certain you'd like to bail on match?", comment:"QuitMatchAlertMessage"),
+			preferredStyle: UIAlertControllerStyle.Alert)
+
+		alert.view.tintColor = SquizitTheme.alertTintColor()
+
+		alert.addAction(UIAlertAction(
+			title: NSLocalizedString("Nevermind", comment:"QuitMatchAlertButtonCancelTitle"),
+			style: UIAlertActionStyle.Cancel,
+			handler: {
+				( action:UIAlertAction! ) -> Void in
+				alert.dismissViewControllerAnimated(true, completion: nil)
+			}))
+
+		alert.addAction(UIAlertAction(
+			title: NSLocalizedString("Quit", comment:"QuitMatchAlertButtonQuitTitle"),
+			style: UIAlertActionStyle.Destructive,
+			handler: {
+				[weak self] ( action:UIAlertAction! ) -> Void in
+
+				alert.dismissViewControllerAnimated(true, completion:nil)
+				if let sself = self {
+					sself.dismissViewControllerAnimated(true, completion: nil)
+				}
+			}))
+
+		presentViewController(alert, animated: true, completion: nil)
+	}
+
 	dynamic func swipeLeft( t:UISwipeGestureRecognizer ) {
 
 		//
@@ -159,6 +193,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		view.clipsToBounds = true
 		view.backgroundColor = SquizitTheme.matchBackgroundColor()
 
 		matchView.backgroundColor = SquizitTheme.paperBackgroundColor()
@@ -211,6 +246,11 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		stepForwardButton.frame = CGRect(x: 0, y: 0, width: 200, height: 44)
 		view.addSubview(stepForwardButton)
 
+		// create the quit game button
+		quitGameButton = QuitGameButton.quitGameButton()
+		quitGameButton.addTarget(self, action: "quitMatch:", forControlEvents: UIControlEvents.TouchUpInside)
+		view.addSubview(quitGameButton)
+
 		matchView.match = match
 		matchView.player = 0
 	}
@@ -221,7 +261,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	// MARK: Private
 
-	private func syncToMatchState_Animate() {
+	internal func syncToMatchState_Animate() {
 		let duration:NSTimeInterval = 0.7
 		let delay:NSTimeInterval = 0
 		let damping:CGFloat = 0.7
@@ -236,10 +276,18 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			animations: { [unowned self] () -> Void in
 				self.syncToMatchState()
 			},
-			completion: nil)
+			completion: { [unowned self] (complet:Bool) -> Void in
+				if self.step >= self.numPlayers {
+					self.shieldViews[0].hidden = true
+					self.shieldViews[1].hidden = true
+					self.toolSelector.hidden = true
+					self.stepForwardButton.hidden = true
+					self.quitGameButton.hidden = true
+				}
+			})
 	}
 
-	private func syncToMatchState() {
+	internal func syncToMatchState() {
 
 		if matchActive {
 
@@ -260,6 +308,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			shieldViews[1].alpha = 0
 			toolSelector.alpha = 0
 			stepForwardButton.alpha = 0
+			quitGameButton.alpha = 0
 
 			let angleRange = drand48() * 2.0 - 1.0
 			let angle = M_PI * 0.00625 * angleRange
@@ -267,7 +316,6 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			let rotation = CATransform3DMakeRotation(CGFloat(angle), 0, 0, 1)
 			matchView.layer.transform = CATransform3DConcat(scale, rotation)
 			matchView.layer.shouldRasterize = true
-
 			matchView.layer.shadowOpacity = 1
 
 		} else {
@@ -275,13 +323,10 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		}
 	}
 
-	private func layoutSubviewsForTwoPlayers( currentPlayer:Int ) {
+	internal func layoutSubviewsForTwoPlayers( currentPlayer:Int ) {
 
 		if let match = self.match {
-			let bounds = view.bounds
 			let margin = 2 * match.overlap
-			var toolSelectorRect = CGRectZero
-			var stepForwardButtonCenter = CGPointZero
 
 			// two player game only needs one shield view
 			shieldViews[0].hidden = false
@@ -291,37 +336,22 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			switch currentPlayer {
 
 				case 0:
-					toolSelectorRect = CGRect(x: 0, y: bounds.midY, width: bounds.width, height: bounds.height/4)
-					stepForwardButtonCenter = CGPoint( x: bounds.midX, y: bounds.midY + bounds.height/4 + bounds.height/8 )
 					shieldViews[0].frame = matchView.rectForPlayer(1)!.rectByAddingTopMargin(margin)
-					//shieldViews[0].topMargin = margin
+					positionToolsInShield( shieldViews[0], alignTop:false )
 
 				case 1:
-					toolSelectorRect = CGRect(x: 0, y: bounds.midY/2, width: bounds.width, height: bounds.height/4)
-					stepForwardButtonCenter = CGPoint( x: bounds.midX, y: bounds.height/8 )
 					shieldViews[0].frame = matchView.rectForPlayer(0)!.rectByAddingBottomMargin(margin)
-					//shieldViews[0].bottomMargin = margin
+					positionToolsInShield( shieldViews[0], alignTop:true )
 
 				default: break;
 			}
-
-			toolSelector.frame = toolSelectorRect
-			stepForwardButton.center = stepForwardButtonCenter
-
 		}
 	}
 
-	private func layoutSubviewsForThreePlayers( currentPlayer:Int ) {
+	internal func layoutSubviewsForThreePlayers( currentPlayer:Int ) {
 
 		if let match = self.match {
-			let bounds = view.bounds
 			let margin = 2 * match.overlap
-			var toolSelectorRect = CGRectZero
-			var stepForwardButtonCenter = CGPointZero
-			var thirdHeight = bounds.size.height / 3.0
-			var twoThirdsHeight = bounds.size.height * 2.0 / 3.0
-			var sixthHeight = thirdHeight / 2.0
-
 			shieldViews[0].hidden = false
 			shieldViews[1].hidden = false
 			shieldViews[0].alpha = 1
@@ -330,10 +360,6 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			switch currentPlayer {
 
 				case 0:
-					// place controls over middle third
-					toolSelectorRect = CGRect(x: 0, y: thirdHeight, width: bounds.width, height: sixthHeight)
-					stepForwardButtonCenter = CGPoint( x: bounds.midX, y: thirdHeight + 1.5 * sixthHeight )
-
 					// hide shield 1 off top of screen - it will slide down in case 1
 					var r = matchView.rectForPlayer(0)!
 					r.offset(dx: 0, dy: -r.height )
@@ -344,39 +370,54 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 					let r2 = matchView.rectForPlayer(2)!
 					shieldViews[1].frame = r1.rectByUnion(r2)
 
+					positionToolsInShield( shieldViews[1], alignTop:false )
+
 				case 1:
-					// place controls over top third
-					toolSelectorRect = CGRect(x: 0, y: 0, width: bounds.width, height: sixthHeight)
-					stepForwardButtonCenter = CGPoint( x: bounds.midX, y: sixthHeight + 0.5 * sixthHeight )
 					shieldViews[0].frame = matchView.rectForPlayer(0)!.rectByAddingBottomMargin(margin)
 					shieldViews[1].frame = matchView.rectForPlayer(2)!.rectByAddingTopMargin(margin)
+					positionToolsInShield( shieldViews[1], alignTop:false )
 
 				case 2:
-					// place controls over middle third
-					toolSelectorRect = CGRect(x: 0, y: thirdHeight, width: bounds.width, height: sixthHeight)
-					stepForwardButtonCenter = CGPoint( x: bounds.midX, y: thirdHeight + 1.5 * sixthHeight )
-					shieldViews[0].frame = matchView.rectForPlayer(0)!
-					shieldViews[1].frame = matchView.rectForPlayer(1)!.rectByAddingBottomMargin(margin)
-
 					// shield 1 takes up top 2/3
-					let r1 = matchView.rectForPlayer(0)!.rectByAddingTopMargin(margin)
+					let r1 = matchView.rectForPlayer(0)!
 					let r2 = matchView.rectForPlayer(1)!
-					shieldViews[0].frame = r1.rectByUnion(r2)
+					shieldViews[0].frame = r1.rectByUnion(r2).rectByAddingBottomMargin(margin)
+					positionToolsInShield( shieldViews[0], alignTop:true )
 
 					// slide shield 2 off bottom of screen
-					var r = matchView.rectForPlayer(2)!.rectByAddingTopMargin(margin)
+					var r = matchView.rectForPlayer(2)!
 					r.offset(dx: 0, dy: r.height )
 					shieldViews[1].frame = r
 
 				default: break;
 			}
-
-			toolSelector.frame = toolSelectorRect
-			stepForwardButton.center = stepForwardButtonCenter
 		}
 	}
 
-	private func showSaveToGalleryQuery() {
+	internal func positionToolsInShield( view:UIView, alignTop:Bool ) {
+
+		let frame = view.frame
+		let size = quitGameButton.intrinsicContentSize()
+		let margin:CGFloat = 36
+		let rowHeight:CGFloat = 176
+
+		var toolSelectorRect = CGRectZero
+		var stepForwardButtonCenter = CGPointZero
+
+		toolSelectorRect = CGRect(x: frame.minX, y: frame.minY + frame.height/2 - rowHeight, width: frame.width, height: rowHeight )
+		stepForwardButtonCenter = CGPoint( x: frame.midX, y: frame.minY + frame.height/2 + rowHeight/2 )
+
+		if alignTop {
+			quitGameButton.frame = CGRect( x: frame.minX + margin, y: frame.minY + margin, width: size.width, height: size.height )
+		} else {
+			quitGameButton.frame = CGRect( x: frame.minX + margin, y: frame.maxY - margin - size.height, width: size.width, height: size.height )
+		}
+
+		toolSelector.frame = toolSelectorRect
+		stepForwardButton.center = stepForwardButtonCenter
+	}
+
+	internal func showSaveToGalleryQuery() {
 
 		//
 		//	Load from storyboard and present
@@ -391,8 +432,10 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		presentViewController(vc, animated: true, completion: nil)
 	}
 
-	func didDismissSaveToGallery() {
-		println("didDismiss" )
+
+	// MARK: SaveToGalleryDelegate
+
+	internal func didDismissSaveToGallery() {
 		dismissViewControllerAnimated(true) {
 			if let presenter = self.presentingViewController {
 				presenter.dismissViewControllerAnimated(true, completion: nil)
@@ -401,9 +444,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		}
 	}
 
-	func didSaveToGalleryWithNames(names: [String]? ) {
-		println( "didSave names: \(names)")
-
+	internal func didSaveToGalleryWithNames(names: [String]? ) {
 		if let match = self.match {
 
 			let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
@@ -466,7 +507,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		calling done() on main queue when complete
 	*/
 
-	private func export( match:Match, done:((matchData:NSData?, thumbnailData:NSData?) -> Void)) {
+	internal func export( match:Match, done:((matchData:NSData?, thumbnailData:NSData?) -> Void)) {
 
 			dispatch_async(exportQueue) { [unowned self] in
 
@@ -488,7 +529,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			}
 	}
 
-	private func DEBUG_saveImage( image:UIImage, path:String ) {
+	internal func DEBUG_saveImage( image:UIImage, path:String ) {
 	    let folderURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as NSURL
 		let targetURL = folderURL.URLByAppendingPathComponent(path, isDirectory: false)
 

@@ -87,6 +87,10 @@ class SquizitTheme {
 		return UIColor.whiteColor()
 	}
 
+	class func alertTintColor() -> UIColor {
+		return dialogBackgroundColor()
+	}
+
 	class func dialogBackgroundColor() -> UIColor {
 		return UIColor(white: 0.137, alpha: 1)
 	}
