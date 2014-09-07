@@ -112,13 +112,13 @@ class Match {
 		}
 	}
 
-	func render( backgroundColor:UIColor? = nil ) -> UIImage {
+	func render( backgroundColor:UIColor? = nil, scale:CGFloat = 0 ) -> UIImage {
 
 		//
 		// first, render the match itself over a white background
 		//
 
-		UIGraphicsBeginImageContextWithOptions( _stageSize, true, 0 )
+		UIGraphicsBeginImageContextWithOptions( _stageSize, true, scale )
 		let context = UIGraphicsGetCurrentContext()
 		let rect = CGRect(x: 0, y: 0, width: _stageSize.width, height: _stageSize.height)
 
@@ -146,7 +146,7 @@ class Match {
 			// now, multiply composite this over an image filled with backgroundColor
 			//
 
-			UIGraphicsBeginImageContextWithOptions(_stageSize, true, 0)
+			UIGraphicsBeginImageContextWithOptions(_stageSize, true, scale)
 
 			backgroundColor.set()
 			UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)

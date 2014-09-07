@@ -512,7 +512,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		didSet {
 
 			if _debouncedArtistFilterApplicator == nil {
-				_debouncedArtistFilterApplicator = debounce(0.5) {
+				_debouncedArtistFilterApplicator = debounce(0.1) {
 					[weak self] () -> () in
 					if let sself = self {
 						sself._dataSource.artistNameFilter = sself.artistFilter

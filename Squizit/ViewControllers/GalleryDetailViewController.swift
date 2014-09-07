@@ -121,6 +121,8 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 
 class GalleryDetailViewController: UICollectionViewController, UIScrollViewDelegate {
 
+	private var _exportQueue = dispatch_queue_create("com.zakariya.squizit.GalleryDetailExportQueue", nil)
+
 	var store:GalleryStore!
 	var filterPredicate:NSPredicate?
 	var initialIndexPath:NSIndexPath?
@@ -162,6 +164,8 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 				self.title = drawing.artistDisplayNames
 			}
 		}
+
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "shareDrawing:")
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -182,6 +186,58 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 		let width = view.bounds.width
 		let height = view.bounds.height - 44
 		flow.itemSize = CGSize(width: width, height: height)
+	}
+
+	// MARK: Actions
+
+	dynamic func shareDrawing( sender:AnyObject ) {
+
+		// first get the current item
+		if let indexPath = self.collectionView!.indexPathsForVisibleItems().first as? NSIndexPath {
+			if let drawing = _dataSource.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
+
+				export(drawing) {
+					[weak self] (rendering:UIImage)->Void in
+					if let sself = self {
+
+						var title:String = ""
+
+						if drawing.artists.count > 0 {
+							title = NSLocalizedString( "Squizit Match featuring ", comment:"ShareActionTitleWithArtistNames")
+							title += drawing.artistDisplayNames
+						} else {
+							title = NSLocalizedString( "Squizit Match", comment:"ShareActionTitleWithoutArtistNames")
+						}
+
+						let activityController = UIActivityViewController( activityItems: [title,rendering], applicationActivities: nil)
+						activityController.popoverPresentationController?.barButtonItem = sender as UIBarButtonItem
+						sself.presentViewController(activityController, animated: true, completion: nil)
+
+					}
+				}
+			}
+		}
+	}
+
+	internal func export( drawing:GalleryDrawing, done:(rendering:UIImage)->Void) {
+
+		dispatch_async(_exportQueue) {
+
+			if let buffer = ByteBuffer.fromNSData( drawing.match ) {
+				var matchLoadResult = buffer.getMatch()
+				if let error = matchLoadResult.error {
+					NSLog("Unable to load match from data, error: %@", error.message )
+					assertionFailure("Unable to load match from data, bailing" )
+				}
+
+				var match = matchLoadResult.value
+				var rendering = match.render( backgroundColor: SquizitTheme.paperBackgroundColor(), scale:1 )
+
+				dispatch_main {
+					done( rendering:rendering )
+				}
+			}
+		}
 	}
 
 	// MARK: UIScrollViewDelegate
