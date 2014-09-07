@@ -112,18 +112,18 @@ class Match {
 		}
 	}
 
-	func render( backgroundColor:UIColor ) -> UIImage {
+	func render( backgroundColor:UIColor? = nil ) -> UIImage {
 
-		UIGraphicsBeginImageContextWithOptions( _stageSize, false, 0 )
+		//
+		// first, render the match itself over a white background
+		//
+
+		UIGraphicsBeginImageContextWithOptions( _stageSize, true, 0 )
 		let context = UIGraphicsGetCurrentContext()
 		let rect = CGRect(x: 0, y: 0, width: _stageSize.width, height: _stageSize.height)
 
-		if backgroundColor.alphaComponent > 0 {
-			backgroundColor.set()
-			UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
-		} else {
-			CGContextClearRect( context, rect )
-		}
+		UIColor.whiteColor().set()
+		UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
 
 		for (i,drawing) in enumerate(_drawings) {
 			let transform = _transforms[i]
@@ -132,15 +132,32 @@ class Match {
 			CGContextConcatCTM(context, transform)
 			CGContextClipToRect(context, CGRect(x: 0, y: 0, width: drawing.size.width, height: drawing.size.height))
 
-			drawing.draw( overrideBackgroundColor: backgroundColor )
+			drawing.draw()
 
 			CGContextRestoreGState(context)
 		}
 
-		var image = UIGraphicsGetImageFromCurrentImageContext()
+		var rendering = UIGraphicsGetImageFromCurrentImageContext()
 		UIGraphicsEndImageContext()
 
-		return image
+		if let backgroundColor = backgroundColor {
+
+			//
+			// now, multiply composite this over an image filled with backgroundColor
+			//
+
+			UIGraphicsBeginImageContextWithOptions(_stageSize, true, 0)
+
+			backgroundColor.set()
+			UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
+
+			rendering.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
+
+			rendering = UIGraphicsGetImageFromCurrentImageContext()
+			UIGraphicsEndImageContext()
+		}
+
+		return rendering
 	}
 }
 

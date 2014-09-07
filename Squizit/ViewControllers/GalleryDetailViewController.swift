@@ -92,20 +92,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 					}
 
 					var match = matchLoadResult.value
-					var rendering = match.render( UIColor.clearColor() )
-
-					let size = rendering.size
-					let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-					UIGraphicsBeginImageContextWithOptions(size, true, 0)
-
-					backgroundColor.set()
-					UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
-
-					rendering.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
-
-					rendering = UIGraphicsGetImageFromCurrentImageContext()
-					UIGraphicsEndImageContext()
-
+					var rendering = match.render( backgroundColor: backgroundColor )
 
 					dispatch_main {
 						galleryCell.imageView.image = rendering
