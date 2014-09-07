@@ -103,8 +103,6 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	}
 
 	dynamic func quitMatch( t:AnyObject ) {
-		NSLog("quitMatch")
-
 		var alert = UIAlertController(
 			title: NSLocalizedString("Quit?", comment:"QuitMatchAlertTitle"),
 			message: NSLocalizedString("Are you certain you'd like to bail on match?", comment:"QuitMatchAlertMessage"),
