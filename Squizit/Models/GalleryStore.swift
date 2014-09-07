@@ -13,6 +13,22 @@ import CoreData
 let GalleryStoreErrorDomain = "org.zakariya.Squizit.GalleryStore"
 let GalleryStoreErrorCodeInitializationError = 0001
 
+extension GalleryDrawing {
+
+	var artistDisplayNames:String {
+		if artists.count > 0 {
+			var artistNames:[String] = []
+			for artist in artists {
+				artistNames.append(artist.name)
+			}
+
+			return (artistNames as NSArray).componentsJoinedByString(", ")
+		}
+
+		return NSLocalizedString("Anonymous", comment: "No artist specified for gallery detail image")
+	}
+
+}
 
 class GalleryStore {
 

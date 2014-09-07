@@ -79,18 +79,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 			var galleryCell = cell as GalleryDetailCollectionViewCell
 
 
-			var artistNames:[String] = []
-			for artist in drawing.artists {
-				artistNames.append(artist.name)
-			}
-
-			var playerNamesText = NSLocalizedString("Anonymous", comment: "No artist specified for gallery detail image")
-			if !artistNames.isEmpty {
-				playerNamesText = (artistNames as NSArray).componentsJoinedByString(", ")
-			}
-
-			galleryCell.playerNamesLabel.text = playerNamesText
-
+			galleryCell.playerNamesLabel.text = drawing.artistDisplayNames
 			galleryCell.matchDateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
 
 			dispatch_async( _renderQueue ) {
@@ -179,6 +168,13 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 		flow.minimumLineSpacing = 0
 		flow.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 		updateItemSize()
+
+		let numItems = _dataSource.collectionView(collectionView!, numberOfItemsInSection: 0)
+		if numItems == 1 {
+			if let drawing = _dataSource.fetchedResultsController.objectAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as? GalleryDrawing {
+				self.title = drawing.artistDisplayNames
+			}
+		}
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -214,26 +210,26 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 
 	private var _debouncedTitleUpdater:(()->())?
 	private func updateTitle() {
-		if _debouncedTitleUpdater == nil {
-			var collectionView = self.collectionView!
-			var flow = collectionView.collectionViewLayout as UICollectionViewFlowLayout
-			var numItems = _dataSource.collectionView(collectionView, numberOfItemsInSection: 0)
+		var collectionView = self.collectionView!
+		var flow = collectionView.collectionViewLayout as UICollectionViewFlowLayout
+		var numItems = _dataSource.collectionView(collectionView, numberOfItemsInSection: 0)
+		if numItems > 1 {
 
-			_debouncedTitleUpdater = debounce(0.2, {
-				[weak self] () -> () in
-				if let sself = self {
+			if _debouncedTitleUpdater == nil {
+				_debouncedTitleUpdater = debounce(0.1, {
+					[weak self] () -> () in
+					if let sself = self {
 
-					var itemWidth = flow.itemSize.width
-					var totalWidth = collectionView.contentSize.width
-					var position = collectionView.contentOffset.x / totalWidth
-					var index = Int(floor( CGFloat(position) * CGFloat(numItems) + CGFloat(0.5))) + 1
-					//NSLog( "position: %@, index: %@", position, index )
+						var itemWidth = flow.itemSize.width
+						var totalWidth = collectionView.contentSize.width
+						var position = collectionView.contentOffset.x / totalWidth
+						var index = Int(floor( CGFloat(position) * CGFloat(numItems) + CGFloat(0.5))) + 1
+						sself.title = "Drawing \(index) of \(numItems)"
+					}
+				})
+			}
 
-					sself.title = "Drawing \(index) of \(numItems)"
-				}
-			})
+			_debouncedTitleUpdater!()
 		}
-
-		_debouncedTitleUpdater!()
 	}
 }

@@ -264,13 +264,8 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 		let store = self.store
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
-			var artistNames:[String] = []
-			for artist in drawing.artists {
-				artistNames.append(artist.name)
-			}
-
 			var galleryCell = cell as GalleryCollectionViewCell
-			galleryCell.namesLabel.text = (artistNames as NSArray).componentsJoinedByString(", ")
+			galleryCell.namesLabel.text = drawing.artistDisplayNames
 			galleryCell.dateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
 			galleryCell.deleteButtonVisible = self.editMode
 
