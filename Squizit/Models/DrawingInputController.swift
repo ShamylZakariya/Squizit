@@ -58,8 +58,6 @@ class DrawingInputController {
 	}
 
 	func draw( context:CGContextRef ) {
-		assert(view != nil, "Expect non-nil view")
-
 		if let drawing = self.drawing {
 			CGContextSaveGState(context)
 			CGContextConcatCTM(context, transform)
