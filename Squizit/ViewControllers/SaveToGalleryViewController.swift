@@ -39,6 +39,12 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		}
 	}
 
+	var showPlayerNameFields:Bool = true {
+		didSet {
+			animateLayout()
+		}
+	}
+
 	// MARK: UIViewController Overrides
 
 	deinit {
@@ -56,8 +62,10 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
 	}
 
+	private var _visible:Bool = false
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+		_visible = true
 
 		switch nameCount {
 			case 2:
@@ -74,7 +82,6 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 			default:
 				break;
 		}
-
 	}
 
 	override func viewWillLayoutSubviews() {
@@ -87,8 +94,8 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	@IBAction func addToGallery(sender: AnyObject) {
 
 		// first tap opens the name entry fields
-		if !self.open {
-			self.open = true
+		if !self.showPlayerNameFields {
+			self.showPlayerNameFields = true
 		} else {
 
 			// collect names
@@ -166,15 +173,19 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	}
 
 	private func animateLayout() {
-		UIView.animateWithDuration(0.7,
-			delay: 0,
-			usingSpringWithDamping: 0.7,
-			initialSpringVelocity: 0.0,
-			options: UIViewAnimationOptions(0),
-			animations: { () -> Void in
-				self.layout()
-			},
-			completion: nil)
+		if _visible {
+			UIView.animateWithDuration(0.7,
+				delay: 0,
+				usingSpringWithDamping: 0.7,
+				initialSpringVelocity: 0.0,
+				options: UIViewAnimationOptions(0),
+				animations: { () -> Void in
+					self.layout()
+				},
+				completion: nil)
+		} else {
+			layout()
+		}
 	}
 
 	private func layout() {
@@ -191,7 +202,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 			}
 		}
 
-		let alpha:CGFloat = open ? 1.0 : 0.0
+		let alpha:CGFloat = showPlayerNameFields ? 1.0 : 0.0
 		questionLabel.alpha = alpha
 		playerOneNameInputField.alpha = alpha
 		playerTwoNameInputField.alpha = alpha
@@ -205,7 +216,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		let heightWhenClosed:CGFloat = 306.0
 		let playerThreeNameInputFieldHeight:CGFloat = playerThreeNameInputField.intrinsicContentSize().height
 
-		if !open {
+		if !showPlayerNameFields {
 			return CGSize( width: width, height: heightWhenClosed )
 		}
 
@@ -213,12 +224,6 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 			case 2: return CGSize( width: width, height: heightWhen3NamesAreVisible - playerThreeNameInputFieldHeight )
 			case 3: return CGSize( width: width, height: heightWhen3NamesAreVisible )
 			default: return CGSizeZero
-		}
-	}
-
-	private var open:Bool = false {
-		didSet {
-			animateLayout()
 		}
 	}
 }
