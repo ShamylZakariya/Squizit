@@ -22,5 +22,7 @@
 #DONE
 
 	Don't save paper texture in screenshots, save just clear with alpha channel then composite a scaled-down paper texture as background of imageView showing the image'
+	Wiggle mode on GalleryViewController doesn't work well
+
 
 
