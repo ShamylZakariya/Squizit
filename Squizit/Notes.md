@@ -1,7 +1,5 @@
 #TODO
 
-	Wiggle mode on GalleryViewController doesn't work well
-
 	Drawing lines at 90% opacity looks great... but there's a hairline crack between stroke segments
 		Since we're drawing at partial opacity we can't stroke, because the stroke would darken the line. 
 		- Should strokes be slightly outset at edges? 
