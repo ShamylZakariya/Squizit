@@ -78,6 +78,8 @@ class DrawingTestsViewController : UIViewController {
 		self.title = "Drawing Tests..."
 
 		drawingView.drawing = Drawing(width: 768, height: 1024)
+		drawingView.drawing!.debugRender = true
+
 		let controller = DrawingInputController()
 		controller.drawing = drawingView.drawing!
 		controller.view = drawingView
@@ -91,6 +93,8 @@ class DrawingTestsViewController : UIViewController {
 		tgr.numberOfTapsRequired = 2
 		tgr.numberOfTouchesRequired = 1
 		drawingView.addGestureRecognizer(tgr)
+
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "DEBUG", style: UIBarButtonItemStyle.Plain, target: self, action: "toggleDebugRendering:")
 	}
 
 	override func viewWillLayoutSubviews() {
@@ -99,6 +103,11 @@ class DrawingTestsViewController : UIViewController {
 
 	dynamic internal func eraseDrawing( tgr:UITapGestureRecognizer ) {
 		drawingView.drawing!.clear()
+		drawingView.setNeedsDisplay()
+	}
+
+	dynamic internal func toggleDebugRendering( sender:AnyObject ) {
+		drawingView.drawing!.debugRender = !drawingView.drawing!.debugRender
 		drawingView.setNeedsDisplay()
 	}
 
