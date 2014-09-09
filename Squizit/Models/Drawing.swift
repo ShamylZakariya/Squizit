@@ -192,7 +192,7 @@ class Drawing {
 				blue = 0.1 + 0.2 * drand48()
 		}
 
-		return UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: 1)
+		return UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: 0.25)
 	}
 
 	private func renderStroke( context:CGContext, stroke:Stroke ) {
@@ -201,6 +201,8 @@ class Drawing {
 			return
 		}
 
+		println("stroke.spars.count: \(stroke.spars.count)")
+
 		if !_debugRender {
 			stroke.fill.set( self.backgroundColor )
 		} else {
@@ -208,69 +210,28 @@ class Drawing {
 		}
 
 		var shapes = UIBezierPath()
-		let OneBigShape = true
+		var cp:ControlPoint = stroke.spars[0].a
 
-		if OneBigShape && stroke.spars.count > 2 {
-			var cp:ControlPoint = stroke.spars[0].a
-
-			shapes.moveToPoint( cp.position )
-			for i in 1 ..< stroke.spars.count {
-				let ncp = stroke.spars[i].a
-				shapes.addCurveToPoint(ncp.position, controlPoint1: cp.control, controlPoint2: ncp.control)
-				cp = ncp
-			}
-
-			cp = stroke.spars.last!.b
-			shapes.addLineToPoint(cp.position)
-			for var i = stroke.spars.count - 2; i >= 0; i-- {
-				let ncp = stroke.spars[i].b
-				shapes.addCurveToPoint(ncp.position, controlPoint1: cp.control, controlPoint2: ncp.control)
-				cp = ncp
-			}
-
-			shapes.addLineToPoint(stroke.spars.first!.a.position)
-
-		} else {
-			var spar = stroke.spars[0]
-			for i in 1 ..< stroke.spars.count {
-
-				let nextSpar = stroke.spars[i]
-				let interpolator1 = ControlPointCubicBezierInterpolator(a: spar.a, b: nextSpar.a )
-				let interpolator2 = ControlPointCubicBezierInterpolator(a: spar.b, b: nextSpar.b )
-				let subdivisions = interpolator1.recommendedSubdivisions()
-
-				if subdivisions > 1 {
-
-					var p0 = interpolator1.a.position
-					var p1 = interpolator2.a.position
-
-					for s in 1 ... subdivisions {
-
-						let T = CGFloat(s) / CGFloat(subdivisions)
-						let p2 = interpolator2.bezierPoint(T)
-						let p3 = interpolator1.bezierPoint(T)
-
-						let rect = UIBezierPath()
-						rect.moveToPoint(p0)
-						rect.addLineToPoint(p1)
-						rect.addLineToPoint(p2)
-						rect.addLineToPoint(p3)
-						rect.closePath()
-
-						shapes.appendPath(rect)
-						p1 = p2;
-						p0 = p3;
-					}
-				}
-
-				spar = nextSpar
-			}
+		shapes.moveToPoint( cp.position )
+		for i in 1 ..< stroke.spars.count {
+			let ncp = stroke.spars[i].a
+			shapes.addCurveToPoint(ncp.position, controlPoint1: cp.control, controlPoint2: ncp.control)
+			cp = ncp
 		}
 
+		cp = stroke.spars.last!.b
+		shapes.addLineToPoint(cp.position)
+		for var i = stroke.spars.count - 2; i >= 0; i-- {
+			let ncp = stroke.spars[i].b
+			shapes.addCurveToPoint(ncp.position, controlPoint1: cp.control, controlPoint2: ncp.control)
+			cp = ncp
+		}
 
+		shapes.closePath()
 		shapes.fill()
 
 		if _debugRender {
+			UIColor.blackColor().set()
 			shapes.stroke()
 
 			var spars = UIBezierPath()
