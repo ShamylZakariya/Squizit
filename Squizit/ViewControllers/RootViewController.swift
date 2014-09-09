@@ -18,7 +18,12 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	@IBOutlet weak var contentView: UIView!
 	@IBOutlet weak var borderView: UIImageView!
 
-	override func viewDidLoad() {}
+	override func viewDidLoad() {
+		var tgr = UITapGestureRecognizer(target: self, action: "showTestDrawingView:")
+		tgr.numberOfTapsRequired = 2
+		tgr.numberOfTouchesRequired = 2
+		self.view.addGestureRecognizer(tgr)
+	}
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
@@ -55,29 +60,42 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 
-		if sender === galleryButton {
+		switch ( segue.identifier ) {
+			case "showGallery":
+				let navVC = segue.destinationViewController as UINavigationController
+				if let galleryVC = navVC.childViewControllers.first as? GalleryViewController {
+					galleryVC.store = (UIApplication.sharedApplication().delegate as? AppDelegate)!.galleryStore
+					galleryVC.delegate = self
+				} else {
+					assertionFailure("Unable to extract GalleryViewController from segue")
+				}
 
-			let navVC = segue.destinationViewController as UINavigationController
-			if let galleryVC = navVC.childViewControllers.first as? GalleryViewController {
-				galleryVC.store = (UIApplication.sharedApplication().delegate as? AppDelegate)!.galleryStore
-				galleryVC.delegate = self
-			} else {
-				assertionFailure("Unable to extract GalleryViewController from segue")
-			}
+			case "beginTwoPlayerMatch", "beginThreePlayerMatch":
+				var players = 0
+				if segue.identifier == "beginTwoPlayerMatch" {
+					players = 2
+				} else {
+					players = 3
+				}
 
-		} else {
+				let matchVC = segue.destinationViewController as MatchViewController
+				let screenBounds = UIScreen.mainScreen().bounds
+				matchVC.match = Match(players: players, stageSize: CGSize(width: screenBounds.width, height: screenBounds.height), overlap: 4)
 
-			var players = 0
-			if sender === twoPlayersButton {
-				players = 2
-			} else if sender === threePlayersButton {
-				players = 3
-			}
+			case "showTestDrawingView":
+				break;
 
-			let matchVC = segue.destinationViewController as MatchViewController
-			let screenBounds = UIScreen.mainScreen().bounds
-			matchVC.match = Match(players: players, stageSize: CGSize(width: screenBounds.width, height: screenBounds.height), overlap: 4)
+			default:
+				assertionFailure("Unrecognized segue")
+				break;
+
 		}
+	}
+
+	// MARK: Actions
+
+	internal dynamic func showTestDrawingView( sender:AnyObject ) {
+		performSegueWithIdentifier("showTestDrawingView", sender: sender)
 	}
 
 	// MARK: GalleryViewControllerDelegate

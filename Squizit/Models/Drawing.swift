@@ -21,45 +21,23 @@ class Drawing {
 
 	private var _debugRender = false
 	private var _strokes:[Stroke] = []
-	private var _lastDrawnStrokeIndex:Int
-	private var _cachedImage:UIImage?
-	private var _renderQueue = dispatch_queue_create("com.zakariya.squizit.drawingQueue", nil)
 
 	init(width:Int, height:Int) {
 		_width = width
 		_height = height
-		_lastDrawnStrokeIndex = -1
-		backgroundColor = UIColor.whiteColor()
 	}
 
-	var backgroundColor:UIColor {
-		didSet {
-			invalidate()
-		}
-	}
-
-	// add stroke to drawing, return # of strokes in drawing
-	func addStroke( stroke:Stroke ) -> Int {
+	func addStroke( stroke:Stroke ) {
 		_strokes.append(stroke)
-		return _strokes.count
+		_cachedImage = _currentImage
 	}
 
 	// remove last stroke added to drawing
 	func popStroke() {
-		_strokes.removeLast()
-		invalidate()
-	}
-
-	// remove all strokes starting at `mark to end
-	func popStrokesTo( var mark:Int ) {
-		mark = min( max(mark,0), _strokes.count )
-		if mark > 0 {
-			_strokes = Array<Stroke>(_strokes[0..<mark])
-		} else {
-			_strokes = []
+		if !_strokes.isEmpty {
+			_strokes.removeLast()
+			invalidate()
 		}
-
-		invalidate()
 	}
 
 	func clear() {
@@ -90,7 +68,7 @@ class Drawing {
 	func draw() {
 		let rect = CGRect(x: 0, y: 0, width: _width, height: _height)
 
-		backgroundColor.set()
+		UIColor.whiteColor().set()
 		UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
 
 		if _debugRender {
@@ -98,52 +76,75 @@ class Drawing {
 		}
 
 		let ctx = UIGraphicsGetCurrentContext()
-		for i in 0 ..< _strokes.count {
-			renderStroke(ctx, stroke: _strokes[i])
+		for stroke in _strokes {
+			renderStroke(ctx, stroke: stroke)
 		}
 	}
 
+
+	private var _lastDrawnStrokeLength:Int = -1
+	private var _cachedImage:UIImage?
+	private var _currentImage:UIImage?
+
 	func render() -> UIImage {
 
-		// Early exit if cached image is up to date
-		if _cachedImage != nil && _lastDrawnStrokeIndex == _strokes.count - 1 {
-			return _cachedImage!
+		if let currentStroke = _strokes.last {
+			if _currentImage != nil && currentStroke.spars.count == _lastDrawnStrokeLength {
+				return _currentImage!
+			}
+		}
+
+		/*
+			we cache two images.
+			_cachedImage is a cached rendering of all strokes up to but not including the last (or current) stroke
+			_currentImage is _cachedImage + rendering of current stroke
+			
+			we always return _currentImage
+			when a new stroke is started ( via addStroke ) _cachedImage is set to _currentImage
+		*/
+
+
+		if _debugRender {
+			seedRandomColorGenerator()
 		}
 
 		UIGraphicsBeginImageContextWithOptions(CGSize(width: _width, height: _height), true, 0)
 		let ctx = UIGraphicsGetCurrentContext()
 
 		if _cachedImage == nil {
-			backgroundColor.set()
+			UIColor.whiteColor().set()
 			UIRectFillUsingBlendMode(CGRect(x: 0, y: 0, width: _width, height: _height), kCGBlendModeNormal)
+
+			// render all strokes up to but not including the last stroke
+			if _strokes.count > 1 {
+				for i in 0 ..< _strokes.count - 1 {
+					renderStroke(ctx, stroke: _strokes[i])
+				}
+			}
 		}
 
 		// redraw last cached image back into this context
-		if let img = _cachedImage {
-			img.drawAtPoint(CGPointZero)
+		if let cachedImage = _cachedImage {
+			CGContextSetAlpha(ctx, 1)
+			cachedImage.drawAtPoint(CGPointZero)
 		}
 
-		if _debugRender {
-			seedRandomColorGenerator()
+		// draw the current stroke
+		if let stroke = _strokes.last {
+			renderStroke(ctx, stroke: stroke)
+			_lastDrawnStrokeLength = stroke.spars.count
 		}
 
-		//	render from _cachedImageStrokeIndex to end of _strokes
-		for i in _lastDrawnStrokeIndex + 1 ..< _strokes.count {
-			renderStroke(ctx, stroke: _strokes[i])
-		}
-
-		//	We're done
-		_lastDrawnStrokeIndex = _strokes.count - 1
-		_cachedImage = UIGraphicsGetImageFromCurrentImageContext()
+		_currentImage = UIGraphicsGetImageFromCurrentImageContext()
 		UIGraphicsEndImageContext()
-
-		return _cachedImage!
+		return _currentImage!
 	}
+
+	private var _renderQueue = dispatch_queue_create("com.zakariya.squizit.drawingQueue", nil)
 
 	/**
 		Render on background queue, calling `done on main queue when complete, passing the rendered image
 	*/
-
 	func render( done: ((image:UIImage)->Void)? ) {
 		dispatch_async( _renderQueue ) {
 			let image = self.render();
@@ -159,19 +160,18 @@ class Drawing {
 
 	private func invalidate() {
 		_cachedImage = nil
-		_lastDrawnStrokeIndex = -1
+		_currentImage = nil
+		_lastDrawnStrokeLength = -1
 	}
 
 	private func seedRandomColorGenerator() {
 		srand48(12345)
 
-		// iterate rand sequence to meet where we would be at this point
-		if _lastDrawnStrokeIndex > 0 {
-			for i in 0 ... _lastDrawnStrokeIndex {
-				drand48()
-				drand48()
-				drand48()
-			}
+		// each stroke is a unique color, so pump the random seed to get us to a consistent position
+		for i in 0 ... _strokes.count {
+			drand48()
+			drand48()
+			drand48()
 		}
 	}
 
@@ -201,10 +201,9 @@ class Drawing {
 			return
 		}
 
-		println("stroke.spars.count: \(stroke.spars.count)")
-
 		if !_debugRender {
-			stroke.fill.set( self.backgroundColor )
+			stroke.fill.set()
+			CGContextSetAlpha(context, 0.8)
 		} else {
 			nextRandomColor(stroke.fill).set()
 		}
@@ -298,7 +297,6 @@ extension ByteBuffer  {
 		putInt32(Int32(DrawingSerializationVersion_V0))
 		putInt32(Int32(drawing.size.width))
 		putInt32(Int32(drawing.size.height))
-		putColor(drawing.backgroundColor)
 
 		putInt32(Int32(drawing.strokes.count))
 		for stroke in drawing.strokes {
@@ -325,10 +323,6 @@ extension ByteBuffer  {
 			let height = getInt32()
 
 			drawing = Drawing( width: Int(width), height: Int(height) )
-
-			if let color = getColor() {
-				drawing?.backgroundColor = color
-			}
 
 			let strokesCount = getInt32()
 			for i in 0 ..< strokesCount {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.9" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2U9-PO-2Cg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.9" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7U9-N8-2K1">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -30,7 +30,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="2Yj-yc-FrP" kind="presentation" id="7sc-b3-6yH"/>
+                                            <segue destination="2Yj-yc-FrP" kind="presentation" identifier="beginTwoPlayerMatch" id="7sc-b3-6yH"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rGO-wl-LMv" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
@@ -39,7 +39,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="2Yj-yc-FrP" kind="presentation" id="fbA-qo-xxm"/>
+                                            <segue destination="2Yj-yc-FrP" kind="presentation" identifier="beginThreePlayerMatch" id="fbA-qo-xxm"/>
                                         </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="root-or" translatesAutoresizingMaskIntoConstraints="NO" id="rHq-0U-mAh">
@@ -51,7 +51,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="AJ9-2T-z5F" kind="presentation" id="YTF-oq-3bE"/>
+                                            <segue destination="AJ9-2T-z5F" kind="presentation" identifier="showGallery" id="YTF-oq-3bE"/>
                                         </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="root-title" translatesAutoresizingMaskIntoConstraints="NO" id="eyv-id-0vb">
@@ -85,6 +85,7 @@
                         <outlet property="galleryButton" destination="NFM-Zv-8Ul" id="2dV-KS-jND"/>
                         <outlet property="threePlayersButton" destination="rGO-wl-LMv" id="uwr-7G-ObW"/>
                         <outlet property="twoPlayersButton" destination="91w-da-Nqx" id="wXJ-Y5-FmO"/>
+                        <segue destination="2U9-PO-2Cg" kind="presentation" identifier="showTestDrawingView" id="nlD-cw-RuA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hj4-9L-CMp" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -494,6 +495,6 @@
         <image name="save-to-gallery-dialog-title" width="149" height="61"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="fbA-qo-xxm"/>
+        <segue reference="7sc-b3-6yH"/>
     </inferredMetricsTieBreakers>
 </document>

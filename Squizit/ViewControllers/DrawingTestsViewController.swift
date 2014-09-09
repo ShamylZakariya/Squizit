@@ -95,13 +95,19 @@ class DrawingTestsViewController : UIViewController {
 		drawingView.addGestureRecognizer(tgr)
 
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "DEBUG", style: UIBarButtonItemStyle.Plain, target: self, action: "toggleDebugRendering:")
+
+		self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "UNFO", style: UIBarButtonItemStyle.Plain, target: self, action: "undo:")
 	}
 
 	override func viewWillLayoutSubviews() {
 		drawingView.frame = view.bounds
 	}
 
-	dynamic internal func eraseDrawing( tgr:UITapGestureRecognizer ) {
+	dynamic internal func undo( sender:AnyObject ) {
+		drawingView.controller!.undo()
+	}
+
+	dynamic internal func eraseDrawing( sender:AnyObject ) {
 		drawingView.drawing!.clear()
 		drawingView.setNeedsDisplay()
 	}

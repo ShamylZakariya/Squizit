@@ -15,8 +15,6 @@ class DrawingInputController {
 	private var _pointsTop = 0
 	private var _isFirstPoint = false
 	private var _lastSegment = LineSegment()
-	private var _undoStrokeIndexes:[Int] = []
-
 
 	// MARK: Public Ivars
 
@@ -49,11 +47,8 @@ class DrawingInputController {
 
 	func undo() {
 		if let drawing = self.drawing {
-			if !_undoStrokeIndexes.isEmpty {
-				let mark = _undoStrokeIndexes.removeLast()
-				drawing.popStrokesTo(mark)
-				view?.setNeedsDisplay()
-			}
+			drawing.popStroke()
+			view?.setNeedsDisplay()
 		}
 	}
 
@@ -77,7 +72,8 @@ class DrawingInputController {
 			_points[_pointsTop] = locationInDrawing
 			_isFirstPoint = true
 
-			_undoStrokeIndexes.append(drawing.strokes.count)
+			_activeStroke = Stroke( fill: self.fill )
+			drawing.addStroke(_activeStroke!)
 		}
 	}
 
@@ -89,7 +85,7 @@ class DrawingInputController {
 
 			if _pointsTop == 4 {
 
-				renderStroke()
+				appendToStroke()
 
 				drawing.render {
 					[unowned self]
@@ -102,12 +98,14 @@ class DrawingInputController {
 	}
 
 	func touchEnded() {
+		_activeStroke = nil
 		view?.setNeedsDisplay()
 	}
 
 	// MARK: Private API
 
-	private func renderStroke() {
+	private var _activeStroke:Stroke?
+	private func appendToStroke() {
 
 		_points[3] = CGPoint(x: (_points[2].x + _points[4].x)/2, y: (_points[2].y + _points[4].y)/2)
 
@@ -120,7 +118,6 @@ class DrawingInputController {
 		_points[1] = _points[4]
 		_pointsTop = 1
 
-		var stroke = Stroke( fill: self.fill )
 		let fillSize = self.fill.size
 
 		let SCALE:CGFloat = 1.0
@@ -158,13 +155,10 @@ class DrawingInputController {
 			let c = ControlPoint(position: ls[3].firstPoint, control: ls[2].firstPoint)
 			let d = ControlPoint(position: ls[3].secondPoint, control: ls[2].secondPoint)
 
-			stroke.spars.append( Stroke.Spar(a: a, b: b))
-			stroke.spars.append( Stroke.Spar(a: c, b: d))
+			_activeStroke!.spars.append( Stroke.Spar(a: a, b: b))
+			_activeStroke!.spars.append( Stroke.Spar(a: c, b: d))
 
 			_lastSegment = ls[3]
 		}
-
-		drawing!.addStroke(stroke)
 	}
-
 }
