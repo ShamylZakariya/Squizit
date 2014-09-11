@@ -105,13 +105,13 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	dynamic func quitMatch( t:AnyObject ) {
 		var alert = UIAlertController(
 			title: NSLocalizedString("Quit?", comment:"QuitMatchAlertTitle"),
-			message: NSLocalizedString("Are you certain you'd like to bail on match?", comment:"QuitMatchAlertMessage"),
+			message: NSLocalizedString("Are you certain you'd like to bail on this match?", comment:"QuitMatchAlertMessage"),
 			preferredStyle: UIAlertControllerStyle.Alert)
 
 		alert.view.tintColor = SquizitTheme.alertTintColor()
 
 		alert.addAction(UIAlertAction(
-			title: NSLocalizedString("Nevermind", comment:"QuitMatchAlertButtonCancelTitle"),
+			title: NSLocalizedString("Continue Match", comment:"QuitMatchAlertButtonCancelTitle"),
 			style: UIAlertActionStyle.Cancel,
 			handler: {
 				( action:UIAlertAction! ) -> Void in
