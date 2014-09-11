@@ -72,7 +72,8 @@ class Stroke : Equatable {
 			}
 		}
 
-		var spars:[Spar] = []
+		let start:Spar
+		let end:Spar
 	}
 
 	var fill:Fill = Fill.Pencil
@@ -95,17 +96,8 @@ func == (left:Stroke.Chunk.Spar, right:Stroke.Chunk.Spar) -> Bool {
 }
 
 func == (left:Stroke.Chunk, right:Stroke.Chunk) -> Bool {
-	if left.spars.count != right.spars.count {
-		return false
-	}
 
-	for (i,spar) in enumerate(left.spars) {
-		if spar != right.spars[i] {
-			return false
-		}
-	}
-
-	return true
+	return left.start == right.start && left.end == right.end
 }
 
 func == (left:Stroke, right:Stroke) -> Bool {
@@ -182,34 +174,27 @@ extension ByteBuffer {
 	}
 
 	class func requiredSizeForStrokeChunk( chunk:Stroke.Chunk ) -> Int {
-		return sizeof(Int32) +
-			chunk.spars.count * 2 * requiredSizeForControlPoint()
+		return 4 * requiredSizeForControlPoint()
 	}
 
 	func putStrokeChunk( chunk:Stroke.Chunk ) -> Bool {
-		if remaining < sizeof(Int32) {
+		if remaining < ByteBuffer.requiredSizeForStrokeChunk( chunk ) {
 			return false
 		}
 
-		putInt32(Int32(chunk.spars.count))
-
-		for chunk in chunk.spars {
-			if !putControlPoint(chunk.a) || !putControlPoint(chunk.b) {
-				return false
-			}
-		}
+		putControlPoint(chunk.start.a)
+		putControlPoint(chunk.start.b)
+		putControlPoint(chunk.end.a)
+		putControlPoint(chunk.end.b)
 
 		return true
 	}
 
 	func getStrokeChunk() -> Stroke.Chunk {
-		var chunk = Stroke.Chunk()
-		let count = getInt32()
-		for i in 0 ..< count {
-			chunk.spars.append( Stroke.Chunk.Spar( a: getControlPoint(), b: getControlPoint() ) )
-		}
-
-		return chunk
+		return Stroke.Chunk(
+			start: Stroke.Chunk.Spar( a: getControlPoint(), b: getControlPoint() ),
+			end: Stroke.Chunk.Spar( a: getControlPoint(), b: getControlPoint() )
+		)
 	}
 
 	class func requiredSizeForStroke( stroke:Stroke ) -> Int {

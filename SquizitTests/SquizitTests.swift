@@ -62,18 +62,14 @@ class SquizitTests: XCTestCase {
 		srand48(123)
 
 		for i in 0 ..< 20 {
-			var chunk = Stroke.Chunk()
-			chunk.spars.append( Stroke.Chunk.Spar(
-				a: ControlPoint(position: randomPoint(), control: randomPoint()),
-				b: ControlPoint(position: randomPoint(), control: randomPoint())))
-
-			chunk.spars.append( Stroke.Chunk.Spar(
-				a: ControlPoint(position: randomPoint(), control: randomPoint()),
-				b: ControlPoint(position: randomPoint(), control: randomPoint())))
-
-			chunk.spars.append( Stroke.Chunk.Spar(
-				a: ControlPoint(position: randomPoint(), control: randomPoint()),
-				b: ControlPoint(position: randomPoint(), control: randomPoint())))
+			var chunk = Stroke.Chunk(
+				start: Stroke.Chunk.Spar(
+					a: ControlPoint(position: randomPoint(), control: randomPoint()),
+					b: ControlPoint(position: randomPoint(), control: randomPoint())),
+				end: Stroke.Chunk.Spar(
+					a: ControlPoint(position: randomPoint(), control: randomPoint()),
+					b: ControlPoint(position: randomPoint(), control: randomPoint()))
+			)
 
 			strokeA.chunks.append(chunk)
 		}
@@ -139,11 +135,7 @@ class SquizitTests: XCTestCase {
 		var radians:CGFloat = 0;
 		for i in 0 ..< steps {
 			let nextRadians = radians + radianIncrement
-
-			var chunk = Stroke.Chunk()
-			chunk.spars.append(spar( radians ))
-			chunk.spars.append(spar( nextRadians ))
-			stroke.chunks.append(chunk)
+			stroke.chunks.append(Stroke.Chunk( start: spar(radians), end:spar(nextRadians)))
 		}
 
 		drawing.addStroke(stroke)

@@ -200,25 +200,13 @@ class Drawing {
 		for i in chunkIndex ..< stroke.chunks.count {
 			let chunk = stroke.chunks[i]
 
-			var cp:ControlPoint = chunk.spars[0].a
-
 			var shapes = UIBezierPath()
-			shapes.moveToPoint( cp.position )
-			for i in 1 ..< chunk.spars.count {
-				let ncp = chunk.spars[i].a
-				shapes.addCurveToPoint(ncp.position, controlPoint1: cp.control, controlPoint2: ncp.control)
-				cp = ncp
-			}
-
-			cp = chunk.spars.last!.b
-			shapes.addLineToPoint(cp.position)
-			for var i = chunk.spars.count - 2; i >= 0; i-- {
-				let ncp = chunk.spars[i].b
-				shapes.addCurveToPoint(ncp.position, controlPoint1: cp.control, controlPoint2: ncp.control)
-				cp = ncp
-			}
-
+			shapes.moveToPoint( chunk.start.a.position )
+			shapes.addCurveToPoint(chunk.end.a.position, controlPoint1: chunk.start.a.control, controlPoint2: chunk.end.a.control)
+			shapes.addLineToPoint(chunk.end.b.position)
+			shapes.addCurveToPoint(chunk.start.b.position, controlPoint1: chunk.end.b.control, controlPoint2: chunk.start.b.control)
 			shapes.closePath()
+
 			shapes.fill()
 
 			if _debugRender {
@@ -231,7 +219,7 @@ class Drawing {
 				var spars = UIBezierPath()
 				var handles = UIBezierPath()
 
-				for spar in chunk.spars {
+				for spar in [chunk.start, chunk.end] {
 
 					spars.moveToPoint(spar.a.position)
 					spars.addLineToPoint(spar.b.position)
