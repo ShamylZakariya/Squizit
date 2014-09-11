@@ -42,6 +42,8 @@
 		63EBB87F19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87E19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift */; };
 		63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */; };
 		63EBB88319B0CBE6003C3EC2 /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */; };
+		63FD058219BFFE6E00CA7121 /* Lilliput.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63BBECCE1996F8A200F6E2B3 /* Lilliput.framework */; };
+		63FD058419C0011300CA7121 /* Lilliput.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63BBECCE1996F8A200F6E2B3 /* Lilliput.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		63FDE7321998249A0006B7E4 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
 /* End PBXBuildFile section */
 
@@ -74,7 +76,28 @@
 			remoteGlobalIDString = E5BDC5C0196F698B001ABC11;
 			remoteInfo = Lilliput;
 		};
+		63FD058519C0011300CA7121 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63BBECC81996F8A200F6E2B3 /* Lilliput.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = E5BDC5C0196F698B001ABC11;
+			remoteInfo = Lilliput;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		63FD058719C0011300CA7121 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				63FD058419C0011300CA7121 /* Lilliput.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		6350C5E919A1727B008CE4F5 /* MatchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchViewController.swift; sourceTree = "<group>"; };
@@ -124,6 +147,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63FD058219BFFE6E00CA7121 /* Lilliput.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,11 +306,13 @@
 				63BBEC8619967A2300F6E2B3 /* Sources */,
 				63BBEC8719967A2300F6E2B3 /* Frameworks */,
 				63BBEC8819967A2300F6E2B3 /* Resources */,
+				63FD058719C0011300CA7121 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				63BBECD21996F8A800F6E2B3 /* PBXTargetDependency */,
+				63FD058619C0011300CA7121 /* PBXTargetDependency */,
 			);
 			name = Squizit;
 			productName = Squizit;
@@ -453,6 +479,11 @@
 			name = Lilliput;
 			targetProxy = 63BBECD11996F8A800F6E2B3 /* PBXContainerItemProxy */;
 		};
+		63FD058619C0011300CA7121 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Lilliput;
+			targetProxy = 63FD058519C0011300CA7121 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -555,6 +586,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Squizit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "-DDEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Squizit/Models/Squizit-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -570,6 +602,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Squizit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Squizit/Models/Squizit-Bridging-Header.h";
 			};

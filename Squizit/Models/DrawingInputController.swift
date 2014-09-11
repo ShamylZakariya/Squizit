@@ -155,8 +155,10 @@ class DrawingInputController {
 			let c = ControlPoint(position: ls[3].firstPoint, control: ls[2].firstPoint)
 			let d = ControlPoint(position: ls[3].secondPoint, control: ls[2].secondPoint)
 
-			_activeStroke!.spars.append( Stroke.Spar(a: a, b: b))
-			_activeStroke!.spars.append( Stroke.Spar(a: c, b: d))
+			var chunk = Stroke.Chunk()
+			chunk.spars.append( Stroke.Chunk.Spar(a: a, b: b))
+			chunk.spars.append( Stroke.Chunk.Spar(a: c, b: d))
+			_activeStroke!.chunks.append(chunk)
 
 			_lastSegment = ls[3]
 		}

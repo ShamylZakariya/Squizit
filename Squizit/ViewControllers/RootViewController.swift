@@ -19,10 +19,13 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	@IBOutlet weak var borderView: UIImageView!
 
 	override func viewDidLoad() {
-		var tgr = UITapGestureRecognizer(target: self, action: "showTestDrawingView:")
-		tgr.numberOfTapsRequired = 2
-		tgr.numberOfTouchesRequired = 2
-		self.view.addGestureRecognizer(tgr)
+
+		#if DEBUG
+			var tgr = UITapGestureRecognizer(target: self, action: "showTestDrawingView:")
+			tgr.numberOfTapsRequired = 2
+			tgr.numberOfTouchesRequired = 2
+			self.view.addGestureRecognizer(tgr)
+		#endif
 	}
 
 	override func viewWillAppear(animated: Bool) {
