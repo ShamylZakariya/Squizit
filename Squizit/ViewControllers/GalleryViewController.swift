@@ -56,6 +56,9 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		deleteButton.alpha = 0
 		deleteButton.hidden = true
 
+		layer.transform = CATransform3DIdentity
+		layer.opacity = 1
+
 		// for some reason I can't set Baskerville in IB
 		namesLabel.font = UIFont(name: "Baskerville", size: namesLabel.font.pointSize)
 		dateLabel.font = UIFont(name:"Baskerville-Italic", size: dateLabel.font.pointSize)
@@ -73,6 +76,11 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		deleteButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "deleteButtonTapped:"))
 	}
 
+	override func prepareForReuse() {
+		layer.transform = CATransform3DIdentity
+		layer.opacity = 1
+	}
+
 	dynamic internal func longPress( gr:UILongPressGestureRecognizer ) {
 		switch gr.state {
 			case UIGestureRecognizerState.Began:
@@ -84,10 +92,25 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		}
 	}
 
+	private var _deleting:Bool = false
 	dynamic internal func deleteButtonTapped( tr:UITapGestureRecognizer ) {
-		if let handler = onDeleteButtonTapped {
-			handler( cell:self )
-		}
+
+		_deleting = true
+		let layer = self.layer
+		let maybeHandler = self.onDeleteButtonTapped
+
+		UIView.animateWithDuration(0.2,
+			animations: {
+				[unowned self] () -> Void in
+				let scale = CATransform3DMakeScale(0.1, 0.1, 1)
+				layer.transform = CATransform3DConcat(layer.transform, scale)
+				self.alpha = 0
+			}) {
+				(complete:Bool) -> Void in
+				if let handler = maybeHandler {
+					handler( cell:self )
+				}
+			}
 	}
 
 	internal func showDeleteButton() {
@@ -126,6 +149,11 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	}
 
 	internal dynamic func wiggleAnimationTimeout( timer:NSTimer ) {
+
+		if _deleting {
+			return
+		}
+
 		let now = NSDate().timeIntervalSinceReferenceDate
 		let cycle = (now / WigglePhaseDuration) + _phaseOffset
 		let phase = sin(cycle * M_PI)
