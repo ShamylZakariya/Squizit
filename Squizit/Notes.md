@@ -1,8 +1,6 @@
 #TODO
 
 	Design an app icon
-	In gallery detail, fade in the image once it loads so as to be less "harsh"
-	Add motion effect to background pattern of homescreen
 	figure out a better solution to sizing of drawings. infinite virtual cavas w/ a "viewport", and scaling? no idea right now.
 	add transitions to my segues
 
