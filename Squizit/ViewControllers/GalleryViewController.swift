@@ -104,7 +104,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 				[unowned self] () -> Void in
 				let scale = CATransform3DMakeScale(0.1, 0.1, 1)
 				layer.transform = CATransform3DConcat(layer.transform, scale)
-				self.alpha = 0
+				layer.opacity = 0
 			}) {
 				(complete:Bool) -> Void in
 				if let handler = maybeHandler {
