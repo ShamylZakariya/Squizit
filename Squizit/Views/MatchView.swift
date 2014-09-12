@@ -48,6 +48,8 @@ class MatchView : UIView {
 
 	override func drawRect(rect: CGRect) {
 		let ctx = UIGraphicsGetCurrentContext()
+		CGContextClipToRect(ctx, rect)
+
 		if let match = self.match {
 			for (i,drawing) in enumerate(match.drawings) {
 				let transform = match.transforms[i]

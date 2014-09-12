@@ -22,7 +22,7 @@ enum Fill {
 				UIColor.blackColor().set()
 
 			case .Eraser:
-				UIColor.whiteColor().set()
+				UIColor.whiteColor().colorWithAlphaComponent(0.8).set()
 		}
 	}
 
@@ -57,77 +57,54 @@ struct ControlPoint:Printable,Equatable {
 	}
 }
 
-func == (left:ControlPoint, right:ControlPoint) -> Bool {
-	return CGPointEqualToPoint( left.position, right.position ) &&
-		CGPointEqualToPoint(left.control, right.control)
-}
-
-
-struct ControlPointCubicBezierInterpolator {
-
-	let a:ControlPoint
-	let	b:ControlPoint
-
-	init( a:ControlPoint, b:ControlPoint ) {
-		self.a = a
-		self.b = b
-	}
-
-	func bezierPoint( t: CGFloat ) -> CGPoint {
-		// from http://ciechanowski.me/blog/2014/02/18/drawing-bezier-curves/
-
-		let Nt = 1.0 - t
-		let A = Nt * Nt * Nt
-		let B = 3.0 * Nt * Nt * t
-		let C = 3.0 * Nt * t * t
-		let D = t * t * t
-
-		var p = a.position.scale(A)
-		p = p.add( a.control.scale(B) )
-		p = p.add( b.control.scale(C) )
-		p = p.add( b.position.scale(D) )
-
-		return p
-	}
-
-	func recommendedSubdivisions() -> Int {
-		// from http://ciechanowski.me/blog/2014/02/18/drawing-bezier-curves/
-
-		let L0 = a.position.distance(a.control)
-		let L1 = a.control.distance(b.control)
-		let L2 = b.control.distance(b.position)
-		let ApproximateLength = L0 + L1 + L2
-
-		let Min:CGFloat = 10.0
-		let Segs:CGFloat = ApproximateLength / 30.0
-		let Slope:CGFloat = 0.6
-
-		return Int(ceil(sqrt( (Segs*Segs) * Slope + (Min*Min))))
-	}
-}
 
 class Stroke : Equatable {
 
-	struct Spar:Equatable {
-		let a:ControlPoint
-		let b:ControlPoint
+	struct Chunk : Equatable {
 
-		init(a:ControlPoint, b:ControlPoint){
-			self.a = a
-			self.b = b
+		struct Spar:Equatable {
+			let a:ControlPoint
+			let b:ControlPoint
+
+			init(a:ControlPoint, b:ControlPoint){
+				self.a = a
+				self.b = b
+			}
+		}
+
+		let start:Spar
+		let end:Spar
+
+		var boundingRect:CGRect {
+			return CGRect.rectByFitting(
+				start.a.position, start.a.control, end.a.control, end.a.position, // contains 'a'-side bezier curve
+				start.b.position, start.b.control, end.b.control, end.b.position // contains 'b'-side bezier curve
+			)
 		}
 	}
 
 	var fill:Fill = Fill.Pencil
-	var spars:[Spar] = []
+	var chunks:[Chunk] = []
 
 	init( fill:Fill ) {
 		self.fill = fill
 	}
 }
 
-func == (left:Stroke.Spar, right:Stroke.Spar) -> Bool {
+// MARK: Equatable
+
+func == (left:ControlPoint, right:ControlPoint) -> Bool {
+	return CGPointEqualToPoint( left.position, right.position ) &&
+		CGPointEqualToPoint(left.control, right.control)
+}
+
+func == (left:Stroke.Chunk.Spar, right:Stroke.Chunk.Spar) -> Bool {
 	return left.a == right.a && left.b == right.b
+}
+
+func == (left:Stroke.Chunk, right:Stroke.Chunk) -> Bool {
+
+	return left.start == right.start && left.end == right.end
 }
 
 func == (left:Stroke, right:Stroke) -> Bool {
@@ -135,12 +112,12 @@ func == (left:Stroke, right:Stroke) -> Bool {
 		return false
 	}
 
-	if left.spars.count != right.spars.count {
+	if left.chunks.count != right.chunks.count {
 		return false
 	}
 
-	for (i,spar) in enumerate(left.spars) {
-		if spar != right.spars[i] {
+	for (i,chunk) in enumerate(left.chunks) {
+		if chunk != right.chunks[i] {
 			return false
 		}
 	}
@@ -203,9 +180,36 @@ extension ByteBuffer {
 			control: CGPoint( x:CGFloat(getFloat64()), y: CGFloat(getFloat64()) ))
 	}
 
+	class func requiredSizeForStrokeChunk( chunk:Stroke.Chunk ) -> Int {
+		return 4 * requiredSizeForControlPoint()
+	}
+
+	func putStrokeChunk( chunk:Stroke.Chunk ) -> Bool {
+		if remaining < ByteBuffer.requiredSizeForStrokeChunk( chunk ) {
+			return false
+		}
+
+		putControlPoint(chunk.start.a)
+		putControlPoint(chunk.start.b)
+		putControlPoint(chunk.end.a)
+		putControlPoint(chunk.end.b)
+
+		return true
+	}
+
+	func getStrokeChunk() -> Stroke.Chunk {
+		return Stroke.Chunk(
+			start: Stroke.Chunk.Spar( a: getControlPoint(), b: getControlPoint() ),
+			end: Stroke.Chunk.Spar( a: getControlPoint(), b: getControlPoint() )
+		)
+	}
+
 	class func requiredSizeForStroke( stroke:Stroke ) -> Int {
-		return requiredSizeForFill() + sizeof(Int32) +
-			stroke.spars.count * 2 * requiredSizeForControlPoint()
+		return requiredSizeForFill() +
+			sizeof(Int32) + // number of chunks
+			stroke.chunks.reduce(0, combine: { (total:Int, chunk:Stroke.Chunk) -> Int in
+				return total + ByteBuffer.requiredSizeForStrokeChunk( chunk )
+			})
 	}
 
 	func putStroke( stroke:Stroke ) -> Bool {
@@ -218,10 +222,10 @@ extension ByteBuffer {
 			return false
 		}
 
-		putInt32(Int32(stroke.spars.count))
+		putInt32(Int32(stroke.chunks.count))
 
-		for spar in stroke.spars {
-			if !putControlPoint(spar.a) || !putControlPoint(spar.b) {
+		for chunk in stroke.chunks {
+			if !putStrokeChunk(chunk) {
 				return false
 			}
 		}
@@ -233,7 +237,7 @@ extension ByteBuffer {
 		var stroke = Stroke( fill: getFill() )
 		let count = getInt32()
 		for i in 0 ..< count {
-			stroke.spars.append( Stroke.Spar( a: getControlPoint(), b: getControlPoint() ) )
+			stroke.chunks.append( getStrokeChunk() )
 		}
 
 		return stroke
@@ -274,3 +278,45 @@ extension ByteBuffer {
 
 }
 
+struct ControlPointCubicBezierInterpolator {
+
+	let a:ControlPoint
+	let	b:ControlPoint
+
+	init( a:ControlPoint, b:ControlPoint ) {
+		self.a = a
+		self.b = b
+	}
+
+	func bezierPoint( t: CGFloat ) -> CGPoint {
+		// from http://ciechanowski.me/blog/2014/02/18/drawing-bezier-curves/
+
+		let Nt = 1.0 - t
+		let A = Nt * Nt * Nt
+		let B = 3.0 * Nt * Nt * t
+		let C = 3.0 * Nt * t * t
+		let D = t * t * t
+
+		var p = a.position.scale(A)
+		p = p.add( a.control.scale(B) )
+		p = p.add( b.control.scale(C) )
+		p = p.add( b.position.scale(D) )
+
+		return p
+	}
+
+	func recommendedSubdivisions() -> Int {
+		// from http://ciechanowski.me/blog/2014/02/18/drawing-bezier-curves/
+
+		let L0 = a.position.distance(a.control)
+		let L1 = a.control.distance(b.control)
+		let L2 = b.control.distance(b.position)
+		let ApproximateLength = L0 + L1 + L2
+
+		let Min:CGFloat = 10.0
+		let Segs:CGFloat = ApproximateLength / 30.0
+		let Slope:CGFloat = 0.6
+
+		return Int(ceil(sqrt( (Segs*Segs) * Slope + (Min*Min))))
+	}
+}

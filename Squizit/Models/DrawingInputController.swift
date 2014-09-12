@@ -57,7 +57,7 @@ class DrawingInputController {
 			CGContextSaveGState(context)
 			CGContextConcatCTM(context, transform)
 
-			let image = drawing.render()
+			let image = drawing.render().image
 			image.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
 
 			CGContextRestoreGState(context)
@@ -89,8 +89,16 @@ class DrawingInputController {
 
 				drawing.render {
 					[unowned self]
-					(image:UIImage) in
-					self.view?.setNeedsDisplay()
+					(image:UIImage, dirtyRect:CGRect ) in
+					if !dirtyRect.isNull {
+
+						// transform dirtyRect from drawing coordinate space to screen
+						let screenDirtyRect = CGRectApplyAffineTransform(dirtyRect, self.transform)
+						self.view?.setNeedsDisplayInRect( screenDirtyRect )
+
+					} else {
+						self.view?.setNeedsDisplay()
+					}
 					return
 				}
 			}
@@ -155,8 +163,12 @@ class DrawingInputController {
 			let c = ControlPoint(position: ls[3].firstPoint, control: ls[2].firstPoint)
 			let d = ControlPoint(position: ls[3].secondPoint, control: ls[2].secondPoint)
 
-			_activeStroke!.spars.append( Stroke.Spar(a: a, b: b))
-			_activeStroke!.spars.append( Stroke.Spar(a: c, b: d))
+			let chunk = Stroke.Chunk(
+				start: Stroke.Chunk.Spar(a: a, b: b),
+				end: Stroke.Chunk.Spar(a: c, b: d)
+			)
+
+			_activeStroke!.chunks.append(chunk)
 
 			_lastSegment = ls[3]
 		}

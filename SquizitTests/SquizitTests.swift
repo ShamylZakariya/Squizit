@@ -10,7 +10,7 @@ import UIKit
 import XCTest
 import Lilliput
 
-func randRange( var min:CGFloat, var max: CGFloat ) -> CGFloat {
+private func randRange( var min:CGFloat, var max: CGFloat ) -> CGFloat {
 	if ( max < min ) {
 		swap( &max, &min )
 	}
@@ -18,7 +18,7 @@ func randRange( var min:CGFloat, var max: CGFloat ) -> CGFloat {
 	return min + (CGFloat(drand48()) * (max - min))
 }
 
-func randomColor() -> UIColor {
+private func randomColor() -> UIColor {
 	let red = drand48()
 	let green = fract(red + drand48() * 0.5)
 	let blue = fract( green + drand48() * 0.5)
@@ -26,7 +26,7 @@ func randomColor() -> UIColor {
 	return UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alpha))
 }
 
-func randomPoint() -> CGPoint {
+private func randomPoint() -> CGPoint {
 	return CGPoint(x: randRange(-100, 100), y: randRange(-100, 100))
 }
 
@@ -62,9 +62,16 @@ class SquizitTests: XCTestCase {
 		srand48(123)
 
 		for i in 0 ..< 20 {
-			strokeA.spars.append(Stroke.Spar(
-				a: ControlPoint(position: randomPoint(), control: randomPoint()),
-				b: ControlPoint(position: randomPoint(), control: randomPoint())))
+			var chunk = Stroke.Chunk(
+				start: Stroke.Chunk.Spar(
+					a: ControlPoint(position: randomPoint(), control: randomPoint()),
+					b: ControlPoint(position: randomPoint(), control: randomPoint())),
+				end: Stroke.Chunk.Spar(
+					a: ControlPoint(position: randomPoint(), control: randomPoint()),
+					b: ControlPoint(position: randomPoint(), control: randomPoint()))
+			)
+
+			strokeA.chunks.append(chunk)
 		}
 
 		buffer.putStroke(strokeA)
@@ -95,7 +102,7 @@ class SquizitTests: XCTestCase {
 			XCTAssertNotNil(maybeColorPrime, "Expect to deserialize a color")
 
 			if let colorPrime:UIColor = maybeColorPrime {
-//				XCTAssert(colorPrime.hasRGBComponents, "Expect deserialized color to have RGB components")
+				XCTAssert(colorPrime.hasRGBComponents, "Expect deserialized color to have RGB components")
 				let color = colors[i]
 				XCTAssertEqual(color.redComponent!, colorPrime.redComponent!, "Expect equal red components")
 				XCTAssertEqual(color.greenComponent!, colorPrime.greenComponent!, "Expect equal green components")
@@ -115,25 +122,23 @@ class SquizitTests: XCTestCase {
 		let center = CGPoint( x: 256, y: 256 )
 		let width:CGFloat = 20.0
 
-		func spar( radians:CGFloat ) -> Stroke.Spar {
+		func spar( radians:CGFloat ) -> Stroke.Chunk.Spar {
 			let ap = center.add(CGPoint(x: (radius-width) * cos(radians), y: (radius-width) * sin(radians)))
 			let ac = ap.add(CGPoint( x: cos(radians), y: sin(radians)))
 			let bp = center.add(CGPoint(x: (radius+width) * cos(radians), y: (radius+width) * sin(radians)))
 			let bc = bp.add(CGPoint( x: cos(radians), y: sin(radians)))
 
-			return Stroke.Spar(a: ControlPoint(position: ap, control: ac), b: ControlPoint(position: bp, control: bc))
+			return Stroke.Chunk.Spar(a: ControlPoint(position: ap, control: ac), b: ControlPoint(position: bp, control: bc))
 		}
 
+		var stroke = Stroke(fill: .Pencil)
 		var radians:CGFloat = 0;
 		for i in 0 ..< steps {
 			let nextRadians = radians + radianIncrement
-
-			var stroke = Stroke(fill: .Pencil)
-			stroke.spars.append(spar( radians ))
-			stroke.spars.append(spar( nextRadians ))
-
-			drawing.addStroke(stroke)
+			stroke.chunks.append(Stroke.Chunk( start: spar(radians), end:spar(nextRadians)))
 		}
+
+		drawing.addStroke(stroke)
 
 		return drawing
 	}
@@ -167,8 +172,8 @@ class SquizitTests: XCTestCase {
 		var drawingImage = drawing.render()
 		var drawingImagePrime = drawingPrimeResult.value.render()
 
-		var drawingImageData = UIImagePNGRepresentation(drawingImage)
-		var drawingImageDataPrime = UIImagePNGRepresentation(drawingImagePrime)
+		var drawingImageData = UIImagePNGRepresentation(drawingImage.image)
+		var drawingImageDataPrime = UIImagePNGRepresentation(drawingImagePrime.image)
 
 		XCTAssert(drawingImageData.length > 0, "Expect rendered drawing's PNG data rep to have > 0 length")
 		XCTAssert(drawingImageDataPrime.length > 0, "Expect deserialized rendered drawing's PNG data rep to have > 0 length")

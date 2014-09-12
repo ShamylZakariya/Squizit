@@ -29,7 +29,7 @@ class Drawing {
 
 	func addStroke( stroke:Stroke ) {
 		_strokes.append(stroke)
-		_cachedImage = _currentImage
+		_lastDrawnStrokeChunkIndex = -1
 	}
 
 	// remove last stroke added to drawing
@@ -77,32 +77,28 @@ class Drawing {
 
 		let ctx = UIGraphicsGetCurrentContext()
 		for stroke in _strokes {
-			renderStroke(ctx, stroke: stroke)
+			renderStroke(ctx, stroke: stroke, chunkIndex: 0)
 		}
 	}
 
 
-	private var _lastDrawnStrokeLength:Int = -1
+	private var _lastDrawnStrokeChunkIndex:Int = -1
 	private var _cachedImage:UIImage?
-	private var _currentImage:UIImage?
 
-	func render() -> UIImage {
+	/**
+		synchronously renders the drawing, returning a tuple containing the rendered result image, and a 
+		dirtyRect describing the updated region of the image from the last time render was called.
+		
+		If the image is unchanged from the last time render() was called, dirtyRect will be CGRect.nullRect
+	*/
+	func render() -> (image:UIImage,dirtyRect:CGRect) {
 
 		if let currentStroke = _strokes.last {
-			if _currentImage != nil && currentStroke.spars.count == _lastDrawnStrokeLength {
-				return _currentImage!
+			if _cachedImage != nil &&
+				_lastDrawnStrokeChunkIndex == currentStroke.chunks.count - 1 {
+				return (image:_cachedImage!, dirtyRect:CGRect.nullRect)
 			}
 		}
-
-		/*
-			we cache two images.
-			_cachedImage is a cached rendering of all strokes up to but not including the last (or current) stroke
-			_currentImage is _cachedImage + rendering of current stroke
-			
-			we always return _currentImage
-			when a new stroke is started ( via addStroke ) _cachedImage is set to _currentImage
-		*/
-
 
 		if _debugRender {
 			seedRandomColorGenerator()
@@ -118,26 +114,29 @@ class Drawing {
 			// render all strokes up to but not including the last stroke
 			if _strokes.count > 1 {
 				for i in 0 ..< _strokes.count - 1 {
-					renderStroke(ctx, stroke: _strokes[i])
+					renderStroke(ctx, stroke: _strokes[i], chunkIndex: 0)
 				}
 			}
 		}
 
 		// redraw last cached image back into this context
 		if let cachedImage = _cachedImage {
-			CGContextSetAlpha(ctx, 1)
 			cachedImage.drawAtPoint(CGPointZero)
 		}
 
-		// draw the current stroke
+		// draw the undrawn chunks of the current stroke
+		var dirtyRect:CGRect = CGRect.nullRect
+
 		if let stroke = _strokes.last {
-			renderStroke(ctx, stroke: stroke)
-			_lastDrawnStrokeLength = stroke.spars.count
+			stroke.fill.set()
+			dirtyRect = renderStroke(ctx, stroke: stroke, chunkIndex: _lastDrawnStrokeChunkIndex + 1 )
+			_lastDrawnStrokeChunkIndex = stroke.chunks.count - 1
 		}
 
-		_currentImage = UIGraphicsGetImageFromCurrentImageContext()
+		_cachedImage = UIGraphicsGetImageFromCurrentImageContext()
 		UIGraphicsEndImageContext()
-		return _currentImage!
+
+		return (image:_cachedImage!, dirtyRect: dirtyRect)
 	}
 
 	private var _renderQueue = dispatch_queue_create("com.zakariya.squizit.drawingQueue", nil)
@@ -145,12 +144,12 @@ class Drawing {
 	/**
 		Render on background queue, calling `done on main queue when complete, passing the rendered image
 	*/
-	func render( done: ((image:UIImage)->Void)? ) {
+	func render( done: ((image:UIImage, dirtyRect:CGRect )->Void)? ) {
 		dispatch_async( _renderQueue ) {
-			let image = self.render();
+			let result = self.render();
 			if let d = done {
 				dispatch_async( dispatch_get_main_queue()) {
-					d( image:image )
+					d( image: result.image, dirtyRect: result.dirtyRect )
 				}
 			}
 		}
@@ -160,8 +159,7 @@ class Drawing {
 
 	private func invalidate() {
 		_cachedImage = nil
-		_currentImage = nil
-		_lastDrawnStrokeLength = -1
+		_lastDrawnStrokeChunkIndex = -1
 	}
 
 	private func seedRandomColorGenerator() {
@@ -195,79 +193,80 @@ class Drawing {
 		return UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: 0.25)
 	}
 
-	private func renderStroke( context:CGContext, stroke:Stroke ) {
+	/**
+		returns the rect containing all chunks in the rendered stroke
+	*/
+	private func renderStroke( context:CGContext, stroke:Stroke, chunkIndex:Int ) -> CGRect {
 
-		if stroke.spars.isEmpty {
-			return
+
+		if stroke.chunks.isEmpty {
+			return CGRect.nullRect
 		}
 
 		if !_debugRender {
 			stroke.fill.set()
-			CGContextSetAlpha(context, 0.8)
 		} else {
 			nextRandomColor(stroke.fill).set()
 		}
 
-		var shapes = UIBezierPath()
-		var cp:ControlPoint = stroke.spars[0].a
+		var dirtyRect = CGRect.nullRect
 
-		shapes.moveToPoint( cp.position )
-		for i in 1 ..< stroke.spars.count {
-			let ncp = stroke.spars[i].a
-			shapes.addCurveToPoint(ncp.position, controlPoint1: cp.control, controlPoint2: ncp.control)
-			cp = ncp
-		}
+		for i in chunkIndex ..< stroke.chunks.count {
+			let chunk = stroke.chunks[i]
 
-		cp = stroke.spars.last!.b
-		shapes.addLineToPoint(cp.position)
-		for var i = stroke.spars.count - 2; i >= 0; i-- {
-			let ncp = stroke.spars[i].b
-			shapes.addCurveToPoint(ncp.position, controlPoint1: cp.control, controlPoint2: ncp.control)
-			cp = ncp
-		}
+			var chunkPath = UIBezierPath()
+			chunkPath.moveToPoint( chunk.start.a.position )
+			chunkPath.addCurveToPoint(chunk.end.a.position, controlPoint1: chunk.start.a.control, controlPoint2: chunk.end.a.control)
+			chunkPath.addLineToPoint(chunk.end.b.position)
+			chunkPath.addCurveToPoint(chunk.start.b.position, controlPoint1: chunk.end.b.control, controlPoint2: chunk.start.b.control)
+			chunkPath.closePath()
+			chunkPath.fill()
 
-		shapes.closePath()
-		shapes.fill()
+			// expand dirtyRect to contain chunk
+			dirtyRect = dirtyRect.rectByUnion(chunkPath.bounds)
 
-		if _debugRender {
-			UIColor.blackColor().set()
-			shapes.stroke()
+			if _debugRender {
+				UIColor.blackColor().set()
+				chunkPath.stroke()
 
-			var spars = UIBezierPath()
-			var handles = UIBezierPath()
+				var spars = UIBezierPath()
+				var handles = UIBezierPath()
 
-			for spar in stroke.spars {
+				for spar in [chunk.start, chunk.end] {
 
-				spars.moveToPoint(spar.a.position)
-				spars.addLineToPoint(spar.b.position)
+					spars.moveToPoint(spar.a.position)
+					spars.addLineToPoint(spar.b.position)
 
-				handles.moveToPoint(spar.a.position)
-				handles.addLineToPoint(spar.a.control)
+					handles.moveToPoint(spar.a.position)
+					handles.addLineToPoint(spar.a.control)
 
-				handles.moveToPoint(spar.b.position)
-				handles.addLineToPoint(spar.b.control)
+					handles.moveToPoint(spar.b.position)
+					handles.addLineToPoint(spar.b.control)
+				}
+
+				switch stroke.fill {
+					case .Pencil:
+						UIColor.blackColor().setStroke()
+
+					case .Brush:
+						UIColor.greenColor().setStroke()
+
+					case .Eraser:
+						UIColor.redColor().setStroke()
+				}
+
+				let dashes:[CGFloat] = [4.0,4.0]
+				spars.setLineDash(dashes, count: dashes.count, phase: 0)
+
+				spars.stroke()
+
+				UIColor.greenColor().set()
+				handles.setLineDash(dashes, count: dashes.count, phase: 0)
+				handles.stroke()
 			}
-
-			switch stroke.fill {
-				case .Pencil:
-					UIColor.blackColor().setStroke()
-
-				case .Brush:
-					UIColor.greenColor().setStroke()
-
-				case .Eraser:
-					UIColor.redColor().setStroke()
-			}
-
-			let dashes:[CGFloat] = [4.0,4.0]
-			spars.setLineDash(dashes, count: dashes.count, phase: 0)
-
-			spars.stroke()
-
-			UIColor.greenColor().set()
-			handles.setLineDash(dashes, count: dashes.count, phase: 0)
-			handles.stroke()
 		}
+
+		return dirtyRect
 	}
 }
 
