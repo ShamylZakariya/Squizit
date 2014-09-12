@@ -21,6 +21,9 @@ class GalleryDetailCollectionViewCell : UICollectionViewCell {
 	class func identifier() ->String { return "GalleryDetailCollectionViewCell" }
 
 	override func prepareForReuse() {
+
+		imageView.image = nil
+
 		if DebugLayout {
 			backgroundColor = UIColor(hue: CGFloat(drand48()), saturation: 0.5 + CGFloat(drand48()/2), brightness: 0.5 + CGFloat(drand48()/2), alpha: CGFloat(0.5))
 		}
@@ -28,6 +31,8 @@ class GalleryDetailCollectionViewCell : UICollectionViewCell {
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
+
+		imageView.backgroundColor = SquizitTheme.paperBackgroundColor()
 
 		// for some reason I can't set Baskerville in IB
 		playerNamesLabel.font = UIFont(name: "Baskerville", size: playerNamesLabel.font.pointSize)
