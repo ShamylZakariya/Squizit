@@ -12,22 +12,13 @@ import Lilliput
 let DebugLayout = false
 
 class GalleryDetailCollectionViewCell : UICollectionViewCell {
-	@IBOutlet weak var imageView: UIImageView!
+	@IBOutlet weak var imageView: ImagePresenterView!
 	@IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
 	@IBOutlet weak var imageViewCenterYAlignmentConstraint: NSLayoutConstraint!
 	@IBOutlet weak var playerNamesLabel: UILabel!
 	@IBOutlet weak var matchDateLabel: UILabel!
 
 	class func identifier() ->String { return "GalleryDetailCollectionViewCell" }
-
-	override func prepareForReuse() {
-
-		imageView.image = nil
-
-		if DebugLayout {
-			backgroundColor = UIColor(hue: CGFloat(drand48()), saturation: 0.5 + CGFloat(drand48()/2), brightness: 0.5 + CGFloat(drand48()/2), alpha: CGFloat(0.5))
-		}
-	}
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -42,6 +33,17 @@ class GalleryDetailCollectionViewCell : UICollectionViewCell {
 		imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
 		imageView.layer.shadowOpacity = 1
 		imageView.layer.shadowRadius = 5
+
+		prepareForReuse()
+	}
+
+	override func prepareForReuse() {
+
+		imageView.image = nil
+
+		if DebugLayout {
+			backgroundColor = UIColor(hue: CGFloat(drand48()), saturation: 0.5 + CGFloat(drand48()/2), brightness: 0.5 + CGFloat(drand48()/2), alpha: CGFloat(0.5))
+		}
 	}
 
 	override func layoutSubviews() {

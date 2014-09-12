@@ -28,7 +28,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 	@IBOutlet weak var containerView: UIView!
 	@IBOutlet weak var deleteButton: UIImageView!
-	@IBOutlet weak var imageView: UIImageView!
+	@IBOutlet weak var imageView: ImagePresenterView!
 	@IBOutlet weak var namesLabel: UILabel!
 	@IBOutlet weak var dateLabel: UILabel!
 
@@ -56,29 +56,34 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		deleteButton.alpha = 0
 		deleteButton.hidden = true
 
-		layer.transform = CATransform3DIdentity
-		layer.opacity = 1
-
 		// for some reason I can't set Baskerville in IB
 		namesLabel.font = UIFont(name: "Baskerville", size: namesLabel.font.pointSize)
 		dateLabel.font = UIFont(name:"Baskerville-Italic", size: dateLabel.font.pointSize)
 
+		// set background color of imageview to the thumbnail background to minimize flashing as images are lazily loaded
+		imageView.backgroundColor = SquizitTheme.thumbnailBackgroundColor()
+
+		// add shadows because we're a little skeumorphic here
 		imageView.layer.shouldRasterize = true
 		imageView.layer.shadowColor = UIColor.blackColor().CGColor
 		imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
 		imageView.layer.shadowOpacity = 1
 		imageView.layer.shadowRadius = 5
 
-		let longPressGR = UILongPressGestureRecognizer(target: self, action: "longPress:")
-		addGestureRecognizer(longPressGR)
+		addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPress:"))
 
 		deleteButton.userInteractionEnabled = true
 		deleteButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "deleteButtonTapped:"))
+
+		// common initialization
+		prepareForReuse()
 	}
 
 	override func prepareForReuse() {
+		// reset layer transform and nil the image
 		layer.transform = CATransform3DIdentity
 		layer.opacity = 1
+		imageView.image = nil
 	}
 
 	dynamic internal func longPress( gr:UILongPressGestureRecognizer ) {
@@ -95,6 +100,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	private var _deleting:Bool = false
 	dynamic internal func deleteButtonTapped( tr:UITapGestureRecognizer ) {
 
+		// flag that we're deleting - this halts the wiggle animation which would override our scale transform
 		_deleting = true
 		let layer = self.layer
 		let maybeHandler = self.onDeleteButtonTapped

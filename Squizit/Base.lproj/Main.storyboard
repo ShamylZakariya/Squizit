@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.9" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7U9-N8-2K1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7U9-N8-2K1">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Root View Controller-->
@@ -292,13 +292,14 @@
                                                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IIQ-uS-qMR">
                                                     <rect key="frame" x="0.0" y="0.0" width="256" height="360"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0pA-9b-Bcj">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qbo-L7-0JH" customClass="ImagePresenterView" customModule="Squizit" customModuleProvider="target">
                                                             <rect key="frame" x="32" y="20" width="192" height="256"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="192" id="he4-f4-LkE"/>
-                                                                <constraint firstAttribute="height" constant="256" id="qXm-EY-9e2"/>
+                                                                <constraint firstAttribute="height" constant="256" id="7JO-aA-8Us"/>
+                                                                <constraint firstAttribute="width" constant="192" id="ayP-hr-ER6"/>
                                                             </constraints>
-                                                        </imageView>
+                                                        </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player Names" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vF6-pa-txg">
                                                             <rect key="frame" x="32" y="286" width="192" height="19"/>
                                                             <constraints>
@@ -327,14 +328,14 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="centerX" secondItem="0pA-9b-Bcj" secondAttribute="centerX" id="6uq-2g-o1N"/>
+                                                        <constraint firstAttribute="centerX" secondItem="qbo-L7-0JH" secondAttribute="centerX" id="7I5-KA-91p"/>
                                                         <constraint firstAttribute="centerX" secondItem="c0T-JK-PLb" secondAttribute="centerX" id="7kO-za-sLt"/>
-                                                        <constraint firstItem="0pA-9b-Bcj" firstAttribute="top" secondItem="IIQ-uS-qMR" secondAttribute="top" constant="20" id="ct2-IH-KOg"/>
+                                                        <constraint firstItem="qbo-L7-0JH" firstAttribute="top" secondItem="IIQ-uS-qMR" secondAttribute="top" constant="20" id="G0U-KN-grf"/>
+                                                        <constraint firstItem="vF6-pa-txg" firstAttribute="top" secondItem="qbo-L7-0JH" secondAttribute="bottom" constant="10" id="WXQ-Q1-6YJ"/>
                                                         <constraint firstAttribute="centerX" secondItem="vF6-pa-txg" secondAttribute="centerX" id="dE3-M0-89m"/>
-                                                        <constraint firstItem="0pA-9b-Bcj" firstAttribute="leading" secondItem="BOP-eT-3qN" secondAttribute="leading" constant="11" id="j2g-33-QLo"/>
-                                                        <constraint firstItem="0pA-9b-Bcj" firstAttribute="top" secondItem="BOP-eT-3qN" secondAttribute="top" constant="12" id="qKp-mL-cN4"/>
+                                                        <constraint firstItem="qbo-L7-0JH" firstAttribute="leading" secondItem="BOP-eT-3qN" secondAttribute="trailing" constant="-32" id="eZw-cf-r0Q"/>
                                                         <constraint firstItem="c0T-JK-PLb" firstAttribute="top" secondItem="vF6-pa-txg" secondAttribute="bottom" constant="6" id="vE6-gI-m3E"/>
-                                                        <constraint firstItem="vF6-pa-txg" firstAttribute="top" secondItem="0pA-9b-Bcj" secondAttribute="bottom" constant="10" id="vXj-KC-bf6"/>
+                                                        <constraint firstItem="qbo-L7-0JH" firstAttribute="top" secondItem="BOP-eT-3qN" secondAttribute="bottom" constant="-31" id="wfw-11-I6n"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -351,7 +352,7 @@
                                             <outlet property="containerView" destination="IIQ-uS-qMR" id="6Al-ri-L2C"/>
                                             <outlet property="dateLabel" destination="c0T-JK-PLb" id="ZIh-C1-jQC"/>
                                             <outlet property="deleteButton" destination="BOP-eT-3qN" id="gF5-Pm-yPY"/>
-                                            <outlet property="imageView" destination="0pA-9b-Bcj" id="j3f-TC-2eo"/>
+                                            <outlet property="imageView" destination="qbo-L7-0JH" id="n1L-sH-n2G"/>
                                             <outlet property="namesLabel" destination="vF6-pa-txg" id="g0m-Pe-Jzb"/>
                                         </connections>
                                     </collectionViewCell>
@@ -397,13 +398,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dNK-Nt-MuK">
-                                            <rect key="frame" x="188" y="150" width="225" height="300"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="300" id="gZ1-Vf-CKQ"/>
-                                                <constraint firstAttribute="width" secondItem="dNK-Nt-MuK" secondAttribute="height" multiplier="3:4" id="v41-7J-kVR"/>
-                                            </constraints>
-                                        </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player Names" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8TL-r4-RiL">
                                             <rect key="frame" x="188" y="460" width="225" height="19"/>
                                             <fontDescription key="fontDescription" name="Didot" family="Didot" pointSize="15"/>
@@ -416,24 +410,32 @@
                                             <color key="textColor" white="1" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jh6-MK-WMA" customClass="ImagePresenterView" customModule="Squizit" customModuleProvider="target">
+                                            <rect key="frame" x="188" y="150" width="225" height="300"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="300" id="rDy-SO-WeO"/>
+                                                <constraint firstAttribute="width" secondItem="jh6-MK-WMA" secondAttribute="height" multiplier="3:4" id="yp7-xj-cmb"/>
+                                            </constraints>
+                                        </view>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="8TL-r4-RiL" firstAttribute="width" secondItem="dNK-Nt-MuK" secondAttribute="width" id="1sM-IU-bEI"/>
-                                    <constraint firstItem="8TL-r4-RiL" firstAttribute="top" secondItem="dNK-Nt-MuK" secondAttribute="bottom" constant="10" id="UwB-48-ypr"/>
+                                    <constraint firstItem="jh6-MK-WMA" firstAttribute="width" secondItem="8TL-r4-RiL" secondAttribute="width" id="Cyk-fx-GTy"/>
+                                    <constraint firstAttribute="centerX" secondItem="jh6-MK-WMA" secondAttribute="centerX" id="T6h-2n-un0"/>
+                                    <constraint firstItem="8TL-r4-RiL" firstAttribute="top" secondItem="jh6-MK-WMA" secondAttribute="bottom" constant="10" id="V09-UP-kaY"/>
                                     <constraint firstAttribute="centerX" secondItem="8TL-r4-RiL" secondAttribute="centerX" id="YID-rH-BIn"/>
                                     <constraint firstItem="3P1-PS-qc6" firstAttribute="top" secondItem="8TL-r4-RiL" secondAttribute="bottom" constant="5" id="csF-Qi-Q2U"/>
-                                    <constraint firstAttribute="centerX" secondItem="dNK-Nt-MuK" secondAttribute="centerX" id="eLe-hW-80T"/>
-                                    <constraint firstAttribute="centerY" secondItem="dNK-Nt-MuK" secondAttribute="centerY" id="jHs-Pa-6uT"/>
                                     <constraint firstItem="3P1-PS-qc6" firstAttribute="width" secondItem="8TL-r4-RiL" secondAttribute="width" id="kYD-Fp-m4d"/>
                                     <constraint firstAttribute="centerX" secondItem="3P1-PS-qc6" secondAttribute="centerX" id="okS-1t-GBz"/>
+                                    <constraint firstAttribute="centerY" secondItem="jh6-MK-WMA" secondAttribute="centerY" id="rTG-Wp-REe"/>
                                 </constraints>
                                 <connections>
-                                    <outlet property="imageView" destination="dNK-Nt-MuK" id="zGz-kZ-c6l"/>
-                                    <outlet property="imageViewCenterYAlignmentConstraint" destination="jHs-Pa-6uT" id="Jgk-HQ-dPQ"/>
-                                    <outlet property="imageViewHeightConstraint" destination="gZ1-Vf-CKQ" id="1GF-3s-khn"/>
+                                    <outlet property="imageView" destination="jh6-MK-WMA" id="jkT-mv-T2q"/>
+                                    <outlet property="imageViewCenterYAlignmentConstraint" destination="rTG-Wp-REe" id="J2K-aR-pW9"/>
+                                    <outlet property="imageViewHeightConstraint" destination="rDy-SO-WeO" id="Woa-v1-RHa"/>
                                     <outlet property="matchDateLabel" destination="3P1-PS-qc6" id="V74-rH-2cC"/>
                                     <outlet property="playerNamesLabel" destination="8TL-r4-RiL" id="yFt-JS-kNt"/>
                                 </connections>
