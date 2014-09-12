@@ -9,46 +9,53 @@
 import Foundation
 import UIKit
 
+let ParallaxBackground = false
+
 class RootView : UIView {
 
-	private var _view:UIView = UIView(frame:CGRect.zeroRect)
-	private var _motionOffset:CGFloat = 60
+	private var _parallaxBackgroundView:UIView?
+	private var _parallaxMotionOffset:CGFloat = 60
 
 	required init(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		backgroundColor = SquizitTheme.rootScreenBackgroundColor()
 
-		_view.backgroundColor = SquizitTheme.rootScreenBackgroundColor()
-		_view.alpha = 0
-		insertSubview(_view, atIndex: 0)
+		if ParallaxBackground {
 
-		addParallaxEffect()
+			_parallaxBackgroundView = UIView(frame:CGRect.zeroRect)
+			_parallaxBackgroundView!.backgroundColor = SquizitTheme.rootScreenBackgroundColor()
+			_parallaxBackgroundView!.alpha = 0
+
+			insertSubview(_parallaxBackgroundView!, atIndex: 0)
+
+			var horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: UIInterpolatingMotionEffectType.TiltAlongHorizontalAxis)
+			horizontal.minimumRelativeValue = -_parallaxMotionOffset
+			horizontal.maximumRelativeValue = _parallaxMotionOffset
+
+			var vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: UIInterpolatingMotionEffectType.TiltAlongVerticalAxis)
+			vertical.minimumRelativeValue = -_parallaxMotionOffset
+			vertical.maximumRelativeValue = _parallaxMotionOffset
+
+			var effect = UIMotionEffectGroup()
+			effect.motionEffects = [horizontal, vertical]
+			_parallaxBackgroundView!.addMotionEffect(effect)
+		}
 	}
 
 	override func layoutSubviews() {
-		_view.frame = self.bounds.rectByInsetting(dx: -_motionOffset, dy: -_motionOffset)
-	}
-
-	private func addParallaxEffect() {
-		var horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: UIInterpolatingMotionEffectType.TiltAlongHorizontalAxis)
-		horizontal.minimumRelativeValue = -_motionOffset
-		horizontal.maximumRelativeValue = _motionOffset
-
-		var vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: UIInterpolatingMotionEffectType.TiltAlongVerticalAxis)
-		vertical.minimumRelativeValue = -_motionOffset
-		vertical.maximumRelativeValue = _motionOffset
-
-		var effect = UIMotionEffectGroup()
-		effect.motionEffects = [horizontal, vertical]
-		_view.addMotionEffect(effect)
+		if let pbv = _parallaxBackgroundView {
+			pbv.frame = self.bounds.rectByInsetting(dx: -_parallaxMotionOffset, dy: -_parallaxMotionOffset)
+		}
 	}
 
 	override func awakeFromNib() {
 
-		UIView.animateWithDuration(0.5, animations: {
-			[unowned self] () -> Void in
-			self._view.alpha = 1
-		})
+		if let pbv = _parallaxBackgroundView {
+			UIView.animateWithDuration(0.5, animations: {
+				() -> Void in
+				pbv.alpha = 1
+			})
+		}
 
 	}
 
