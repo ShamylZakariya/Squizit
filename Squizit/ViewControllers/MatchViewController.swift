@@ -264,7 +264,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		let delay:NSTimeInterval = 0
 		let damping:CGFloat = 0.7
 		let initialSpringVelocity:CGFloat = 0
-		let options:UIViewAnimationOptions = UIViewAnimationOptions(0)
+		let options:UIViewAnimationOptions = UIViewAnimationOptions.AllowUserInteraction
 
 		UIView.animateWithDuration(duration,
 			delay: delay,
