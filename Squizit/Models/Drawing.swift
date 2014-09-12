@@ -85,13 +85,18 @@ class Drawing {
 	private var _lastDrawnStrokeChunkIndex:Int = -1
 	private var _cachedImage:UIImage?
 
-	// FIXME: Return a tuple ( image:UIImage, dirtyRect:CGRect ) - note, if drawing was invaliated, we must return whole size() rect for dirty
-	func render() -> UIImage {
+	/**
+		synchronously renders the drawing, returning a tuple containing the rendered result image, and a 
+		dirtyRect describing the updated region of the image from the last time render was called.
+		
+		If the image is unchanged from the last time render() was called, dirtyRect will be CGRect.nullRect
+	*/
+	func render() -> (image:UIImage,dirtyRect:CGRect) {
 
 		if let currentStroke = _strokes.last {
 			if _cachedImage != nil &&
 				_lastDrawnStrokeChunkIndex == currentStroke.chunks.count - 1 {
-				return _cachedImage!
+				return (image:_cachedImage!, dirtyRect:CGRect.nullRect)
 			}
 		}
 
@@ -120,15 +125,18 @@ class Drawing {
 		}
 
 		// draw the undrawn chunks of the current stroke
+		var dirtyRect:CGRect = CGRect.nullRect
+
 		if let stroke = _strokes.last {
 			stroke.fill.set()
-			renderStroke(ctx, stroke: stroke, chunkIndex: _lastDrawnStrokeChunkIndex + 1 )
+			dirtyRect = renderStroke(ctx, stroke: stroke, chunkIndex: _lastDrawnStrokeChunkIndex + 1 )
 			_lastDrawnStrokeChunkIndex = stroke.chunks.count - 1
 		}
 
 		_cachedImage = UIGraphicsGetImageFromCurrentImageContext()
 		UIGraphicsEndImageContext()
-		return _cachedImage!
+
+		return (image:_cachedImage!, dirtyRect: dirtyRect)
 	}
 
 	private var _renderQueue = dispatch_queue_create("com.zakariya.squizit.drawingQueue", nil)
@@ -136,12 +144,12 @@ class Drawing {
 	/**
 		Render on background queue, calling `done on main queue when complete, passing the rendered image
 	*/
-	func render( done: ((image:UIImage)->Void)? ) {
+	func render( done: ((image:UIImage, dirtyRect:CGRect )->Void)? ) {
 		dispatch_async( _renderQueue ) {
-			let image = self.render();
+			let result = self.render();
 			if let d = done {
 				dispatch_async( dispatch_get_main_queue()) {
-					d( image:image )
+					d( image: result.image, dirtyRect: result.dirtyRect )
 				}
 			}
 		}
@@ -185,10 +193,14 @@ class Drawing {
 		return UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: 0.25)
 	}
 
-	private func renderStroke( context:CGContext, stroke:Stroke, chunkIndex:Int ) {
+	/**
+		returns the rect containing all chunks in the rendered stroke
+	*/
+	private func renderStroke( context:CGContext, stroke:Stroke, chunkIndex:Int ) -> CGRect {
+
 
 		if stroke.chunks.isEmpty {
-			return
+			return CGRect.nullRect
 		}
 
 		if !_debugRender {
@@ -197,24 +209,25 @@ class Drawing {
 			nextRandomColor(stroke.fill).set()
 		}
 
+		var dirtyRect = CGRect.nullRect
+
 		for i in chunkIndex ..< stroke.chunks.count {
 			let chunk = stroke.chunks[i]
 
-			var shapes = UIBezierPath()
-			shapes.moveToPoint( chunk.start.a.position )
-			shapes.addCurveToPoint(chunk.end.a.position, controlPoint1: chunk.start.a.control, controlPoint2: chunk.end.a.control)
-			shapes.addLineToPoint(chunk.end.b.position)
-			shapes.addCurveToPoint(chunk.start.b.position, controlPoint1: chunk.end.b.control, controlPoint2: chunk.start.b.control)
-			shapes.closePath()
+			var chunkPath = UIBezierPath()
+			chunkPath.moveToPoint( chunk.start.a.position )
+			chunkPath.addCurveToPoint(chunk.end.a.position, controlPoint1: chunk.start.a.control, controlPoint2: chunk.end.a.control)
+			chunkPath.addLineToPoint(chunk.end.b.position)
+			chunkPath.addCurveToPoint(chunk.start.b.position, controlPoint1: chunk.end.b.control, controlPoint2: chunk.start.b.control)
+			chunkPath.closePath()
+			chunkPath.fill()
 
-			shapes.fill()
+			// expand dirtyRect to contain chunk
+			dirtyRect = dirtyRect.rectByUnion(chunkPath.bounds)
 
 			if _debugRender {
 				UIColor.blackColor().set()
-				shapes.stroke()
-			}
-
-			if _debugRender {
+				chunkPath.stroke()
 
 				var spars = UIBezierPath()
 				var handles = UIBezierPath()
@@ -252,6 +265,8 @@ class Drawing {
 				handles.stroke()
 			}
 		}
+
+		return dirtyRect
 	}
 }
 

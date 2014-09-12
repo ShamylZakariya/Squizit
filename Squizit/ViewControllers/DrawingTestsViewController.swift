@@ -27,6 +27,11 @@ class DrawingTestView : UIView {
 
 	override func drawRect(rect: CGRect) {
 		let ctx = UIGraphicsGetCurrentContext()
+		CGContextClipToRect(ctx, rect)
+
+		UIColor.redColor().colorWithAlphaComponent(0.5).set()
+		UIRectFrameUsingBlendMode(rect, kCGBlendModeNormal)
+
 		controller!.draw(ctx)
 	}
 

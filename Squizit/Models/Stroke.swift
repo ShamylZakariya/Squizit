@@ -74,6 +74,13 @@ class Stroke : Equatable {
 
 		let start:Spar
 		let end:Spar
+
+		var boundingRect:CGRect {
+			return CGRect.rectByFitting(
+				start.a.position, start.a.control, end.a.control, end.a.position, // contains 'a'-side bezier curve
+				start.b.position, start.b.control, end.b.control, end.b.position // contains 'b'-side bezier curve
+			)
+		}
 	}
 
 	var fill:Fill = Fill.Pencil

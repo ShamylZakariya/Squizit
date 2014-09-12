@@ -57,7 +57,7 @@ class DrawingInputController {
 			CGContextSaveGState(context)
 			CGContextConcatCTM(context, transform)
 
-			let image = drawing.render()
+			let image = drawing.render().image
 			image.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
 
 			CGContextRestoreGState(context)
@@ -89,8 +89,16 @@ class DrawingInputController {
 
 				drawing.render {
 					[unowned self]
-					(image:UIImage) in
-					self.view?.setNeedsDisplay()
+					(image:UIImage, dirtyRect:CGRect ) in
+					if !dirtyRect.isNull {
+
+						// transform dirtyRect from drawing coordinate space to screen
+						let screenDirtyRect = CGRectApplyAffineTransform(dirtyRect, self.transform)
+						self.view?.setNeedsDisplayInRect( screenDirtyRect )
+
+					} else {
+						self.view?.setNeedsDisplay()
+					}
 					return
 				}
 			}

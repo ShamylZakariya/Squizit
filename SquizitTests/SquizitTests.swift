@@ -172,8 +172,8 @@ class SquizitTests: XCTestCase {
 		var drawingImage = drawing.render()
 		var drawingImagePrime = drawingPrimeResult.value.render()
 
-		var drawingImageData = UIImagePNGRepresentation(drawingImage)
-		var drawingImageDataPrime = UIImagePNGRepresentation(drawingImagePrime)
+		var drawingImageData = UIImagePNGRepresentation(drawingImage.image)
+		var drawingImageDataPrime = UIImagePNGRepresentation(drawingImagePrime.image)
 
 		XCTAssert(drawingImageData.length > 0, "Expect rendered drawing's PNG data rep to have > 0 length")
 		XCTAssert(drawingImageDataPrime.length > 0, "Expect deserialized rendered drawing's PNG data rep to have > 0 length")
