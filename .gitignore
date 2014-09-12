@@ -3,6 +3,9 @@ xcuserdata
 xcuserdata/
 *.xcuserdatad/
 *.xcuserstate
+*.xcbkptlist
+UserInterfaceState.xcuserstate
+
 node_modules/
 node_modules
 Reference Server/public/
