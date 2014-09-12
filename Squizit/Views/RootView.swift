@@ -16,9 +16,12 @@ class RootView : UIView {
 
 	required init(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
-		backgroundColor = UIColor.redColor()
+		backgroundColor = SquizitTheme.rootScreenBackgroundColor()
+
 		_view.backgroundColor = SquizitTheme.rootScreenBackgroundColor()
+		_view.alpha = 0
 		insertSubview(_view, atIndex: 0)
+
 		addParallaxEffect()
 	}
 
@@ -39,4 +42,14 @@ class RootView : UIView {
 		effect.motionEffects = [horizontal, vertical]
 		_view.addMotionEffect(effect)
 	}
+
+	override func awakeFromNib() {
+
+		UIView.animateWithDuration(0.5, animations: {
+			[unowned self] () -> Void in
+			self._view.alpha = 1
+		})
+
+	}
+
 }
