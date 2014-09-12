@@ -1,6 +1,9 @@
 #TODO
 
-	Now that strokes are correctly appended to, I no longer have the infuriating cracks. HOWEVER, now when a stroke passes over itself it no longer darkens itself like it used to. The solution is likely to be to go back to my bezier interpolator, and to draw each generated rect individually. Which should not be too bad a performance hit since the caching strategy requires only the last stroke to be drawn.
+	Design an app icon
+	Add motion effect to background pattern of homescreen
+	add transitions to my segues
+	In gallery detail, fade in the image once it loads so as to be less "harsh"
 
 #FIXME
 

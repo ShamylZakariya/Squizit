@@ -63,9 +63,15 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	}
 
 	private var _visible:Bool = false
+	private var _didAddMotionEffect:Bool = false
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		_visible = true
+
+		if !_didAddMotionEffect {
+			_didAddMotionEffect = true
+			addParallaxEffect()
+		}
 
 		switch nameCount {
 			case 2:
@@ -225,5 +231,19 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 			case 3: return CGSize( width: width, height: heightWhen3NamesAreVisible )
 			default: return CGSizeZero
 		}
+	}
+
+	private func addParallaxEffect() {
+		var horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: UIInterpolatingMotionEffectType.TiltAlongHorizontalAxis)
+		horizontal.minimumRelativeValue = -15
+		horizontal.maximumRelativeValue = 15
+
+		var vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: UIInterpolatingMotionEffectType.TiltAlongVerticalAxis)
+		vertical.minimumRelativeValue = -15
+		vertical.maximumRelativeValue = 15
+
+		var effect = UIMotionEffectGroup()
+		effect.motionEffects = [horizontal, vertical]
+		self.view.superview!.addMotionEffect(effect)
 	}
 }
