@@ -218,6 +218,7 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 
 						let activityController = UIActivityViewController( activityItems: [title,rendering], applicationActivities: nil)
 						activityController.popoverPresentationController?.barButtonItem = sender as UIBarButtonItem
+						activityController.view.tintColor = SquizitTheme.alertTintColor()
 						sself.presentViewController(activityController, animated: true, completion: nil)
 
 					}
