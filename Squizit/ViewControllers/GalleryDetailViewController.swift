@@ -237,8 +237,13 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 					assertionFailure("Unable to load match from data, bailing" )
 				}
 
+				//
+				//	Note: we're rendering the match in retina so it looks super good
+				//
+
 				var match = matchLoadResult.value
-				var rendering = match.render( backgroundColor: SquizitTheme.paperBackgroundColor(), scale:1 )
+				var scale:CGFloat = 2
+				var rendering = match.render( backgroundColor: SquizitTheme.paperBackgroundColor(scale:scale), scale:scale )
 
 				dispatch_main {
 					done( rendering:rendering )

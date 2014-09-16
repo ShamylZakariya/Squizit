@@ -51,8 +51,14 @@ class SquizitTheme {
 		return UIImage(named: "leather-pattern")
 	}
 
-	class func paperBackgroundImage() -> UIImage {
-		return UIImage(named: "paper-pattern")
+	class func paperBackgroundImage( scale:CGFloat = 0 ) -> UIImage {
+		let paperImageName = "paper-pattern"
+		if scale == 0 {
+			return UIImage(named: paperImageName)
+		}
+
+		let tc = UITraitCollection(displayScale: scale)
+		return UIImage(named: paperImageName, inBundle: nil, compatibleWithTraitCollection: tc)
 	}
 
 	class func thumbnailPaperBackgroundImage() -> UIImage {
@@ -63,8 +69,8 @@ class SquizitTheme {
 		return UIColor( patternImage: self.cubeBackgroundImage() )
 	}
 
-	class func paperBackgroundColor() -> UIColor {
-		return UIColor( patternImage: self.paperBackgroundImage() )
+	class func paperBackgroundColor( scale:CGFloat = 0 ) -> UIColor {
+		return UIColor( patternImage: self.paperBackgroundImage( scale: scale ) )
 	}
 
 	class func matchBackgroundColor() -> UIColor {
