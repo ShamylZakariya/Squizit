@@ -29,7 +29,6 @@ class Match {
 
 	init( players:Int, stageSize:CGSize, overlap:CGFloat ){
 
-		let rowHeight:CGFloat = CGFloat(round(stageSize.height / CGFloat(players)))
 		_stageSize = stageSize
 		_overlap = overlap
 		_players = players
@@ -123,7 +122,7 @@ class Match {
 			let viewport = _viewports[i]
 
 			CGContextSaveGState(context)
-			CGContextTranslateCTM(context, -viewport.origin.x, -viewport.origin.y)
+			CGContextTranslateCTM(context, viewport.origin.x, viewport.origin.y)
 			CGContextClipToRect(context, CGRect(x: 0, y: 0, width: viewport.width, height: viewport.height))
 
 			drawing.draw()
@@ -169,10 +168,10 @@ extension ByteBuffer {
 			+ 1*sizeof(Int32) // version #
 			+ 2*sizeof(Float64) // width + height
 			+ 1*sizeof(Float64) // overlap
-			+ sizeof(Int32) // count of drawings & transforms
-			+ match.players * ByteBuffer.requiredSizeForCGRect() // viewports
+			+ sizeof(Int32) // count of viewports & drawings
+			+ match.players * ByteBuffer.requiredSizeForCGRect() // total space for viewports
 			+ match.drawings.reduce(0, combine: { (totalSize:Int, drawing:Drawing) -> Int in
-				return totalSize + ByteBuffer.requiredSizeForDrawing(drawing)
+				return totalSize + ByteBuffer.requiredSizeForDrawing(drawing) // total space for drawings
 			})
 	}
 
@@ -200,10 +199,12 @@ extension ByteBuffer {
 		if ( cookie == MatchSerializationCookie ) {
 			let version:Int32 = getInt32()
 
-			if version == MatchSerializationVersion_V0 {
-				return inflate_V0()
-			} else {
-				return .Failure(Error(message: "version # mismatch, unrecognized version: \(version)"))
+			switch version {
+				case MatchSerializationVersion_V0:
+					return inflate_V0()
+
+				default:
+					return .Failure(Error(message: "version # mismatch, unrecognized version: \(version)"))
 			}
 		} else {
 			return .Failure(Error(message: "Match cookie mismatch - expected: \(MatchSerializationCookie) got: \(cookie)"))
@@ -217,9 +218,10 @@ extension ByteBuffer {
 		let stageSize = CGSize(width: CGFloat(getFloat64()), height: CGFloat(getFloat64()))
 		match._stageSize = stageSize
 		match._overlap = CGFloat(getFloat64())
+		match._players = Int(getInt32())
 
-		let count = getInt32()
-		for i in 0 ..< count {
+		for i in 0 ..< match._players {
+
 			if let viewport = getCGRect() {
 				match._viewports.append(viewport)
 			} else {

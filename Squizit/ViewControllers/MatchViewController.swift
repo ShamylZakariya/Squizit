@@ -172,18 +172,6 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		extendedLayoutIncludesOpaqueBars = true
 	}
 
-	override func viewWillAppear(animated: Bool) {
-		super.viewWillAppear(animated)
-		endOfMatchGestureRecognizer.enabled = false
-		matchView.match = match
-		matchView.player = step
-		toolSelector.selectedToolIndex = 0
-	}
-
-	override func viewDidAppear(animated: Bool) {
-		super.viewDidAppear(animated)
-	}
-
 	override func prefersStatusBarHidden() -> Bool {
 		return true
 	}
@@ -251,6 +239,14 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 		matchView.match = match
 		matchView.player = 0
+	}
+
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		endOfMatchGestureRecognizer.enabled = false
+		matchView.match = match
+		matchView.player = step
+		toolSelector.selectedToolIndex = 0
 	}
 
 	override func viewWillLayoutSubviews() {
