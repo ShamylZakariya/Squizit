@@ -24,11 +24,9 @@ class DrawingInputController {
 		}
 	}
 
-	private var inverseTransform:CGAffineTransform = CGAffineTransformIdentity
-
-	var transform:CGAffineTransform = CGAffineTransformIdentity {
+	// the viewport into the drawing - this is what will be rendered on screen
+	var viewport:CGRect = CGRect.zeroRect {
 		didSet {
-			inverseTransform = CGAffineTransformInvert(transform)
 			view?.setNeedsDisplay()
 		}
 	}
@@ -47,26 +45,24 @@ class DrawingInputController {
 
 	func undo() {
 		if let drawing = self.drawing {
-			drawing.popStroke()
-			view?.setNeedsDisplay()
+			if let dirtyRect = drawing.popStroke() {
+				view?.setNeedsDisplayInRect(dirtyRect)
+			} else {
+				view?.setNeedsDisplay()
+			}
 		}
 	}
 
 	func draw( context:CGContextRef ) {
 		if let drawing = self.drawing {
-			CGContextSaveGState(context)
-			CGContextConcatCTM(context, transform)
-
-			let image = drawing.render().image
-			image.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
-
-			CGContextRestoreGState(context)
+			let image = drawing.render( viewport ).image
+			image.drawAtPoint( viewport.origin, blendMode: kCGBlendModeMultiply, alpha: 1)
 		}
 	}
 
 	func touchBegan( locationInView:CGPoint ) {
 		if let drawing = self.drawing {
-			let locationInDrawing:CGPoint = CGPointApplyAffineTransform( locationInView, inverseTransform )
+			let locationInDrawing = screenToDrawing( locationInView )
 
 			_pointsTop = 0
 			_points[_pointsTop] = locationInDrawing
@@ -79,7 +75,7 @@ class DrawingInputController {
 
 	func touchMoved( locationInView:CGPoint ) {
 		if let drawing = self.drawing {
-			let locationInDrawing:CGPoint = CGPointApplyAffineTransform( locationInView, inverseTransform )
+			let locationInDrawing = screenToDrawing( locationInView )
 
 			_points[++_pointsTop] = locationInDrawing;
 
@@ -87,13 +83,13 @@ class DrawingInputController {
 
 				appendToStroke()
 
-				drawing.render {
+				drawing.render( viewport ) {
 					[unowned self]
 					(image:UIImage, dirtyRect:CGRect ) in
 					if !dirtyRect.isNull {
 
 						// transform dirtyRect from drawing coordinate space to screen
-						let screenDirtyRect = CGRectApplyAffineTransform(dirtyRect, self.transform)
+						let screenDirtyRect = dirtyRect.rectByOffsetting(dx: self.viewport.origin.x, dy: self.viewport.origin.y)
 						self.view?.setNeedsDisplayInRect( screenDirtyRect )
 
 					} else {
@@ -111,6 +107,10 @@ class DrawingInputController {
 	}
 
 	// MARK: Private API
+
+	private func screenToDrawing( location:CGPoint ) -> CGPoint {
+		return location.subtract( viewport.origin )
+	}
 
 	private var _activeStroke:Stroke?
 	private func appendToStroke() {

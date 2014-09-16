@@ -113,7 +113,7 @@ class SquizitTests: XCTestCase {
 	}
 
 	func newDrawing() -> Drawing {
-		var drawing = Drawing(width: 512, height: 512)
+		var drawing = Drawing()
 
 		// draw a circle
 		let steps = 36
@@ -159,9 +159,6 @@ class SquizitTests: XCTestCase {
 
 		var drawingPrime = drawingPrimeResult.value
 
-		// check if drawing's width/height are same
-		XCTAssert(CGSizeEqualToSize(drawing.size, drawingPrime.size), "Expect deserialized drawing to have same size")
-
 		// check if strokes are the same
 		XCTAssertEqual(drawing.strokes.count, drawingPrime.strokes.count, "Expect deserialized drawing to have same # of strokes")
 
@@ -169,8 +166,9 @@ class SquizitTests: XCTestCase {
 			XCTAssertEqual(stroke, drawingPrime.strokes[i], "Expect strokes to be equal")
 		}
 
-		var drawingImage = drawing.render()
-		var drawingImagePrime = drawingPrimeResult.value.render()
+		let viewport = CGRect(x: 0, y: 0, width: 512, height: 512)
+		var drawingImage = drawing.render(viewport)
+		var drawingImagePrime = drawingPrimeResult.value.render(viewport)
 
 		var drawingImageData = UIImagePNGRepresentation(drawingImage.image)
 		var drawingImageDataPrime = UIImagePNGRepresentation(drawingImagePrime.image)

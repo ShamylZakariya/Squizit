@@ -1,8 +1,13 @@
 #TODO
 
-	Design an app icon
-	figure out a better solution to sizing of drawings. infinite virtual cavas w/ a "viewport", and scaling? no idea right now.
-	add transitions to my segues
+	- Design an app icon
+	- figure out a better solution to sizing of drawings. infinite virtual cavas w/ a "viewport", and scaling? no idea right now.
+	
+		1) Drawing is an infinite canvas with no concept of size or viewport
+		2) render() method takes a viewport, and caches that with _cachedImage for cached rendering handling - changing viewport on render() invalidates _cachedImage
+	
+	
+	- add transitions to my segues
 
 #FIXME
 

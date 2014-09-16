@@ -334,11 +334,11 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			switch currentPlayer {
 
 				case 0:
-					shieldViews[0].frame = matchView.rectForPlayer(1)!.rectByAddingTopMargin(margin)
+					shieldViews[0].frame = matchView.screenRectForDrawing(1)!.rectByAddingTopMargin(margin)
 					positionToolsInShield( shieldViews[0], alignTop:false )
 
 				case 1:
-					shieldViews[0].frame = matchView.rectForPlayer(0)!.rectByAddingBottomMargin(margin)
+					shieldViews[0].frame = matchView.screenRectForDrawing(0)!.rectByAddingBottomMargin(margin)
 					positionToolsInShield( shieldViews[0], alignTop:true )
 
 				default: break;
@@ -359,31 +359,31 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 				case 0:
 					// hide shield 1 off top of screen - it will slide down in case 1
-					var r = matchView.rectForPlayer(0)!
+					var r = matchView.screenRectForDrawing(0)!
 					r.offset(dx: 0, dy: -r.height )
 					shieldViews[0].frame = r
 
 					// shield 2 takes up bottom 2/3
-					let r1 = matchView.rectForPlayer(1)!.rectByAddingTopMargin(margin)
-					let r2 = matchView.rectForPlayer(2)!
+					let r1 = matchView.screenRectForDrawing(1)!.rectByAddingTopMargin(margin)
+					let r2 = matchView.screenRectForDrawing(2)!
 					shieldViews[1].frame = r1.rectByUnion(r2)
 
 					positionToolsInShield( shieldViews[1], alignTop:false )
 
 				case 1:
-					shieldViews[0].frame = matchView.rectForPlayer(0)!.rectByAddingBottomMargin(margin)
-					shieldViews[1].frame = matchView.rectForPlayer(2)!.rectByAddingTopMargin(margin)
+					shieldViews[0].frame = matchView.screenRectForDrawing(0)!.rectByAddingBottomMargin(margin)
+					shieldViews[1].frame = matchView.screenRectForDrawing(2)!.rectByAddingTopMargin(margin)
 					positionToolsInShield( shieldViews[1], alignTop:false )
 
 				case 2:
 					// shield 1 takes up top 2/3
-					let r1 = matchView.rectForPlayer(0)!
-					let r2 = matchView.rectForPlayer(1)!
+					let r1 = matchView.screenRectForDrawing(0)!
+					let r2 = matchView.screenRectForDrawing(1)!
 					shieldViews[0].frame = r1.rectByUnion(r2).rectByAddingBottomMargin(margin)
 					positionToolsInShield( shieldViews[0], alignTop:true )
 
 					// slide shield 2 off bottom of screen
-					var r = matchView.rectForPlayer(2)!
+					var r = matchView.screenRectForDrawing(2)!
 					r.offset(dx: 0, dy: r.height )
 					shieldViews[1].frame = r
 

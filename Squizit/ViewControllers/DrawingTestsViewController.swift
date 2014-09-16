@@ -17,17 +17,23 @@ class DrawingTestView : UIView {
 
 	override init(frame:CGRect) {
 		super.init( frame: frame )
-		backgroundColor = UIColor.whiteColor()
+		backgroundColor = UIColor.yellowColor()
 	}
 
 	required init(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
-		backgroundColor = UIColor.whiteColor()
+		backgroundColor = UIColor.yellowColor()
 	}
 
 	override func drawRect(rect: CGRect) {
+
 		let ctx = UIGraphicsGetCurrentContext()
 		CGContextClipToRect(ctx, rect)
+
+		if let vp = controller?.viewport {
+			UIColor.whiteColor().set()
+			UIRectFill(vp)
+		}
 
 		UIColor.redColor().colorWithAlphaComponent(0.5).set()
 		UIRectFrameUsingBlendMode(rect, kCGBlendModeNormal)
@@ -82,13 +88,13 @@ class DrawingTestsViewController : UIViewController {
 
 		self.title = "Drawing Tests..."
 
-		drawingView.drawing = Drawing(width: 768, height: 1024)
+		drawingView.drawing = Drawing()
 		drawingView.drawing!.debugRender = true
 
 		let controller = DrawingInputController()
 		controller.drawing = drawingView.drawing!
 		controller.view = drawingView
-		controller.transform = CGAffineTransformIdentity
+		controller.viewport = CGRect(x: 0, y: 0, width: 768, height: 1024).rectByInsetting(dx: 100, dy: 100)
 		controller.fill = Fill.Brush
 		drawingView.controller = controller
 

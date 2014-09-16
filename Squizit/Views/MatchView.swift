@@ -33,11 +33,11 @@ class MatchView : UIView {
 		super.init( coder: aDecoder )
 	}
 
-	func rectForPlayer( maybeIndex:Int? ) -> CGRect? {
+	func screenRectForDrawing( maybeIndex:Int? ) -> CGRect? {
 
 		if let match = self.match {
 			if let index = maybeIndex {
-				return match.rectForPlayer(index)
+				return match.viewports[index]
 			}
 		}
 
@@ -52,7 +52,6 @@ class MatchView : UIView {
 
 		if let match = self.match {
 			for (i,drawing) in enumerate(match.drawings) {
-				let transform = match.transforms[i]
 				_controllers[i].draw(ctx)
 			}
 		}
@@ -105,7 +104,7 @@ class MatchView : UIView {
 				let adapter = DrawingInputController()
 				adapter.drawing = drawing
 				adapter.view = self
-				adapter.transform = match.transforms[i]
+				adapter.viewport = match.viewports[i]
 
 				_controllers.append(adapter)
 			}

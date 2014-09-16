@@ -16,28 +16,30 @@ let DrawingSerializationVersion_V0:Int32 = 0
 
 class Drawing {
 
-	private let _width:Int
-	private let _height:Int
-
 	private var _debugRender = false
 	private var _strokes:[Stroke] = []
 
-	init(width:Int, height:Int) {
-		_width = width
-		_height = height
-	}
+	init() {}
 
 	func addStroke( stroke:Stroke ) {
 		_strokes.append(stroke)
 		_lastDrawnStrokeChunkIndex = -1
 	}
 
-	// remove last stroke added to drawing
-	func popStroke() {
+	// remove last stroke added to drawing, returning bounding rect of removed stroke, if one was removed
+	func popStroke() -> CGRect? {
 		if !_strokes.isEmpty {
+
+			let last = _strokes.last!
+			let bounds = last.boundingRect
+
 			_strokes.removeLast()
 			invalidate()
+
+			return bounds
 		}
+
+		return nil
 	}
 
 	func clear() {
@@ -49,14 +51,6 @@ class Drawing {
 		return _strokes
 	}
 
-	var image:UIImage? {
-		return _cachedImage
-	}
-
-	var size:CGSize {
-		return CGSize(width: _width, height: _height)
-	}
-
 	var debugRender:Bool {
 		get { return _debugRender }
 		set(d) {
@@ -66,11 +60,6 @@ class Drawing {
 	}
 
 	func draw() {
-		let rect = CGRect(x: 0, y: 0, width: _width, height: _height)
-
-		UIColor.whiteColor().set()
-		UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
-
 		if _debugRender {
 			seedRandomColorGenerator()
 		}
@@ -84,6 +73,7 @@ class Drawing {
 
 	private var _lastDrawnStrokeChunkIndex:Int = -1
 	private var _cachedImage:UIImage?
+	private var _cachedImageViewport:CGRect?
 
 	/**
 		synchronously renders the drawing, returning a tuple containing the rendered result image, and a 
@@ -91,25 +81,35 @@ class Drawing {
 		
 		If the image is unchanged from the last time render() was called, dirtyRect will be CGRect.nullRect
 	*/
-	func render() -> (image:UIImage,dirtyRect:CGRect) {
+	func render( viewport:CGRect ) -> (image:UIImage,dirtyRect:CGRect) {
 
-		if let currentStroke = _strokes.last {
-			if _cachedImage != nil &&
-				_lastDrawnStrokeChunkIndex == currentStroke.chunks.count - 1 {
-				return (image:_cachedImage!, dirtyRect:CGRect.nullRect)
+		if let cachedImageViewport = _cachedImageViewport {
+			if let currentStroke = _strokes.last {
+				if _cachedImage != nil && _lastDrawnStrokeChunkIndex == currentStroke.chunks.count - 1 && cachedImageViewport == viewport {
+					return (image:_cachedImage!, dirtyRect:CGRect.nullRect)
+				}
 			}
+
+			// if we're here we have a cached image viewport but it != the requested one: invalidate
+			if cachedImageViewport != viewport {
+				invalidate()
+			}
+		} else {
+			// if we're here we don't have a cached image viewport so we need to invalidate
+			invalidate()
 		}
+
 
 		if _debugRender {
 			seedRandomColorGenerator()
 		}
 
-		UIGraphicsBeginImageContextWithOptions(CGSize(width: _width, height: _height), true, 0)
+		UIGraphicsBeginImageContextWithOptions(CGSize(width: viewport.width, height: viewport.height), true, 0)
 		let ctx = UIGraphicsGetCurrentContext()
 
 		if _cachedImage == nil {
 			UIColor.whiteColor().set()
-			UIRectFillUsingBlendMode(CGRect(x: 0, y: 0, width: _width, height: _height), kCGBlendModeNormal)
+			UIRectFillUsingBlendMode(CGRect(x: 0, y: 0, width: viewport.width, height: viewport.height), kCGBlendModeNormal)
 
 			// render all strokes up to but not including the last stroke
 			if _strokes.count > 1 {
@@ -134,6 +134,7 @@ class Drawing {
 		}
 
 		_cachedImage = UIGraphicsGetImageFromCurrentImageContext()
+		_cachedImageViewport = viewport
 		UIGraphicsEndImageContext()
 
 		return (image:_cachedImage!, dirtyRect: dirtyRect)
@@ -144,9 +145,9 @@ class Drawing {
 	/**
 		Render on background queue, calling `done on main queue when complete, passing the rendered image
 	*/
-	func render( done: ((image:UIImage, dirtyRect:CGRect )->Void)? ) {
+	func render( viewport:CGRect, done: ((image:UIImage, dirtyRect:CGRect )->Void)? ) {
 		dispatch_async( _renderQueue ) {
-			let result = self.render();
+			let result = self.render( viewport );
 			if let d = done {
 				dispatch_async( dispatch_get_main_queue()) {
 					d( image: result.image, dirtyRect: result.dirtyRect )
@@ -294,9 +295,6 @@ extension ByteBuffer  {
 
 		putUInt8(DrawingSerializationCookie)
 		putInt32(Int32(DrawingSerializationVersion_V0))
-		putInt32(Int32(drawing.size.width))
-		putInt32(Int32(drawing.size.height))
-
 		putInt32(Int32(drawing.strokes.count))
 		for stroke in drawing.strokes {
 			if !putStroke(stroke) {
@@ -318,10 +316,7 @@ extension ByteBuffer  {
 		var drawing:Drawing? = nil
 
 		if version == DrawingSerializationVersion_V0 {
-			let width = getInt32()
-			let height = getInt32()
-
-			drawing = Drawing( width: Int(width), height: Int(height) )
+			drawing = Drawing()
 
 			let strokesCount = getInt32()
 			for i in 0 ..< strokesCount {

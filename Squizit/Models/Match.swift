@@ -20,8 +20,8 @@ let MatchSerializationVersion_V0:Int32 = 0
 class Match {
 
 	private var _drawings:[Drawing] = []
-	private var _transforms:[CGAffineTransform] = []
-	private var _stageSize = CGSize(width: 0, height: 0)
+	private var _viewports:[CGRect] = []
+	private var _stageSize = CGSize.zeroSize
 	private var _overlap:CGFloat = 0
 
 	init(){}
@@ -32,24 +32,15 @@ class Match {
 		_stageSize = stageSize
 		_overlap = overlap
 
-		let drawingSize = CGSize(width: stageSize.width, height: rowHeight + 2*overlap )
-		let t:CGAffineTransform = CGAffineTransformMakeTranslation(0, 0)
-
 		for i in 0 ..< players {
-			_drawings.append(Drawing(width: Int(drawingSize.width), height: Int(drawingSize.height)))
-			_transforms.append(CGAffineTransformMakeTranslation( 0, rowHeight * CGFloat(i) - overlap ))
+			_drawings.append(Drawing())
+			_viewports.append(viewportForPlayer(i))
 		}
 	}
 
 	var drawings:[Drawing] { return _drawings }
-	var transforms:[CGAffineTransform] { return _transforms }
+	var viewports:[CGRect] { return _viewports }
 	var overlap:CGFloat { return _overlap }
-
-	func rectForPlayer( player:Int ) -> CGRect {
-		let rowHeight:CGFloat = CGFloat(round(_stageSize.height / CGFloat(_drawings.count)))
-		let drawingSize = CGSize(width: _stageSize.width, height: rowHeight + 2*_overlap )
-		return CGRect(x: 0, y: rowHeight * CGFloat(player) - _overlap, width: drawingSize.width, height: drawingSize.height )
-	}
 
 	class func load( path:String ) -> Result<Match> {
 		let openResult = BinaryFile.openForReading(path)
@@ -126,11 +117,11 @@ class Match {
 		UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
 
 		for (i,drawing) in enumerate(_drawings) {
-			let transform = _transforms[i]
+			let viewport = _viewports[i]
 
 			CGContextSaveGState(context)
-			CGContextConcatCTM(context, transform)
-			CGContextClipToRect(context, CGRect(x: 0, y: 0, width: drawing.size.width, height: drawing.size.height))
+			CGContextTranslateCTM(context, -viewport.origin.x, -viewport.origin.y)
+			CGContextClipToRect(context, CGRect(x: 0, y: 0, width: viewport.width, height: viewport.height))
 
 			drawing.draw()
 
@@ -159,24 +150,26 @@ class Match {
 
 		return rendering
 	}
+
+	private func viewportForPlayer( player:Int ) -> CGRect {
+		let rowHeight:CGFloat = CGFloat(round(_stageSize.height / CGFloat(_drawings.count)))
+		let drawingSize = CGSize(width: _stageSize.width, height: rowHeight + 2*_overlap )
+		return CGRect(x: 0, y: rowHeight * CGFloat(player) - _overlap, width: drawingSize.width, height: drawingSize.height )
+	}
 }
 
 extension ByteBuffer {
 
 	class func requiredSizeForMatch( match:Match ) -> Int {
-		let headerSize = sizeof(UInt8)*MatchSerializationCookie.count // #cookie
+		return sizeof(UInt8)*MatchSerializationCookie.count // #cookie
 			+ 1*sizeof(Int32) // version #
 			+ 2*sizeof(Float64) // width + height
 			+ 1*sizeof(Float64) // overlap
 			+ sizeof(Int32) // count of drawings & transforms
-			+ match.drawings.count * ByteBuffer.requiredSizeForCGAffineTransform()
-
-		var drawingSize = 0;
-		for drawing in match.drawings {
-			drawingSize += ByteBuffer.requiredSizeForDrawing(drawing)
-		}
-
-		return headerSize + drawingSize
+			+ match.drawings.count * ByteBuffer.requiredSizeForCGRect() // viewports
+			+ match.drawings.reduce(0, combine: { (totalSize:Int, drawing:Drawing) -> Int in
+				return totalSize + ByteBuffer.requiredSizeForDrawing(drawing)
+			})
 	}
 
 	func putMatch( match:Match ) -> Bool {
@@ -188,7 +181,7 @@ extension ByteBuffer {
 		putInt32(Int32(match.drawings.count))
 
 		for i in 0 ..< match.drawings.count {
-			putCGAffineTransform(match.transforms[i])
+			putCGRect(match.viewports[i])
 			if !putDrawing(match.drawings[i]) {
 				return false
 			}
@@ -223,10 +216,10 @@ extension ByteBuffer {
 
 		let count = getInt32()
 		for i in 0 ..< count {
-			if let t = getCGAffineTransform() {
-				match._transforms.append(t)
+			if let viewport = getCGRect() {
+				match._viewports.append(viewport)
 			} else {
-				return .Failure(Error(message: "Unable to extract transform for drawing \(i)"))
+				return .Failure(Error(message: "Unable to extract viewport for drawing \(i)"))
 			}
 
 			let drawingResult = getDrawing()

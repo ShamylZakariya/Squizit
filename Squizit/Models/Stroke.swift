@@ -89,6 +89,12 @@ class Stroke : Equatable {
 	init( fill:Fill ) {
 		self.fill = fill
 	}
+
+	var boundingRect:CGRect {
+		return chunks.reduce(CGRect.nullRect, combine: { (bounds:CGRect, chunk:Stroke.Chunk) -> CGRect in
+			return bounds.rectByUnion(chunk.boundingRect)
+		})
+	}
 }
 
 // MARK: Equatable
@@ -241,6 +247,31 @@ extension ByteBuffer {
 		}
 
 		return stroke
+	}
+
+	class func requiredSizeForCGRect() -> Int {
+		return 4 * sizeof(Float64)
+	}
+
+	func putCGRect( t:CGRect ) -> Bool {
+		if remaining < ByteBuffer.requiredSizeForCGRect() {
+			return false
+		}
+
+		putFloat64( Float64(t.origin.x))
+		putFloat64( Float64(t.origin.y))
+		putFloat64( Float64(t.size.width))
+		putFloat64( Float64(t.size.height))
+
+		return true
+	}
+
+	func getCGRect() -> CGRect? {
+		if remaining < ByteBuffer.requiredSizeForCGRect() {
+			return nil
+		}
+
+		return CGRect(x: CGFloat(getFloat64()), y: CGFloat(getFloat64()), width: CGFloat(getFloat64()), height: CGFloat(getFloat64()))
 	}
 
 	class func requiredSizeForCGAffineTransform() -> Int {
