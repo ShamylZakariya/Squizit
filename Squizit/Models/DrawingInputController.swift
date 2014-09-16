@@ -46,7 +46,7 @@ class DrawingInputController {
 	func undo() {
 		if let drawing = self.drawing {
 			if let dirtyRect = drawing.popStroke() {
-				view?.setNeedsDisplayInRect(dirtyRect)
+				self.view?.setNeedsDisplayInRect( drawingToScreen(dirtyRect) )
 			} else {
 				view?.setNeedsDisplay()
 			}
@@ -88,9 +88,7 @@ class DrawingInputController {
 					(image:UIImage, dirtyRect:CGRect ) in
 					if !dirtyRect.isNull {
 
-						// transform dirtyRect from drawing coordinate space to screen
-						let screenDirtyRect = dirtyRect.rectByOffsetting(dx: self.viewport.origin.x, dy: self.viewport.origin.y)
-						self.view?.setNeedsDisplayInRect( screenDirtyRect )
+						self.view?.setNeedsDisplayInRect( self.drawingToScreen(dirtyRect) )
 
 					} else {
 						self.view?.setNeedsDisplay()
@@ -110,6 +108,10 @@ class DrawingInputController {
 
 	private func screenToDrawing( location:CGPoint ) -> CGPoint {
 		return location.subtract( viewport.origin )
+	}
+
+	private func drawingToScreen( rect:CGRect ) -> CGRect {
+		return rect.rectByOffsetting(dx: self.viewport.origin.x, dy: self.viewport.origin.y)
 	}
 
 	private var _activeStroke:Stroke?
