@@ -19,6 +19,7 @@ let MatchSerializationVersion_V0:Int32 = 0
 */
 class Match {
 
+	private var _players:Int = 0
 	private var _drawings:[Drawing] = []
 	private var _viewports:[CGRect] = []
 	private var _stageSize = CGSize.zeroSize
@@ -31,6 +32,7 @@ class Match {
 		let rowHeight:CGFloat = CGFloat(round(stageSize.height / CGFloat(players)))
 		_stageSize = stageSize
 		_overlap = overlap
+		_players = players
 
 		for i in 0 ..< players {
 			_drawings.append(Drawing())
@@ -38,6 +40,7 @@ class Match {
 		}
 	}
 
+	var players:Int { return _players }
 	var drawings:[Drawing] { return _drawings }
 	var viewports:[CGRect] { return _viewports }
 	var overlap:CGFloat { return _overlap }
@@ -152,9 +155,10 @@ class Match {
 	}
 
 	private func viewportForPlayer( player:Int ) -> CGRect {
-		let rowHeight:CGFloat = CGFloat(round(_stageSize.height / CGFloat(_drawings.count)))
-		let drawingSize = CGSize(width: _stageSize.width, height: rowHeight + 2*_overlap )
-		return CGRect(x: 0, y: rowHeight * CGFloat(player) - _overlap, width: drawingSize.width, height: drawingSize.height )
+		let rowHeight:CGFloat = CGFloat(round(_stageSize.height / CGFloat(_players)))
+		let size = CGSize(width: _stageSize.width, height: rowHeight + 2*_overlap )
+
+		return CGRect(x: 0, y: (rowHeight * CGFloat(player)) - _overlap, width: size.width, height: size.height )
 	}
 }
 
@@ -166,7 +170,7 @@ extension ByteBuffer {
 			+ 2*sizeof(Float64) // width + height
 			+ 1*sizeof(Float64) // overlap
 			+ sizeof(Int32) // count of drawings & transforms
-			+ match.drawings.count * ByteBuffer.requiredSizeForCGRect() // viewports
+			+ match.players * ByteBuffer.requiredSizeForCGRect() // viewports
 			+ match.drawings.reduce(0, combine: { (totalSize:Int, drawing:Drawing) -> Int in
 				return totalSize + ByteBuffer.requiredSizeForDrawing(drawing)
 			})
@@ -178,9 +182,9 @@ extension ByteBuffer {
 		putFloat64(Float64(match._stageSize.width))
 		putFloat64(Float64(match._stageSize.height))
 		putFloat64(Float64(match._overlap))
-		putInt32(Int32(match.drawings.count))
+		putInt32(Int32(match.players))
 
-		for i in 0 ..< match.drawings.count {
+		for i in 0 ..< match.players {
 			putCGRect(match.viewports[i])
 			if !putDrawing(match.drawings[i]) {
 				return false
