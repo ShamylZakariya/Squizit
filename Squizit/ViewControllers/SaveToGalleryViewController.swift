@@ -63,15 +63,9 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	}
 
 	private var _visible:Bool = false
-	private var _didAddMotionEffect:Bool = false
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		_visible = true
-
-		if !_didAddMotionEffect {
-			_didAddMotionEffect = true
-			addParallaxEffect()
-		}
 
 		switch nameCount {
 			case 2:
@@ -87,6 +81,16 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 			default:
 				break;
+		}
+	}
+
+	private var _didAddMotionEffect:Bool = false
+
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
+		if !_didAddMotionEffect {
+			_didAddMotionEffect = true
+			addParallaxEffect()
 		}
 	}
 

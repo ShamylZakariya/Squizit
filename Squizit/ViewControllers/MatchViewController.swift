@@ -512,7 +512,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 				}
 
 				// render match with transparent background
-				var rendering = match.render()
+				var rendering = match.render( backgroundColor: nil, scale: UIScreen.mainScreen().scale )
 				let thumbnailSize = CGSize( width: rendering.size.width/4, height: rendering.size.height/4 )
 				rendering = rendering.imageByScalingToSize(thumbnailSize)
 				var thumbnailData:NSData? = UIImagePNGRepresentation(rendering)

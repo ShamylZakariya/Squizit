@@ -18,9 +18,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="root-border" translatesAutoresizingMaskIntoConstraints="NO" id="9d5-o7-f32">
+                            <view userInteractionEnabled="NO" contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="gao-o1-joj" customClass="RootBorderView" customModule="Squizit" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                            </imageView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iAQ-zh-NXo">
                                 <rect key="frame" x="24" y="58" width="552" height="483"/>
                                 <subviews>
@@ -70,17 +71,17 @@
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="nOw-Ll-IFc" firstAttribute="top" secondItem="9d5-o7-f32" secondAttribute="bottom" id="JbL-Sa-cur"/>
-                            <constraint firstAttribute="trailing" secondItem="9d5-o7-f32" secondAttribute="trailing" id="JuI-ed-Y61"/>
+                            <constraint firstItem="gao-o1-joj" firstAttribute="leading" secondItem="dYp-Yh-uXK" secondAttribute="leading" id="0JQ-Kx-Nqc"/>
+                            <constraint firstAttribute="trailing" secondItem="gao-o1-joj" secondAttribute="trailing" id="Ghu-lE-mLU"/>
+                            <constraint firstItem="nOw-Ll-IFc" firstAttribute="top" secondItem="gao-o1-joj" secondAttribute="bottom" id="Msk-rt-yl9"/>
                             <constraint firstAttribute="centerY" secondItem="iAQ-zh-NXo" secondAttribute="centerY" id="N22-A9-rLe"/>
-                            <constraint firstItem="9d5-o7-f32" firstAttribute="leading" secondItem="dYp-Yh-uXK" secondAttribute="leading" id="XfZ-TZ-bKn"/>
                             <constraint firstAttribute="centerX" secondItem="iAQ-zh-NXo" secondAttribute="centerX" id="eGv-dj-LfV"/>
-                            <constraint firstItem="9d5-o7-f32" firstAttribute="top" secondItem="dYp-Yh-uXK" secondAttribute="top" id="xnJ-4w-836"/>
+                            <constraint firstItem="gao-o1-joj" firstAttribute="top" secondItem="dYp-Yh-uXK" secondAttribute="top" id="xEu-S2-t2P"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="1PA-Il-3I5"/>
                     <connections>
-                        <outlet property="borderView" destination="9d5-o7-f32" id="iqS-tT-VKV"/>
+                        <outlet property="borderView" destination="gao-o1-joj" id="JKT-qX-sje"/>
                         <outlet property="contentView" destination="iAQ-zh-NXo" id="7ZL-yX-Aju"/>
                         <outlet property="galleryButton" destination="NFM-Zv-8Ul" id="2dV-KS-jND"/>
                         <outlet property="threePlayersButton" destination="rGO-wl-LMv" id="uwr-7G-ObW"/>
@@ -490,7 +491,6 @@
     </scenes>
     <resources>
         <image name="gallery-item-delete-button" width="43" height="43"/>
-        <image name="root-border" width="768" height="1024"/>
         <image name="root-or" width="195" height="13"/>
         <image name="root-subhead" width="161" height="19"/>
         <image name="root-title" width="289" height="61"/>

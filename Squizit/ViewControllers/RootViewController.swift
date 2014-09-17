@@ -16,7 +16,7 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	@IBOutlet weak var threePlayersButton: UIButton!
 	@IBOutlet weak var galleryButton: UIButton!
 	@IBOutlet weak var contentView: UIView!
-	@IBOutlet weak var borderView: UIImageView!
+	@IBOutlet weak var borderView: RootBorderView!
 
 	override func viewDidLoad() {
 
@@ -37,6 +37,17 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 		contentView.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1)
 		borderView.layer.opacity = 0
 		borderView.layer.transform = CATransform3DMakeScale(1.1, 1.1, 1)
+
+		switch UIDevice.currentDevice().userInterfaceIdiom {
+			case UIUserInterfaceIdiom.Pad:
+				borderView.borderSize = 32
+
+			case UIUserInterfaceIdiom.Phone:
+				borderView.borderSize = 6
+
+			default:
+				break;
+		}
 	}
 
 	override func viewDidAppear(animated: Bool) {

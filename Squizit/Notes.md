@@ -1,15 +1,13 @@
 #TODO
 
 	- Design an app icon
-	- figure out a better solution to sizing of drawings. infinite virtual cavas w/ a "viewport", and scaling? no idea right now.
-	
-		1) Drawing is an infinite canvas with no concept of size or viewport
-		2) render() method takes a viewport, and caches that with _cachedImage for cached rendering handling - changing viewport on render() invalidates _cachedImage
-	
-	
 	- add transitions to my segues
+	- Gallery thumbnail isn't retina!
 
 #FIXME
+
+	Use display link to render wiggle animation instead of NSTimer
+		- https://github.com/kaishin/gifu
 
 	GalleryDetailViewController::updateItemSize
 		The viewController's topLayoutGuide.length is zero, so I'm manually setting a fudge factor of 44 to accommodate the navbar height so UICollectionViewFlowLayout doesn't complain about inadequate room to layout cells. 
