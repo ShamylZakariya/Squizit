@@ -22,6 +22,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		theme = SquizitTheme()
 		window?.tintColor = SquizitTheme.tintColor()
 
+		#if DEBUG
+			println("Documents: \(NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as NSURL)")
+		#endif
+
 		return true
 	}
 
