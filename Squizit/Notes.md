@@ -2,7 +2,6 @@
 
 	- Design an app icon
 	- add transitions to my segues
-	- Gallery thumbnail isn't retina!
 
 #FIXME
 
