@@ -70,7 +70,6 @@ class RootBorderView : UIView {
 		l(plot( 3, 3))
 		CGContextClosePath(context)
 
-		CGContextSetRGBStrokeColor(context, 1, 0, 1, 1)
 		CGContextSetLineWidth(context, 1)
 		CGContextReplacePathWithStrokedPath(context)
 		CGContextClip(context)
