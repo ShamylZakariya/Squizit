@@ -25,8 +25,12 @@
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iAQ-zh-NXo">
                                 <rect key="frame" x="24" y="58" width="552" height="483"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="91w-da-Nqx" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="152" y="191" width="256" height="65"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="91w-da-Nqx" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="148" y="171" width="256" height="65"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="256" id="OyP-m8-eJH"/>
+                                            <constraint firstAttribute="height" constant="65" id="wzB-L8-8Md"/>
+                                        </constraints>
                                         <state key="normal" title="FOR TWO">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -34,8 +38,12 @@
                                             <segue destination="2Yj-yc-FrP" kind="presentation" identifier="beginTwoPlayerMatch" id="7sc-b3-6yH"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rGO-wl-LMv" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="152" y="276" width="256" height="65"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rGO-wl-LMv" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="148" y="256" width="256" height="65"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="65" id="sbN-et-rX9"/>
+                                            <constraint firstAttribute="width" constant="256" id="xOI-lR-dcF"/>
+                                        </constraints>
                                         <state key="normal" title="OR THREE">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -43,11 +51,19 @@
                                             <segue destination="2Yj-yc-FrP" kind="presentation" identifier="beginThreePlayerMatch" id="fbA-qo-xxm"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="root-or" translatesAutoresizingMaskIntoConstraints="NO" id="rHq-0U-mAh">
-                                        <rect key="frame" x="179" y="371" width="195" height="13"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="root-or" translatesAutoresizingMaskIntoConstraints="NO" id="rHq-0U-mAh">
+                                        <rect key="frame" x="179" y="341" width="195" height="13"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="195" id="kjL-us-EpC"/>
+                                            <constraint firstAttribute="height" constant="13" id="u8f-5q-0xb"/>
+                                        </constraints>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NFM-Zv-8Ul" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="148" y="413" width="256" height="65"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NFM-Zv-8Ul" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="148" y="374" width="256" height="65"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="65" id="nY1-5S-zqm"/>
+                                            <constraint firstAttribute="width" constant="256" id="pll-u5-GIm"/>
+                                        </constraints>
                                         <state key="normal" title="PERUSE THE GALLERY">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -55,17 +71,42 @@
                                             <segue destination="AJ9-2T-z5F" kind="presentation" identifier="showGallery" id="YTF-oq-3bE"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="root-title" translatesAutoresizingMaskIntoConstraints="NO" id="eyv-id-0vb">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="root-title" translatesAutoresizingMaskIntoConstraints="NO" id="eyv-id-0vb">
                                         <rect key="frame" x="132" y="27" width="289" height="61"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="289" id="DGu-vy-mFo">
+                                                <variation key="heightClass=regular-widthClass=compact" constant="256"/>
+                                            </constraint>
+                                            <constraint firstAttribute="width" secondItem="eyv-id-0vb" secondAttribute="height" multiplier="289:61" id="DrL-dM-Llp"/>
+                                        </constraints>
+                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="149" y="27" width="256" height="54"/>
+                                        </variation>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="root-subhead" translatesAutoresizingMaskIntoConstraints="NO" id="IxX-g1-QXr">
-                                        <rect key="frame" x="196" y="148" width="161" height="19"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="root-subhead" translatesAutoresizingMaskIntoConstraints="NO" id="IxX-g1-QXr">
+                                        <rect key="frame" x="196" y="128" width="161" height="19"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="161" id="2c6-BX-ebG"/>
+                                            <constraint firstAttribute="height" constant="19" id="9HL-2k-cSo"/>
+                                        </constraints>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstAttribute="centerX" secondItem="91w-da-Nqx" secondAttribute="centerX" id="FjP-VD-KZO"/>
                                     <constraint firstAttribute="width" constant="552" id="PzZ-EM-duB"/>
+                                    <constraint firstItem="eyv-id-0vb" firstAttribute="top" secondItem="iAQ-zh-NXo" secondAttribute="top" constant="27" id="Ub3-es-rYN"/>
+                                    <constraint firstItem="rHq-0U-mAh" firstAttribute="top" secondItem="rGO-wl-LMv" secondAttribute="bottom" constant="20" id="UcP-QI-Sop"/>
+                                    <constraint firstItem="rGO-wl-LMv" firstAttribute="top" secondItem="91w-da-Nqx" secondAttribute="bottom" constant="20" id="V5D-xi-ClC"/>
+                                    <constraint firstAttribute="centerX" secondItem="eyv-id-0vb" secondAttribute="centerX" id="WN2-0M-s74"/>
+                                    <constraint firstAttribute="centerX" secondItem="rGO-wl-LMv" secondAttribute="centerX" id="Wdi-kE-FpI"/>
+                                    <constraint firstItem="IxX-g1-QXr" firstAttribute="top" secondItem="eyv-id-0vb" secondAttribute="bottom" constant="40" id="ZUY-T9-Oqa"/>
+                                    <constraint firstItem="91w-da-Nqx" firstAttribute="top" secondItem="IxX-g1-QXr" secondAttribute="bottom" constant="24" id="geg-pC-DH3"/>
+                                    <constraint firstItem="NFM-Zv-8Ul" firstAttribute="top" secondItem="rHq-0U-mAh" secondAttribute="bottom" constant="20" id="iM4-pR-jEZ"/>
                                     <constraint firstAttribute="height" constant="483" id="ktL-G8-0SV"/>
+                                    <constraint firstAttribute="centerX" secondItem="NFM-Zv-8Ul" secondAttribute="centerX" id="lxs-v5-yKJ"/>
+                                    <constraint firstAttribute="centerX" secondItem="rHq-0U-mAh" secondAttribute="centerX" id="sn9-sF-bEf"/>
+                                    <constraint firstAttribute="centerX" secondItem="IxX-g1-QXr" secondAttribute="centerX" id="zLq-Yx-R6Q"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -76,7 +117,9 @@
                             <constraint firstItem="nOw-Ll-IFc" firstAttribute="top" secondItem="gao-o1-joj" secondAttribute="bottom" id="Msk-rt-yl9"/>
                             <constraint firstAttribute="centerY" secondItem="iAQ-zh-NXo" secondAttribute="centerY" id="N22-A9-rLe"/>
                             <constraint firstAttribute="centerX" secondItem="iAQ-zh-NXo" secondAttribute="centerX" id="eGv-dj-LfV"/>
-                            <constraint firstItem="gao-o1-joj" firstAttribute="top" secondItem="dYp-Yh-uXK" secondAttribute="top" id="xEu-S2-t2P"/>
+                            <constraint firstItem="gao-o1-joj" firstAttribute="top" secondItem="dYp-Yh-uXK" secondAttribute="top" id="xEu-S2-t2P">
+                                <variation key="heightClass=regular-widthClass=compact" constant="22"/>
+                            </constraint>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="1PA-Il-3I5"/>
