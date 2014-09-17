@@ -136,7 +136,7 @@ class DrawingToolSelector : UIControl {
 	func layoutTools() {
 		let width = self.bounds.width
 		let maxButtonSize:CGFloat = (width - ((CGFloat(_tools.count)-1)*margin)) / CGFloat(_tools.count)
-		let size = min( buttonSize, maxButtonSize )
+		let size = min( min(bounds.height,buttonSize), maxButtonSize )
 		let inset = size * 0.25
 		let contentWidth = CGFloat(_tools.count) * size + (CGFloat(_tools.count) - 1.0) * margin;
 		var x = width/2 - contentWidth/2

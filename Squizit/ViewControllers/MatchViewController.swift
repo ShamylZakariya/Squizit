@@ -22,7 +22,6 @@ extension CGRect {
 	func rectByAddingMargins( topMargin:CGFloat, bottomMargin:CGFloat ) ->CGRect {
 		return CGRect(x: origin.x, y: origin.y + topMargin, width: size.width, height: size.height - topMargin - bottomMargin )
 	}
-
 }
 
 class MatchViewController : UIViewController, SaveToGalleryDelegate {
@@ -30,7 +29,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	@IBOutlet var matchView: MatchView!
 	
 
-	var quitGameButton:QuitGameButton!
+	var quitButton:QuitGameButton!
 	var toolSelector:DrawingToolSelector!
 	var stepForwardButton:UIButton!
 	var shieldViews:[MatchShieldView] = []
@@ -217,7 +216,6 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		// create the tool selector
 
 		toolSelector = DrawingToolSelector(frame: CGRectZero)
-		toolSelector.orientation = .Horizontal
 		toolSelector.addTool("Pencil", icon: UIImage(named: "tool-pencil"))
 		toolSelector.addTool("Brush", icon: UIImage(named: "tool-brush"))
 		toolSelector.addTool("Eraser", icon: UIImage(named: "tool-eraser"))
@@ -233,9 +231,9 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		view.addSubview(stepForwardButton)
 
 		// create the quit game button
-		quitGameButton = QuitGameButton.quitGameButton()
-		quitGameButton.addTarget(self, action: "quitMatch:", forControlEvents: UIControlEvents.TouchUpInside)
-		view.addSubview(quitGameButton)
+		quitButton = QuitGameButton.quitGameButton()
+		quitButton.addTarget(self, action: "quitMatch:", forControlEvents: UIControlEvents.TouchUpInside)
+		view.addSubview(quitButton)
 
 		matchView.match = match
 		matchView.player = 0
@@ -258,7 +256,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	internal func syncToMatchState_Animate() {
 		let duration:NSTimeInterval = 0.7
 		let delay:NSTimeInterval = 0
-		let damping:CGFloat = 0.7
+		let damping:CGFloat = 0.9
 		let initialSpringVelocity:CGFloat = 0
 		let options:UIViewAnimationOptions = UIViewAnimationOptions.AllowUserInteraction
 
@@ -276,7 +274,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 					self.shieldViews[1].hidden = true
 					self.toolSelector.hidden = true
 					self.stepForwardButton.hidden = true
-					self.quitGameButton.hidden = true
+					self.quitButton.hidden = true
 				}
 			})
 	}
@@ -302,7 +300,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			shieldViews[1].alpha = 0
 			toolSelector.alpha = 0
 			stepForwardButton.alpha = 0
-			quitGameButton.alpha = 0
+			quitButton.alpha = 0
 
 			let angleRange = drand48() * 2.0 - 1.0
 			let angle = M_PI * 0.00625 * angleRange
@@ -391,24 +389,45 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	internal func positionToolsInShield( view:UIView, alignTop:Bool ) {
 
 		let frame = view.frame
-		let size = quitGameButton.intrinsicContentSize()
-		let margin:CGFloat = 36
-		let rowHeight:CGFloat = 176
+		let margin:CGFloat = UIDevice.currentDevice().userInterfaceIdiom == .Pad ? 32 : 16
+		let insetFrame = frame.rectByInsetting(dx: margin, dy: margin)
+		let toolsHeight:CGFloat = UIDevice.currentDevice().userInterfaceIdiom == .Pad ? 88 : 66
 
-		var toolSelectorRect = CGRectZero
-		var stepForwardButtonCenter = CGPointZero
+		var toolSelectorFrame = CGRect.zeroRect
+		var stepForwardButtonFrame = CGRect.zeroRect
+		var quitButtonFrame = CGRect.zeroRect
 
-		toolSelectorRect = CGRect(x: frame.minX, y: frame.minY + frame.height/2 - rowHeight, width: frame.width, height: rowHeight )
-		stepForwardButtonCenter = CGPoint( x: frame.midX, y: frame.minY + frame.height/2 + rowHeight/2 )
+		// position tool selector in center of shield
+		toolSelectorFrame = CGRect(x: insetFrame.minX, y: insetFrame.midY - toolsHeight/2, width: insetFrame.width, height: toolsHeight )
 
+		// position step forward button in center bottom of shield
+		let stepForwardButtonSize = stepForwardButton.frame.size
+		stepForwardButtonFrame = CGRect(
+			x: insetFrame.midX - stepForwardButtonSize.width/2,
+			y: insetFrame.maxY - stepForwardButtonSize.height,
+			width: stepForwardButtonSize.width,
+			height: stepForwardButtonSize.height )
+
+
+		let quitButtonSize = quitButton.intrinsicContentSize()
 		if alignTop {
-			quitGameButton.frame = CGRect( x: frame.minX + margin, y: frame.minY + margin, width: size.width, height: size.height )
+			quitButtonFrame = CGRect( x: insetFrame.minX, y: insetFrame.minY, width: quitButtonSize.width, height: quitButtonSize.height )
 		} else {
-			quitGameButton.frame = CGRect( x: frame.minX + margin, y: frame.maxY - margin - size.height, width: size.width, height: size.height )
+			quitButtonFrame = CGRect( x: insetFrame.minX, y: insetFrame.maxY - quitButtonSize.height, width: quitButtonSize.width, height: quitButtonSize.height )
+
+			// right-align step forward button if we're crowded
+			if quitButtonFrame.maxX + margin > stepForwardButtonFrame.minX {
+				stepForwardButtonFrame.offset(dx: insetFrame.maxX - stepForwardButtonFrame.maxX, dy: 0)
+			}
 		}
 
-		toolSelector.frame = toolSelectorRect
-		stepForwardButton.center = stepForwardButtonCenter
+		if toolSelectorFrame.maxY + margin > stepForwardButtonFrame.minY {
+			toolSelectorFrame.origin.y = stepForwardButtonFrame.minY - margin - toolSelectorFrame.height
+		}
+
+		toolSelector.frame = toolSelectorFrame
+		stepForwardButton.frame = stepForwardButtonFrame
+		quitButton.frame = quitButtonFrame
 	}
 
 	internal func showSaveToGalleryQuery() {
