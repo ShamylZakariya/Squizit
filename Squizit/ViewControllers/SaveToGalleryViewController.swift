@@ -29,6 +29,15 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	@IBOutlet weak var addToGalleryButton: SquizitThemeButton!
 	@IBOutlet weak var discardButton: SquizitThemeButton!
 
+	// layout constraints for dynamic sizing
+
+	@IBOutlet weak var topMarginConstraint: NSLayoutConstraint!
+	@IBOutlet weak var titleHeightConstraint: NSLayoutConstraint!
+	@IBOutlet weak var sideMarginConstraint: NSLayoutConstraint!
+	@IBOutlet weak var buttonHeightConstraint: NSLayoutConstraint!
+	@IBOutlet weak var buttonSpacingConstraint: NSLayoutConstraint!
+	@IBOutlet weak var bottomMarginConstraint: NSLayoutConstraint!
+
 	weak var delegate:SaveToGalleryDelegate?
 
 	var nameCount:Int = 3 {
@@ -76,6 +85,20 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 			default:
 				break;
 		}
+
+		switch( traitCollection.userInterfaceIdiom ) {
+			case .Phone:
+				topMarginConstraint.constant = 16
+				titleHeightConstraint.constant = 32
+				buttonHeightConstraint.constant = 33
+				sideMarginConstraint.constant = 8
+				buttonSpacingConstraint.constant = 8
+				bottomMarginConstraint.constant = 8
+
+			default:
+				buttonHeightConstraint.constant = 65
+		}
+
 	}
 
 	private var _didAddMotionEffect:Bool = false
@@ -92,7 +115,6 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		super.viewWillLayoutSubviews()
 		layout()
 	}
-
 
 	// MARK: IBActions
 
@@ -213,7 +235,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		}
 
 		let bottomHeight = view.bounds.height - addToGalleryButton.frame.minY
-		let padding:CGFloat = 16
+		let padding:CGFloat = buttonSpacingConstraint.constant
 
 		return CGSize( width: 300, height: topHeight + padding + bottomHeight )
 	}

@@ -52,9 +52,9 @@ class GalleryDetailCollectionViewCell : UICollectionViewCell {
 	}
 
 	override func updateConstraints() {
-		super.updateConstraints()
 		imageViewHeightConstraint.constant = self.bounds.height * 0.8
 		imageViewCenterYAlignmentConstraint.constant = playerNamesLabel.intrinsicContentSize().height + matchDateLabel.intrinsicContentSize().height
+		super.updateConstraints()
 	}
 
 }
