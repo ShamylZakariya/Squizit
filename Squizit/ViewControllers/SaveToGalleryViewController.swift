@@ -39,12 +39,6 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		}
 	}
 
-	var showPlayerNameFields:Bool = true {
-		didSet {
-			animateLayout()
-		}
-	}
-
 	// MARK: UIViewController Overrides
 
 	deinit {
@@ -99,39 +93,34 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		layout()
 	}
 
+
 	// MARK: IBActions
 
 	@IBAction func addToGallery(sender: AnyObject) {
 
-		// first tap opens the name entry fields
-		if !self.showPlayerNameFields {
-			self.showPlayerNameFields = true
-		} else {
+		// collect names
+		var names:[String] = []
+		var namesEnteredByUser = 0
 
-			// collect names
-			var names:[String] = []
-			var namesEnteredByUser = 0
-
-			var fields:[UITextField] = []
-			switch nameCount {
-				case 2:	fields = [playerOneNameInputField,playerTwoNameInputField]
-				case 3:	fields = [playerOneNameInputField,playerTwoNameInputField,playerThreeNameInputField]
-				default: break;
-			}
-
-			for nameField in fields {
-				var name = sanitize(nameField.text)
-				if countElements(name) == 0 {
-					name = NSLocalizedString("Anonymous", comment: "AnonymousPlayerIdentifier")
-				} else {
-					namesEnteredByUser++
-				}
-
-				names.append( name )
-			}
-
-			delegate?.didSaveToGalleryWithNames( namesEnteredByUser > 0 ? names : nil )
+		var fields:[UITextField] = []
+		switch nameCount {
+			case 2:	fields = [playerOneNameInputField,playerTwoNameInputField]
+			case 3:	fields = [playerOneNameInputField,playerTwoNameInputField,playerThreeNameInputField]
+			default: break;
 		}
+
+		for nameField in fields {
+			var name = sanitize(nameField.text)
+			if countElements(name) == 0 {
+				name = NSLocalizedString("Anonymous", comment: "AnonymousPlayerIdentifier")
+			} else {
+				namesEnteredByUser++
+			}
+
+			names.append( name )
+		}
+
+		delegate?.didSaveToGalleryWithNames( namesEnteredByUser > 0 ? names : nil )
 	}
 
 	@IBAction func discard(sender: AnyObject) {
@@ -211,30 +200,22 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 				superview.frame = frame
 			}
 		}
-
-		let alpha:CGFloat = showPlayerNameFields ? 1.0 : 0.0
-		questionLabel.alpha = alpha
-		playerOneNameInputField.alpha = alpha
-		playerTwoNameInputField.alpha = alpha
-		playerThreeNameInputField.alpha = alpha
 	}
 
 	private var dialogSize:CGSize {
 
-		let width:CGFloat = 300.0
-		let heightWhen3NamesAreVisible:CGFloat = 468.0;
-		let heightWhenClosed:CGFloat = 306.0
-		let playerThreeNameInputFieldHeight:CGFloat = playerThreeNameInputField.intrinsicContentSize().height
-
-		if !showPlayerNameFields {
-			return CGSize( width: width, height: heightWhenClosed )
-		}
-
+		view.layoutIfNeeded()
+		var topHeight:CGFloat = 0
 		switch nameCount {
-			case 2: return CGSize( width: width, height: heightWhen3NamesAreVisible - playerThreeNameInputFieldHeight )
-			case 3: return CGSize( width: width, height: heightWhen3NamesAreVisible )
+			case 2: topHeight = playerTwoNameInputField.frame.maxY
+			case 3: topHeight = playerThreeNameInputField.frame.maxY
 			default: return CGSizeZero
 		}
+
+		let bottomHeight = view.bounds.height - addToGalleryButton.frame.minY
+		let padding:CGFloat = 16
+
+		return CGSize( width: 300, height: topHeight + padding + bottomHeight )
 	}
 
 	private func addParallaxEffect() {
