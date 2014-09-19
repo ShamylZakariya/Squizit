@@ -32,6 +32,8 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	@IBOutlet weak var namesLabel: UILabel!
 	@IBOutlet weak var dateLabel: UILabel!
 
+	var indexInCollection:Int = 0
+
 	var onLongPress:((( cell:GalleryCollectionViewCell )->())?)
 	var onDeleteButtonTapped:((( cell:GalleryCollectionViewCell )->())?)
 
@@ -142,7 +144,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 			})
 	}
 
-	internal let _phaseOffset:NSTimeInterval = drand48()
+	internal let _cycleOffset:NSTimeInterval = drand48() / 2
 	internal var _phase:NSTimeInterval = 0
 	internal var _wiggleAnimationDisplayLink:CADisplayLink?
 
@@ -158,8 +160,9 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		}
 
 		let now = NSDate().timeIntervalSinceReferenceDate
-		let cycle = (now / WigglePhaseDuration) + _phaseOffset
-		let phase = sin(cycle * M_PI)
+		let cycle = now / WigglePhaseDuration
+		let sign = (indexInCollection % 2 == 0) ? +1.0 : -1.0
+		let phase = sin(cycle * M_PI + _cycleOffset * M_PI ) * sign
 		let angle = CGFloat(phase * WiggleAngleMax)
 		let layer = self.layer
 		UIView.performWithoutAnimation { () -> Void in
@@ -253,6 +256,8 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 			galleryCell.namesLabel.text = drawing.artistDisplayNames
 			galleryCell.dateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
 			galleryCell.deleteButtonVisible = self.editMode
+
+			galleryCell.indexInCollection = indexPath.item
 
 			galleryCell.onLongPress = {
 				[weak self]
