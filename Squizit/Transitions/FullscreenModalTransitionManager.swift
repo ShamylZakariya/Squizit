@@ -22,8 +22,9 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 		let fromView = transitionContext.viewForKey(UITransitionContextFromViewKey)!
 		let toView = transitionContext.viewForKey(UITransitionContextToViewKey)!
 
-		let bigScale = CGAffineTransformMakeScale(1.1, 1.1)
-		let smallScale = CGAffineTransformMakeScale(0.9,0.9)
+		let scale:CGFloat = 1.075
+		let bigScale = CGAffineTransformMakeScale(scale, scale)
+		let smallScale = CGAffineTransformMakeScale(1/scale,1/scale)
 		let smallOpacity:CGFloat = 0.5
 		let presenting = self.presenting
 
@@ -60,7 +61,7 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 
 		UIView.animateWithDuration(duration,
 			delay: 0.0,
-			usingSpringWithDamping: 0.8,
+			usingSpringWithDamping: 0.7,
 			initialSpringVelocity: 0,
 			options: nil,
 			animations: {
@@ -77,9 +78,9 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 			completion: nil )
 
 		UIView.animateWithDuration(duration,
-			delay: duration/4,
-			usingSpringWithDamping: 0.8,
-			initialSpringVelocity: 0.25,
+			delay: duration/6,
+			usingSpringWithDamping: 0.7,
+			initialSpringVelocity: 0.5,
 			options: nil,
 			animations: {
 				toView.transform = CGAffineTransformIdentity
