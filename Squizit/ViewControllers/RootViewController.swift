@@ -28,15 +28,19 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 		#endif
 	}
 
+	private var playedIntroAnimation:Bool = false
+
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 
 		UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: UIStatusBarAnimation.Fade)
 
-		contentView.layer.opacity = 0
-		contentView.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1)
-		borderView.layer.opacity = 0
-		borderView.layer.transform = CATransform3DMakeScale(1.1, 1.1, 1)
+		if !playedIntroAnimation {
+			contentView.layer.opacity = 0
+			contentView.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1)
+			borderView.layer.opacity = 0
+			borderView.layer.transform = CATransform3DMakeScale(1.1, 1.1, 1)
+		}
 
 		switch UIDevice.currentDevice().userInterfaceIdiom {
 			case UIUserInterfaceIdiom.Pad:
@@ -53,30 +57,40 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
 
-		UIView.animateWithDuration(1.5,
-			delay: 0.0,
-			usingSpringWithDamping: CGFloat(0.4),
-			initialSpringVelocity: CGFloat(0.0),
-			options: UIViewAnimationOptions.AllowUserInteraction,
-			animations: {
-				[unowned self] () -> Void in
-				self.contentView.layer.opacity = 1
-				self.contentView.layer.transform = CATransform3DMakeScale(1, 1, 1)
-				self.borderView.layer.opacity = 1
-				self.borderView.layer.transform = CATransform3DMakeScale(1, 1, 1)
-			},
-			completion: nil)
+		if !playedIntroAnimation {
+			UIView.animateWithDuration(1.5,
+				delay: 0.0,
+				usingSpringWithDamping: CGFloat(0.4),
+				initialSpringVelocity: CGFloat(0.0),
+				options: UIViewAnimationOptions.AllowUserInteraction,
+				animations: {
+					[unowned self] () -> Void in
+					self.contentView.layer.opacity = 1
+					self.contentView.layer.transform = CATransform3DMakeScale(1, 1, 1)
+					self.borderView.layer.opacity = 1
+					self.borderView.layer.transform = CATransform3DMakeScale(1, 1, 1)
+				},
+				completion: {
+					[unowned self] finished in
+					self.playedIntroAnimation = true
+				})
+		}
 	}
 
 	override func preferredStatusBarStyle() -> UIStatusBarStyle {
 		return UIStatusBarStyle.LightContent
 	}
-	
+
+	private var transitionManager = FullscreenModalTransitionManager()
+
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+
+		let destinationVC = segue.destinationViewController as UIViewController
+		destinationVC.transitioningDelegate = transitionManager
 
 		switch ( segue.identifier ) {
 			case "showGallery":
-				let navVC = segue.destinationViewController as UINavigationController
+				let navVC = destinationVC as UINavigationController
 				if let galleryVC = navVC.childViewControllers.first as? GalleryViewController {
 					galleryVC.store = (UIApplication.sharedApplication().delegate as? AppDelegate)!.galleryStore
 					galleryVC.delegate = self
@@ -92,7 +106,7 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 					players = 3
 				}
 
-				let matchVC = segue.destinationViewController as MatchViewController
+				let matchVC = destinationVC as MatchViewController
 				let screenBounds = UIScreen.mainScreen().bounds
 				matchVC.match = Match(players: players, stageSize: CGSize(width: screenBounds.width, height: screenBounds.height), overlap: 4)
 

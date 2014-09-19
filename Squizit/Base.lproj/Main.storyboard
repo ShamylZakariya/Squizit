@@ -35,7 +35,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="2Yj-yc-FrP" kind="presentation" identifier="beginTwoPlayerMatch" id="7sc-b3-6yH"/>
+                                            <segue destination="2Yj-yc-FrP" kind="custom" identifier="beginTwoPlayerMatch" id="7sc-b3-6yH"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rGO-wl-LMv" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
@@ -48,7 +48,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="2Yj-yc-FrP" kind="presentation" identifier="beginThreePlayerMatch" id="fbA-qo-xxm"/>
+                                            <segue destination="2Yj-yc-FrP" kind="custom" identifier="beginThreePlayerMatch" id="fbA-qo-xxm"/>
                                         </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="root-or" translatesAutoresizingMaskIntoConstraints="NO" id="rHq-0U-mAh">
@@ -68,7 +68,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="AJ9-2T-z5F" kind="presentation" identifier="showGallery" id="YTF-oq-3bE"/>
+                                            <segue destination="AJ9-2T-z5F" kind="custom" identifier="showGallery" id="YTF-oq-3bE"/>
                                         </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="root-title" translatesAutoresizingMaskIntoConstraints="NO" id="eyv-id-0vb">
@@ -554,6 +554,6 @@
         <image name="save-to-gallery-dialog-title" width="149" height="61"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="7sc-b3-6yH"/>
+        <segue reference="fbA-qo-xxm"/>
     </inferredMetricsTieBreakers>
 </document>

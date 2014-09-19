@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		63267AD319CC7CE800B22242 /* FullscreenModalTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63267AD219CC7CE700B22242 /* FullscreenModalTransitionManager.swift */; };
 		6327299819C3403F003BCD76 /* ImagePresenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6327299719C3403F003BCD76 /* ImagePresenterView.swift */; };
 		6350C5EA19A1727B008CE4F5 /* MatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350C5E919A1727B008CE4F5 /* MatchViewController.swift */; };
 		6350C5EC19A24790008CE4F5 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350C5EB19A24790008CE4F5 /* RootViewController.swift */; };
@@ -102,6 +103,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		63267AD219CC7CE700B22242 /* FullscreenModalTransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullscreenModalTransitionManager.swift; sourceTree = "<group>"; };
 		6327299719C3403F003BCD76 /* ImagePresenterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePresenterView.swift; sourceTree = "<group>"; };
 		6350C5E919A1727B008CE4F5 /* MatchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchViewController.swift; sourceTree = "<group>"; };
 		6350C5EB19A24790008CE4F5 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
@@ -165,6 +167,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		63267AD019CC7CCB00B22242 /* Transitions */ = {
+			isa = PBXGroup;
+			children = (
+				63267AD219CC7CE700B22242 /* FullscreenModalTransitionManager.swift */,
+			);
+			path = Transitions;
+			sourceTree = "<group>";
+		};
 		638576E919A6480600581DE8 /* Theme */ = {
 			isa = PBXGroup;
 			children = (
@@ -211,6 +221,7 @@
 				63B44AF9199A5DEE00AE7B62 /* Extensions */,
 				63BBECB019967A9900F6E2B3 /* Models */,
 				638576E919A6480600581DE8 /* Theme */,
+				63267AD019CC7CCB00B22242 /* Transitions */,
 				63BBECB119967A9900F6E2B3 /* ViewControllers */,
 				63BBECB219967A9900F6E2B3 /* Views */,
 				63BBEC8F19967A2300F6E2B3 /* AppDelegate.swift */,
@@ -449,6 +460,7 @@
 				63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */,
 				636CEA24199E586400BEBF53 /* DrawingInputController.swift in Sources */,
 				636CEA29199F251200BEBF53 /* Match.swift in Sources */,
+				63267AD319CC7CE800B22242 /* FullscreenModalTransitionManager.swift in Sources */,
 				6350C5EC19A24790008CE4F5 /* RootViewController.swift in Sources */,
 				638576F019A65B4500581DE8 /* Geometry.swift in Sources */,
 				63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */,
