@@ -20,7 +20,7 @@ protocol GalleryViewControllerDelegate : class {
 // MARK: - GalleryCollectionViewCell
 
 internal let WigglePhaseDuration:NSTimeInterval = 0.2
-internal let WiggleAngleMax = 1 * M_PI / 180.0
+internal let WiggleAngleMax = 0.75 * M_PI / 180.0
 
 class GalleryCollectionViewCell : UICollectionViewCell {
 
@@ -144,17 +144,14 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 	internal let _phaseOffset:NSTimeInterval = drand48()
 	internal var _phase:NSTimeInterval = 0
-	internal var _wiggleAnimationTimer:NSTimer?
+	internal var _wiggleAnimationDisplayLink:CADisplayLink?
 
 	internal func startWiggling() {
-		assert( _wiggleAnimationTimer == nil, "Expect wiggle timer to be nil - wiggle cycle should never overlap")
-
-		_wiggleAnimationTimer = NSTimer.scheduledTimerWithTimeInterval(1.0/60.0, target: self, selector: "wiggleAnimationTimeout:", userInfo: nil, repeats: true)
-
-		NSRunLoop.mainRunLoop().addTimer(_wiggleAnimationTimer!, forMode: NSRunLoopCommonModes)
+		_wiggleAnimationDisplayLink = CADisplayLink(target: self, selector: "updateWiggleAnimation")
+		_wiggleAnimationDisplayLink!.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSRunLoopCommonModes)
 	}
 
-	internal dynamic func wiggleAnimationTimeout( timer:NSTimer ) {
+	internal dynamic func updateWiggleAnimation() {
 
 		if _deleting {
 			return
@@ -171,9 +168,9 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	}
 
 	internal func stopWiggling() {
-		if let timer = _wiggleAnimationTimer {
-			timer.invalidate()
-			_wiggleAnimationTimer = nil
+		if let displayLink = _wiggleAnimationDisplayLink {
+			displayLink.invalidate()
+			_wiggleAnimationDisplayLink = nil
 		}
 
 		let layer = self.layer
