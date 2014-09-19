@@ -39,7 +39,7 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 
 			fromView.transform = CGAffineTransformIdentity
 			fromView.opaque = false
-			fromView.alpha = 0
+			fromView.alpha = 1
 		} else {
 
 			// when !presenting, outgoing view must be on top
@@ -58,19 +58,12 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 
 		let duration = self.transitionDuration(transitionContext)
 
-		// perform the animation!
-		// for this example, just slid both fromView and toView to the left at the same time
-		// meaning fromView is pushed off the screen and toView slides into view
-		// we also use the block animation usingSpringWithDamping for a little bounce
 		UIView.animateWithDuration(duration,
 			delay: 0.0,
 			usingSpringWithDamping: 0.8,
-			initialSpringVelocity: 0.5,
+			initialSpringVelocity: 0,
 			options: nil,
 			animations: {
-
-				toView.transform = CGAffineTransformIdentity
-				toView.alpha = 1
 
 				if presenting {
 					fromView.transform = smallScale
@@ -81,6 +74,17 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 				}
 
 			},
+			completion: nil )
+
+		UIView.animateWithDuration(duration,
+			delay: duration/4,
+			usingSpringWithDamping: 0.8,
+			initialSpringVelocity: 0.25,
+			options: nil,
+			animations: {
+				toView.transform = CGAffineTransformIdentity
+				toView.alpha = 1
+			},
 			completion: { finished in
 				transitionContext.completeTransition(true)
 			})
@@ -88,7 +92,7 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 
 	// return how many seconds the transiton animation will take
 	func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
-		return 0.75
+		return 0.5
 	}
 
 	// MARK: UIViewControllerTransitioningDelegate protocol methods
