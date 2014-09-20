@@ -470,13 +470,13 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player Names" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8TL-r4-RiL">
-                                            <rect key="frame" x="188" y="460" width="225" height="19"/>
+                                            <rect key="frame" x="8" y="460" width="584" height="19"/>
                                             <fontDescription key="fontDescription" name="Didot" family="Didot" pointSize="15"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Match Date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3P1-PS-qc6">
-                                            <rect key="frame" x="188" y="484" width="225" height="15"/>
+                                            <rect key="frame" x="8" y="484" width="584" height="15"/>
                                             <fontDescription key="fontDescription" name="Didot-Italic" family="Didot" pointSize="12"/>
                                             <color key="textColor" white="1" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -485,8 +485,8 @@
                                             <rect key="frame" x="188" y="150" width="225" height="300"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
+                                                <constraint firstAttribute="width" constant="225" id="M7t-Oc-cag"/>
                                                 <constraint firstAttribute="height" constant="300" id="rDy-SO-WeO"/>
-                                                <constraint firstAttribute="width" secondItem="jh6-MK-WMA" secondAttribute="height" multiplier="3:4" id="yp7-xj-cmb"/>
                                             </constraints>
                                         </view>
                                     </subviews>
@@ -494,7 +494,11 @@
                                 </view>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="8TL-r4-RiL" firstAttribute="trailing" secondItem="1h0-2g-UOC" secondAttribute="trailingMargin" id="5Yv-rt-csP"/>
+                                    <constraint firstItem="8TL-r4-RiL" firstAttribute="leading" secondItem="1h0-2g-UOC" secondAttribute="leadingMargin" id="B3B-tR-eDc"/>
                                     <constraint firstItem="jh6-MK-WMA" firstAttribute="width" secondItem="8TL-r4-RiL" secondAttribute="width" id="Cyk-fx-GTy"/>
+                                    <constraint firstItem="3P1-PS-qc6" firstAttribute="trailing" secondItem="1h0-2g-UOC" secondAttribute="trailingMargin" id="LV4-dF-xYf"/>
+                                    <constraint firstItem="3P1-PS-qc6" firstAttribute="leading" secondItem="1h0-2g-UOC" secondAttribute="leadingMargin" id="RLt-kf-CHz"/>
                                     <constraint firstAttribute="centerX" secondItem="jh6-MK-WMA" secondAttribute="centerX" id="T6h-2n-un0"/>
                                     <constraint firstItem="8TL-r4-RiL" firstAttribute="top" secondItem="jh6-MK-WMA" secondAttribute="bottom" constant="10" id="V09-UP-kaY"/>
                                     <constraint firstAttribute="centerX" secondItem="8TL-r4-RiL" secondAttribute="centerX" id="YID-rH-BIn"/>
@@ -503,10 +507,19 @@
                                     <constraint firstAttribute="centerX" secondItem="3P1-PS-qc6" secondAttribute="centerX" id="okS-1t-GBz"/>
                                     <constraint firstAttribute="centerY" secondItem="jh6-MK-WMA" secondAttribute="centerY" id="rTG-Wp-REe"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Cyk-fx-GTy"/>
+                                        <exclude reference="YID-rH-BIn"/>
+                                        <exclude reference="kYD-Fp-m4d"/>
+                                        <exclude reference="okS-1t-GBz"/>
+                                    </mask>
+                                </variation>
                                 <connections>
                                     <outlet property="imageView" destination="jh6-MK-WMA" id="jkT-mv-T2q"/>
                                     <outlet property="imageViewCenterYAlignmentConstraint" destination="rTG-Wp-REe" id="J2K-aR-pW9"/>
                                     <outlet property="imageViewHeightConstraint" destination="rDy-SO-WeO" id="Woa-v1-RHa"/>
+                                    <outlet property="imageViewWidthConstraint" destination="M7t-Oc-cag" id="q1h-bF-3El"/>
                                     <outlet property="matchDateLabel" destination="3P1-PS-qc6" id="V74-rH-2cC"/>
                                     <outlet property="playerNamesLabel" destination="8TL-r4-RiL" id="yFt-JS-kNt"/>
                                 </connections>

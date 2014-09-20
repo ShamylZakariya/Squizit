@@ -14,6 +14,7 @@ let DebugLayout = false
 class GalleryDetailCollectionViewCell : UICollectionViewCell {
 	@IBOutlet weak var imageView: ImagePresenterView!
 	@IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
+	@IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
 	@IBOutlet weak var imageViewCenterYAlignmentConstraint: NSLayoutConstraint!
 	@IBOutlet weak var playerNamesLabel: UILabel!
 	@IBOutlet weak var matchDateLabel: UILabel!
@@ -46,16 +47,16 @@ class GalleryDetailCollectionViewCell : UICollectionViewCell {
 		}
 	}
 
-	override func layoutSubviews() {
-		super.layoutSubviews()
-		setNeedsUpdateConstraints()
-	}
-
-	override func updateConstraints() {
-		imageViewHeightConstraint.constant = self.bounds.height * 0.8
-		imageViewCenterYAlignmentConstraint.constant = playerNamesLabel.intrinsicContentSize().height + matchDateLabel.intrinsicContentSize().height
-		super.updateConstraints()
-	}
+//	override func layoutSubviews() {
+//		super.layoutSubviews()
+//		setNeedsUpdateConstraints()
+//	}
+//
+//	override func updateConstraints() {
+//		imageViewHeightConstraint.constant = self.bounds.height * 0.8
+//		imageViewCenterYAlignmentConstraint.constant = playerNamesLabel.intrinsicContentSize().height + matchDateLabel.intrinsicContentSize().height
+//		super.updateConstraints()
+//	}
 
 }
 
@@ -75,6 +76,10 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 	override func configureCell( cell:UICollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
 		let store = self.store
 		let backgroundColor = _matchBackgroundColor
+		let flowLayout = self.collectionView.collectionViewLayout as UICollectionViewFlowLayout
+		let itemSize = flowLayout.itemSize
+		let thumbnailHeight = itemSize.height * 0.8
+
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
 			//
@@ -85,9 +90,19 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 
 			var galleryCell = cell as GalleryDetailCollectionViewCell
 
-
 			galleryCell.playerNamesLabel.text = drawing.artistDisplayNames
 			galleryCell.matchDateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
+
+
+			// use the thumbnail's size to set the cell image size & aspect ratio
+			let thumbnailActualHeight = CGFloat(drawing.thumbnailHeight)
+			let thumbnailActualWidth = CGFloat(drawing.thumbnailWidth)
+			let thumbnailWidth = thumbnailActualWidth * (thumbnailHeight/thumbnailActualHeight)
+			galleryCell.imageViewHeightConstraint.constant = thumbnailHeight
+			galleryCell.imageViewWidthConstraint.constant = thumbnailWidth
+
+			// offset the vertical centering constraint
+			galleryCell.imageViewCenterYAlignmentConstraint.constant = galleryCell.playerNamesLabel.intrinsicContentSize().height + galleryCell.matchDateLabel.intrinsicContentSize().height
 
 			dispatch_async( _renderQueue ) {
 
