@@ -19,8 +19,8 @@ protocol GalleryViewControllerDelegate : class {
 
 // MARK: - GalleryCollectionViewCell
 
-internal let WigglePhaseDuration:NSTimeInterval = 0.2
-internal let WiggleAngleMax = 0.75 * M_PI / 180.0
+let WigglePhaseDuration:NSTimeInterval = 0.2
+let WiggleAngleMax = 0.75 * M_PI / 180.0
 
 class GalleryCollectionViewCell : UICollectionViewCell {
 
@@ -31,6 +31,10 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	@IBOutlet weak var imageView: ImagePresenterView!
 	@IBOutlet weak var namesLabel: UILabel!
 	@IBOutlet weak var dateLabel: UILabel!
+
+	@IBOutlet weak var topPaddingConstraint: NSLayoutConstraint!
+	@IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
+	@IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
 
 	var indexInCollection:Int = 0
 
@@ -88,7 +92,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		imageView.image = nil
 	}
 
-	dynamic internal func longPress( gr:UILongPressGestureRecognizer ) {
+	dynamic func longPress( gr:UILongPressGestureRecognizer ) {
 		switch gr.state {
 			case UIGestureRecognizerState.Began:
 				if let onLongPress = self.onLongPress {
@@ -100,7 +104,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	}
 
 	private var _deleting:Bool = false
-	dynamic internal func deleteButtonTapped( tr:UITapGestureRecognizer ) {
+	dynamic func deleteButtonTapped( tr:UITapGestureRecognizer ) {
 
 		// flag that we're deleting - this halts the wiggle animation which would override our scale transform
 		_deleting = true
@@ -121,7 +125,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 			}
 	}
 
-	internal func showDeleteButton() {
+	func showDeleteButton() {
 		let deleteButton = self.deleteButton
 		UIView.animateWithDuration(0.2, animations: { () -> Void in
 			deleteButton.hidden = false
@@ -129,7 +133,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		})
 	}
 
-	internal func hideDeleteButton() {
+	func hideDeleteButton() {
 		let deleteButton = self.deleteButton
 		UIView.animateWithDuration(0.2,
 			animations: {
@@ -144,16 +148,16 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 			})
 	}
 
-	internal let _cycleOffset:NSTimeInterval = drand48() / 2
-	internal var _phase:NSTimeInterval = 0
-	internal var _wiggleAnimationDisplayLink:CADisplayLink?
+	let _cycleOffset:NSTimeInterval = drand48() / 2
+	var _phase:NSTimeInterval = 0
+	var _wiggleAnimationDisplayLink:CADisplayLink?
 
-	internal func startWiggling() {
+	func startWiggling() {
 		_wiggleAnimationDisplayLink = CADisplayLink(target: self, selector: "updateWiggleAnimation")
 		_wiggleAnimationDisplayLink!.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSRunLoopCommonModes)
 	}
 
-	internal dynamic func updateWiggleAnimation() {
+	dynamic func updateWiggleAnimation() {
 
 		if _deleting {
 			return
@@ -170,7 +174,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		}
 	}
 
-	internal func stopWiggling() {
+	func stopWiggling() {
 		if let displayLink = _wiggleAnimationDisplayLink {
 			displayLink.invalidate()
 			_wiggleAnimationDisplayLink = nil
@@ -188,8 +192,8 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
-	internal var _thumbnailCompositorQueue = dispatch_queue_create("com.zakariya.squizit.GalleryThumbnailCompositorQueue", nil)
-	internal var _thumbnailBackgroundColor = SquizitTheme.thumbnailBackgroundColor()
+	var _thumbnailCompositorQueue = dispatch_queue_create("com.zakariya.squizit.GalleryThumbnailCompositorQueue", nil)
+	var _thumbnailBackgroundColor = SquizitTheme.thumbnailBackgroundColor()
 
 	override init( store:GalleryStore, collectionView:UICollectionView ) {
 		super.init(store: store, collectionView:collectionView)
@@ -250,6 +254,10 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 	override func configureCell( cell:UICollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
 		let store = self.store
+		let flowLayout = self.collectionView.collectionViewLayout as UICollectionViewFlowLayout
+		let itemSize = flowLayout.itemSize
+		let thumbnailHeight = itemSize.height * 0.8
+
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
 			var galleryCell = cell as GalleryCollectionViewCell
@@ -257,7 +265,16 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 			galleryCell.dateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
 			galleryCell.deleteButtonVisible = self.editMode
 
+			// set the index in collection to aid in wiggle cycle direction (odd/even wiggle in different directions)
 			galleryCell.indexInCollection = indexPath.item
+
+			// use the thumbnail's size to set the cell image size & aspect ratio
+			let thumbnailActualHeight = CGFloat(drawing.thumbnailHeight)
+			let thumbnailActualWidth = CGFloat(drawing.thumbnailWidth)
+			let thumbnailWidth = thumbnailActualWidth * (thumbnailHeight/thumbnailActualHeight)
+			galleryCell.imageViewHeightConstraint.constant = thumbnailHeight
+			galleryCell.imageViewWidthConstraint.constant = thumbnailWidth
+
 
 			galleryCell.onLongPress = {
 				[weak self]
@@ -301,6 +318,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 				thumbnail = UIGraphicsGetImageFromCurrentImageContext()
 				UIGraphicsEndImageContext()
 
+
 				dispatch_async(dispatch_get_main_queue() ) {
 					galleryCell.imageView.image = thumbnail
 				}
@@ -311,8 +329,8 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 		}
 	}
 
-	internal var _dateFormatter:NSDateFormatter?
-	internal var dateFormatter:NSDateFormatter {
+	var _dateFormatter:NSDateFormatter?
+	var dateFormatter:NSDateFormatter {
 		if _dateFormatter != nil {
 			return _dateFormatter!
 		}
@@ -332,11 +350,11 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 	var store:GalleryStore!
 	weak var delegate:GalleryViewControllerDelegate?
-	internal var _dataSource:GalleryCollectionViewDataSource!
+	var _dataSource:GalleryCollectionViewDataSource!
 
-	internal var _searchField = SquizitThemeSearchField(frame: CGRect.zeroRect )
-	internal var _fixedHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
-	internal let _fixedHeaderHeight:CGFloat = 60
+	var _searchField = SquizitThemeSearchField(frame: CGRect.zeroRect )
+	var _fixedHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
+	let _fixedHeaderHeight:CGFloat = 60
 
 	required init(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
@@ -445,17 +463,17 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 	// MARK: IBActions
 
-	dynamic internal func onClose(sender: AnyObject) {
+	dynamic func onClose(sender: AnyObject) {
 		delegate?.galleryDidDismiss(self)
 	}
 
-	dynamic internal func onDoneEditing( sender:AnyObject ) {
+	dynamic func onDoneEditing( sender:AnyObject ) {
 		_dataSource.editMode = false
 	}
 
 	// MARK: UITextFieldDelegate
 
-	dynamic internal func searchTextChanged( sender:UITextField ) {
+	dynamic func searchTextChanged( sender:UITextField ) {
 		if sender === _searchField {
 			artistFilter = _searchField.text
 		}
@@ -494,11 +512,11 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 	// MARK: Private
 
-	internal func showDetail( drawing:GalleryDrawing, indexPath:NSIndexPath ) {
+	func showDetail( drawing:GalleryDrawing, indexPath:NSIndexPath ) {
 		self.performSegueWithIdentifier("showDetail", sender: indexPath)
 	}
 
-	internal var artistFilter:String = "" {
+	var artistFilter:String = "" {
 		didSet {
 
 			if _debouncedArtistFilterApplicator == nil {
@@ -516,5 +534,5 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		}
 	}
 
-	internal var _debouncedArtistFilterApplicator:((()->())?)
+	var _debouncedArtistFilterApplicator:((()->())?)
 }

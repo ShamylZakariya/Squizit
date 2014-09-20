@@ -72,5 +72,8 @@
 @dynamic date;
 @dynamic artists;
 @dynamic uuid;
+@dynamic thumbnailWidth;
+@dynamic thumbnailHeight;
+
 
 @end

@@ -13,7 +13,7 @@ class DrawingTestView : UIView {
 
 	var drawing:Drawing?
 	var controller:DrawingInputController?
-	internal var _tracking:Bool = false
+	var _tracking:Bool = false
 
 	override init(frame:CGRect) {
 		super.init( frame: frame )
@@ -114,16 +114,16 @@ class DrawingTestsViewController : UIViewController {
 		drawingView.frame = view.bounds
 	}
 
-	dynamic internal func undo( sender:AnyObject ) {
+	dynamic func undo( sender:AnyObject ) {
 		drawingView.controller!.undo()
 	}
 
-	dynamic internal func eraseDrawing( sender:AnyObject ) {
+	dynamic func eraseDrawing( sender:AnyObject ) {
 		drawingView.drawing!.clear()
 		drawingView.setNeedsDisplay()
 	}
 
-	dynamic internal func toggleDebugRendering( sender:AnyObject ) {
+	dynamic func toggleDebugRendering( sender:AnyObject ) {
 		drawingView.drawing!.debugRender = !drawingView.drawing!.debugRender
 		drawingView.setNeedsDisplay()
 	}

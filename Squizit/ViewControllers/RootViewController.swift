@@ -122,7 +122,7 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 
 	// MARK: Actions
 
-	internal dynamic func showTestDrawingView( sender:AnyObject ) {
+	dynamic func showTestDrawingView( sender:AnyObject ) {
 		performSegueWithIdentifier("showTestDrawingView", sender: sender)
 	}
 

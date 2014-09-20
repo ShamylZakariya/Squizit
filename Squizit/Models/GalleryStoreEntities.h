@@ -44,6 +44,8 @@
 @property (nonatomic) NSTimeInterval date;
 @property (nonatomic, retain) NSSet *artists;
 @property (nonatomic, retain) NSString * uuid;
+@property (nonatomic) int32_t thumbnailWidth;
+@property (nonatomic) int32_t thumbnailHeight;
 @end
 
 @interface GalleryDrawing (CoreDataGeneratedAccessors)

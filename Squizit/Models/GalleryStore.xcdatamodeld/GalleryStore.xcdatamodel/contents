@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6220.14" systemVersion="13E28" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6244" systemVersion="13F34" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="GalleryArtist" representedClassName="GalleryArtist" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="drawings" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GalleryDrawing" inverseName="artists" inverseEntity="GalleryDrawing" syncable="YES"/>
@@ -10,11 +10,13 @@
         <attribute name="numPlayers" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="starred" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="thumbnail" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="thumbnailHeight" optional="YES" attributeType="Integer 32" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="thumbnailWidth" optional="YES" attributeType="Integer 32" defaultValueString="0.0" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="artists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GalleryArtist" inverseName="drawings" inverseEntity="GalleryArtist" syncable="YES"/>
     </entity>
     <elements>
-        <element name="GalleryDrawing" positionX="-63" positionY="-18" width="128" height="148"/>
         <element name="GalleryArtist" positionX="-54" positionY="18" width="128" height="73"/>
+        <element name="GalleryDrawing" positionX="-63" positionY="-18" width="128" height="180"/>
     </elements>
 </model>

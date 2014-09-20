@@ -227,7 +227,7 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 		}
 	}
 
-	internal func export( drawing:GalleryDrawing, done:(rendering:UIImage)->Void) {
+	func export( drawing:GalleryDrawing, done:(rendering:UIImage)->Void) {
 
 		dispatch_async(_exportQueue) {
 

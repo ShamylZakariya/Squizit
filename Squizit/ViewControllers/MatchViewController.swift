@@ -35,7 +35,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	var shieldViews:[MatchShieldView] = []
 	var endOfMatchGestureRecognizer:UITapGestureRecognizer!
 
-	internal var exportQueue = dispatch_queue_create("com.zakariya.squizit.ExportQueue", nil)
+	var exportQueue = dispatch_queue_create("com.zakariya.squizit.ExportQueue", nil)
 
 	var match:Match?
 
@@ -253,7 +253,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	// MARK: Private
 
-	internal func syncToMatchState_Animate() {
+	func syncToMatchState_Animate() {
 		let duration:NSTimeInterval = 0.7
 		let delay:NSTimeInterval = 0
 		let damping:CGFloat = 0.9
@@ -279,7 +279,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			})
 	}
 
-	internal func syncToMatchState() {
+	func syncToMatchState() {
 
 		if matchActive {
 
@@ -315,7 +315,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		}
 	}
 
-	internal func layoutSubviewsForTwoPlayers( currentPlayer:Int ) {
+	func layoutSubviewsForTwoPlayers( currentPlayer:Int ) {
 
 		if let match = self.match {
 			let margin = 2 * match.overlap
@@ -340,7 +340,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		}
 	}
 
-	internal func layoutSubviewsForThreePlayers( currentPlayer:Int ) {
+	func layoutSubviewsForThreePlayers( currentPlayer:Int ) {
 
 		if let match = self.match {
 			let margin = 2 * match.overlap
@@ -386,7 +386,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		}
 	}
 
-	internal func positionToolsInShield( view:UIView, alignTop:Bool ) {
+	func positionToolsInShield( view:UIView, alignTop:Bool ) {
 
 		let frame = view.frame
 		let margin:CGFloat = UIDevice.currentDevice().userInterfaceIdiom == .Pad ? 32 : 16
@@ -430,7 +430,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		quitButton.frame = quitButtonFrame
 	}
 
-	internal func showSaveToGalleryQuery() {
+	func showSaveToGalleryQuery() {
 
 		//
 		//	Load from storyboard and present
@@ -448,7 +448,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	// MARK: SaveToGalleryDelegate
 
-	internal func didDismissSaveToGallery() {
+	func didDismissSaveToGallery() {
 		dismissViewControllerAnimated(true) {
 			if let presenter = self.presentingViewController {
 				presenter.dismissViewControllerAnimated(true, completion: nil)
@@ -457,7 +457,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		}
 	}
 
-	internal func didSaveToGalleryWithNames(names: [String]? ) {
+	func didSaveToGalleryWithNames(names: [String]? ) {
 		if let match = self.match {
 
 			let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
@@ -466,12 +466,14 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 				export( match ) {
 					[weak self]
-					( matchData: NSData?, thumbnailData:NSData? ) -> Void in
+					( matchData: NSData?, thumbnailSize:CGSize, thumbnailData:NSData? ) -> Void in
 
 					// create the gallery drawing entity
 					let drawingEntity = GalleryDrawing.newInstanceInManagedObjectContext(moc)
 					drawingEntity.match = matchData!
 					drawingEntity.thumbnail = thumbnailData!
+					drawingEntity.thumbnailWidth = Int32(thumbnailSize.width)
+					drawingEntity.thumbnailHeight = Int32(thumbnailSize.height)
 					drawingEntity.numPlayers = Int16(match.drawings.count)
 					drawingEntity.date = NSDate().timeIntervalSinceReferenceDate
 
@@ -520,7 +522,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		calling done() on main queue when complete
 	*/
 
-	internal func export( match:Match, done:((matchData:NSData?, thumbnailData:NSData?) -> Void)) {
+	func export( match:Match, done:((matchData:NSData?, thumbnailSize:CGSize, thumbnailData:NSData?) -> Void)) {
 
 			dispatch_async(exportQueue) { [unowned self] in
 
@@ -539,12 +541,12 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 				var thumbnailData:NSData? = UIImagePNGRepresentation(rendering)
 
 				dispatch_async(dispatch_get_main_queue()) {
-					done( matchData: matchDataResult.value, thumbnailData: thumbnailData )
+					done( matchData: matchDataResult.value, thumbnailSize:thumbnailSize, thumbnailData: thumbnailData )
 				}
 			}
 	}
 
-	internal func DEBUG_saveImage( image:UIImage, path:String ) {
+	func DEBUG_saveImage( image:UIImage, path:String ) {
 	    let folderURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as NSURL
 		let targetURL = folderURL.URLByAppendingPathComponent(path, isDirectory: false)
 

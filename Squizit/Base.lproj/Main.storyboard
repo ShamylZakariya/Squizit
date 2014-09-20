@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7U9-N8-2K1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7U9-N8-2K1">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -354,24 +354,18 @@
                                                             <rect key="frame" x="32" y="20" width="192" height="256"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
+                                                                <constraint firstAttribute="width" constant="192" id="0qc-dr-UFs"/>
                                                                 <constraint firstAttribute="height" constant="256" id="7JO-aA-8Us"/>
-                                                                <constraint firstAttribute="width" constant="192" id="ayP-hr-ER6"/>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player Names" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vF6-pa-txg">
-                                                            <rect key="frame" x="32" y="286" width="192" height="19"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="192" id="6Bb-wX-lpf"/>
-                                                            </constraints>
+                                                            <rect key="frame" x="8" y="286" width="240" height="19"/>
                                                             <fontDescription key="fontDescription" name="Didot" family="Didot" pointSize="15"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Match Date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c0T-JK-PLb">
-                                                            <rect key="frame" x="32" y="311" width="192" height="15"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="192" id="iiG-SN-Jhr"/>
-                                                            </constraints>
+                                                            <rect key="frame" x="8" y="311" width="240" height="15"/>
                                                             <fontDescription key="fontDescription" name="Didot-Italic" family="Didot" pointSize="12"/>
                                                             <color key="textColor" white="1" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
@@ -388,13 +382,29 @@
                                                     <constraints>
                                                         <constraint firstAttribute="centerX" secondItem="qbo-L7-0JH" secondAttribute="centerX" id="7I5-KA-91p"/>
                                                         <constraint firstAttribute="centerX" secondItem="c0T-JK-PLb" secondAttribute="centerX" id="7kO-za-sLt"/>
+                                                        <constraint firstItem="c0T-JK-PLb" firstAttribute="width" secondItem="qbo-L7-0JH" secondAttribute="width" id="7nJ-W0-ncK"/>
+                                                        <constraint firstItem="c0T-JK-PLb" firstAttribute="leading" secondItem="IIQ-uS-qMR" secondAttribute="leadingMargin" id="84n-s6-cNS"/>
                                                         <constraint firstItem="qbo-L7-0JH" firstAttribute="top" secondItem="IIQ-uS-qMR" secondAttribute="top" constant="20" id="G0U-KN-grf"/>
+                                                        <constraint firstItem="vF6-pa-txg" firstAttribute="leading" secondItem="IIQ-uS-qMR" secondAttribute="leadingMargin" id="MFi-lc-G8W"/>
+                                                        <constraint firstItem="qbo-L7-0JH" firstAttribute="width" secondItem="vF6-pa-txg" secondAttribute="width" id="VWU-eh-CFT"/>
                                                         <constraint firstItem="vF6-pa-txg" firstAttribute="top" secondItem="qbo-L7-0JH" secondAttribute="bottom" constant="10" id="WXQ-Q1-6YJ"/>
                                                         <constraint firstAttribute="centerX" secondItem="vF6-pa-txg" secondAttribute="centerX" id="dE3-M0-89m"/>
                                                         <constraint firstItem="qbo-L7-0JH" firstAttribute="leading" secondItem="BOP-eT-3qN" secondAttribute="trailing" constant="-32" id="eZw-cf-r0Q"/>
+                                                        <constraint firstItem="vF6-pa-txg" firstAttribute="trailing" secondItem="IIQ-uS-qMR" secondAttribute="trailingMargin" id="ixQ-lq-QMP"/>
+                                                        <constraint firstItem="c0T-JK-PLb" firstAttribute="trailing" secondItem="IIQ-uS-qMR" secondAttribute="trailingMargin" id="pqX-rK-dxF"/>
+                                                        <constraint firstItem="c0T-JK-PLb" firstAttribute="top" secondItem="vF6-pa-txg" secondAttribute="bottom" constant="6" id="svT-Vk-dxn"/>
                                                         <constraint firstItem="c0T-JK-PLb" firstAttribute="top" secondItem="vF6-pa-txg" secondAttribute="bottom" constant="6" id="vE6-gI-m3E"/>
                                                         <constraint firstItem="qbo-L7-0JH" firstAttribute="top" secondItem="BOP-eT-3qN" secondAttribute="bottom" constant="-31" id="wfw-11-I6n"/>
                                                     </constraints>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="VWU-eh-CFT"/>
+                                                            <exclude reference="dE3-M0-89m"/>
+                                                            <exclude reference="7kO-za-sLt"/>
+                                                            <exclude reference="7nJ-W0-ncK"/>
+                                                            <exclude reference="vE6-gI-m3E"/>
+                                                        </mask>
+                                                    </variation>
                                                 </view>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -411,7 +421,10 @@
                                             <outlet property="dateLabel" destination="c0T-JK-PLb" id="ZIh-C1-jQC"/>
                                             <outlet property="deleteButton" destination="BOP-eT-3qN" id="gF5-Pm-yPY"/>
                                             <outlet property="imageView" destination="qbo-L7-0JH" id="n1L-sH-n2G"/>
+                                            <outlet property="imageViewHeightConstraint" destination="7JO-aA-8Us" id="7D0-XR-Hkb"/>
+                                            <outlet property="imageViewWidthConstraint" destination="0qc-dr-UFs" id="loh-Df-0U0"/>
                                             <outlet property="namesLabel" destination="vF6-pa-txg" id="g0m-Pe-Jzb"/>
+                                            <outlet property="topPaddingConstraint" destination="G0U-KN-grf" id="C6l-ME-9jp"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
