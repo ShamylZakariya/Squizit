@@ -71,6 +71,8 @@ class RootBorderView : UIView {
 		CGContextClosePath(context)
 
 		CGContextSetLineWidth(context, 1)
+		CGContextSetLineCap(context, kCGLineCapSquare)
+
 		CGContextReplacePathWithStrokedPath(context)
 		CGContextClip(context)
 
@@ -79,6 +81,13 @@ class RootBorderView : UIView {
 		let topLeft = plot(1,1)
 		let bottomRight = plot(-1,-1)
 		CGContextDrawLinearGradient(context, gradient, topLeft, bottomRight, CGGradientDrawingOptions(0))
+
+		// fix a rendering error on retina where the top left point of the path isn't drawn
+		if UIScreen.mainScreen().scale > 1 {
+			let pointRect = CGRect(center: plot(1,1), radius: 0.5)
+			CGContextSetFillColorWithColor(context, topLeftColor.CGColor)
+			CGContextFillRect(context, pointRect)
+		}
 
 		CGContextRestoreGState(context)
 	}
