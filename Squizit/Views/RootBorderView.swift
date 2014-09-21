@@ -83,11 +83,9 @@ class RootBorderView : UIView {
 		CGContextDrawLinearGradient(context, gradient, topLeft, bottomRight, CGGradientDrawingOptions(0))
 
 		// fix a rendering error on retina where the top left point of the path isn't drawn
-		if UIScreen.mainScreen().scale > 1 {
-			let pointRect = CGRect(center: plot(1,1), radius: 0.5)
-			CGContextSetFillColorWithColor(context, topLeftColor.CGColor)
-			CGContextFillRect(context, pointRect)
-		}
+		let pointRect = CGRect(center: plot(1,1), radius: 0.5)
+		CGContextSetFillColorWithColor(context, topLeftColor.CGColor)
+		CGContextFillRect(context, pointRect)
 
 		CGContextRestoreGState(context)
 	}
