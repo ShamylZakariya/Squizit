@@ -1,12 +1,11 @@
 #TODO
 
-	- Design an app icon
-	- add transitions to my segues
+	- make SaveToGalleryViewController a more modern VC with a custom segue overlay
+		this means I will manually manage the blanker view, and will have to manually manage the content view inside it
 
 #FIXME
 
-	Use display link to render wiggle animation instead of NSTimer
-		- https://github.com/kaishin/gifu
+	You can still draw on the last drawing of the match when the match is over and the final drawing is presented!
 
 	GalleryDetailViewController::updateItemSize
 		The viewController's topLayoutGuide.length is zero, so I'm manually setting a fudge factor of 44 to accommodate the navbar height so UICollectionViewFlowLayout doesn't complain about inadequate room to layout cells. 
