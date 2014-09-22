@@ -37,6 +37,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	@IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
 
 	var indexInCollection:Int = 0
+	var thumbnailLoadAction:CancelableAction<UIImage>?
 
 	var onLongPress:((( cell:GalleryCollectionViewCell )->())?)
 	var onDeleteButtonTapped:((( cell:GalleryCollectionViewCell )->())?)
@@ -86,6 +87,12 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	}
 
 	override func prepareForReuse() {
+
+		if let action = thumbnailLoadAction {
+			action.cancel()
+			thumbnailLoadAction = nil
+		}
+
 		// reset layer transform and nil the image
 		layer.transform = CATransform3DIdentity
 		layer.opacity = 1
@@ -297,32 +304,31 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 				}
 			}
 
-			//
-			//	Now, we have to render the thumbnail - it comes from the store as a transparent PNG, 
-			//	with pen/brush strokes in black, and eraser in white. We need to multiply composite
-			//	it over the paper texture to make a viable thumbnail image
-			//
+			let queue = _thumbnailCompositorQueue
+			galleryCell.thumbnailLoadAction = CancelableAction<UIImage>(action: { (done) -> () in
 
-			dispatch_async( _thumbnailCompositorQueue ) {
+				dispatch_async( queue ) {
 
-				var thumbnail = UIImage( data: drawing.thumbnail )
-				let size = thumbnail.size
-				let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-				UIGraphicsBeginImageContextWithOptions(size, true, 0)
+					var thumbnail = UIImage( data: drawing.thumbnail )
+					let size = thumbnail.size
+					let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+					UIGraphicsBeginImageContextWithOptions(size, true, 0)
 
-				self._thumbnailBackgroundColor.set()
-				UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
+					self._thumbnailBackgroundColor.set()
+					UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
 
-				thumbnail.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
+					thumbnail.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
 
-				thumbnail = UIGraphicsGetImageFromCurrentImageContext()
-				UIGraphicsEndImageContext()
+					thumbnail = UIGraphicsGetImageFromCurrentImageContext()
+					UIGraphicsEndImageContext()
 
-
-				dispatch_async(dispatch_get_main_queue() ) {
-					galleryCell.imageView.image = thumbnail
+					done( result:thumbnail )
 				}
-			}
+			}, done: { ( result:UIImage ) -> () in
+				dispatch_async(dispatch_get_main_queue() ) {
+					galleryCell.imageView.image = result
+				}
+			})
 
 		} else {
 			assertionFailure("Unable to vend a GalleryDrawing for index path")

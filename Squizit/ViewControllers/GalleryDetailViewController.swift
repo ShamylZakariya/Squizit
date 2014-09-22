@@ -19,6 +19,8 @@ class GalleryDetailCollectionViewCell : UICollectionViewCell {
 	@IBOutlet weak var playerNamesLabel: UILabel!
 	@IBOutlet weak var matchDateLabel: UILabel!
 
+	var renderAction:CancelableAction<UIImage>?
+
 	class func identifier() ->String { return "GalleryDetailCollectionViewCell" }
 
 	override func awakeFromNib() {
@@ -40,23 +42,17 @@ class GalleryDetailCollectionViewCell : UICollectionViewCell {
 
 	override func prepareForReuse() {
 
+		if let action = renderAction {
+			action.cancel()
+			renderAction = nil
+		}
+
 		imageView.image = nil
 
 		if DebugLayout {
 			backgroundColor = UIColor(hue: CGFloat(drand48()), saturation: 0.5 + CGFloat(drand48()/2), brightness: 0.5 + CGFloat(drand48()/2), alpha: CGFloat(0.5))
 		}
 	}
-
-//	override func layoutSubviews() {
-//		super.layoutSubviews()
-//		setNeedsUpdateConstraints()
-//	}
-//
-//	override func updateConstraints() {
-//		imageViewHeightConstraint.constant = self.bounds.height * 0.8
-//		imageViewCenterYAlignmentConstraint.constant = playerNamesLabel.intrinsicContentSize().height + matchDateLabel.intrinsicContentSize().height
-//		super.updateConstraints()
-//	}
 
 }
 
@@ -104,23 +100,31 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 			// offset the vertical centering constraint
 			galleryCell.imageViewCenterYAlignmentConstraint.constant = galleryCell.playerNamesLabel.intrinsicContentSize().height + galleryCell.matchDateLabel.intrinsicContentSize().height
 
-			dispatch_async( _renderQueue ) {
+			let queue = _renderQueue
+			galleryCell.renderAction = CancelableAction<UIImage>(action: { (done) -> () in
 
-				if let buffer = ByteBuffer.fromNSData( drawing.match ) {
-					var matchLoadResult = buffer.getMatch()
-					if let error = matchLoadResult.error {
-						NSLog("Unable to load match from data, error: %@", error.message )
-						assertionFailure("Unable to load match from data, bailing" )
-					}
+				dispatch_async( queue ) {
 
-					var match = matchLoadResult.value
-					var rendering = match.render( backgroundColor: backgroundColor )
+					if let buffer = ByteBuffer.fromNSData( drawing.match ) {
+						var matchLoadResult = buffer.getMatch()
+						if let error = matchLoadResult.error {
+							NSLog("Unable to load match from data, error: %@", error.message )
+							assertionFailure("Unable to load match from data, bailing" )
+						}
 
-					dispatch_main {
-						galleryCell.imageView.image = rendering
+						var match = matchLoadResult.value
+						var rendering = match.render( backgroundColor: backgroundColor )
+						done( result:rendering )
 					}
 				}
-			}
+
+			}, done:{ ( result:UIImage ) -> () in
+
+				dispatch_main {
+					galleryCell.imageView.image = result
+				}
+
+			})
 
 		} else {
 			assertionFailure("Unable to vend a GalleryDrawing for index path")

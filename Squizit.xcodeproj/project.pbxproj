@@ -45,6 +45,7 @@
 		63EBB87F19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87E19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift */; };
 		63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */; };
 		63EBB88319B0CBE6003C3EC2 /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */; };
+		63EFB1AD19D06C8100253560 /* CancelableAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EFB1AC19D06C8100253560 /* CancelableAction.swift */; };
 		63FD058219BFFE6E00CA7121 /* Lilliput.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63BBECCE1996F8A200F6E2B3 /* Lilliput.framework */; };
 		63FD058419C0011300CA7121 /* Lilliput.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63BBECCE1996F8A200F6E2B3 /* Lilliput.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		63FDE7321998249A0006B7E4 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
@@ -145,6 +146,7 @@
 		63EBB87E19AEC9E5003C3EC2 /* ByteBuffer_NSData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBuffer_NSData.swift; sourceTree = "<group>"; };
 		63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage_sizing.swift; sourceTree = "<group>"; };
 		63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
+		63EFB1AC19D06C8100253560 /* CancelableAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CancelableAction.swift; sourceTree = "<group>"; };
 		63FDE7311998249A0006B7E4 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -222,6 +224,7 @@
 				63BBECB019967A9900F6E2B3 /* Models */,
 				638576E919A6480600581DE8 /* Theme */,
 				63267AD019CC7CCB00B22242 /* Transitions */,
+				63EFB1AA19D06C7100253560 /* Util */,
 				63BBECB119967A9900F6E2B3 /* ViewControllers */,
 				63BBECB219967A9900F6E2B3 /* Views */,
 				63BBEC8F19967A2300F6E2B3 /* AppDelegate.swift */,
@@ -311,6 +314,14 @@
 				63BBECD01996F8A200F6E2B3 /* LilliputTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		63EFB1AA19D06C7100253560 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				63EFB1AC19D06C8100253560 /* CancelableAction.swift */,
+			);
+			path = Util;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -465,6 +476,7 @@
 				638576F019A65B4500581DE8 /* Geometry.swift in Sources */,
 				63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */,
 				635DFA8119B76B6900102B6A /* Appearance.m in Sources */,
+				63EFB1AD19D06C8100253560 /* CancelableAction.swift in Sources */,
 				63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */,
 				63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */,
 				638E459219C88EEC008D8CD9 /* RootBorderView.swift in Sources */,
