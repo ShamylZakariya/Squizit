@@ -105,7 +105,7 @@ class Match {
 		}
 	}
 
-	func render( backgroundColor:UIColor? = nil, scale:CGFloat = 0 ) -> UIImage {
+	func render( backgroundColor:UIColor? = nil, scale:CGFloat = 0, watermark:Bool = false ) -> UIImage {
 
 		//
 		// first, render the match itself over a white background
@@ -130,6 +130,17 @@ class Match {
 			CGContextRestoreGState(context)
 		}
 
+		if watermark {
+			let watermark = SquizitTheme.exportWatermarkImage()
+			let margin = _stageSize.width * 0.025
+			let scale = _stageSize.width * 0.1 / watermark.size.width
+			let size = CGSize( width: watermark.size.width * scale, height: watermark.size.height * scale )
+			let watermarkRect = CGRect( x: _stageSize.width - margin - size.width, y: _stageSize.height - margin - size.height, width: size.width, height: size.height )
+
+			watermark.drawInRect( watermarkRect, blendMode: kCGBlendModeNormal, alpha: 1)
+		}
+
+
 		var rendering = UIGraphicsGetImageFromCurrentImageContext()
 		UIGraphicsEndImageContext()
 
@@ -149,6 +160,7 @@ class Match {
 			rendering = UIGraphicsGetImageFromCurrentImageContext()
 			UIGraphicsEndImageContext()
 		}
+
 
 		return rendering
 	}

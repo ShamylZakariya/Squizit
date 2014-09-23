@@ -69,22 +69,36 @@ class SquizitTheme {
 		return UIColor( patternImage: self.cubeBackgroundImage() )
 	}
 
+	// background color of paper surface (e.g., background of drawing canvas)
 	class func paperBackgroundColor( scale:CGFloat = 0 ) -> UIColor {
 		return UIColor( patternImage: self.paperBackgroundImage( scale: scale ) )
 	}
 
+	// background color for when a match is exported
+	class func exportedMatchBackgroundColor() -> UIColor {
+		return UIColor.whiteColor()
+	}
+
+	class func exportWatermarkImage() -> UIImage {
+		return UIImage(named:"export-watermark")
+	}
+
+	// background color for the match view
 	class func matchBackgroundColor() -> UIColor {
 		return UIColor( patternImage: self.leatherBackgroundImage() )
 	}
 
+	// background color for the shields displayed during matches
 	class func matchShieldBackgroundColor() -> UIColor {
 		return UIColor( patternImage: self.leatherBackgroundImage() )
 	}
 
+	// background color for gallery collection view
 	class func galleryBackgroundColor() -> UIColor {
 		return UIColor( patternImage: self.leatherBackgroundImage() )
 	}
 
+	// background color for gallery drawing thumbnails
 	class func thumbnailBackgroundColor() -> UIColor {
 		return UIColor( patternImage: self.thumbnailPaperBackgroundImage() )
 	}

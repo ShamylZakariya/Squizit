@@ -59,7 +59,7 @@ class GalleryDetailCollectionViewCell : UICollectionViewCell {
 class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 	private var _renderQueue = dispatch_queue_create("com.zakariya.squizit.GalleryDetailRenderQueue", nil)
-	private var _matchBackgroundColor = SquizitTheme.paperBackgroundColor()
+	private var _drawingBackgroundColor = SquizitTheme.paperBackgroundColor()
 
 	override var cellIdentifier:String {
 		return GalleryDetailCollectionViewCell.identifier()
@@ -71,7 +71,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 
 	override func configureCell( cell:UICollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
 		let store = self.store
-		let backgroundColor = _matchBackgroundColor
+		let backgroundColor = _drawingBackgroundColor
 		let flowLayout = self.collectionView.collectionViewLayout as UICollectionViewFlowLayout
 		let itemSize = flowLayout.itemSize
 		let thumbnailHeight = itemSize.height * 0.8
@@ -265,9 +265,10 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 				//	Note: we're rendering the match in retina so it looks super good
 				//
 
+				var background = SquizitTheme.exportedMatchBackgroundColor()
 				var match = matchLoadResult.value
 				var scale:CGFloat = 2
-				var rendering = match.render( backgroundColor: SquizitTheme.paperBackgroundColor(scale:scale), scale:scale )
+				var rendering = match.render( backgroundColor: background, scale:scale, watermark: true )
 
 				dispatch_main {
 					done( rendering:rendering )
