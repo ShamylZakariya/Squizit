@@ -207,6 +207,11 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 		}
 	}
 
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
+		updateScrollPageIndex()
+	}
+
 	override func viewWillLayoutSubviews() {
 		updateItemSize()
 	}
@@ -281,35 +286,41 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 
 
 	override func scrollViewDidScroll(scrollView: UIScrollView) {
-		updateTitle()
+		updateScrollPageIndex()
 	}
 
 	override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-		updateTitle()
+		updateScrollPageIndex()
 	}
 
-	private var _debouncedTitleUpdater:(()->())?
-	private func updateTitle() {
-		var collectionView = self.collectionView!
-		var flow = collectionView.collectionViewLayout as UICollectionViewFlowLayout
-		var numItems = _dataSource.collectionView(collectionView, numberOfItemsInSection: 0)
-		if numItems > 1 {
+	private func numItems() -> Int {
+		if let collectionView = self.collectionView {
+			let flow = collectionView.collectionViewLayout as UICollectionViewFlowLayout
+			let numItems = _dataSource.collectionView(collectionView, numberOfItemsInSection: 0)
+			return numItems
+		}
 
-			if _debouncedTitleUpdater == nil {
-				_debouncedTitleUpdater = debounce(0.1, {
-					[weak self] () -> () in
-					if let sself = self {
+		return 0
+	}
 
-						var itemWidth = flow.itemSize.width
-						var totalWidth = collectionView.contentSize.width
-						var position = collectionView.contentOffset.x / totalWidth
-						var index = Int(floor( CGFloat(position) * CGFloat(numItems) + CGFloat(0.5))) + 1
-						sself.title = "Drawing \(index) of \(numItems)"
-					}
-				})
+	private func updateScrollPageIndex() {
+		if let collectionView = self.collectionView {
+			let flow = collectionView.collectionViewLayout as UICollectionViewFlowLayout
+			let numItems = _dataSource.collectionView(collectionView, numberOfItemsInSection: 0)
+
+			let itemWidth = flow.itemSize.width
+			let totalWidth = collectionView.contentSize.width
+			let position = collectionView.contentOffset.x / totalWidth
+
+			scrollPageIndex = max(Int(floor( CGFloat(position) * CGFloat(numItems) + CGFloat(0.5))), 0 )
+		}
+	}
+
+	private var scrollPageIndex:Int = -1 {
+		didSet {
+			if scrollPageIndex != oldValue {
+				self.title = "Drawing \(scrollPageIndex+1) of \(numItems())"
 			}
-
-			_debouncedTitleUpdater!()
 		}
 	}
 }
