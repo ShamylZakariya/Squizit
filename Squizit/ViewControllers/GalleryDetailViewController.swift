@@ -74,7 +74,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 		let backgroundColor = _drawingBackgroundColor
 		let flowLayout = self.collectionView.collectionViewLayout as UICollectionViewFlowLayout
 		let itemSize = flowLayout.itemSize
-		let thumbnailHeight = itemSize.height * 0.8
+		let thumbnailHeight = itemSize.height * 0.85
 
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
@@ -98,7 +98,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 			galleryCell.imageViewWidthConstraint.constant = thumbnailWidth
 
 			// offset the vertical centering constraint
-			galleryCell.imageViewCenterYAlignmentConstraint.constant = galleryCell.playerNamesLabel.intrinsicContentSize().height + galleryCell.matchDateLabel.intrinsicContentSize().height
+			galleryCell.imageViewCenterYAlignmentConstraint.constant = (galleryCell.playerNamesLabel.intrinsicContentSize().height + galleryCell.matchDateLabel.intrinsicContentSize().height) / 2
 
 			let queue = _renderQueue
 			galleryCell.renderAction = CancelableAction<UIImage>(action: { done, canceled in
