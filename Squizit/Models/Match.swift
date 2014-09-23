@@ -135,7 +135,7 @@ class Match {
 			let margin = _stageSize.width * 0.025
 			let scale = _stageSize.width * 0.1 / watermark.size.width
 			let size = CGSize( width: watermark.size.width * scale, height: watermark.size.height * scale )
-			let watermarkRect = CGRect( x: _stageSize.width - margin - size.width, y: _stageSize.height - margin - size.height, width: size.width, height: size.height )
+			let watermarkRect = CGRect( x: _stageSize.width - margin - size.width, y: _stageSize.height - margin - size.height, width: size.width, height: size.height ).integerRect
 
 			watermark.drawInRect( watermarkRect, blendMode: kCGBlendModeNormal, alpha: 1)
 		}
