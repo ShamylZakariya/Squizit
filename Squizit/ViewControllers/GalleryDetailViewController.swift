@@ -101,20 +101,24 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 			galleryCell.imageViewCenterYAlignmentConstraint.constant = galleryCell.playerNamesLabel.intrinsicContentSize().height + galleryCell.matchDateLabel.intrinsicContentSize().height
 
 			let queue = _renderQueue
-			galleryCell.renderAction = CancelableAction<UIImage>(action: { (done) -> () in
+			galleryCell.renderAction = CancelableAction<UIImage>(action: { done, canceled in
 
 				dispatch_async( queue ) {
 
 					if let buffer = ByteBuffer.fromNSData( drawing.match ) {
-						var matchLoadResult = buffer.getMatch()
-						if let error = matchLoadResult.error {
-							NSLog("Unable to load match from data, error: %@", error.message )
-							assertionFailure("Unable to load match from data, bailing" )
-						}
+						if !canceled() {
+							var matchLoadResult = buffer.getMatch()
+							if let error = matchLoadResult.error {
+								NSLog("Unable to load match from data, error: %@", error.message )
+								assertionFailure("Unable to load match from data, bailing" )
+							}
 
-						var match = matchLoadResult.value
-						var rendering = match.render( backgroundColor: backgroundColor )
-						done( result:rendering )
+							var match = matchLoadResult.value
+							if !canceled() {
+								var rendering = match.render( backgroundColor: backgroundColor )
+								done( result:rendering )
+							}
+						}
 					}
 				}
 

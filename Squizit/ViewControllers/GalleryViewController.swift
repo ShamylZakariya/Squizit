@@ -305,7 +305,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 			}
 
 			let queue = _thumbnailCompositorQueue
-			galleryCell.thumbnailLoadAction = CancelableAction<UIImage>(action: { (done) -> () in
+			galleryCell.thumbnailLoadAction = CancelableAction<UIImage>(action: { done, canceled in
 
 				dispatch_async( queue ) {
 
@@ -317,12 +317,14 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 					self._thumbnailBackgroundColor.set()
 					UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
 
-					thumbnail.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
-
-					thumbnail = UIGraphicsGetImageFromCurrentImageContext()
-					UIGraphicsEndImageContext()
-
-					done( result:thumbnail )
+					if !canceled() {
+						thumbnail.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
+						thumbnail = UIGraphicsGetImageFromCurrentImageContext()
+						UIGraphicsEndImageContext()
+						done( result:thumbnail )
+					} else {
+						UIGraphicsEndImageContext()
+					}
 				}
 			}, done: { ( result:UIImage ) -> () in
 				dispatch_async(dispatch_get_main_queue() ) {
