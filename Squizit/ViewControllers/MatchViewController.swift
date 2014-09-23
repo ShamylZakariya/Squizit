@@ -464,9 +464,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			let galleryStore = appDelegate.galleryStore
 			if let moc = galleryStore.managedObjectContext {
 
-				export( match ) {
-					[weak self]
-					( matchData: NSData?, thumbnailSize:CGSize, thumbnailData:NSData? ) -> Void in
+				export( match ) { matchData, thumbnailSize, thumbnailData in
 
 					// create the gallery drawing entity
 					let drawingEntity = GalleryDrawing.newInstanceInManagedObjectContext(moc)
@@ -496,12 +494,6 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 					// finish up
 					galleryStore.save()
 				}
-
-				let matchDataResult = match.serialize()
-				if let error = matchDataResult.error {
-					println("unable to save match to data, \(error.message)")
-					abort()
-				}
 			}
 		}
 
@@ -524,7 +516,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	func export( match:Match, done:((matchData:NSData?, thumbnailSize:CGSize, thumbnailData:NSData?) -> Void)) {
 
-			dispatch_async(exportQueue) { [unowned self] in
+			dispatch_async(exportQueue) {
 
 				let matchDataResult = match.serialize()
 				if let error = matchDataResult.error {
@@ -553,5 +545,5 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		println("saving image to \(targetURL)")
 		UIImagePNGRepresentation(image).writeToURL(targetURL, atomically: true)
 	}
-
+	
 }

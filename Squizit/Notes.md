@@ -1,5 +1,6 @@
 #TODO
 
+	- drop background color from match export
 	- Takes a LONG time to save a drawing to the gallery. Profile it. If it can't be made faster ( debug code??? ) look into running the save in a background queue, and immediately dismissing the view controller. Note, this could result in a scenario where a user might jump immediately to the gallery, and not see the match that just got saved. Need therefore to handle scenario where a match finishes save and comes in while we're viewing the gallery.
 
 	- In gallery detail view, pre-render the drawings before and after the current drawing, using my neat cancelable action. Use that to speed up panning. Because rendering is slow. Again, DEBUG?
