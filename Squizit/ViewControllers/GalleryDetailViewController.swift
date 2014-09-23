@@ -303,17 +303,29 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 		return 0
 	}
 
+	private var _debouncedUpdateScrollPageIndex:(()->())?
 	private func updateScrollPageIndex() {
-		if let collectionView = self.collectionView {
-			let flow = collectionView.collectionViewLayout as UICollectionViewFlowLayout
-			let numItems = _dataSource.collectionView(collectionView, numberOfItemsInSection: 0)
 
-			let itemWidth = flow.itemSize.width
-			let totalWidth = collectionView.contentSize.width
-			let position = collectionView.contentOffset.x / totalWidth
+		if _debouncedUpdateScrollPageIndex == nil {
+			_debouncedUpdateScrollPageIndex = debounce(0.1, {
+				[weak self] () -> () in
+				if let sself = self {
 
-			scrollPageIndex = max(Int(floor( CGFloat(position) * CGFloat(numItems) + CGFloat(0.5))), 0 )
+					if let collectionView = sself.collectionView {
+						let flow = collectionView.collectionViewLayout as UICollectionViewFlowLayout
+						let numItems = sself._dataSource.collectionView(collectionView, numberOfItemsInSection: 0)
+
+						let itemWidth = flow.itemSize.width
+						let totalWidth = collectionView.contentSize.width
+						let position = collectionView.contentOffset.x / totalWidth
+
+						sself.scrollPageIndex = max(Int(floor( CGFloat(position) * CGFloat(numItems) + CGFloat(0.5))), 0 )
+					}
+				}
+			})
 		}
+
+		_debouncedUpdateScrollPageIndex!()
 	}
 
 	private var scrollPageIndex:Int = -1 {
