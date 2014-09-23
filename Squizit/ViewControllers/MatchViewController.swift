@@ -50,7 +50,8 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			if matchActive {
 				matchView.player = self.step
 			} else if step == numPlayers {
-				// enable the
+				// disable drawing, and listen for a tap to show the save view controller
+				matchView.player = nil
 				endOfMatchGestureRecognizer.enabled = true
 			} else {
 				showSaveToGalleryQuery()
