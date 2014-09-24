@@ -74,7 +74,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 		let backgroundColor = _drawingBackgroundColor
 		let flowLayout = self.collectionView.collectionViewLayout as UICollectionViewFlowLayout
 		let itemSize = flowLayout.itemSize
-		let thumbnailHeight = itemSize.height * 0.8
+		let thumbnailHeight = itemSize.height * 0.85
 
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
@@ -98,40 +98,122 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 			galleryCell.imageViewWidthConstraint.constant = thumbnailWidth
 
 			// offset the vertical centering constraint
-			galleryCell.imageViewCenterYAlignmentConstraint.constant = galleryCell.playerNamesLabel.intrinsicContentSize().height + galleryCell.matchDateLabel.intrinsicContentSize().height
+			galleryCell.imageViewCenterYAlignmentConstraint.constant = (galleryCell.playerNamesLabel.intrinsicContentSize().height + galleryCell.matchDateLabel.intrinsicContentSize().height) / 2
 
 			let queue = _renderQueue
-			galleryCell.renderAction = CancelableAction<UIImage>(action: { done, canceled in
 
-				dispatch_async( queue ) {
+			let index = indexPath.item
+			let loader = loaderFor( index )
 
-					if let buffer = ByteBuffer.fromNSData( drawing.match ) {
-						if !canceled() {
-							var matchLoadResult = buffer.getMatch()
-							if let error = matchLoadResult.error {
-								NSLog("Unable to load match from data, error: %@", error.message )
-								assertionFailure("Unable to load match from data, bailing" )
-							}
+			//
+			//	If the loader has completed already, just assign the image without animation
+			//	Otherwise, cache the loader so the cell can cancel it when reused, and set the done
+			//	action to assign the image
+			//
 
-							var match = matchLoadResult.value
-							if !canceled() {
-								var rendering = match.render( backgroundColor: backgroundColor )
-								done( result:rendering )
-							}
-						}
+			if let image = loader.result {
+				galleryCell.renderAction = nil
+				galleryCell.imageView.animate = false
+				galleryCell.imageView.image = image
+			} else {
+				galleryCell.renderAction = loader
+				galleryCell.renderAction!.done = { result in
+					dispatch_main {
+						galleryCell.imageView.animate = true
+						galleryCell.imageView.image = result
 					}
 				}
+			}
 
-			}, done:{ ( result:UIImage ) -> () in
-
-				dispatch_main {
-					galleryCell.imageView.image = result
-				}
-
-			})
+			// preload neighbor drawings, and prune drawings that are farther away
+			preloadAndPrune( index )
 
 		} else {
 			assertionFailure("Unable to vend a GalleryDrawing for index path")
+		}
+	}
+
+	private var _loaders:[Int:CancelableAction<UIImage>?] = [:]
+
+	private func loaderFor( index:Int ) -> CancelableAction<UIImage> {
+		let indexPath = NSIndexPath(forItem: index, inSection: 0 )
+		let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as GalleryDrawing
+
+		// check for an existing loader @ index
+		if let maybeExistingLoader = _loaders[index] {
+			if let existingLoader = maybeExistingLoader {
+				return existingLoader
+			}
+		}
+
+		// we need to create a new loader and store it @ index
+
+		let queue = _renderQueue
+		let backgroundColor = _drawingBackgroundColor
+		let loader = CancelableAction<UIImage>(action: { done, canceled in
+
+			dispatch_async( queue ) {
+				if let buffer = ByteBuffer.fromNSData( drawing.match ) {
+					if !canceled() {
+						var matchLoadResult = buffer.getMatch()
+						if let error = matchLoadResult.error {
+							NSLog("Unable to load match from data, error: %@", error.message )
+							assertionFailure("Unable to load match from data, bailing" )
+						}
+
+						var match = matchLoadResult.value
+						if !canceled() {
+							var rendering = match.render( backgroundColor: backgroundColor )
+							done( result:rendering )
+						}
+					}
+				}
+			}
+		})
+
+		_loaders[index] = loader
+		return loader
+	}
+
+	/*
+		Ensures loaders are allocated for (index - 1) and (index + 1), and
+		cancels and clears loaders outside that range
+	*/
+	private func preloadAndPrune( index:Int ) {
+
+		// preload neighbors
+		let count = self.count
+
+		if index > 0 {
+			loaderFor( index - 1 )
+		}
+
+		if index < count - 1 {
+			loaderFor( index + 1 )
+		}
+
+		// prune loaders up to but not including index - 1
+		if index > 2 {
+			for i in 0 ..< index - 1 {
+				if let maybeLoader = _loaders[i] {
+					if let loader = maybeLoader {
+						loader.cancel()
+					}
+					_loaders[i] = nil
+				}
+			}
+		}
+
+		// prune loaders from index + 2 to end
+		if index < count - 2 {
+			for i in index + 2 ..< count {
+				if let maybeLoader = _loaders[i] {
+					if let loader = maybeLoader {
+						loader.cancel()
+					}
+					_loaders[i] = nil
+				}
+			}
 		}
 	}
 
@@ -205,6 +287,11 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 				atScrollPosition: .CenteredVertically | .CenteredHorizontally,
 				animated: false)
 		}
+	}
+
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
+		updateScrollPageIndex()
 	}
 
 	override func viewWillLayoutSubviews() {
@@ -281,35 +368,48 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 
 
 	override func scrollViewDidScroll(scrollView: UIScrollView) {
-		updateTitle()
+		updateScrollPageIndex()
 	}
 
 	override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-		updateTitle()
+		updateScrollPageIndex()
 	}
 
-	private var _debouncedTitleUpdater:(()->())?
-	private func updateTitle() {
-		var collectionView = self.collectionView!
-		var flow = collectionView.collectionViewLayout as UICollectionViewFlowLayout
-		var numItems = _dataSource.collectionView(collectionView, numberOfItemsInSection: 0)
-		if numItems > 1 {
+	private var _debouncedUpdateScrollPageIndex:(()->())?
+	private func updateScrollPageIndex() {
 
-			if _debouncedTitleUpdater == nil {
-				_debouncedTitleUpdater = debounce(0.1, {
-					[weak self] () -> () in
-					if let sself = self {
+		if _debouncedUpdateScrollPageIndex == nil {
+			_debouncedUpdateScrollPageIndex = debounce(0.1, {
+				[weak self] () -> () in
+				if let sself = self {
 
-						var itemWidth = flow.itemSize.width
-						var totalWidth = collectionView.contentSize.width
-						var position = collectionView.contentOffset.x / totalWidth
-						var index = Int(floor( CGFloat(position) * CGFloat(numItems) + CGFloat(0.5))) + 1
-						sself.title = "Drawing \(index) of \(numItems)"
+					if let collectionView = sself.collectionView {
+						let flow = collectionView.collectionViewLayout as UICollectionViewFlowLayout
+						let numItems = sself._dataSource.collectionView(collectionView, numberOfItemsInSection: 0)
+
+						let itemWidth = flow.itemSize.width
+						let totalWidth = collectionView.contentSize.width
+						let position = collectionView.contentOffset.x / totalWidth
+
+						sself.scrollPageIndex = max(Int(floor( CGFloat(position) * CGFloat(numItems) + CGFloat(0.5))), 0 )
 					}
-				})
-			}
+				}
+			})
+		}
 
-			_debouncedTitleUpdater!()
+		_debouncedUpdateScrollPageIndex!()
+	}
+
+	private var scrollPageIndex:Int = -1 {
+		didSet {
+			if scrollPageIndex != oldValue {
+				self.title = "Drawing \(scrollPageIndex+1) of \(numPages)"
+			}
 		}
 	}
+
+	private var numPages:Int {
+		return _dataSource.count
+	}
+
 }

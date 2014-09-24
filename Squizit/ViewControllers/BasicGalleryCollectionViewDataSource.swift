@@ -37,11 +37,15 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 		return ""
 	}
 
+	var count:Int {
+		let info = self.fetchedResultsController.sections![0] as NSFetchedResultsSectionInfo
+		return info.numberOfObjects
+	}
+
 	// MARK: UICollectionViewDataSource
 
 	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		let info = self.fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
-		return info.numberOfObjects
+		return self.count
 	}
 
 	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
