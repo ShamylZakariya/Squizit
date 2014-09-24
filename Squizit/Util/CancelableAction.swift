@@ -18,12 +18,15 @@ class CancelableAction<T> {
 	private var _canceled:Bool = false
 	private var _result:T?
 
-	init( action:Action, done:Done ) {
+	init( action:Action, done:Done? ) {
+		self.done = done
 		action({ [weak self] result in
 			if let sself = self {
 				if !sself._canceled {
 					sself._result = result
-					done( result:result )
+					if let done = sself.done {
+						done( result:result )
+					}
 				}
 			}
 		}, { [weak self] in
@@ -35,10 +38,41 @@ class CancelableAction<T> {
 		})
 	}
 
+	/*
+		Create a CancelableAction without a done block
+		When this action is complete, result will be assigned.
+		If a done block is assigned later, when the action completes that done block will be invoked.
+		If when the done block is assigned the action has already completed, the done block will be immediately invoked.
+	*/
+	convenience init( action:Action ) {
+		self.init( action: action, done: nil )
+	}
+
+	/*
+		Assign done block
+		If the action has already completed ( result != nil ) the assigned done block will be immediately run
+	*/
+	var done:Done? {
+		didSet {
+			if let result = self.result {
+				if let done = self.done {
+					done( result: result )
+				}
+			}
+		}
+	}
+
+	/*
+		If the action has completed execution the result is available here
+	*/
 	var result:T? {
 		return _result
 	}
 
+	/*
+		Cancel this action's execution
+		This means the done block will never be invoked, and result will never be assigned.
+	*/
 	func cancel(){
 		_canceled = true
 	}

@@ -21,6 +21,8 @@ class ImagePresenterView : UIView {
 		commonInit()
 	}
 
+	var animate:Bool = true
+
 	var image:UIImage? {
 		didSet {
 			_imageView.image = image
@@ -55,23 +57,34 @@ class ImagePresenterView : UIView {
 
 	private func update() {
 
-		let duration:NSTimeInterval = 0.2
 		let placeholderImageView = _placeholderImageView
 		let imageView = _imageView
 
-		if let image = self.image {
+		if animate {
+			let duration:NSTimeInterval = 0.2
 
-			UIView.animateWithDuration(duration, animations: { () -> Void in
+			if let image = self.image {
+
+				UIView.animateWithDuration(duration, animations: { () -> Void in
+					placeholderImageView.alpha = 0
+					imageView.alpha = 1
+				})
+
+			} else {
+
+				// don't animate transition to placeholder since this is being used in collection views and we nil the image during recycling
+				placeholderImageView.alpha = placeholderImage != nil ? 1 : 0
+				imageView.alpha = 0
+
+			}
+		} else {
+			if let image = self.image {
 				placeholderImageView.alpha = 0
 				imageView.alpha = 1
-			})
-
-		} else {
-
-			// don't animate transition to placeholder since this is being used in collection views and we nil the image during recycling
-			placeholderImageView.alpha = placeholderImage != nil ? 1 : 0
-			imageView.alpha = 0
-
+			} else {
+				placeholderImageView.alpha = placeholderImage != nil ? 1 : 0
+				imageView.alpha = 0
+			}
 		}
 
 	}
