@@ -37,22 +37,28 @@
 + (instancetype) newInstanceInManagedObjectContext: (NSManagedObjectContext*) context;
 + (NSString*) entityName;
 
-@property (nonatomic, retain) NSData * thumbnail;
+@property (nonatomic) NSTimeInterval date;
 @property (nonatomic, retain) NSData * match;
 @property (nonatomic) int16_t numPlayers;
 @property (nonatomic) BOOL starred;
-@property (nonatomic) NSTimeInterval date;
-@property (nonatomic, retain) NSSet *artists;
-@property (nonatomic, retain) NSString * uuid;
-@property (nonatomic) int32_t thumbnailWidth;
+@property (nonatomic, retain) NSData * thumbnail;
 @property (nonatomic) int32_t thumbnailHeight;
+@property (nonatomic) int32_t thumbnailWidth;
+@property (nonatomic, retain) NSString * uuid;
+@property (nonatomic, retain) NSOrderedSet *artists;
+
 @end
 
 @interface GalleryDrawing (CoreDataGeneratedAccessors)
 
+- (void)insertObject:(GalleryArtist *)value inArtistsAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromArtistsAtIndex:(NSUInteger)idx;
+- (void)insertArtists:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeArtistsAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInArtistsAtIndex:(NSUInteger)idx withObject:(GalleryArtist *)value;
+- (void)replaceArtistsAtIndexes:(NSIndexSet *)indexes withArtists:(NSArray *)values;
 - (void)addArtistsObject:(GalleryArtist *)value;
 - (void)removeArtistsObject:(GalleryArtist *)value;
-- (void)addArtists:(NSSet *)values;
-- (void)removeArtists:(NSSet *)values;
-
+- (void)addArtists:(NSOrderedSet *)values;
+- (void)removeArtists:(NSOrderedSet *)values;
 @end

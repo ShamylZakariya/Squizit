@@ -23,6 +23,7 @@
 		638576EC19A6481500581DE8 /* SquizitTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EB19A6481500581DE8 /* SquizitTheme.swift */; };
 		638576F019A65B4500581DE8 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EF19A65B4500581DE8 /* Geometry.swift */; };
 		638E459219C88EEC008D8CD9 /* RootBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638E459119C88EEC008D8CD9 /* RootBorderView.swift */; };
+		63A4B7ED19D46C9700975048 /* Images.xcassets in Sources */ = {isa = PBXBuildFile; fileRef = 63BBEC9A19967A2300F6E2B3 /* Images.xcassets */; };
 		63B44AF519990DA100AE7B62 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBB19967B0C00F6E2B3 /* Stroke.swift */; };
 		63B44AF619990DA100AE7B62 /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB519967ACC00F6E2B3 /* Drawing.swift */; };
 		63B44AF719990DA100AE7B62 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
@@ -467,6 +468,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63A4B7ED19D46C9700975048 /* Images.xcassets in Sources */,
 				63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */,
 				63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */,
 				636CEA24199E586400BEBF53 /* DrawingInputController.swift in Sources */,

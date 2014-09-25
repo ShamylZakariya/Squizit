@@ -13,10 +13,10 @@
         <attribute name="thumbnailHeight" optional="YES" attributeType="Integer 32" defaultValueString="0.0" syncable="YES"/>
         <attribute name="thumbnailWidth" optional="YES" attributeType="Integer 32" defaultValueString="0.0" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="artists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GalleryArtist" inverseName="drawings" inverseEntity="GalleryArtist" syncable="YES"/>
+        <relationship name="artists" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="GalleryArtist" inverseName="drawings" inverseEntity="GalleryArtist" syncable="YES"/>
     </entity>
     <elements>
         <element name="GalleryArtist" positionX="-54" positionY="18" width="128" height="73"/>
-        <element name="GalleryDrawing" positionX="-63" positionY="-18" width="128" height="180"/>
+        <element name="GalleryDrawing" positionX="-63" positionY="-18" width="128" height="178"/>
     </elements>
 </model>

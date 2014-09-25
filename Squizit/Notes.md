@@ -1,7 +1,5 @@
 #TODO
 
-	- In gallery detail view, pre-render the drawings before and after the current drawing, using my neat cancelable action. Use that to speed up panning. Because rendering is slow. Again, DEBUG?
-
 	- make SaveToGalleryViewController a more modern VC with a custom segue overlay
 		this means I will manually manage the blanker view, and will have to manually manage the content view inside it
 

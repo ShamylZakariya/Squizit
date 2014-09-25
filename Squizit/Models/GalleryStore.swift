@@ -15,17 +15,41 @@ let GalleryStoreErrorCodeInitializationError = 0001
 
 extension GalleryDrawing {
 
-	var artistDisplayNames:String {
-		if artists.count > 0 {
-			var artistNames:[String] = []
-			for artist in artists {
-				artistNames.append(artist.name)
-			}
+//	var artistDisplayNames:String {
+//		if artists.count > 0 {
+//			var artistNames:[String] = []
+//			for artist in artists {
+//				artistNames.append(artist.name)
+//			}
+//
+//			return (artistNames as NSArray).componentsJoinedByString(", ")
+//		}
+//
+//		return NSLocalizedString("Anonymous", comment: "No artist specified for gallery detail image")
+//	}
 
-			return (artistNames as NSArray).componentsJoinedByString(", ")
+	var artistDisplayNames:String {
+		var artistNames:[String] = []
+
+		// NSOrderedSet doesn't support for in loop in swift, apparently
+		artists.enumerateObjectsUsingBlock { artist, index, _ in
+			artistNames.append(artist.name)
 		}
 
-		return NSLocalizedString("Anonymous", comment: "No artist specified for gallery detail image")
+
+		switch artistNames.count {
+			case 0: return NSLocalizedString("Anonymous", comment: "No artist specified for gallery detail image")
+			case 1: return artistNames[0]
+			case 2: return artistNames[0] + " & " + artistNames[1]
+			default:
+				var str = artistNames[0]
+				for i in 1 ..< artistNames.count {
+					str += i < artistNames.count - 1 ? ", " : ", & "
+					str += artistNames[i]
+				}
+
+				return str
+		}
 	}
 
 }

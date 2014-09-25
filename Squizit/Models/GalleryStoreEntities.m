@@ -65,15 +65,23 @@
 }
 
 
-@dynamic thumbnail;
+@dynamic date;
 @dynamic match;
 @dynamic numPlayers;
 @dynamic starred;
-@dynamic date;
-@dynamic artists;
-@dynamic uuid;
-@dynamic thumbnailWidth;
+@dynamic thumbnail;
 @dynamic thumbnailHeight;
+@dynamic thumbnailWidth;
+@dynamic uuid;
+@dynamic artists;
+
+- (void)addArtistsObject:(GalleryArtist *)value {
+	// workaround for http://stackoverflow.com/questions/7385439/exception-thrown-in-nsorderedset-generated-accessors
+	// WTF, Apple
+	NSMutableOrderedSet* tempSet = [NSMutableOrderedSet orderedSetWithOrderedSet:self.artists];
+	[tempSet addObject:value];
+	self.artists = tempSet;
+}
 
 
 @end
