@@ -336,45 +336,6 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 
 	// MARK: Actions
 
-	dynamic func shareDrawingToTwitter( sender:AnyObject ) {
-		// first get the current item
-		if let indexPath = self.collectionView!.indexPathsForVisibleItems().first as? NSIndexPath {
-			if let drawing = _dataSource.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
-
-				export(drawing) {
-					[weak self] (rendering:UIImage)->Void in
-					if let sself = self {
-
-						var message:String = "@squizitapp"
-
-						let activityController = UIActivityViewController( activityItems: [message,rendering], applicationActivities: nil)
-
-						// this should be everything BUT twitter
-						activityController.excludedActivityTypes = [
-							UIActivityTypePostToFacebook,
-							UIActivityTypePostToWeibo,
-							UIActivityTypeMessage,
-							UIActivityTypeMail,
-							UIActivityTypePrint,
-							UIActivityTypeCopyToPasteboard,
-							UIActivityTypeAssignToContact,
-							UIActivityTypeSaveToCameraRoll,
-							UIActivityTypeAddToReadingList,
-							UIActivityTypePostToFlickr,
-							UIActivityTypePostToVimeo,
-							UIActivityTypePostToTencentWeibo,
-							UIActivityTypeAirDrop
-						]
-
-						activityController.popoverPresentationController?.barButtonItem = sender as UIBarButtonItem
-						activityController.view.tintColor = SquizitTheme.alertTintColor()
-						sself.presentViewController(activityController, animated: true, completion: nil)
-					}
-				}
-			}
-		}
-	}
-
 	dynamic func shareDrawing( sender:AnyObject ) {
 
 		// first get the current item
