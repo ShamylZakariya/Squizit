@@ -190,136 +190,6 @@
             </objects>
             <point key="canvasLocation" x="1819" y="698"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="4gf-ia-vho">
-            <objects>
-                <viewController id="7Eu-Im-FY7" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="I4e-E1-zFg"/>
-                        <viewControllerLayoutGuide type="bottom" id="D6I-oV-UyA"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="qYH-Gg-4ZW">
-                        <rect key="frame" x="0.0" y="0.0" width="328" height="419"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="save-to-gallery-dialog-title" translatesAutoresizingMaskIntoConstraints="NO" id="RfD-7v-KLm">
-                                <rect key="frame" x="90" y="56" width="149" height="61"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="61" id="TmZ-ub-HYK"/>
-                                    <constraint firstAttribute="width" secondItem="RfD-7v-KLm" secondAttribute="height" multiplier="149:61" id="cMq-KJ-1o0"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Do you want to mark down who played?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="08W-p7-jUF">
-                                <rect key="frame" x="16" y="133" width="296" height="20"/>
-                                <fontDescription key="fontDescription" name="Avenir-MediumOblique" family="Avenir" pointSize="14"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player one..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ju1-Ai-NgK" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
-                                <rect key="frame" x="16" y="169" width="296" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
-                                <connections>
-                                    <outlet property="delegate" destination="7Eu-Im-FY7" id="gXR-va-FB5"/>
-                                    <outlet property="nextField" destination="Xea-rQ-9Ao" id="UVl-ZJ-1Sh"/>
-                                </connections>
-                            </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player two..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xea-rQ-9Ao" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
-                                <rect key="frame" x="16" y="207" width="296" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
-                                <connections>
-                                    <outlet property="delegate" destination="7Eu-Im-FY7" id="Bpn-uU-MJQ"/>
-                                    <outlet property="nextField" destination="oPi-fY-7gf" id="7i7-19-Lrm"/>
-                                </connections>
-                            </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player three..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oPi-fY-7gf" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
-                                <rect key="frame" x="16" y="245" width="296" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
-                                <connections>
-                                    <outlet property="delegate" destination="7Eu-Im-FY7" id="B3W-yH-mzh"/>
-                                    <outlet property="nextField" destination="ju1-Ai-NgK" id="Rhe-dZ-SCD"/>
-                                </connections>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PF3-zP-FSb" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                <rect key="frame" x="16" y="359" width="296" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="iAt-qe-eua"/>
-                                </constraints>
-                                <state key="normal" title="DISCARD">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="discard:" destination="7Eu-Im-FY7" eventType="touchUpInside" id="oMn-KU-61e"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ap7-zN-M7S" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                <rect key="frame" x="16" y="299" width="296" height="44"/>
-                                <state key="normal" title="ADD TO GALLERY">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="addToGallery:" destination="7Eu-Im-FY7" eventType="touchUpInside" id="eUd-O8-nel"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" red="0.13725490196078433" green="0.13725490196078433" blue="0.13725490196078433" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstItem="oPi-fY-7gf" firstAttribute="top" secondItem="Xea-rQ-9Ao" secondAttribute="bottom" constant="8" id="22h-7h-VlN"/>
-                            <constraint firstItem="D6I-oV-UyA" firstAttribute="top" secondItem="PF3-zP-FSb" secondAttribute="bottom" constant="16" id="7PM-pX-P1U"/>
-                            <constraint firstAttribute="centerX" secondItem="08W-p7-jUF" secondAttribute="centerX" id="HSL-zP-ydc"/>
-                            <constraint firstAttribute="centerX" secondItem="oPi-fY-7gf" secondAttribute="centerX" id="IGw-UF-moa"/>
-                            <constraint firstItem="Xea-rQ-9Ao" firstAttribute="width" secondItem="PF3-zP-FSb" secondAttribute="width" id="Lfz-zI-Xmy"/>
-                            <constraint firstItem="PF3-zP-FSb" firstAttribute="width" secondItem="ap7-zN-M7S" secondAttribute="width" id="NSj-tL-LVc"/>
-                            <constraint firstItem="08W-p7-jUF" firstAttribute="leading" secondItem="qYH-Gg-4ZW" secondAttribute="leadingMargin" id="TTh-xI-yG2"/>
-                            <constraint firstItem="PF3-zP-FSb" firstAttribute="height" secondItem="ap7-zN-M7S" secondAttribute="height" id="VB0-W3-2LO"/>
-                            <constraint firstItem="PF3-zP-FSb" firstAttribute="width" secondItem="08W-p7-jUF" secondAttribute="width" id="XIX-gw-HIv"/>
-                            <constraint firstAttribute="centerX" secondItem="ju1-Ai-NgK" secondAttribute="centerX" id="Yao-3Q-nc4"/>
-                            <constraint firstItem="ju1-Ai-NgK" firstAttribute="width" secondItem="PF3-zP-FSb" secondAttribute="width" id="ZGa-yI-aXo"/>
-                            <constraint firstItem="08W-p7-jUF" firstAttribute="top" secondItem="RfD-7v-KLm" secondAttribute="bottom" constant="16" id="ZeR-74-Not"/>
-                            <constraint firstItem="08W-p7-jUF" firstAttribute="trailing" secondItem="qYH-Gg-4ZW" secondAttribute="trailingMargin" id="cCC-GX-bOO"/>
-                            <constraint firstItem="PF3-zP-FSb" firstAttribute="top" secondItem="ap7-zN-M7S" secondAttribute="bottom" constant="16" id="efc-iA-Jmn"/>
-                            <constraint firstItem="RfD-7v-KLm" firstAttribute="top" secondItem="I4e-E1-zFg" secondAttribute="bottom" constant="36" id="egH-Pk-LDa"/>
-                            <constraint firstAttribute="centerX" secondItem="RfD-7v-KLm" secondAttribute="centerX" id="h5Y-oU-GAO"/>
-                            <constraint firstAttribute="centerX" secondItem="Xea-rQ-9Ao" secondAttribute="centerX" id="jBV-Xo-U7X"/>
-                            <constraint firstItem="Xea-rQ-9Ao" firstAttribute="top" secondItem="ju1-Ai-NgK" secondAttribute="bottom" constant="8" id="kIN-VZ-rLO"/>
-                            <constraint firstItem="ju1-Ai-NgK" firstAttribute="top" secondItem="08W-p7-jUF" secondAttribute="bottom" constant="16" id="kuW-X6-MTT"/>
-                            <constraint firstAttribute="centerX" secondItem="PF3-zP-FSb" secondAttribute="centerX" id="tna-IA-QR5"/>
-                            <constraint firstItem="PF3-zP-FSb" firstAttribute="leading" secondItem="qYH-Gg-4ZW" secondAttribute="leading" constant="16" id="txl-lu-duC"/>
-                            <constraint firstAttribute="centerX" secondItem="ap7-zN-M7S" secondAttribute="centerX" id="w86-pe-tfC"/>
-                            <constraint firstItem="oPi-fY-7gf" firstAttribute="width" secondItem="PF3-zP-FSb" secondAttribute="width" id="wm1-jV-Me3"/>
-                            <constraint firstAttribute="trailing" secondItem="PF3-zP-FSb" secondAttribute="trailing" constant="16" id="zO4-T1-cSB"/>
-                        </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="TTh-xI-yG2"/>
-                                <exclude reference="cCC-GX-bOO"/>
-                                <exclude reference="zO4-T1-cSB"/>
-                            </mask>
-                        </variation>
-                    </view>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="328" height="419"/>
-                    <connections>
-                        <outlet property="addToGalleryButton" destination="ap7-zN-M7S" id="5uI-cD-MMa"/>
-                        <outlet property="bottomMarginConstraint" destination="7PM-pX-P1U" id="gyG-hg-X8D"/>
-                        <outlet property="buttonHeightConstraint" destination="iAt-qe-eua" id="bmu-Fk-7cF"/>
-                        <outlet property="buttonSpacingConstraint" destination="efc-iA-Jmn" id="ZVh-rr-e6J"/>
-                        <outlet property="discardButton" destination="PF3-zP-FSb" id="SEc-yN-fVC"/>
-                        <outlet property="playerOneNameInputField" destination="ju1-Ai-NgK" id="Yd8-4V-TzV"/>
-                        <outlet property="playerThreeNameInputField" destination="oPi-fY-7gf" id="lS0-lz-OYT"/>
-                        <outlet property="playerTwoNameInputField" destination="Xea-rQ-9Ao" id="b1t-fF-5Yb"/>
-                        <outlet property="questionLabel" destination="08W-p7-jUF" id="C8w-xF-u36"/>
-                        <outlet property="sideMarginConstraint" destination="txl-lu-duC" id="TxZ-Zw-7aX"/>
-                        <outlet property="titleHeightConstraint" destination="TmZ-ub-HYK" id="Gtq-eu-0ru"/>
-                        <outlet property="topMarginConstraint" destination="egH-Pk-LDa" id="Bos-IT-VOa"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Qt2-yW-UU1" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3136" y="89.5"/>
-        </scene>
         <!--Save To Gallery View Controller-->
         <scene sceneID="GAw-z2-x3Z">
             <objects>
@@ -353,7 +223,6 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
                                         <connections>
-                                            <outlet property="delegate" destination="7Eu-Im-FY7" id="Uxp-jh-EsH"/>
                                             <outlet property="nextField" destination="Glt-jM-liY" id="pZ3-7U-jFF"/>
                                         </connections>
                                     </textField>
@@ -362,7 +231,6 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
                                         <connections>
-                                            <outlet property="delegate" destination="7Eu-Im-FY7" id="nXY-OM-p0b"/>
                                             <outlet property="nextField" destination="5By-5F-Zrp" id="9sG-cs-YN9"/>
                                         </connections>
                                     </textField>
@@ -375,7 +243,6 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="discard:" destination="7Eu-Im-FY7" eventType="touchUpInside" id="BaN-2p-X0s"/>
                                             <action selector="discard:" destination="5a9-GW-y81" eventType="touchUpInside" id="jfv-fr-kxv"/>
                                         </connections>
                                     </button>
@@ -385,7 +252,6 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="addToGallery:" destination="7Eu-Im-FY7" eventType="touchUpInside" id="0W0-Y6-UrZ"/>
                                             <action selector="addToGallery:" destination="5a9-GW-y81" eventType="touchUpInside" id="b7Z-P7-QAz"/>
                                         </connections>
                                     </button>
@@ -394,7 +260,6 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
                                         <connections>
-                                            <outlet property="delegate" destination="7Eu-Im-FY7" id="ZuI-af-jOd"/>
                                             <outlet property="nextField" destination="6mG-Y5-mXe" id="UJV-S5-7lv"/>
                                         </connections>
                                     </textField>
