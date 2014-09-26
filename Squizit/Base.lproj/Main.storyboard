@@ -183,16 +183,17 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="matchView" destination="ycd-Fs-v1p" id="McZ-dI-VIQ"/>
+                        <segue destination="5a9-GW-y81" kind="presentation" identifier="showSaveToGallery" modalPresentationStyle="overFullScreen" id="2B5-MN-07Z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TFS-CD-32v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1819" y="698"/>
         </scene>
-        <!--Save To Gallery View Controller-->
+        <!--View Controller-->
         <scene sceneID="4gf-ia-vho">
             <objects>
-                <viewController storyboardIdentifier="SaveToGallery" id="7Eu-Im-FY7" customClass="SaveToGalleryViewController" customModule="Squizit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="7Eu-Im-FY7" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="I4e-E1-zFg"/>
                         <viewControllerLayoutGuide type="bottom" id="D6I-oV-UyA"/>
@@ -317,7 +318,143 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qt2-yW-UU1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2548" y="698"/>
+            <point key="canvasLocation" x="3136" y="89.5"/>
+        </scene>
+        <!--Save To Gallery View Controller-->
+        <scene sceneID="GAw-z2-x3Z">
+            <objects>
+                <viewController storyboardIdentifier="SaveToGallery" id="5a9-GW-y81" customClass="SaveToGalleryViewController" customModule="Squizit" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="KX7-zj-uTh"/>
+                        <viewControllerLayoutGuide type="bottom" id="nGz-lz-Gxp"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="5iS-8Q-M9r">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="frv-RY-s5h">
+                                <rect key="frame" x="140" y="90" width="320" height="420"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="save-to-gallery-dialog-title" translatesAutoresizingMaskIntoConstraints="NO" id="Y7z-qL-RJe">
+                                        <rect key="frame" x="86" y="39" width="149" height="61"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="Y7z-qL-RJe" secondAttribute="height" multiplier="149:61" id="cVZ-1H-5qY"/>
+                                            <constraint firstAttribute="height" constant="61" id="fxg-Uy-2dV"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Do you want to mark down who played?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5gZ-ki-tmo">
+                                        <rect key="frame" x="16" y="115" width="288" height="20"/>
+                                        <fontDescription key="fontDescription" name="Avenir-MediumOblique" family="Avenir" pointSize="14"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player one..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5By-5F-Zrp" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="16" y="155" width="288" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="7Eu-Im-FY7" id="Uxp-jh-EsH"/>
+                                            <outlet property="nextField" destination="Glt-jM-liY" id="pZ3-7U-jFF"/>
+                                        </connections>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player three..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6mG-Y5-mXe" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="16" y="229" width="288" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="7Eu-Im-FY7" id="nXY-OM-p0b"/>
+                                            <outlet property="nextField" destination="5By-5F-Zrp" id="9sG-cs-YN9"/>
+                                        </connections>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JQl-hx-BjM" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="16" y="351" width="288" height="53"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="53" id="sRa-KZ-O4s"/>
+                                        </constraints>
+                                        <state key="normal" title="DISCARD">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="discard:" destination="7Eu-Im-FY7" eventType="touchUpInside" id="BaN-2p-X0s"/>
+                                            <action selector="discard:" destination="5a9-GW-y81" eventType="touchUpInside" id="jfv-fr-kxv"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qsj-3i-ih8" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="16" y="282" width="288" height="53"/>
+                                        <state key="normal" title="ADD TO GALLERY">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="addToGallery:" destination="7Eu-Im-FY7" eventType="touchUpInside" id="0W0-Y6-UrZ"/>
+                                            <action selector="addToGallery:" destination="5a9-GW-y81" eventType="touchUpInside" id="b7Z-P7-QAz"/>
+                                        </connections>
+                                    </button>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player two..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Glt-jM-liY" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="16" y="192" width="288" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="7Eu-Im-FY7" id="ZuI-af-jOd"/>
+                                            <outlet property="nextField" destination="6mG-Y5-mXe" id="UJV-S5-7lv"/>
+                                        </connections>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="JQl-hx-BjM" firstAttribute="leading" secondItem="frv-RY-s5h" secondAttribute="leading" constant="16" id="30K-Sl-4d1"/>
+                                    <constraint firstAttribute="centerX" secondItem="JQl-hx-BjM" secondAttribute="centerX" id="5kZ-t4-ZiP"/>
+                                    <constraint firstItem="Qsj-3i-ih8" firstAttribute="width" secondItem="JQl-hx-BjM" secondAttribute="width" id="78e-rH-wh0"/>
+                                    <constraint firstItem="6mG-Y5-mXe" firstAttribute="width" secondItem="JQl-hx-BjM" secondAttribute="width" id="EK3-5M-BeQ"/>
+                                    <constraint firstItem="Glt-jM-liY" firstAttribute="width" secondItem="JQl-hx-BjM" secondAttribute="width" id="EMS-IR-jXr"/>
+                                    <constraint firstItem="6mG-Y5-mXe" firstAttribute="top" secondItem="Glt-jM-liY" secondAttribute="bottom" constant="7" id="JL4-9G-Voj"/>
+                                    <constraint firstItem="Y7z-qL-RJe" firstAttribute="top" secondItem="frv-RY-s5h" secondAttribute="top" constant="39" id="L8k-Lf-gWg"/>
+                                    <constraint firstItem="5By-5F-Zrp" firstAttribute="top" secondItem="5gZ-ki-tmo" secondAttribute="bottom" constant="20" id="NRz-n3-1BM"/>
+                                    <constraint firstAttribute="centerX" secondItem="Glt-jM-liY" secondAttribute="centerX" id="STf-J6-g4B"/>
+                                    <constraint firstItem="5gZ-ki-tmo" firstAttribute="top" secondItem="Y7z-qL-RJe" secondAttribute="bottom" constant="15" id="Stu-Be-84A"/>
+                                    <constraint firstAttribute="width" constant="320" id="Uvb-nY-ZY3"/>
+                                    <constraint firstAttribute="centerX" secondItem="5By-5F-Zrp" secondAttribute="centerX" id="V8J-4c-F9L"/>
+                                    <constraint firstAttribute="centerX" secondItem="5gZ-ki-tmo" secondAttribute="centerX" id="Wwt-29-Ci2"/>
+                                    <constraint firstAttribute="height" constant="420" id="crI-pw-M1q"/>
+                                    <constraint firstAttribute="centerX" secondItem="Y7z-qL-RJe" secondAttribute="centerX" id="gqV-h2-7FJ"/>
+                                    <constraint firstAttribute="bottom" secondItem="JQl-hx-BjM" secondAttribute="bottom" constant="16" id="hTk-Rw-NVK"/>
+                                    <constraint firstItem="Glt-jM-liY" firstAttribute="top" secondItem="5By-5F-Zrp" secondAttribute="bottom" constant="7" id="kDg-FG-LUn"/>
+                                    <constraint firstItem="Qsj-3i-ih8" firstAttribute="height" secondItem="JQl-hx-BjM" secondAttribute="height" id="kxX-My-7Ki"/>
+                                    <constraint firstItem="5gZ-ki-tmo" firstAttribute="width" secondItem="JQl-hx-BjM" secondAttribute="width" id="v9f-JP-K3a"/>
+                                    <constraint firstItem="JQl-hx-BjM" firstAttribute="top" secondItem="Qsj-3i-ih8" secondAttribute="bottom" constant="16" id="xRO-B8-3V6"/>
+                                    <constraint firstAttribute="centerX" secondItem="6mG-Y5-mXe" secondAttribute="centerX" id="xTy-S3-9yH"/>
+                                    <constraint firstAttribute="centerX" secondItem="Qsj-3i-ih8" secondAttribute="centerX" id="ynO-9W-qVC"/>
+                                    <constraint firstItem="JQl-hx-BjM" firstAttribute="width" secondItem="5By-5F-Zrp" secondAttribute="width" id="ywr-D9-dSH"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerY" secondItem="frv-RY-s5h" secondAttribute="centerY" id="jPv-No-gGI"/>
+                            <constraint firstAttribute="centerX" secondItem="frv-RY-s5h" secondAttribute="centerX" id="n8S-lt-8vP"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="addToGalleryButton" destination="Qsj-3i-ih8" id="rZB-uy-S6w"/>
+                        <outlet property="bottomMarginConstraint" destination="hTk-Rw-NVK" id="bbG-SA-kVr"/>
+                        <outlet property="buttonHeightConstraint" destination="sRa-KZ-O4s" id="Jbl-eh-Hku"/>
+                        <outlet property="buttonSpacingConstraint" destination="xRO-B8-3V6" id="bGH-Gu-OeH"/>
+                        <outlet property="dialogHeightConstraint" destination="crI-pw-M1q" id="MHO-1m-KYh"/>
+                        <outlet property="dialogVerticalCenteringConstraint" destination="jPv-No-gGI" id="YCd-aU-vhp"/>
+                        <outlet property="dialogView" destination="frv-RY-s5h" id="jqu-Gj-1pS"/>
+                        <outlet property="dialogWidthConstraint" destination="Uvb-nY-ZY3" id="Fvk-Kt-1G2"/>
+                        <outlet property="discardButton" destination="JQl-hx-BjM" id="twi-gO-MlR"/>
+                        <outlet property="playerOneNameInputField" destination="5By-5F-Zrp" id="cta-xR-nCF"/>
+                        <outlet property="playerThreeNameInputField" destination="6mG-Y5-mXe" id="nLd-HT-cqS"/>
+                        <outlet property="playerTwoNameInputField" destination="Glt-jM-liY" id="NsK-ZB-xGS"/>
+                        <outlet property="questionLabel" destination="5gZ-ki-tmo" id="9wP-Xv-Uhj"/>
+                        <outlet property="sideMarginConstraint" destination="30K-Sl-4d1" id="6Fg-1k-zzc"/>
+                        <outlet property="titleHeightConstraint" destination="fxg-Uy-2dV" id="2Rd-jX-Xmi"/>
+                        <outlet property="topMarginConstraint" destination="L8k-Lf-gWg" id="Zen-tW-f6j"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yBM-61-Mdd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2631" y="698"/>
         </scene>
         <!--Gallery View Controller-->
         <scene sceneID="Ydp-hj-bAr">
@@ -535,10 +672,10 @@
             </objects>
             <point key="canvasLocation" x="3472" y="1435"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Gallery Navigation Controller-->
         <scene sceneID="dAx-11-0sC">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AJ9-2T-z5F" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AJ9-2T-z5F" userLabel="Gallery Navigation Controller" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="MuP-cp-hES">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
@@ -553,10 +690,10 @@
             </objects>
             <point key="canvasLocation" x="1819" y="1449"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Drawing Test Navigation Controller-->
         <scene sceneID="tiY-kb-hEj">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2U9-PO-2Cg" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2U9-PO-2Cg" userLabel="Drawing Test Navigation Controller" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="yT5-oZ-X1J">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>

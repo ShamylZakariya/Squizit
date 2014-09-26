@@ -22,6 +22,8 @@ protocol SaveToGalleryDelegate : class {
 class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 
+
+	@IBOutlet weak var dialogView: UIView!
 	@IBOutlet weak var questionLabel: UILabel!
 	@IBOutlet weak var playerOneNameInputField: SquizitThemeNameInputField!
 	@IBOutlet weak var playerTwoNameInputField: SquizitThemeNameInputField!
@@ -37,6 +39,9 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	@IBOutlet weak var buttonHeightConstraint: NSLayoutConstraint!
 	@IBOutlet weak var buttonSpacingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var bottomMarginConstraint: NSLayoutConstraint!
+	@IBOutlet weak var dialogHeightConstraint: NSLayoutConstraint!
+	@IBOutlet weak var dialogWidthConstraint: NSLayoutConstraint!
+	@IBOutlet weak var dialogVerticalCenteringConstraint: NSLayoutConstraint!
 
 	weak var delegate:SaveToGalleryDelegate?
 
@@ -57,7 +62,9 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		view.backgroundColor = SquizitTheme.dialogBackgroundColor()
+		dialogView.opaque = false
+		dialogView.backgroundColor = SquizitTheme.dialogBackgroundColor()
+
 		discardButton.destructive = true
 		questionLabel.font = UIFont(name: "Baskerville-Italic", size: UIFont.labelFontSize())
 
@@ -211,16 +218,15 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 	private func layout() {
 		let dialogSize = self.dialogSize
-		self.view.superview?.bounds = CGRect(x: 0, y: 0, width: dialogSize.width, height: dialogSize.height)
-		view.superview?.layer.cornerRadius = 0
+		dialogHeightConstraint.constant = dialogSize.height
+		dialogWidthConstraint.constant = dialogSize.width
 
 		if keyboardHeight > 0 {
-			let screenHeight = UIScreen.mainScreen().bounds.height
-			if let superview = self.view.superview {
-				var frame = superview.frame
-				frame.origin.y = (screenHeight - keyboardHeight)/2 - dialogSize.height/2
-				superview.frame = frame
-			}
+			let totalHeight = view.bounds.height
+			let offset = (totalHeight - keyboardHeight)/2 - dialogSize.height/2
+			dialogVerticalCenteringConstraint.constant = offset
+		} else {
+			dialogVerticalCenteringConstraint.constant = 0
 		}
 	}
 
@@ -234,7 +240,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 			default: return CGSizeZero
 		}
 
-		let bottomHeight = view.bounds.height - addToGalleryButton.frame.minY
+		let bottomHeight = dialogView.bounds.height - addToGalleryButton.frame.minY
 		let padding:CGFloat = buttonSpacingConstraint.constant
 
 		return CGSize( width: 300, height: topHeight + padding + bottomHeight )
@@ -251,6 +257,6 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 		var effect = UIMotionEffectGroup()
 		effect.motionEffects = [horizontal, vertical]
-		self.view.superview!.addMotionEffect(effect)
+		dialogView.addMotionEffect(effect)
 	}
 }

@@ -248,8 +248,24 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		toolSelector.selectedToolIndex = 0
 	}
 
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
+	}
+
 	override func viewWillLayoutSubviews() {
 		self.syncToMatchState()
+	}
+
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+
+		switch segue.identifier {
+			case "showSaveToGallery":
+				let saveToGalleryVC = segue.destinationViewController as SaveToGalleryViewController
+				saveToGalleryVC.nameCount = numPlayers
+				saveToGalleryVC.delegate = self
+
+			default: break;
+		}
 	}
 
 	// MARK: Private
@@ -432,18 +448,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	}
 
 	func showSaveToGalleryQuery() {
-
-		//
-		//	Load from storyboard and present
-		//
-
-		let storyboard = UIStoryboard(name: "Main", bundle: nil)
-		var vc = storyboard.instantiateViewControllerWithIdentifier("SaveToGallery") as SaveToGalleryViewController
-		vc.modalPresentationStyle = UIModalPresentationStyle.FormSheet
-		vc.nameCount = numPlayers
-		vc.delegate = self
-
-		presentViewController(vc, animated: true, completion: nil)
+		performSegueWithIdentifier("showSaveToGallery", sender: self)
 	}
 
 
