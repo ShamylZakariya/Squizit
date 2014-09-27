@@ -75,6 +75,10 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		discardButton.destructive = true
 		questionLabel.font = UIFont(name: "Baskerville-Italic", size: UIFont.labelFontSize())
 
+		playerOneNameInputField.delegate = self
+		playerTwoNameInputField.delegate = self
+		playerThreeNameInputField.delegate = self
+
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
 	}
@@ -114,24 +118,38 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 				buttonHeightConstraint.constant = 65
 		}
 
-		// FIXME: When I make SaveToGalleryTransitionManager work, I can delete the faux transition animation
+		view.setNeedsUpdateConstraints()
 
+		//
+		// FIXME: When I make SaveToGalleryTransitionManager work, I can delete the faux transition animation
+		//
+
+		// pre-setup for faux transition animation
 		dialogView.alpha = 0
 		dialogView.transform = CGAffineTransformMakeScale(1.1, 1.1)
 
-		UIView.animateWithDuration(0.5, delay: 0.25, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.25, options: UIViewAnimationOptions(0), animations: { () -> Void in
-
+		UIView.animateWithDuration(0.4, delay: 0.25, options: .AllowUserInteraction, animations: { [unowned self] in
 			self.dialogView.alpha = 1
-			self.dialogView.transform = CGAffineTransformIdentity
-
 		}, completion: nil)
 
+		UIView.animateWithDuration(0.6,
+			delay: 0.25,
+			usingSpringWithDamping: 0.4,
+			initialSpringVelocity: 0.3,
+			options: .AllowUserInteraction,
+			animations: { [unowned self] in
+
+				self.dialogView.transform = CGAffineTransformIdentity
+
+			},
+			completion: nil)
 	}
 
 	private var _didAddMotionEffect:Bool = false
 
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
+
 		if !_didAddMotionEffect {
 			_didAddMotionEffect = true
 			addParallaxEffect()
@@ -141,10 +159,6 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		layout()
-	}
-
-	override func viewWillDisappear(animated: Bool) {
-		super.viewWillDisappear(animated)
 	}
 
 	// MARK: IBActions

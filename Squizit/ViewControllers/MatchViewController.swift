@@ -248,13 +248,6 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		toolSelector.selectedToolIndex = 0
 	}
 
-	override func viewDidAppear(animated: Bool) {
-		super.viewDidAppear(animated)
-
-		println("DEBUG - SHOWING SAVE TO GALLERY VC IMMEDIATELY")
-		showSaveToGalleryQuery()
-	}
-
 	override func viewWillLayoutSubviews() {
 		self.syncToMatchState()
 	}
