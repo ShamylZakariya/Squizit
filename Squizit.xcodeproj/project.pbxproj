@@ -24,6 +24,7 @@
 		638576F019A65B4500581DE8 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EF19A65B4500581DE8 /* Geometry.swift */; };
 		638E459219C88EEC008D8CD9 /* RootBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638E459119C88EEC008D8CD9 /* RootBorderView.swift */; };
 		63A4B7ED19D46C9700975048 /* Images.xcassets in Sources */ = {isa = PBXBuildFile; fileRef = 63BBEC9A19967A2300F6E2B3 /* Images.xcassets */; };
+		63A4B7F319D5C03400975048 /* SaveToGalleryTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A4B7F219D5C03400975048 /* SaveToGalleryTransitionManager.swift */; };
 		63B44AF519990DA100AE7B62 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBB19967B0C00F6E2B3 /* Stroke.swift */; };
 		63B44AF619990DA100AE7B62 /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB519967ACC00F6E2B3 /* Drawing.swift */; };
 		63B44AF719990DA100AE7B62 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
@@ -122,6 +123,7 @@
 		638576EB19A6481500581DE8 /* SquizitTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SquizitTheme.swift; sourceTree = "<group>"; };
 		638576EF19A65B4500581DE8 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 		638E459119C88EEC008D8CD9 /* RootBorderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootBorderView.swift; sourceTree = "<group>"; };
+		63A4B7F219D5C03400975048 /* SaveToGalleryTransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToGalleryTransitionManager.swift; sourceTree = "<group>"; };
 		63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor_Serialization.swift; sourceTree = "<group>"; };
 		63B7B70C19A4EB1A00F280AB /* DrawingToolSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingToolSelector.swift; sourceTree = "<group>"; };
 		63BBEC8A19967A2300F6E2B3 /* Squizit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Squizit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				63267AD219CC7CE700B22242 /* FullscreenModalTransitionManager.swift */,
+				63A4B7F219D5C03400975048 /* SaveToGalleryTransitionManager.swift */,
 			);
 			path = Transitions;
 			sourceTree = "<group>";
@@ -477,6 +480,7 @@
 				6350C5EC19A24790008CE4F5 /* RootViewController.swift in Sources */,
 				638576F019A65B4500581DE8 /* Geometry.swift in Sources */,
 				63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */,
+				63A4B7F319D5C03400975048 /* SaveToGalleryTransitionManager.swift in Sources */,
 				635DFA8119B76B6900102B6A /* Appearance.m in Sources */,
 				63EFB1AD19D06C8100253560 /* CancelableAction.swift in Sources */,
 				63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */,

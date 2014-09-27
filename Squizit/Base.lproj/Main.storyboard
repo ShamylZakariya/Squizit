@@ -183,7 +183,7 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="matchView" destination="ycd-Fs-v1p" id="McZ-dI-VIQ"/>
-                        <segue destination="5a9-GW-y81" kind="presentation" identifier="showSaveToGallery" modalPresentationStyle="overFullScreen" id="2B5-MN-07Z"/>
+                        <segue destination="5a9-GW-y81" kind="presentation" identifier="showSaveToGallery" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="2B5-MN-07Z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TFS-CD-32v" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -582,6 +582,6 @@
         <image name="save-to-gallery-dialog-title" width="149" height="61"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="fbA-qo-xxm"/>
+        <segue reference="7sc-b3-6yH"/>
     </inferredMetricsTieBreakers>
 </document>

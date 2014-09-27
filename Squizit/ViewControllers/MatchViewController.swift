@@ -250,11 +250,15 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
+
+		println("DEBUG - SHOWING SAVE TO GALLERY VC IMMEDIATELY")
+		showSaveToGalleryQuery()
 	}
 
 	override func viewWillLayoutSubviews() {
 		self.syncToMatchState()
 	}
+
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 

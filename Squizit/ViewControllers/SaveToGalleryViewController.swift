@@ -21,8 +21,6 @@ protocol SaveToGalleryDelegate : class {
 
 class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
-
-
 	@IBOutlet weak var dialogView: UIView!
 	@IBOutlet weak var questionLabel: UILabel!
 	@IBOutlet weak var playerOneNameInputField: SquizitThemeNameInputField!
@@ -45,6 +43,9 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 	weak var delegate:SaveToGalleryDelegate?
 
+	// FIXME: SaveToGalleryTransitionManager doesn't actually work
+	//private let _saveToGalleryTransitionManager = SaveToGalleryTransitionManager()
+
 	var nameCount:Int = 3 {
 		didSet {
 			if nameCount < 2 || nameCount > 3 {
@@ -55,12 +56,18 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 	// MARK: UIViewController Overrides
 
+	required init(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+		//self.transitioningDelegate = _saveToGalleryTransitionManager
+	}
+
 	deinit {
 		NSNotificationCenter.defaultCenter().removeObserver(self)
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
 
 		dialogView.opaque = false
 		dialogView.backgroundColor = SquizitTheme.dialogBackgroundColor()
@@ -75,6 +82,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	private var _visible:Bool = false
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+
 		_visible = true
 
 		switch nameCount {
@@ -106,6 +114,18 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 				buttonHeightConstraint.constant = 65
 		}
 
+		// FIXME: When I make SaveToGalleryTransitionManager work, I can delete the faux transition animation
+
+		dialogView.alpha = 0
+		dialogView.transform = CGAffineTransformMakeScale(1.1, 1.1)
+
+		UIView.animateWithDuration(0.5, delay: 0.25, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.25, options: UIViewAnimationOptions(0), animations: { () -> Void in
+
+			self.dialogView.alpha = 1
+			self.dialogView.transform = CGAffineTransformIdentity
+
+		}, completion: nil)
+
 	}
 
 	private var _didAddMotionEffect:Bool = false
@@ -121,6 +141,10 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		layout()
+	}
+
+	override func viewWillDisappear(animated: Bool) {
+		super.viewWillDisappear(animated)
 	}
 
 	// MARK: IBActions
@@ -224,9 +248,9 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		if keyboardHeight > 0 {
 			let totalHeight = view.bounds.height
 			let offset = (totalHeight - keyboardHeight)/2 - dialogSize.height/2
-			dialogVerticalCenteringConstraint.constant = offset
+			dialogView.transform = CGAffineTransformMakeTranslation(0, -offset)
 		} else {
-			dialogVerticalCenteringConstraint.constant = 0
+			dialogView.transform = CGAffineTransformIdentity
 		}
 	}
 
