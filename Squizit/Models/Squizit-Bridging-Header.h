@@ -4,3 +4,4 @@
 
 #include "Appearance.h"
 #include "GalleryStoreEntities.h"
+#include "ShareToTwitter.h"

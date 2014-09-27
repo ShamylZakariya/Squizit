@@ -8,6 +8,7 @@
 
 import UIKit
 import Lilliput
+import Social
 
 class TextActivityItemProvider : UIActivityItemProvider {
 
@@ -306,7 +307,21 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 			}
 		}
 
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "shareDrawing:")
+		//
+		//	Set up share buttons - a generic share, and a specific direct-to-twitter action if Twitter is available on this device
+		//
+
+		let shareAction = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "shareDrawing:")
+
+		if SLComposeViewController.isAvailableForServiceType(SLServiceTypeTwitter) {
+
+			let twitterIcon = UIImage(named: "gallery-detail-twitter-export-icon").imageWithRenderingMode(.AlwaysTemplate)
+			let shareToTwitterAction = UIBarButtonItem(image: twitterIcon, style: .Plain, target: self, action: "shareDrawingToTwitter:")
+
+			self.navigationItem.rightBarButtonItems = [ shareAction, shareToTwitterAction ]
+		} else {
+			self.navigationItem.rightBarButtonItem = shareAction
+		}
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -336,59 +351,80 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 
 	// MARK: Actions
 
-	dynamic func shareDrawing( sender:AnyObject ) {
+	dynamic func shareDrawingToTwitter( sender:AnyObject ) {
+		export { [weak self] drawing, rendering in
+			if let sself = self {
 
-		// first get the current item
-		if let indexPath = self.collectionView!.indexPathsForVisibleItems().first as? NSIndexPath {
-			if let drawing = _dataSource.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
-
-				export(drawing) {
-					[weak self] (rendering:UIImage)->Void in
-					if let sself = self {
-
-						var title:String = ""
-						if drawing.artists.count > 0 {
-							title += drawing.artistDisplayNames
-						}
-
-						let textItem = TextActivityItemProvider(placeholderItem: title)
-						let items = [rendering, textItem]
-
-						let activityController = UIActivityViewController( activityItems: items, applicationActivities: nil)
-						activityController.popoverPresentationController?.barButtonItem = sender as UIBarButtonItem
-						activityController.view.tintColor = SquizitTheme.alertTintColor()
-						sself.presentViewController(activityController, animated: true, completion: nil)
-
-					}
+				var message = "@squizitapp"
+				if drawing.artists.count > 0 {
+					message += " match between " + drawing.artistDisplayNames
 				}
+
+				var shareVC = SLComposeViewController_Twitter()
+				shareVC.setInitialText(message)
+				shareVC.addImage(rendering)
+
+				sself.presentViewController(shareVC, animated: true, completion: nil)
 			}
 		}
 	}
 
-	func export( drawing:GalleryDrawing, done:(rendering:UIImage)->Void) {
+	dynamic func shareDrawing( sender:AnyObject ) {
 
-		dispatch_async(_exportQueue) {
+		export { [weak self] drawing, rendering in
+			if let sself = self {
 
-			if let buffer = ByteBuffer.fromNSData( drawing.match ) {
-				var matchLoadResult = buffer.getMatch()
-				if let error = matchLoadResult.error {
-					NSLog("Unable to load match from data, error: %@", error.message )
-					assertionFailure("Unable to load match from data, bailing" )
+				var title:String = ""
+				if drawing.artists.count > 0 {
+					title += drawing.artistDisplayNames
 				}
 
-				//
-				//	Note: we're rendering the match in retina so it looks super good
-				//
+				let textItem = TextActivityItemProvider(placeholderItem: title)
+				let items = [rendering, textItem]
 
-				var background = SquizitTheme.exportedMatchBackgroundColor()
-				var match = matchLoadResult.value
-				var scale:CGFloat = 2
-				var rendering = match.render( backgroundColor: background, scale:scale, watermark: true )
+				let activityController = UIActivityViewController( activityItems: items, applicationActivities: nil)
+				activityController.popoverPresentationController?.barButtonItem = sender as UIBarButtonItem
+				activityController.view.tintColor = SquizitTheme.alertTintColor()
+				sself.presentViewController(activityController, animated: true, completion: nil)
 
-				dispatch_main {
-					done( rendering:rendering )
-				}
 			}
+		}
+	}
+
+	func export( done:(drawing:GalleryDrawing, rendering:UIImage! )->Void ) {
+		if let indexPath = self.collectionView!.indexPathsForVisibleItems().first as? NSIndexPath {
+			if let drawing = _dataSource.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
+
+				dispatch_async(_exportQueue) {
+
+					if let buffer = ByteBuffer.fromNSData( drawing.match ) {
+						var matchLoadResult = buffer.getMatch()
+						if let error = matchLoadResult.error {
+							NSLog("Unable to load match from data, error: %@", error.message )
+							assertionFailure("Unable to load match from data, bailing" )
+						}
+
+						//
+						//	Note: we're rendering the match in retina so it looks super good
+						//
+
+						var background = SquizitTheme.exportedMatchBackgroundColor()
+						var match = matchLoadResult.value
+						var scale:CGFloat = 2
+						var rendering = match.render( backgroundColor: background, scale:scale, watermark: true )
+
+						dispatch_main {
+							done( drawing:drawing, rendering:rendering )
+						}
+					} else {
+						assertionFailure("Unable to load buffer data from drawing" )
+					}
+				}
+			} else {
+				assertionFailure("Unable to get drawing from store" )
+			}
+		} else {
+			assertionFailure("Unable to get indexPath of active item" )
 		}
 	}
 

@@ -30,6 +30,7 @@
 		63B44AF719990DA100AE7B62 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
 		63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */; };
 		63B44AFD199A66B400AE7B62 /* UIColor_Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */; };
+		63B5252519D73F5D00BB550F /* ShareToTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B5252419D73F5D00BB550F /* ShareToTwitter.m */; };
 		63B7B70D19A4EB1A00F280AB /* DrawingToolSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B7B70C19A4EB1A00F280AB /* DrawingToolSelector.swift */; };
 		63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBEC8F19967A2300F6E2B3 /* AppDelegate.swift */; };
 		63BBEC9919967A2300F6E2B3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63BBEC9719967A2300F6E2B3 /* Main.storyboard */; };
@@ -125,6 +126,8 @@
 		638E459119C88EEC008D8CD9 /* RootBorderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootBorderView.swift; sourceTree = "<group>"; };
 		63A4B7F219D5C03400975048 /* SaveToGalleryTransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToGalleryTransitionManager.swift; sourceTree = "<group>"; };
 		63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor_Serialization.swift; sourceTree = "<group>"; };
+		63B5252219D73F0E00BB550F /* ShareToTwitter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShareToTwitter.h; sourceTree = "<group>"; };
+		63B5252419D73F5D00BB550F /* ShareToTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareToTwitter.m; sourceTree = "<group>"; };
 		63B7B70C19A4EB1A00F280AB /* DrawingToolSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingToolSelector.swift; sourceTree = "<group>"; };
 		63BBEC8A19967A2300F6E2B3 /* Squizit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Squizit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63BBEC8E19967A2300F6E2B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -324,6 +327,8 @@
 			isa = PBXGroup;
 			children = (
 				63EFB1AC19D06C8100253560 /* CancelableAction.swift */,
+				63B5252219D73F0E00BB550F /* ShareToTwitter.h */,
+				63B5252419D73F5D00BB550F /* ShareToTwitter.m */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -483,6 +488,7 @@
 				63A4B7F319D5C03400975048 /* SaveToGalleryTransitionManager.swift in Sources */,
 				635DFA8119B76B6900102B6A /* Appearance.m in Sources */,
 				63EFB1AD19D06C8100253560 /* CancelableAction.swift in Sources */,
+				63B5252519D73F5D00BB550F /* ShareToTwitter.m in Sources */,
 				63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */,
 				63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */,
 				638E459219C88EEC008D8CD9 /* RootBorderView.swift in Sources */,

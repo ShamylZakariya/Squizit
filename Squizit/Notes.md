@@ -1,11 +1,7 @@
 #TODO
 
-	- look into SLComposeViewController to tweet directly, bypassing the share sheet
-		http://stackoverflow.com/questions/18982612/twtweetcomposeviewcontroller-alerts-with-no-twitter-accounts-found
-		
-	- add @squizitapp button to root screen
-	- add dedicated tweet this match icon to gallery detail vc's navbar, to left of generic all-purpose share button
 	- add tweet + share buttons to the save-to-gallery vc's dialog, perhaps /outside/ the dialog, over the grey blanker
+	- on Debug podcast was discussion that Apple made public touch APIs to determine touch intensity - could use this to modulate line width -- see UITouch -majorRadius
 	
 #FIXME
 
