@@ -109,13 +109,36 @@
                                     <constraint firstAttribute="centerX" secondItem="IxX-g1-QXr" secondAttribute="centerX" id="zLq-Yx-R6Q"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Bt-N9-Av2" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                <rect key="frame" x="172" y="501" width="256" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="KjC-Ge-YXv"/>
+                                    <constraint firstAttribute="height" constant="30" id="N10-Op-Tfk"/>
+                                    <constraint firstAttribute="width" constant="256" id="fcM-p2-BFF"/>
+                                    <constraint firstAttribute="width" constant="83" id="wQq-tt-hQ4"/>
+                                </constraints>
+                                <state key="normal" title="@squizitapp">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="N10-Op-Tfk"/>
+                                        <exclude reference="wQq-tt-hQ4"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="onTwitterButtonTapped:" destination="7U9-N8-2K1" eventType="touchUpInside" id="skX-c9-Cnu"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="gao-o1-joj" firstAttribute="leading" secondItem="dYp-Yh-uXK" secondAttribute="leading" id="0JQ-Kx-Nqc"/>
+                            <constraint firstAttribute="centerX" secondItem="3Bt-N9-Av2" secondAttribute="centerX" id="48I-3Z-992"/>
                             <constraint firstAttribute="trailing" secondItem="gao-o1-joj" secondAttribute="trailing" id="Ghu-lE-mLU"/>
                             <constraint firstItem="nOw-Ll-IFc" firstAttribute="top" secondItem="gao-o1-joj" secondAttribute="bottom" id="Msk-rt-yl9"/>
                             <constraint firstAttribute="centerY" secondItem="iAQ-zh-NXo" secondAttribute="centerY" id="N22-A9-rLe"/>
+                            <constraint firstItem="nOw-Ll-IFc" firstAttribute="top" secondItem="3Bt-N9-Av2" secondAttribute="bottom" constant="55" id="OLa-Dz-2xI"/>
                             <constraint firstAttribute="centerX" secondItem="iAQ-zh-NXo" secondAttribute="centerX" id="eGv-dj-LfV"/>
                             <constraint firstItem="gao-o1-joj" firstAttribute="top" secondItem="dYp-Yh-uXK" secondAttribute="top" id="xEu-S2-t2P">
                                 <variation key="heightClass=regular-widthClass=compact" constant="22"/>
@@ -128,6 +151,8 @@
                         <outlet property="contentView" destination="iAQ-zh-NXo" id="7ZL-yX-Aju"/>
                         <outlet property="galleryButton" destination="NFM-Zv-8Ul" id="2dV-KS-jND"/>
                         <outlet property="threePlayersButton" destination="rGO-wl-LMv" id="uwr-7G-ObW"/>
+                        <outlet property="twitterButton" destination="3Bt-N9-Av2" id="FLQ-Ll-R39"/>
+                        <outlet property="twitterButtonBottomConstraint" destination="OLa-Dz-2xI" id="TPR-Xr-uk3"/>
                         <outlet property="twoPlayersButton" destination="91w-da-Nqx" id="wXJ-Y5-FmO"/>
                         <segue destination="2U9-PO-2Cg" kind="presentation" identifier="showTestDrawingView" id="nlD-cw-RuA"/>
                     </connections>

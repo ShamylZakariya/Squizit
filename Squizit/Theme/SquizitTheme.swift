@@ -119,6 +119,12 @@ class SquizitTheme {
 
 class SquizitThemeButton : UIButton {
 
+	var bordered:Bool = true {
+		didSet {
+			update()
+		}
+	}
+
 	// if a button is destructive, its label text will be a reddish/fuscia-ish color - otherwise it will be the current tintColor
 	var destructive:Bool = false {
 		didSet {
@@ -154,9 +160,14 @@ class SquizitThemeButton : UIButton {
 	private func update() {
 		titleLabel!.font = UIFont(name: "Avenir-Light", size: UIFont.buttonFontSize())
 		layer.cornerRadius = 0
-		layer.borderWidth = 1
-		layer.backgroundColor = UIColor(white: 0.19, alpha: 0.2).CGColor
-		layer.borderColor = self.tintColor!.colorWithAlphaComponent(0.2).CGColor
+		if bordered {
+			layer.borderWidth = 1
+			layer.backgroundColor = UIColor(white: 0.19, alpha: 0.2).CGColor
+			layer.borderColor = self.tintColor!.colorWithAlphaComponent(0.2).CGColor
+		} else {
+			layer.borderWidth = 0
+			layer.backgroundColor = UIColor.clearColor().CGColor
+		}
 	}
 
 	override func intrinsicContentSize() -> CGSize {

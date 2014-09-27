@@ -7,15 +7,14 @@
 	- add dedicated tweet this match icon to gallery detail vc's navbar, to left of generic all-purpose share button
 	- add tweet + share buttons to the save-to-gallery vc's dialog, perhaps /outside/ the dialog, over the grey blanker
 	
-	- make SaveToGalleryViewController a more modern VC with a custom segue overlay
-		this means I will manually manage the blanker view, and will have to manually manage the content view inside it
-
 #FIXME
 
 	You can still draw on the last drawing of the match when the match is over and the final drawing is presented!
 
 	GalleryDetailViewController::updateItemSize
 		The viewController's topLayoutGuide.length is zero, so I'm manually setting a fudge factor of 44 to accommodate the navbar height so UICollectionViewFlowLayout doesn't complain about inadequate room to layout cells. 
+
+	SaveToGalleryTransitionManager doesn't actually work - not certain if it's my bug or iOS8. It's disabled, and I'm doing a hacky workaround.
 
 #PROBLEMS
 

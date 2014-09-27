@@ -17,8 +17,12 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	@IBOutlet weak var galleryButton: UIButton!
 	@IBOutlet weak var contentView: UIView!
 	@IBOutlet weak var borderView: RootBorderView!
+	@IBOutlet weak var twitterButton: SquizitThemeButton!
+	@IBOutlet weak var twitterButtonBottomConstraint: NSLayoutConstraint!
 
 	override func viewDidLoad() {
+
+		twitterButton.bordered = false
 
 		#if DEBUG
 			var tgr = UITapGestureRecognizer(target: self, action: "showTestDrawingView:")
@@ -36,10 +40,12 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 		UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: UIStatusBarAnimation.Fade)
 
 		if !playedIntroAnimation {
-			contentView.layer.opacity = 0
-			contentView.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1)
-			borderView.layer.opacity = 0
-			borderView.layer.transform = CATransform3DMakeScale(1.1, 1.1, 1)
+			contentView.alpha = 0
+			contentView.transform = CGAffineTransformMakeScale(0.9, 0.9)
+			borderView.alpha = 0
+			borderView.transform = CGAffineTransformMakeScale(1.1, 1.1)
+
+			twitterButton.alpha = 0
 		}
 
 		switch UIDevice.currentDevice().userInterfaceIdiom {
@@ -52,6 +58,9 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 			default:
 				break;
 		}
+
+		twitterButtonBottomConstraint.constant = CGFloat(3 * borderView.borderSize)
+
 	}
 
 	override func viewDidAppear(animated: Bool) {
@@ -65,15 +74,23 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 				options: UIViewAnimationOptions.AllowUserInteraction,
 				animations: {
 					[unowned self] () -> Void in
-					self.contentView.layer.opacity = 1
-					self.contentView.layer.transform = CATransform3DMakeScale(1, 1, 1)
-					self.borderView.layer.opacity = 1
-					self.borderView.layer.transform = CATransform3DMakeScale(1, 1, 1)
+					self.contentView.alpha = 1
+					self.contentView.transform = CGAffineTransformIdentity
+					self.borderView.alpha = 1
+					self.borderView.transform = CGAffineTransformIdentity
 				},
 				completion: {
 					[unowned self] finished in
 					self.playedIntroAnimation = true
 				})
+
+			UIView.animateWithDuration(0.5,
+				delay: 1.0,
+				options: .AllowUserInteraction,
+				animations: { () -> Void in
+					self.twitterButton.alpha = 0.5
+				},
+				completion: nil)
 		}
 	}
 
@@ -116,11 +133,16 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 			default:
 				assertionFailure("Unrecognized segue")
 				break;
-
 		}
 	}
 
 	// MARK: Actions
+
+	@IBAction func onTwitterButtonTapped(sender: AnyObject) {
+		let twitterURL = NSURL(string: "https://twitter.com/squizitapp")
+		UIApplication.sharedApplication().openURL(twitterURL)
+	}
+
 
 	dynamic func showTestDrawingView( sender:AnyObject ) {
 		performSegueWithIdentifier("showTestDrawingView", sender: sender)
