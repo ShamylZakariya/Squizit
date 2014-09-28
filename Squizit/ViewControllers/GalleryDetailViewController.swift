@@ -49,7 +49,7 @@ class GalleryDetailCollectionViewCell : UICollectionViewCell {
 	@IBOutlet weak var playerNamesLabel: UILabel!
 	@IBOutlet weak var matchDateLabel: UILabel!
 
-	var renderAction:CancelableAction<UIImage>?
+	var renderAction:CancelableAction<(GalleryDrawing,Match,UIImage)>?
 
 	class func identifier() ->String { return "GalleryDetailCollectionViewCell" }
 
@@ -141,7 +141,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 			//	action to assign the image
 			//
 
-			if let image = loader.result {
+			if let (drawing,match,image) = loader.result {
 				galleryCell.renderAction = nil
 				galleryCell.imageView.animate = false
 				galleryCell.imageView.image = image
@@ -150,7 +150,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 				galleryCell.renderAction!.done = { result in
 					dispatch_main {
 						galleryCell.imageView.animate = true
-						galleryCell.imageView.image = result
+						galleryCell.imageView.image = result.2
 					}
 				}
 			}
@@ -163,9 +163,9 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 		}
 	}
 
-	private var _loaders:[Int:CancelableAction<UIImage>?] = [:]
+	private var _loaders:[Int:CancelableAction<(GalleryDrawing,Match,UIImage)>?] = [:]
 
-	private func loaderFor( index:Int ) -> CancelableAction<UIImage> {
+	private func loaderFor( index:Int ) -> CancelableAction<(GalleryDrawing,Match,UIImage)> {
 		let indexPath = NSIndexPath(forItem: index, inSection: 0 )
 		let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as GalleryDrawing
 
@@ -180,7 +180,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 
 		let queue = _renderQueue
 		let backgroundColor = _drawingBackgroundColor
-		let loader = CancelableAction<UIImage>(action: { done, canceled in
+		let loader = CancelableAction<(GalleryDrawing,Match,UIImage)>(action: { done, canceled in
 
 			dispatch_async( queue ) {
 				if let buffer = ByteBuffer.fromNSData( drawing.match ) {
@@ -194,7 +194,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 						var match = matchLoadResult.value
 						if !canceled() {
 							var rendering = match.render( backgroundColor: backgroundColor )
-							done( result:rendering )
+							done( result:(drawing,match,rendering))
 						}
 					}
 				}
@@ -269,7 +269,7 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 	var filterPredicate:NSPredicate?
 	var initialIndexPath:NSIndexPath?
 
-	private var _dataSource:BasicGalleryCollectionViewDataSource!
+	private var _dataSource:GalleryDetailCollectionViewDataSource!
 
 	required init(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
@@ -393,43 +393,24 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 
 	func export( done:(drawing:GalleryDrawing, rendering:UIImage! )->Void ) {
 		if let indexPath = self.collectionView!.indexPathsForVisibleItems().first as? NSIndexPath {
-			if let drawing = _dataSource.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
-
+			let action = _dataSource.loaderFor( indexPath.item )
+			if let (drawing,match,_) = action.result {
 				dispatch_async(_exportQueue) {
 
-					if let buffer = ByteBuffer.fromNSData( drawing.match ) {
-						var matchLoadResult = buffer.getMatch()
-						if let error = matchLoadResult.error {
-							NSLog("Unable to load match from data, error: %@", error.message )
-							assertionFailure("Unable to load match from data, bailing" )
-						}
+					var background = SquizitTheme.exportedMatchBackgroundColor()
+					var rendering = match.render( backgroundColor: background, scale:2, watermark: true )
 
-						//
-						//	Note: we're rendering the match in retina so it looks super good
-						//
-
-						var background = SquizitTheme.exportedMatchBackgroundColor()
-						var match = matchLoadResult.value
-						var scale:CGFloat = 2
-						var rendering = match.render( backgroundColor: background, scale:scale, watermark: true )
-
-						dispatch_main {
-							done( drawing:drawing, rendering:rendering )
-						}
-					} else {
-						assertionFailure("Unable to load buffer data from drawing" )
+					dispatch_main {
+						done( drawing:drawing, rendering:rendering )
 					}
 				}
 			} else {
-				assertionFailure("Unable to get drawing from store" )
+				assertionFailure("Unable to get result from action")
 			}
-		} else {
-			assertionFailure("Unable to get indexPath of active item" )
 		}
 	}
 
 	// MARK: UIScrollViewDelegate
-
 
 	override func scrollViewDidScroll(scrollView: UIScrollView) {
 		updateScrollPageIndex()
