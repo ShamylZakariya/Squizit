@@ -392,8 +392,8 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Match Date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c0T-JK-PLb">
-                                                            <rect key="frame" x="8" y="311" width="240" height="15"/>
-                                                            <fontDescription key="fontDescription" name="Didot-Italic" family="Didot" pointSize="12"/>
+                                                            <rect key="frame" x="8" y="307" width="240" height="18"/>
+                                                            <fontDescription key="fontDescription" name="Didot-Italic" family="Didot" pointSize="14"/>
                                                             <color key="textColor" white="1" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -419,7 +419,7 @@
                                                         <constraint firstItem="qbo-L7-0JH" firstAttribute="leading" secondItem="BOP-eT-3qN" secondAttribute="trailing" constant="-32" id="eZw-cf-r0Q"/>
                                                         <constraint firstItem="vF6-pa-txg" firstAttribute="trailing" secondItem="IIQ-uS-qMR" secondAttribute="trailingMargin" id="ixQ-lq-QMP"/>
                                                         <constraint firstItem="c0T-JK-PLb" firstAttribute="trailing" secondItem="IIQ-uS-qMR" secondAttribute="trailingMargin" id="pqX-rK-dxF"/>
-                                                        <constraint firstItem="c0T-JK-PLb" firstAttribute="top" secondItem="vF6-pa-txg" secondAttribute="bottom" constant="6" id="svT-Vk-dxn"/>
+                                                        <constraint firstItem="c0T-JK-PLb" firstAttribute="top" secondItem="vF6-pa-txg" secondAttribute="bottom" constant="2" id="svT-Vk-dxn"/>
                                                         <constraint firstItem="c0T-JK-PLb" firstAttribute="top" secondItem="vF6-pa-txg" secondAttribute="bottom" constant="6" id="vE6-gI-m3E"/>
                                                         <constraint firstItem="qbo-L7-0JH" firstAttribute="top" secondItem="BOP-eT-3qN" secondAttribute="bottom" constant="-31" id="wfw-11-I6n"/>
                                                     </constraints>
@@ -502,9 +502,9 @@
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Match Date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3P1-PS-qc6">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Match Date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3P1-PS-qc6">
                                             <rect key="frame" x="8" y="484" width="584" height="15"/>
-                                            <fontDescription key="fontDescription" name="Didot-Italic" family="Didot" pointSize="12"/>
+                                            <fontDescription key="fontDescription" name="Didot-Italic" family="Didot" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>

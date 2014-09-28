@@ -95,7 +95,35 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	// MARK: Actions & Gestures
 
 	dynamic func eraseDrawing( t:AnyObject ) {
-		clear()
+
+		var alert = UIAlertController(
+			title: NSLocalizedString("Clear?", comment:"ClearDrawingAlertTitle"),
+			message: NSLocalizedString("Are you certain you'd like to clear this drawing?", comment:"ClearDrawingAlertMessage"),
+			preferredStyle: UIAlertControllerStyle.Alert)
+
+		alert.view.tintColor = SquizitTheme.alertTintColor()
+
+		alert.addAction(UIAlertAction(
+			title: NSLocalizedString("Nevermind", comment:"ClearDrawingCancelButton"),
+			style: UIAlertActionStyle.Cancel,
+			handler: {
+				( action:UIAlertAction! ) -> Void in
+				alert.dismissViewControllerAnimated(true, completion: nil)
+			}))
+
+		alert.addAction(UIAlertAction(
+			title: NSLocalizedString("Clear", comment:"ClearDrawingDestructiveButton"),
+			style: UIAlertActionStyle.Destructive,
+			handler: {
+				[weak self] ( action:UIAlertAction! ) -> Void in
+
+				alert.dismissViewControllerAnimated(true, completion:nil)
+				if let sself = self {
+					sself.clear()
+				}
+			}))
+
+		presentViewController(alert, animated: true, completion: nil)
 	}
 
 	dynamic func stepForward( t:AnyObject ) {
@@ -190,7 +218,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 		var tgr = UITapGestureRecognizer(target: self, action: "eraseDrawing:")
 		tgr.numberOfTapsRequired = 2
-		tgr.numberOfTouchesRequired = 1
+		tgr.numberOfTouchesRequired = 2
 		matchView.addGestureRecognizer(tgr)
 
 		// this will be enabled only when the match is complete
