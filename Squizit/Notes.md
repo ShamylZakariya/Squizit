@@ -5,8 +5,6 @@
 	
 #FIXME
 
-	You can still draw on the last drawing of the match when the match is over and the final drawing is presented!
-
 	GalleryDetailViewController::updateItemSize
 		The viewController's topLayoutGuide.length is zero, so I'm manually setting a fudge factor of 44 to accommodate the navbar height so UICollectionViewFlowLayout doesn't complain about inadequate room to layout cells. 
 
@@ -14,10 +12,16 @@
 
 #PROBLEMS
 
-	Can't Make SaveToGalleryViewController's view transparent:
-		- setting opaque = false on view and view.superview don't seem to help
-		- setting view.superview.backgroundColor = UIColor.clearColor() doesn't seem to help
-		- when hitting the Next key in name entry fields, I get an ever so brief line-return!
+#WRITEUP
+
+	Squizit is a modern take on an old parlour game, "Exquisite Corpse", which was played by surrealists in the 1920's. In it, the first player draws something on the top half or third of a sheet of paper, and then folds it such that the next player can only see the bottom edge. The next player then draws what he or she sees fit based on the the visible bottom portion of the previous player's turn. When complete, the paper is unfolded revealing a strange and often wonderfully absurd drawing.
+	
+	Squizit is an "Exquisite Corpse" game for the iPad, I hope you like it.
+	
+	Features:
+		- Two or Three-person matches
+		- And a gallery for perusing previous matches
+
 	
 #SNIPPETS
 
