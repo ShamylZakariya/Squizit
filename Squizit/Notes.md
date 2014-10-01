@@ -1,6 +1,15 @@
 #TODO
 
 	- add tweet + share buttons to the save-to-gallery vc's dialog, perhaps /outside/ the dialog, over the grey blanker
+	- add undo & clear buttons to the drawing tool selector (+rename drawing tool selector accordingly?)
+	
+	- image analysis of the fold-stripe to determine if player N left any markers for player N+1, and when player N+1 plays, highlight those spots with pulsing transparent red dots until drawing starts
+		1) Render a single pixel tall bitmap of the stripe area
+		2) Blur and threshold bitmap
+		3) for each "run" of black pixels, add a marker for that run's centroid
+		4) If no markers are placed, disallow player to turn over round to player N+1
+		5) At start of player N+1's round, pulse translucent red dots over those centroids until player starts drawing
+	
 	- on Debug podcast was discussion that Apple made public touch APIs to determine touch intensity - could use this to modulate line width -- see UITouch -majorRadius
 	
 #FIXME

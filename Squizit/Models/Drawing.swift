@@ -18,6 +18,7 @@ class Drawing {
 
 	private var _debugRender = false
 	private var _strokes:[Stroke] = []
+	private var _boundingRect = CGRect.nullRect
 
 	init() {}
 
@@ -35,11 +36,36 @@ class Drawing {
 
 			_strokes.removeLast()
 			invalidate()
+			updateBoundingRect()
 
 			return bounds
 		}
 
 		return nil
+	}
+
+	func updateBoundingRect() {
+		if !_strokes.isEmpty {
+
+			//	if the current _boundingRect is null, we need to get the union rect of all strokes,
+			//	otherwise, just the newest added stroke. This is because popStroke() nulls the _boundingRect
+
+			if _boundingRect.isNull {
+
+				for stroke in _strokes {
+					_boundingRect.union(stroke.boundingRect)
+				}
+
+			} else {
+				_boundingRect.union(_strokes[_strokes.count-1].boundingRect)
+			}
+		} else {
+			_boundingRect = CGRect.nullRect
+		}
+	}
+
+	var boundingRect:CGRect {
+		return _boundingRect
 	}
 
 	func clear() {
@@ -161,6 +187,7 @@ class Drawing {
 	private func invalidate() {
 		_cachedImage = nil
 		_lastDrawnStrokeChunkIndex = -1
+		_boundingRect = CGRect.nullRect
 	}
 
 	private func seedRandomColorGenerator() {

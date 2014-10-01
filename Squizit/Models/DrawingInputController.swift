@@ -100,6 +100,10 @@ class DrawingInputController {
 	}
 
 	func touchEnded() {
+		if let drawing = self.drawing {
+			drawing.updateBoundingRect()
+		}
+
 		_activeStroke = nil
 		view?.setNeedsDisplay()
 	}

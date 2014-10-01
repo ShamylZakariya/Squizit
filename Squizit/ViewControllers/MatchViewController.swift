@@ -27,7 +27,6 @@ extension CGRect {
 class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	@IBOutlet var matchView: MatchView!
-	
 
 	var quitButton:QuitGameButton!
 	var toolSelector:DrawingToolSelector!
@@ -200,6 +199,10 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		extendedLayoutIncludesOpaqueBars = true
 	}
 
+	deinit {
+		NSNotificationCenter.defaultCenter().removeObserver(self)
+	}
+
 	override func prefersStatusBarHidden() -> Bool {
 		return true
 	}
@@ -257,15 +260,20 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		stepForwardButton.setTitle(NSLocalizedString("Next", comment: "UserFinishedRound" ).uppercaseString, forState: UIControlState.Normal)
 		stepForwardButton.addTarget(self, action: "stepForward:", forControlEvents: UIControlEvents.TouchUpInside)
 		stepForwardButton.frame = CGRect(x: 0, y: 0, width: 200, height: 44)
+		stepForwardButton.enabled = false
 		view.addSubview(stepForwardButton)
 
 		// create the quit game button
+
 		quitButton = QuitGameButton.quitGameButton()
 		quitButton.addTarget(self, action: "quitMatch:", forControlEvents: UIControlEvents.TouchUpInside)
 		view.addSubview(quitButton)
 
 		matchView.match = match
 		matchView.player = 0
+
+		// listen for drawing notifications from match view to enable the NEXT button
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "drawingChanged:", name: MatchViewDrawingDidChangeNotification, object: matchView)
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -295,7 +303,11 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	// MARK: Private
 
-	func syncToMatchState_Animate() {
+	dynamic private func drawingChanged( note:NSNotification ) {
+		stepForwardButton.enabled = matchView.playerCanEndTurn
+	}
+
+	private func syncToMatchState_Animate() {
 		let duration:NSTimeInterval = 0.7
 		let delay:NSTimeInterval = 0
 		let damping:CGFloat = 0.9
@@ -321,7 +333,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			})
 	}
 
-	func syncToMatchState() {
+	private func syncToMatchState() {
 
 		if matchActive {
 
@@ -329,6 +341,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			stepForwardButton.alpha = 1
 			matchView.layer.shadowOpacity = 0
 			matchView.layer.shouldRasterize = false
+			stepForwardButton.enabled = matchView.playerCanEndTurn
 
 			switch numPlayers {
 				case 2: layoutSubviewsForTwoPlayers(step)
@@ -357,7 +370,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		}
 	}
 
-	func layoutSubviewsForTwoPlayers( currentPlayer:Int ) {
+	private func layoutSubviewsForTwoPlayers( currentPlayer:Int ) {
 
 		if let match = self.match {
 			let margin = 2 * match.overlap
@@ -382,7 +395,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		}
 	}
 
-	func layoutSubviewsForThreePlayers( currentPlayer:Int ) {
+	private func layoutSubviewsForThreePlayers( currentPlayer:Int ) {
 
 		if let match = self.match {
 			let margin = 2 * match.overlap
@@ -428,7 +441,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		}
 	}
 
-	func positionToolsInShield( view:UIView, alignTop:Bool ) {
+	private func positionToolsInShield( view:UIView, alignTop:Bool ) {
 
 		let frame = view.frame
 		let margin:CGFloat = UIDevice.currentDevice().userInterfaceIdiom == .Pad ? 32 : 16
@@ -472,7 +485,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		quitButton.frame = quitButtonFrame
 	}
 
-	func showSaveToGalleryQuery() {
+	private func showSaveToGalleryQuery() {
 		performSegueWithIdentifier("showSaveToGallery", sender: self)
 	}
 
@@ -545,7 +558,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		calling done() on main queue when complete
 	*/
 
-	func export( match:Match, done:((matchData:NSData?, thumbnailSize:CGSize, thumbnailData:NSData?) -> Void)) {
+	private func export( match:Match, done:((matchData:NSData?, thumbnailSize:CGSize, thumbnailData:NSData?) -> Void)) {
 
 			dispatch_async(exportQueue) {
 
@@ -569,7 +582,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			}
 	}
 
-	func DEBUG_saveImage( image:UIImage, path:String ) {
+	private func DEBUG_saveImage( image:UIImage, path:String ) {
 	    let folderURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as NSURL
 		let targetURL = folderURL.URLByAppendingPathComponent(path, isDirectory: false)
 

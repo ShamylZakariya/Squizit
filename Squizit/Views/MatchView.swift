@@ -9,6 +9,9 @@
 import Foundation
 import UIKit
 
+let MatchViewDrawingDidChangeNotification = "MatchViewDrawingDidChangeNotification"
+let MatchViewDrawingDidChangePlayerUserInfoKey = "MatchViewDrawingDidChangePlayerUserInfoKey"
+
 class MatchView : UIView {
 
 	var match:Match? {
@@ -22,6 +25,39 @@ class MatchView : UIView {
 		didSet {
 			setNeedsDisplay()
 		}
+	}
+
+
+	/*
+		returns true iff the current player is allowed to end his turn.
+		For all but the last player, a turn can be ended if the drawing extents below the bottom
+		of the player's viewport, so the next player can see the "connecting lines" to draw against
+	*/
+	var playerCanEndTurn:Bool {
+		if let player = self.player {
+			if let match = self.match {
+				let numPlayers = match.players
+
+				// last player doesn't need to draw off bottom of viewport
+				if player == numPlayers - 1 {
+					return true
+				}
+
+				let viewport = match.viewports[player]
+				let drawing = match.drawings[player]
+				let drawingBounds = drawing.boundingRect
+
+				if drawingBounds.isNull {
+					return false
+				}
+
+				// if the drawing's bottom edge exceeds viewport bottom the connecting lines have been drawn
+				return drawingBounds.maxY >= viewport.height - match.overlap/2
+			}
+		}
+
+		// no player assigned, so logically no they can't end current turn
+		return false
 	}
 
 	private var _controllers:[DrawingInputController] = []
@@ -88,6 +124,7 @@ class MatchView : UIView {
 
 		_controllers[player!].touchEnded()
 		_tracking = false
+		notifyDrawingChanged()
 	}
 
 	override func touchesCancelled(touches: NSSet, withEvent event: UIEvent) {
@@ -96,6 +133,14 @@ class MatchView : UIView {
 
 
 	// MARK: Private
+
+	private func notifyDrawingChanged() {
+		if let player = self.player {
+			NSNotificationCenter.defaultCenter().postNotificationName(MatchViewDrawingDidChangeNotification, object: self, userInfo: [
+				MatchViewDrawingDidChangePlayerUserInfoKey: player
+			])
+		}
+	}
 
 	private func configure(){
 		_controllers = []

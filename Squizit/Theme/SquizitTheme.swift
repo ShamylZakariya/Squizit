@@ -148,7 +148,9 @@ class SquizitThemeButton : UIButton {
 
 	override var enabled:Bool {
 		didSet {
-			update()
+			UIView.animateWithDuration(0.3, animations: { [unowned self] in
+				self.layer.opacity = self.enabled ? 1 : 0.3
+			})
 		}
 	}
 
@@ -160,6 +162,7 @@ class SquizitThemeButton : UIButton {
 	private func update() {
 		titleLabel!.font = UIFont(name: "Avenir-Light", size: UIFont.buttonFontSize())
 		layer.cornerRadius = 0
+
 		if bordered {
 			layer.borderWidth = 1
 			layer.backgroundColor = UIColor(white: 0.19, alpha: 0.2).CGColor
