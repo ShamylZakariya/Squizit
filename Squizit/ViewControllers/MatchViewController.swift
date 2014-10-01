@@ -68,6 +68,10 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		return 0
 	}
 
+	var player:Int? {
+		return step < numPlayers ? step : nil
+	}
+
 	var matchActive:Bool {
 		return step < numPlayers
 	}
@@ -303,8 +307,41 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	// MARK: Private
 
+	/*
+		returns true iff the current player is allowed to end his turn.
+		For all but the last player, a turn can be ended if the drawing extents below the bottom
+		of the player's viewport, so the next player can see the "connecting lines" to draw against
+	*/
+	var playerCanEndTurn:Bool {
+		if let player = self.player {
+			if let match = self.match {
+				let numPlayers = match.players
+
+				// last player doesn't need to draw off bottom of viewport
+				if player == numPlayers - 1 {
+					return true
+				}
+
+				let viewport = match.viewports[player]
+				let drawing = match.drawings[player]
+				let drawingBounds = drawing.boundingRect
+
+				if drawingBounds.isNull {
+					return false
+				}
+
+				// if the drawing's bottom edge exceeds viewport bottom the connecting lines have been drawn
+				return drawingBounds.maxY >= viewport.height - match.overlap/2
+			}
+		}
+
+		// no player assigned, so logically no they can't end current turn
+		return false
+	}
+
+
 	dynamic private func drawingChanged( note:NSNotification ) {
-		stepForwardButton.enabled = matchView.playerCanEndTurn
+		stepForwardButton.enabled = self.playerCanEndTurn
 	}
 
 	private func syncToMatchState_Animate() {
@@ -341,7 +378,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			stepForwardButton.alpha = 1
 			matchView.layer.shadowOpacity = 0
 			matchView.layer.shouldRasterize = false
-			stepForwardButton.enabled = matchView.playerCanEndTurn
+			stepForwardButton.enabled = self.playerCanEndTurn
 
 			switch numPlayers {
 				case 2: layoutSubviewsForTwoPlayers(step)
