@@ -30,7 +30,9 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	var quitButton:QuitGameButton!
 	var toolSelector:DrawingToolSelector!
-	var stepForwardButton:UIButton!
+	var stepForwardButton:SquizitThemeButton!
+	var undoButton:SquizitThemeButton!
+	var clearButton:SquizitThemeButton!
 	var shieldViews:[MatchShieldView] = []
 	var endOfMatchGestureRecognizer:UITapGestureRecognizer!
 
@@ -76,19 +78,21 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		return step < numPlayers
 	}
 
-	func undo() {
+	dynamic func undo() {
 		if let match = self.match {
 			if matchActive {
 				matchView.controllers[step].undo()
+				drawingChanged()
 			}
 		}
 	}
 
-	func clear() {
+	dynamic func clear() {
 
 		if let match = matchView.match {
 			if matchActive {
 				match.drawings[step].clear()
+				drawingChanged()
 			}
 		}
 
@@ -97,7 +101,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	// MARK: Actions & Gestures
 
-	dynamic func eraseDrawing( t:AnyObject ) {
+	dynamic func queryClear() {
 
 		var alert = UIAlertController(
 			title: NSLocalizedString("Clear?", comment:"ClearDrawingAlertTitle"),
@@ -129,11 +133,11 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		presentViewController(alert, animated: true, completion: nil)
 	}
 
-	dynamic func stepForward( t:AnyObject ) {
+	dynamic func stepForward() {
 		step++
 	}
 
-	dynamic func quitMatch( t:AnyObject ) {
+	dynamic func queryQuitMatch() {
 		var alert = UIAlertController(
 			title: NSLocalizedString("Quit?", comment:"QuitMatchAlertTitle"),
 			message: NSLocalizedString("Are you certain you'd like to quit this match?", comment:"QuitMatchAlertMessage"),
@@ -164,7 +168,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		presentViewController(alert, animated: true, completion: nil)
 	}
 
-	dynamic func swipeLeft( t:UISwipeGestureRecognizer ) {
+	dynamic func onSwipeLeftGesture() {
 
 		//
 		//	NOTE: swipe is recognized by the view and a stroke is drawn
@@ -223,18 +227,18 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		matchView.layer.shadowOpacity = 0
 		matchView.layer.shadowRadius = 10
 
-		var tgr = UITapGestureRecognizer(target: self, action: "eraseDrawing:")
+		var tgr = UITapGestureRecognizer(target: self, action: "queryClear")
 		tgr.numberOfTapsRequired = 2
 		tgr.numberOfTouchesRequired = 2
 		matchView.addGestureRecognizer(tgr)
 
 		// this will be enabled only when the match is complete
-		endOfMatchGestureRecognizer = UITapGestureRecognizer(target: self, action: "stepForward:")
+		endOfMatchGestureRecognizer = UITapGestureRecognizer(target: self, action: "stepForward")
 		endOfMatchGestureRecognizer.numberOfTapsRequired = 1
 		endOfMatchGestureRecognizer.enabled = false
 		matchView.addGestureRecognizer(endOfMatchGestureRecognizer)
 
-		var sgr = UISwipeGestureRecognizer(target: self, action: "swipeLeft:" )
+		var sgr = UISwipeGestureRecognizer(target: self, action: "onSwipeLeftGesture" )
 		sgr.direction = .Left
 		sgr.numberOfTouchesRequired = 2
 		matchView.addGestureRecognizer(sgr)
@@ -258,26 +262,40 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		toolSelector.addTarget(self, action: "toolSelected:", forControlEvents: UIControlEvents.ValueChanged)
 		view.addSubview(toolSelector)
 
-		// create the turn-finished button
+		// create the various buttons
 
-		stepForwardButton = SquizitThemeButton.buttonWithType(UIButtonType.Custom) as UIButton
-		stepForwardButton.setTitle(NSLocalizedString("Next", comment: "UserFinishedRound" ).uppercaseString, forState: UIControlState.Normal)
-		stepForwardButton.addTarget(self, action: "stepForward:", forControlEvents: UIControlEvents.TouchUpInside)
+		stepForwardButton = SquizitThemeButton.buttonWithType(UIButtonType.Custom) as SquizitThemeButton
+		stepForwardButton.setTitle(NSLocalizedString("Next", comment: "MatchNextButtonTitle" ).uppercaseString, forState: UIControlState.Normal)
+		stepForwardButton.addTarget(self, action: "stepForward", forControlEvents: .TouchUpInside)
 		stepForwardButton.frame = CGRect(x: 0, y: 0, width: 200, height: 44)
 		stepForwardButton.enabled = false
 		view.addSubview(stepForwardButton)
 
-		// create the quit game button
+		undoButton = SquizitThemeButton.buttonWithType(UIButtonType.Custom) as SquizitThemeButton
+		undoButton.setTitle(NSLocalizedString("Undo", comment: "MatchUndoButtonTitle" ).uppercaseString, forState: UIControlState.Normal)
+		undoButton.addTarget( self, action: "undo", forControlEvents:.TouchUpInside)
+		undoButton.frame = CGRect(x:0, y: 0, width: 100, height: 44)
+		undoButton.enabled = false
+		undoButton.bordered = false
+		view.addSubview(undoButton)
+
+		clearButton = SquizitThemeButton.buttonWithType(UIButtonType.Custom) as SquizitThemeButton
+		clearButton.setTitle(NSLocalizedString("Clear", comment: "MatchClearButtonTitle" ).uppercaseString, forState: UIControlState.Normal)
+		clearButton.addTarget( self, action: "queryClear", forControlEvents:.TouchUpInside)
+		clearButton.frame = CGRect(x:0, y: 0, width: 100, height: 44)
+		clearButton.enabled = false
+		clearButton.bordered = false
+		view.addSubview(clearButton)
 
 		quitButton = QuitGameButton.quitGameButton()
-		quitButton.addTarget(self, action: "quitMatch:", forControlEvents: UIControlEvents.TouchUpInside)
+		quitButton.addTarget(self, action: "queryQuitMatch", forControlEvents: UIControlEvents.TouchUpInside)
 		view.addSubview(quitButton)
 
 		matchView.match = match
 		matchView.player = 0
 
-		// listen for drawing notifications from match view to enable the NEXT button
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "drawingChanged:", name: MatchViewDrawingDidChangeNotification, object: matchView)
+		// listen for drawing notifications from match view to handle enablement of NEXT/UNDO/CLEAR buttons
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "drawingChanged", name: MatchViewDrawingDidChangeNotification, object: matchView)
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -291,7 +309,6 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	override func viewWillLayoutSubviews() {
 		self.syncToMatchState()
 	}
-
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 
@@ -339,9 +356,25 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		return false
 	}
 
+	var playerCanUndo:Bool {
+		if let player = self.player {
+			if let match = self.match {
+				let drawing = match.drawings[player]
+				return !drawing.strokes.isEmpty
+			}
+		}
 
-	dynamic private func drawingChanged( note:NSNotification ) {
+		// no player or no match, so player can't undo
+		return false
+	}
+
+
+	dynamic private func drawingChanged() {
 		stepForwardButton.enabled = self.playerCanEndTurn
+
+		let canUndo = playerCanUndo
+		undoButton.enabled = canUndo
+		clearButton.enabled = canUndo
 	}
 
 	private func syncToMatchState_Animate() {
@@ -379,6 +412,8 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			matchView.layer.shadowOpacity = 0
 			matchView.layer.shouldRasterize = false
 			stepForwardButton.enabled = self.playerCanEndTurn
+			undoButton.enabled = self.playerCanUndo
+			clearButton.enabled = undoButton.enabled
 
 			switch numPlayers {
 				case 2: layoutSubviewsForTwoPlayers(step)
@@ -392,6 +427,8 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			shieldViews[1].alpha = 0
 			toolSelector.alpha = 0
 			stepForwardButton.alpha = 0
+			clearButton.alpha = 0
+			undoButton.alpha = 0
 			quitButton.alpha = 0
 
 			let angleRange = drand48() * 2.0 - 1.0
@@ -488,6 +525,8 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		var toolSelectorFrame = CGRect.zeroRect
 		var stepForwardButtonFrame = CGRect.zeroRect
 		var quitButtonFrame = CGRect.zeroRect
+		var undoButtonFrame = CGRect.zeroRect
+		var clearButtonFrame = CGRect.zeroRect
 
 		// position tool selector in center of shield
 		toolSelectorFrame = CGRect(x: insetFrame.minX, y: insetFrame.midY - toolsHeight/2, width: insetFrame.width, height: toolsHeight )
@@ -499,6 +538,17 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 			y: insetFrame.maxY - stepForwardButtonSize.height,
 			width: stepForwardButtonSize.width,
 			height: stepForwardButtonSize.height )
+
+		// position undo and clear buttons to right of stepForwardButton
+		let rangeRightOfStepForwardButton = insetFrame.maxX - stepForwardButtonFrame.maxX
+		let rangeRightOfStepForwardButtonMidPoint = CGPoint( x: stepForwardButtonFrame.maxX + rangeRightOfStepForwardButton/2, y: stepForwardButtonFrame.midY )
+		let undoButtonSize = undoButton.intrinsicContentSize()
+		let clearButtonSize = clearButton.intrinsicContentSize()
+
+		let undoButtonCenter = rangeRightOfStepForwardButtonMidPoint.subtract(CGPoint(x: undoButtonSize.width/2 + margin/2, y: 0 ))
+		let clearButtonCenter = rangeRightOfStepForwardButtonMidPoint.add(CGPoint(x: clearButtonSize.width/2 + margin/2, y: 0 ))
+		undoButtonFrame = CGRect(center: undoButtonCenter, size: undoButtonSize)
+		clearButtonFrame = CGRect(center: clearButtonCenter, size: clearButtonSize)
 
 
 		let quitButtonSize = quitButton.intrinsicContentSize()
@@ -518,6 +568,8 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		}
 
 		toolSelector.frame = toolSelectorFrame
+		undoButton.frame = undoButtonFrame
+		clearButton.frame = clearButtonFrame
 		stepForwardButton.frame = stepForwardButtonFrame
 		quitButton.frame = quitButtonFrame
 	}

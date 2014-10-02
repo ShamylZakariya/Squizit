@@ -174,7 +174,7 @@ class SquizitThemeButton : UIButton {
 	}
 
 	override func intrinsicContentSize() -> CGSize {
-		return CGSize(width: UIViewNoIntrinsicMetric, height: 65)
+		return CGSize(width: super.intrinsicContentSize().width, height: 44)
 	}
 
 }
