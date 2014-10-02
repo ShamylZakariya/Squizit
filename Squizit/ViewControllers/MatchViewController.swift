@@ -326,29 +326,31 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	/*
 		returns true iff the current player is allowed to end his turn.
-		For all but the last player, a turn can be ended if the drawing extents below the bottom
-		of the player's viewport, so the next player can see the "connecting lines" to draw against
+		Player 0 must have a drawing that overlaps the bottom of drawing area
+		Last player must have a drawing that overlaps the top of drawing area
+		Middle player must have drawing that overlaps top and bottom
 	*/
 	var playerCanEndTurn:Bool {
 		if let player = self.player {
 			if let match = self.match {
 				let numPlayers = match.players
 
-				// last player doesn't need to draw off bottom of viewport
-				if player == numPlayers - 1 {
-					return true
-				}
-
-				let viewport = match.viewports[player]
 				let drawing = match.drawings[player]
 				let drawingBounds = drawing.boundingRect
 
-				if drawingBounds.isNull {
+				if drawing.strokes.isEmpty || drawingBounds.isNull {
 					return false
 				}
 
-				// if the drawing's bottom edge exceeds viewport bottom the connecting lines have been drawn
-				return drawingBounds.maxY >= viewport.height - match.overlap/2
+				let viewport = match.viewports[player]
+				let extendsToBottom = drawingBounds.maxY >= viewport.height - match.overlap/2
+				let extendsToTop = drawingBounds.minY <= match.overlap/2
+
+				switch player {
+					case 0:	return extendsToBottom
+					case numPlayers-1: return extendsToTop
+					default: return extendsToBottom && extendsToTop
+				}
 			}
 		}
 
