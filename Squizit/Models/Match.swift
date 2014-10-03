@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import Lilliput
 
 let MatchSerializationCookie:[UInt8] = [109,116,99,104] // 'mtch'
 let MatchSerializationVersion_V0:Int32 = 0

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Lilliput
 import Social
 
 class TextActivityItemProvider : UIActivityItemProvider {

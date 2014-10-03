@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		630D689319DDAC7600F7F947 /* BinaryFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630D688D19DDAC7600F7F947 /* BinaryFile.swift */; };
+		630D689419DDAC7600F7F947 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630D688E19DDAC7600F7F947 /* ByteBuffer.swift */; };
+		630D689519DDAC7600F7F947 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630D688F19DDAC7600F7F947 /* ByteOrder.swift */; };
+		630D689619DDAC7600F7F947 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 630D689019DDAC7600F7F947 /* Info.plist */; };
+		630D689719DDAC7600F7F947 /* IntegerString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630D689119DDAC7600F7F947 /* IntegerString.swift */; };
+		630D689919DDACD300F7F947 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630D688E19DDAC7600F7F947 /* ByteBuffer.swift */; };
+		630D689A19DDACD300F7F947 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630D688F19DDAC7600F7F947 /* ByteOrder.swift */; };
+		630D689B19DDACD300F7F947 /* IntegerString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630D689119DDAC7600F7F947 /* IntegerString.swift */; };
 		63267AD319CC7CE800B22242 /* FullscreenModalTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63267AD219CC7CE700B22242 /* FullscreenModalTransitionManager.swift */; };
 		6327299819C3403F003BCD76 /* ImagePresenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6327299719C3403F003BCD76 /* ImagePresenterView.swift */; };
 		6350C5EA19A1727B008CE4F5 /* MatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350C5E919A1727B008CE4F5 /* MatchViewController.swift */; };
@@ -22,8 +30,6 @@
 		636CEA2B199F25F000BEBF53 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA2A199F25F000BEBF53 /* MatchView.swift */; };
 		638576EC19A6481500581DE8 /* SquizitTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EB19A6481500581DE8 /* SquizitTheme.swift */; };
 		638576F019A65B4500581DE8 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EF19A65B4500581DE8 /* Geometry.swift */; };
-		63873DD619DA46AB00825554 /* Lilliput.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63873DD319DA46A000825554 /* Lilliput.framework */; };
-		63873DD819DA46C000825554 /* Lilliput.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63873DD319DA46A000825554 /* Lilliput.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		638E459219C88EEC008D8CD9 /* RootBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638E459119C88EEC008D8CD9 /* RootBorderView.swift */; };
 		63A4B7ED19D46C9700975048 /* Images.xcassets in Sources */ = {isa = PBXBuildFile; fileRef = 63BBEC9A19967A2300F6E2B3 /* Images.xcassets */; };
 		63A4B7F319D5C03400975048 /* SaveToGalleryTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A4B7F219D5C03400975048 /* SaveToGalleryTransitionManager.swift */; };
@@ -54,27 +60,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		63873DD219DA46A000825554 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 63873DCD19DA46A000825554 /* Lilliput.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = E5BDC5C1196F698B001ABC11;
-			remoteInfo = Lilliput;
-		};
-		63873DD419DA46A000825554 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 63873DCD19DA46A000825554 /* Lilliput.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = E5BDC5CC196F698C001ABC11;
-			remoteInfo = LilliputTests;
-		};
-		63873DD919DA46C000825554 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 63873DCD19DA46A000825554 /* Lilliput.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = E5BDC5C0196F698B001ABC11;
-			remoteInfo = Lilliput;
-		};
 		63BBECA119967A2300F6E2B3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 63BBEC8219967A2300F6E2B3 /* Project object */;
@@ -84,21 +69,13 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		63FD058719C0011300CA7121 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				63873DD819DA46C000825554 /* Lilliput.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
+		630D688D19DDAC7600F7F947 /* BinaryFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinaryFile.swift; sourceTree = "<group>"; };
+		630D688E19DDAC7600F7F947 /* ByteBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBuffer.swift; sourceTree = "<group>"; };
+		630D688F19DDAC7600F7F947 /* ByteOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteOrder.swift; sourceTree = "<group>"; };
+		630D689019DDAC7600F7F947 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		630D689119DDAC7600F7F947 /* IntegerString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegerString.swift; sourceTree = "<group>"; };
+		630D689219DDAC7600F7F947 /* Lilliput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Lilliput.h; sourceTree = "<group>"; };
 		63267AD219CC7CE700B22242 /* FullscreenModalTransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullscreenModalTransitionManager.swift; sourceTree = "<group>"; };
 		6327299719C3403F003BCD76 /* ImagePresenterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePresenterView.swift; sourceTree = "<group>"; };
 		6350C5E919A1727B008CE4F5 /* MatchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchViewController.swift; sourceTree = "<group>"; };
@@ -115,7 +92,6 @@
 		636CEA2A199F25F000BEBF53 /* MatchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchView.swift; sourceTree = "<group>"; };
 		638576EB19A6481500581DE8 /* SquizitTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SquizitTheme.swift; sourceTree = "<group>"; };
 		638576EF19A65B4500581DE8 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
-		63873DCD19DA46A000825554 /* Lilliput.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Lilliput.xcodeproj; path = ../Lilliput/Lilliput.xcodeproj; sourceTree = "<group>"; };
 		638E459119C88EEC008D8CD9 /* RootBorderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootBorderView.swift; sourceTree = "<group>"; };
 		63A4B7F219D5C03400975048 /* SaveToGalleryTransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToGalleryTransitionManager.swift; sourceTree = "<group>"; };
 		63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor_Serialization.swift; sourceTree = "<group>"; };
@@ -152,7 +128,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63873DD619DA46AB00825554 /* Lilliput.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,6 +141,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		630D688C19DDAC7600F7F947 /* Lilliput */ = {
+			isa = PBXGroup;
+			children = (
+				630D688D19DDAC7600F7F947 /* BinaryFile.swift */,
+				630D688E19DDAC7600F7F947 /* ByteBuffer.swift */,
+				630D688F19DDAC7600F7F947 /* ByteOrder.swift */,
+				630D689019DDAC7600F7F947 /* Info.plist */,
+				630D689119DDAC7600F7F947 /* IntegerString.swift */,
+				630D689219DDAC7600F7F947 /* Lilliput.h */,
+			);
+			name = Lilliput;
+			path = ../Lilliput/Lilliput;
+			sourceTree = "<group>";
+		};
 		63267AD019CC7CCB00B22242 /* Transitions */ = {
 			isa = PBXGroup;
 			children = (
@@ -185,15 +174,6 @@
 			path = Theme;
 			sourceTree = "<group>";
 		};
-		63873DCE19DA46A000825554 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				63873DD319DA46A000825554 /* Lilliput.framework */,
-				63873DD519DA46A000825554 /* LilliputTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		63B44AF9199A5DEE00AE7B62 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -207,7 +187,7 @@
 		63BBEC8119967A2300F6E2B3 = {
 			isa = PBXGroup;
 			children = (
-				63873DCD19DA46A000825554 /* Lilliput.xcodeproj */,
+				630D688C19DDAC7600F7F947 /* Lilliput */,
 				63BBEC8C19967A2300F6E2B3 /* Squizit */,
 				63BBECA319967A2300F6E2B3 /* SquizitTests */,
 				63BBEC8B19967A2300F6E2B3 /* Products */,
@@ -333,13 +313,11 @@
 				63BBEC8619967A2300F6E2B3 /* Sources */,
 				63BBEC8719967A2300F6E2B3 /* Frameworks */,
 				63BBEC8819967A2300F6E2B3 /* Resources */,
-				63FD058719C0011300CA7121 /* Embed Frameworks */,
 				6327299119C22891003BCD76 /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				63873DDA19DA46C000825554 /* PBXTargetDependency */,
 			);
 			name = Squizit;
 			productName = Squizit;
@@ -394,12 +372,6 @@
 			mainGroup = 63BBEC8119967A2300F6E2B3;
 			productRefGroup = 63BBEC8B19967A2300F6E2B3 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 63873DCE19DA46A000825554 /* Products */;
-					ProjectRef = 63873DCD19DA46A000825554 /* Lilliput.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				63BBEC8919967A2300F6E2B3 /* Squizit */,
@@ -408,23 +380,6 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXReferenceProxy section */
-		63873DD319DA46A000825554 /* Lilliput.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Lilliput.framework;
-			remoteRef = 63873DD219DA46A000825554 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		63873DD519DA46A000825554 /* LilliputTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = LilliputTests.xctest;
-			remoteRef = 63873DD419DA46A000825554 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
-
 /* Begin PBXResourcesBuildPhase section */
 		63BBEC8819967A2300F6E2B3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
@@ -432,6 +387,7 @@
 			files = (
 				63BBEC9919967A2300F6E2B3 /* Main.storyboard in Resources */,
 				63BBEC9B19967A2300F6E2B3 /* Images.xcassets in Resources */,
+				630D689619DDAC7600F7F947 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,6 +422,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				63A4B7ED19D46C9700975048 /* Images.xcassets in Sources */,
+				630D689419DDAC7600F7F947 /* ByteBuffer.swift in Sources */,
+				630D689319DDAC7600F7F947 /* BinaryFile.swift in Sources */,
 				63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */,
 				63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */,
 				636CEA24199E586400BEBF53 /* DrawingInputController.swift in Sources */,
@@ -481,6 +439,7 @@
 				63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */,
 				63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */,
 				638E459219C88EEC008D8CD9 /* RootBorderView.swift in Sources */,
+				630D689519DDAC7600F7F947 /* ByteOrder.swift in Sources */,
 				63EBB87319AEC0DD003C3EC2 /* GalleryStore.swift in Sources */,
 				63533B1019BCCD6C00ED8B7A /* QuitGameButton.swift in Sources */,
 				63FDE7321998249A0006B7E4 /* Result.swift in Sources */,
@@ -499,6 +458,7 @@
 				63EBB83D19A97BFE003C3EC2 /* RootView.swift in Sources */,
 				635DFA8519BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift in Sources */,
 				63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */,
+				630D689719DDAC7600F7F947 /* IntegerString.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -506,6 +466,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				630D689919DDACD300F7F947 /* ByteBuffer.swift in Sources */,
+				630D689A19DDACD300F7F947 /* ByteOrder.swift in Sources */,
+				630D689B19DDACD300F7F947 /* IntegerString.swift in Sources */,
 				63EBB83819A65C45003C3EC2 /* Geometry.swift in Sources */,
 				63B44AFD199A66B400AE7B62 /* UIColor_Serialization.swift in Sources */,
 				63B44AF519990DA100AE7B62 /* Stroke.swift in Sources */,
@@ -518,11 +481,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		63873DDA19DA46C000825554 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Lilliput;
-			targetProxy = 63873DD919DA46C000825554 /* PBXContainerItemProxy */;
-		};
 		63BBECA219967A2300F6E2B3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 63BBEC8919967A2300F6E2B3 /* Squizit */;

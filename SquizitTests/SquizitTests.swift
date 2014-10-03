@@ -8,7 +8,6 @@
 
 import UIKit
 import XCTest
-import Lilliput
 
 private func randRange( var min:CGFloat, var max: CGFloat ) -> CGFloat {
 	if ( max < min ) {

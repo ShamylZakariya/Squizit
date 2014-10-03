@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import Lilliput
 
 let DrawingSerializationCookie:[UInt8] = [73, 71, 64, 72]
 let DrawingSerializationVersion_V0:Int32 = 0

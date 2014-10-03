@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import Lilliput
 
 extension ByteBuffer {
 
