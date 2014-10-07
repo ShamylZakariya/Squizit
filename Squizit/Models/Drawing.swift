@@ -298,7 +298,6 @@ class Drawing {
 }
 
 
-
 extension ByteBuffer  {
 
 	class func requiredSizeForDrawing( drawing:Drawing ) -> Int {

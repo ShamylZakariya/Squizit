@@ -10,8 +10,6 @@
 	<string>Squizit</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>E546750FD2F0F626775A683A958153F4B6CF8E3A</key>
-		<string>https://github.com/jkolb/Lilliput.git</string>
 		<key>EA8CCA9B72AAC3B7C1F34B59E92318F9A6C5D712</key>
 		<string>https://github.com/ShamylZakariya/Squizit.git</string>
 	</dict>
