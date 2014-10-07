@@ -16,13 +16,15 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	@IBOutlet weak var threePlayersButton: UIButton!
 	@IBOutlet weak var galleryButton: UIButton!
 	@IBOutlet weak var contentView: UIView!
-	@IBOutlet weak var borderView: RootBorderView!
+	@IBOutlet weak var borderView: RootBorderView!	
+	@IBOutlet weak var howToPlayButton: SquizitThemeButton!
 	@IBOutlet weak var twitterButton: SquizitThemeButton!
 	@IBOutlet weak var twitterButtonBottomConstraint: NSLayoutConstraint!
 
 	override func viewDidLoad() {
 
 		twitterButton.bordered = false
+		howToPlayButton.bordered = false
 
 		#if DEBUG
 			var tgr = UITapGestureRecognizer(target: self, action: "showTestDrawingView:")
@@ -45,6 +47,7 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 			borderView.alpha = 0
 			borderView.transform = CGAffineTransformMakeScale(1.1, 1.1)
 
+			howToPlayButton.alpha = 0
 			twitterButton.alpha = 0
 		}
 
@@ -88,6 +91,7 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 				delay: 1.0,
 				options: .AllowUserInteraction,
 				animations: { () -> Void in
+					self.howToPlayButton.alpha = 0.5
 					self.twitterButton.alpha = 0.5
 				},
 				completion: nil)
@@ -143,6 +147,9 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 		UIApplication.sharedApplication().openURL(twitterURL)
 	}
 
+	@IBAction func onHowToPlayButtonTapped(sender: AnyObject) {
+
+	}
 
 	dynamic func showTestDrawingView( sender:AnyObject ) {
 		performSegueWithIdentifier("showTestDrawingView", sender: sender)
