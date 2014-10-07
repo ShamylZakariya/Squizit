@@ -72,7 +72,7 @@ class Match {
 	func serialize() -> Result<NSData> {
 		var buffer = ByteBuffer(order: BigEndian(), capacity: ByteBuffer.requiredSizeForMatch(self))
 		if buffer.putMatch(self) {
-			return .Success( buffer.toNSData() )
+			return .Success( NSData( buffer:buffer ))
 		} else {
 			return .Failure(Error(message: "unable to serialize to buffer - probably under capacity"))
 		}
