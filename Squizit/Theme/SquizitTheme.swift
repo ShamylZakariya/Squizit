@@ -93,6 +93,11 @@ class SquizitTheme {
 		return UIColor( patternImage: self.leatherBackgroundImage() )
 	}
 
+	// background color for the match view
+	class func howToPlayBackgroundColor() -> UIColor {
+		return UIColor( patternImage: self.leatherBackgroundImage() )
+	}
+
 	// background color for gallery collection view
 	class func galleryBackgroundColor() -> UIColor {
 		return UIColor( patternImage: self.leatherBackgroundImage() )

@@ -131,7 +131,8 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 				let screenBounds = UIScreen.mainScreen().bounds
 				matchVC.match = Match(players: players, stageSize: CGSize(width: screenBounds.width, height: screenBounds.height), overlap: 4)
 
-			case "showTestDrawingView":
+			case "showTestDrawingView", "showHowToPlay":
+				// no setup needed for these two
 				break;
 
 			default:
@@ -145,10 +146,6 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	@IBAction func onTwitterButtonTapped(sender: AnyObject) {
 		let twitterURL = NSURL(string: "https://twitter.com/squizitapp")
 		UIApplication.sharedApplication().openURL(twitterURL)
-	}
-
-	@IBAction func onHowToPlayButtonTapped(sender: AnyObject) {
-
 	}
 
 	dynamic func showTestDrawingView( sender:AnyObject ) {

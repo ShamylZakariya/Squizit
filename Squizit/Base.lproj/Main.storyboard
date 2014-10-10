@@ -127,7 +127,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="onHowToPlayButtonTapped:" destination="7U9-N8-2K1" eventType="touchUpInside" id="A1d-7Z-KQH"/>
+                                    <segue destination="b36-Zb-Wqn" kind="custom" identifier="showHowToPlay" id="hyT-PW-Eqa"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Bt-N9-Av2" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
@@ -206,6 +206,65 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YTQ-ec-S3u" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1830" y="2377"/>
+        </scene>
+        <!--How To Play View Controller-->
+        <scene sceneID="EUQ-tN-4Nt">
+            <objects>
+                <viewController id="b36-Zb-Wqn" customClass="HowToPlayViewController" customModule="Squizit" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="W0r-Xw-hyx"/>
+                        <viewControllerLayoutGuide type="bottom" id="qwr-ig-Ewd"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="RTd-Dw-cgL">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="instruction-text-1" translatesAutoresizingMaskIntoConstraints="NO" id="foZ-js-W6r">
+                                <rect key="frame" x="135" y="532" width="499" height="15"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="The first player draws in the visible top area, leaving guide marks at the bottom to guide the next player." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4MA-P8-ULG">
+                                <rect key="frame" x="134" y="527" width="500" height="50"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="The next player must complete the drawing using only the marks left by the previous player as a guide." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="laJ-IW-1VG">
+                                <rect key="frame" x="134" y="448" width="500" height="50"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L1p-47-LZd">
+                                <rect key="frame" x="44" y="62" width="680" height="900"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qgp-gN-c09" customClass="InstructionDrawingView" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="20" y="20" width="640" height="430"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Yl-9j-nl6" customClass="InstructionDrawingView" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="20" y="450" width="640" height="430"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.2075037802419355" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="768" height="1024"/>
+                    <connections>
+                        <outlet property="instructionsDrawingViewBottom" destination="4Yl-9j-nl6" id="imH-IL-jDR"/>
+                        <outlet property="instructionsDrawingViewTop" destination="qgp-gN-c09" id="oBg-Qm-B2N"/>
+                        <outlet property="instructionsDrawingsHolder" destination="L1p-47-LZd" id="E47-wx-LlY"/>
+                        <outlet property="instructionsText1ImageView" destination="foZ-js-W6r" id="6GK-9c-xAi"/>
+                        <outlet property="instructionsText2" destination="4MA-P8-ULG" id="BXC-os-X6z"/>
+                        <outlet property="instructionsText3" destination="laJ-IW-1VG" id="VZH-4e-h5W"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="T2A-0X-yse" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1903" y="-576"/>
         </scene>
         <!--Match View Controller-->
         <scene sceneID="gec-U3-spX">
@@ -529,8 +588,8 @@
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Match Date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3P1-PS-qc6">
-                                            <rect key="frame" x="8" y="484" width="584" height="15"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Match Date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3P1-PS-qc6">
+                                            <rect key="frame" x="8" y="484" width="584" height="18"/>
                                             <fontDescription key="fontDescription" name="Didot-Italic" family="Didot" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -628,6 +687,7 @@
     </scenes>
     <resources>
         <image name="gallery-item-delete-button" width="43" height="43"/>
+        <image name="instruction-text-1" width="499" height="15"/>
         <image name="root-or" width="195" height="13"/>
         <image name="root-subhead" width="161" height="19"/>
         <image name="root-title" width="289" height="61"/>

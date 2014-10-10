@@ -46,6 +46,7 @@
 		63BC820019E43F7B0047D414 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC81F919E43F7B0047D414 /* ByteOrder.swift */; };
 		63BC820119E43F7B0047D414 /* IntegerString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC81FA19E43F7B0047D414 /* IntegerString.swift */; };
 		63BC820219E43F7B0047D414 /* IntegerString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC81FA19E43F7B0047D414 /* IntegerString.swift */; };
+		63BC820419E441290047D414 /* HowToPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC820319E441290047D414 /* HowToPlayViewController.swift */; };
 		63EBB83819A65C45003C3EC2 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EF19A65B4500581DE8 /* Geometry.swift */; };
 		63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB83A19A78BAA003C3EC2 /* MatchShieldView.swift */; };
 		63EBB83D19A97BFE003C3EC2 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB83C19A97BFD003C3EC2 /* RootView.swift */; };
@@ -106,6 +107,7 @@
 		63BC81F819E43F7B0047D414 /* ByteBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBuffer.swift; sourceTree = "<group>"; };
 		63BC81F919E43F7B0047D414 /* ByteOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteOrder.swift; sourceTree = "<group>"; };
 		63BC81FA19E43F7B0047D414 /* IntegerString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegerString.swift; sourceTree = "<group>"; };
+		63BC820319E441290047D414 /* HowToPlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HowToPlayViewController.swift; sourceTree = "<group>"; };
 		63EBB83A19A78BAA003C3EC2 /* MatchShieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchShieldView.swift; sourceTree = "<group>"; };
 		63EBB83C19A97BFD003C3EC2 /* RootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		63EBB83E19AB821D003C3EC2 /* Notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Notes.md; sourceTree = "<group>"; };
@@ -259,6 +261,7 @@
 				635DFA8219BA025600102B6A /* GalleryDetailViewController.swift */,
 				635DFA8419BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift */,
 				63533B1219BE033A00ED8B7A /* DrawingTestsViewController.swift */,
+				63BC820319E441290047D414 /* HowToPlayViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -454,6 +457,7 @@
 				635DFA8519BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift in Sources */,
 				63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */,
 				63BC820119E43F7B0047D414 /* IntegerString.swift in Sources */,
+				63BC820419E441290047D414 /* HowToPlayViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
