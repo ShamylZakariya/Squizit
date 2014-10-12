@@ -219,23 +219,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="instruction-text-1" translatesAutoresizingMaskIntoConstraints="NO" id="foZ-js-W6r">
-                                <rect key="frame" x="135" y="532" width="499" height="15"/>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="The first player draws in the visible top area, leaving guide marks at the bottom to guide the next player." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4MA-P8-ULG">
-                                <rect key="frame" x="134" y="527" width="500" height="50"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="The next player must complete the drawing using only the marks left by the previous player as a guide." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="laJ-IW-1VG">
-                                <rect key="frame" x="134" y="448" width="500" height="50"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L1p-47-LZd">
-                                <rect key="frame" x="44" y="62" width="680" height="900"/>
+                                <rect key="frame" x="44" y="102" width="680" height="900"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qgp-gN-c09" customClass="InstructionDrawingView" customModule="Squizit" customModuleProvider="target">
                                         <rect key="frame" x="20" y="20" width="640" height="430"/>
@@ -248,18 +233,36 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z5a-bi-X6v" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                <rect key="frame" x="604" y="39" width="100" height="44"/>
+                                <state key="normal" title="NEXT">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onNextButtonTap:" destination="b36-Zb-Wqn" eventType="touchUpInside" id="04d-PM-oZ7"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jzr-GZ-ysG" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                <rect key="frame" x="334" y="930" width="100" height="44"/>
+                                <state key="normal" title="DONE">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onDoneButtonTap:" destination="b36-Zb-Wqn" eventType="touchUpInside" id="RtL-tZ-Uag"/>
+                                    <action selector="onNextButtonTap:" destination="b36-Zb-Wqn" eventType="touchUpInside" id="6Fr-3a-tex"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.2075037802419355" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="768" height="1024"/>
                     <connections>
+                        <outlet property="doneButton" destination="Jzr-GZ-ysG" id="xea-ck-IBV"/>
                         <outlet property="instructionsDrawingViewBottom" destination="4Yl-9j-nl6" id="imH-IL-jDR"/>
                         <outlet property="instructionsDrawingViewTop" destination="qgp-gN-c09" id="oBg-Qm-B2N"/>
                         <outlet property="instructionsDrawingsHolder" destination="L1p-47-LZd" id="E47-wx-LlY"/>
-                        <outlet property="instructionsText1ImageView" destination="foZ-js-W6r" id="6GK-9c-xAi"/>
-                        <outlet property="instructionsText2" destination="4MA-P8-ULG" id="BXC-os-X6z"/>
-                        <outlet property="instructionsText3" destination="laJ-IW-1VG" id="VZH-4e-h5W"/>
+                        <outlet property="nextButton" destination="z5a-bi-X6v" id="Nqt-b3-fKM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T2A-0X-yse" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -687,7 +690,6 @@
     </scenes>
     <resources>
         <image name="gallery-item-delete-button" width="43" height="43"/>
-        <image name="instruction-text-1" width="499" height="15"/>
         <image name="root-or" width="195" height="13"/>
         <image name="root-subhead" width="161" height="19"/>
         <image name="root-title" width="289" height="61"/>

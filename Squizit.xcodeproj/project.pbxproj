@@ -591,7 +591,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-DDEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "409dce92-2889-46bf-96fb-72ac1f0bfdd8";
+				PROVISIONING_PROFILE = "39323fde-25ef-4c85-aab8-475a095e46ad";
 				SWIFT_OBJC_BRIDGING_HEADER = "Squizit/Models/Squizit-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 2;
@@ -610,7 +610,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "409dce92-2889-46bf-96fb-72ac1f0bfdd8";
+				PROVISIONING_PROFILE = "39323fde-25ef-4c85-aab8-475a095e46ad";
 				SWIFT_OBJC_BRIDGING_HEADER = "Squizit/Models/Squizit-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 2;
 			};

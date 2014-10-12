@@ -1,8 +1,8 @@
 #TODO
 
 	- add tweet + share buttons to the save-to-gallery vc's dialog, perhaps /outside/ the dialog, over the grey blanker
-	- add undo & clear buttons to the drawing tool selector (+rename drawing tool selector accordingly?)
 	- on Debug podcast was discussion that Apple made public touch APIs to determine touch intensity - could use this to modulate line width -- see UITouch -majorRadius
+	- SquizitThemeLabel line is 2px thick sometimes on non-retina
 	
 #FIXME
 

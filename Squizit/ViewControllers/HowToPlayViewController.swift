@@ -111,9 +111,16 @@ class HowToPlayViewController: UIViewController {
 	@IBOutlet weak var instructionsDrawingsHolder: UIView!
 	@IBOutlet weak var instructionsDrawingViewTop: InstructionDrawingView!
 	@IBOutlet weak var instructionsDrawingViewBottom: InstructionDrawingView!
-	@IBOutlet weak var instructionsText1ImageView: UIImageView!
-	@IBOutlet weak var instructionsText2: UILabel!
-	@IBOutlet weak var instructionsText3: UILabel!
+	@IBOutlet weak var nextButton: SquizitThemeButton!
+	@IBOutlet weak var doneButton: SquizitThemeButton!
+
+	var instructionsText1: SquizitThemeLabel!
+	var instructionsText2: SquizitThemeLabel!
+	var instructionsText3: SquizitThemeLabel!
+	var instructionsText4: UILabel!
+
+	var duration:NSTimeInterval = 0.5
+	var instructionsDrawingHolderDefaultFrame:CGRect = CGRect.zeroRect
 
 	override func preferredStatusBarStyle() -> UIStatusBarStyle {
 		return UIStatusBarStyle.LightContent
@@ -127,16 +134,37 @@ class HowToPlayViewController: UIViewController {
 		instructionsDrawingViewTop.backgroundColor = SquizitTheme.paperBackgroundColor()
 		instructionsDrawingViewBottom.backgroundColor = SquizitTheme.paperBackgroundColor()
 
-		for v in [instructionsDrawingsHolder,instructionsText1ImageView,instructionsText2,instructionsText3] {
-			v.userInteractionEnabled = false
-		}
+		instructionsText1 = SquizitThemeLabel(frame: CGRect.zeroRect)
+		instructionsText2 = SquizitThemeLabel(frame: CGRect.zeroRect)
+		instructionsText3 = SquizitThemeLabel(frame: CGRect.zeroRect)
 
 		// set up appearance of instructions text
-		let instructionFont = UIFont(name:"Avenir-Black", size: 16)
-		for l in [instructionsText2,instructionsText3] {
-			l.font = instructionFont
-			l.textColor = UIColor.whiteColor()
+		let instructionFont = UIFont(name:"Avenir-Black", size: 18)
+		for l in [instructionsText1,instructionsText2,instructionsText3] {
+			view.insertSubview(l, atIndex: 0)
+
+			l.label.font = instructionFont
+			l.label.textColor = UIColor.whiteColor()
+			l.label.textAlignment = .Center
+			l.alpha = 0
 		}
+
+		instructionsText4 = UILabel(frame: CGRect.zeroRect)
+		instructionsText4.font = UIFont(name:"Baskerville-Italic", size: 16)
+		instructionsText4.textColor = UIColor.whiteColor()
+		instructionsText4.textAlignment = .Center
+		instructionsText4.numberOfLines = 0
+		instructionsText4.lineBreakMode = .ByWordWrapping
+		instructionsText4.alpha = 0
+		view.insertSubview(instructionsText4, atIndex: 0)
+
+
+
+		instructionsText1.label.text = NSLocalizedString("A piece of paper is folded over itself into halves or thirds", comment: "Instructions Text 1")
+		instructionsText2.label.text = NSLocalizedString("The first player draws all the way to the bottom fold - leaving marks to guide the next player", comment: "Instructions Text 2")
+		instructionsText3.label.text = NSLocalizedString("The next player completes the drawing,\nguided by the marks left at the top", comment: "Instructions Text 3")
+		instructionsText4.text = NSLocalizedString("And we have an Exquisite Corpse", comment: "Instructions Text 4")
+
 
 		// set up initial transforms & alphas of views
 		instructionsDrawingViewTop.layer.transform = CATransform3DIdentity
@@ -144,12 +172,23 @@ class HowToPlayViewController: UIViewController {
 		instructionsDrawingViewTop.image = nil
 		instructionsDrawingViewBottom.image = nil
 
-		for v in [instructionsText1ImageView,instructionsText2,instructionsText3] {
-			v.alpha = 0
-		}
+		instructionsDrawingsHolder.layer.shadowColor = UIColor.blackColor().CGColor
+		instructionsDrawingsHolder.layer.shadowOffset = CGSize(width: 0, height:4)
+		instructionsDrawingsHolder.layer.shadowRadius = 8
+		instructionsDrawingsHolder.layer.shadowOpacity = 0
 
+		// cache the default frame before we set a transform
+		instructionsDrawingHolderDefaultFrame = instructionsDrawingsHolder.frame
 		instructionsDrawingsHolder.transform = CGAffineTransformMakeScale(1.1, 1.1)
 		instructionsDrawingsHolder.alpha = 0
+
+		nextButton.alpha = 0
+		doneButton.alpha = 0
+		doneButton.hidden = true
+
+		for v in [instructionsDrawingsHolder,instructionsText1,instructionsText2,instructionsText3] {
+			v.userInteractionEnabled = false
+		}
 
 		view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "tapped:"))
 	}
@@ -160,11 +199,48 @@ class HowToPlayViewController: UIViewController {
 
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
+
+		let bounds = view.bounds
+		let defaultHeight:CGFloat = 60
+		let inset:CGFloat = 20
+		let offset:CGFloat = 40
+
+		let bottomFrame = CGRect(x: instructionsDrawingHolderDefaultFrame.minX, y: instructionsDrawingHolderDefaultFrame.midY, width: instructionsDrawingHolderDefaultFrame.width, height: defaultHeight).rectByInsetting(dx: inset, dy: 0).rectByOffsetting(dx: 0, dy: offset)
+
+		let topFrame = CGRect(x: instructionsDrawingHolderDefaultFrame.minX, y: instructionsDrawingHolderDefaultFrame.midY, width: instructionsDrawingHolderDefaultFrame.width, height: defaultHeight).rectByOffsetting(dx: 0, dy: -defaultHeight).rectByInsetting(dx: inset, dy: 0).rectByOffsetting(dx: 0, dy: -offset)
+
+		instructionsText1.frame = bottomFrame
+		instructionsText2.frame = bottomFrame
+		instructionsText3.frame = topFrame
+
+		// now we can use intrinsic content size to adjust height
+		for v in [instructionsText1,instructionsText2,instructionsText3] {
+			let center = v.center
+			var frame = v.frame
+			frame.size.height = round(v.intrinsicContentSize().height)
+
+			v.frame = frame
+			v.center = center
+
+			v.frame = v.frame.integerRect
+		}
+
+		instructionsText4.frame = CGRect(x: instructionsDrawingHolderDefaultFrame.minX, y: doneButton.frame.minY - instructionsText4.intrinsicContentSize().height - 24, width: instructionsDrawingHolderDefaultFrame.width, height: 40)
 	}
 
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
 		showEmptyPaper()
+	}
+
+	// MARK: IBActions
+
+	@IBAction func onNextButtonTap(sender: AnyObject) {
+		forward()
+	}
+
+	@IBAction func onDoneButtonTap(sender: AnyObject) {
+		finished()
 	}
 
 	// MARK: Internal
@@ -209,9 +285,9 @@ class HowToPlayViewController: UIViewController {
 	let zDistance:CGFloat = -500
 
 	func showEmptyPaper() {
-		println("showEmptyPaper")
+		//println("showEmptyPaper")
 
-		UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions(0), animations: { () -> Void in
+		UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions(0), animations: { () -> Void in
 			self.instructionsDrawingsHolder.transform = CGAffineTransformIdentity
 			self.instructionsDrawingsHolder.alpha = 1
 		}) { [unowned self] completed in
@@ -222,48 +298,52 @@ class HowToPlayViewController: UIViewController {
 	}
 
 	func showTopHalf() {
-		println("showTopHalf")
+		//println("showTopHalf")
 
 		// fold bottom half behind top half
 		instructionsDrawingViewTop.setAnchorPoint(CGPoint( x:0.5, y: 1 ))
 		instructionsDrawingViewBottom.setAnchorPoint(CGPoint( x:0.5, y: 0 ))
 
-		UIView.animateWithDuration(0.5, animations: { [unowned self] in
-			self.instructionsText1ImageView.alpha = 1
+		UIView.animateWithDuration(duration, animations: { [unowned self] in
+			self.instructionsText1.alpha = 1
 
 			var trans = CATransform3DIdentity
 			trans.m34 = 1 / self.zDistance
 			trans = CATransform3DRotate(trans, CGFloat(-M_PI * 0.99), 1, 0, 0)
 			self.instructionsDrawingViewBottom.layer.transform = trans
+
+			self.nextButton.alpha = 1
 		})
 	}
 
 	func showTopHalfWithDrawing() {
-		println("showTopHalfWithDrawing")
+		//println("showTopHalfWithDrawing")
 		instructionsDrawingViewTop.image = UIImage(named:"instructions-drawing-top")
 
-		UIView.animateWithDuration(0.5, animations: { [unowned self] in
-			self.instructionsText1ImageView.alpha = 0
+		UIView.animateWithDuration(duration, animations: { [unowned self] in
+			self.instructionsText1.alpha = 0
 			self.instructionsText2.alpha = 1
 		})
 	}
 
 	func showBottomHalfWithGuide() {
-		println("showBottomHalfWithGuide")
+		//println("showBottomHalfWithGuide")
 
 		// unfold bottom half, and when complete, fold top half behind bottom half
 		self.instructionsDrawingViewBottom.image = UIImage(named:"instructions-drawing-bottom-guide")
 		self.instructionsDrawingViewBottom.contentMode = .Top
 
-		UIView.animateWithDuration(0.5, animations: { [unowned self] in
+		UIView.animateWithDuration(duration, animations: { [unowned self] in
 			self.instructionsText2.alpha = 0
 			self.instructionsText3.alpha = 1
 			self.instructionsDrawingViewBottom.layer.transform = CATransform3DIdentity
+			self.nextButton.alpha = 0
+
 		}) { [unowned self] completed in
 
 			self.instructionsDrawingsHolder.sendSubviewToBack(self.instructionsDrawingViewTop)
 
-			UIView.animateWithDuration(0.5, animations: { () -> Void in
+			UIView.animateWithDuration(self.duration, animations: { () -> Void in
 				var trans = CATransform3DIdentity
 				trans.m34 = 1 / self.zDistance
 
@@ -271,30 +351,60 @@ class HowToPlayViewController: UIViewController {
 				self.instructionsDrawingViewTop.layer.transform = trans
 
 			})
+
+			delay(1){
+				self.forward()
+			}
 		}
 	}
 
 	func showBottomHalfWithDrawing() {
-		println("showBottomHalfWithDrawing")
+		//println("showBottomHalfWithDrawing")
 
 		// unfold bottom half, and when complete, fold top half behind bottom half
 		self.instructionsDrawingViewBottom.image = UIImage(named:"instructions-drawing-bottom")
 		self.instructionsDrawingViewBottom.contentMode = .Center
 
-		UIView.animateWithDuration(0.5, animations: { [unowned self] in
-			self.instructionsText3.alpha = 0
+		UIView.animateWithDuration(duration, animations: { [unowned self] in
+			self.nextButton.alpha = 1
 		})
 	}
 
 	func showFinalDrawing() {
-		println("showFinalDrawing")
-		UIView.animateWithDuration(0.5, animations: { [unowned self] in
-			self.instructionsDrawingViewTop.layer.transform = CATransform3DIdentity
-		})
+		//println("showFinalDrawing")
+
+		nextButton.setTitle(NSLocalizedString("DONE", comment:"InstructionsDoneButtonTitle"), forState: .Normal)
+
+		self.instructionsDrawingsHolder.layer.shouldRasterize = true
+		self.doneButton.hidden = false
+
+		UIView.animateWithDuration(duration/2, delay: 0, options: UIViewAnimationOptions(0), animations: { [unowned self] in
+
+			//	hide the instructionsText3 FIRST, because a triggered call to layoutSubviews will happen when
+			//	self.instructionsDrawingsHolder.transform is set, and this will jarringly bump up the label, since it's
+			//	y position is dependant on the drawings holder
+
+			self.nextButton.alpha = 0
+			self.instructionsText3.alpha = 0
+		}) { [unowned self] completed in
+
+			UIView.animateWithDuration(self.duration, animations: { [unowned self] in
+				self.doneButton.alpha = 1
+				self.instructionsText4.alpha = 1
+				self.instructionsDrawingViewTop.layer.transform = CATransform3DIdentity
+				self.instructionsDrawingsHolder.layer.shadowOpacity = 1
+
+				var transform = CGAffineTransformIdentity
+				transform = CGAffineTransformTranslate(transform, 0, -70)
+				transform = CGAffineTransformScale(transform,0.85, 0.85)
+				transform = CGAffineTransformRotate(transform, CGFloat(1.5 * M_PI / 180.0))
+				self.instructionsDrawingsHolder.transform = transform
+			})
+		}
 	}
 
 	func finished() {
-		println("finished")
+		//println("finished")
 		dismissViewControllerAnimated(true, completion: nil)
 	}
 

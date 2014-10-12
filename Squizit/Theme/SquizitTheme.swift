@@ -317,3 +317,70 @@ class SquizitThemeSearchField : UITextField {
 		}
 	}
 }
+
+class SquizitThemeLabel : UIView {
+
+	private var _label:UILabel!
+
+	var label:UILabel {
+		return _label
+	}
+
+	var margins:(CGFloat,CGFloat) = (60,10)
+
+	required init(coder aDecoder: NSCoder) {
+		super.init( coder: aDecoder )
+		commonInit()
+	}
+
+	override init(frame: CGRect) {
+		super.init( frame: frame )
+		commonInit()
+	}
+
+	override func layoutSubviews() {
+		let bounds = self.bounds
+		let labelBounds = CGRect(x:0,y:0,width:bounds.width - 2*margins.0, height:CGFloat.max)
+		_label.preferredMaxLayoutWidth = labelBounds.width
+
+		let rect = _label.textRectForBounds(labelBounds, limitedToNumberOfLines: 0)
+		_label.frame = CGRect(center: CGPoint(x:bounds.midX, y: bounds.midY), size: rect.size )
+
+		self.layoutIfNeeded()
+	}
+
+	override func drawRect(rect: CGRect) {
+
+		let textRect = _label.frame
+		let midY = round(bounds.midY) + 0.5
+
+		var stroke = UIBezierPath()
+		stroke.moveToPoint(CGPoint(x:0, y:midY))
+		stroke.addLineToPoint(CGPoint(x:margins.0, y:midY))
+
+		stroke.moveToPoint(CGPoint(x:bounds.maxX - margins.0, y:midY))
+		stroke.addLineToPoint(CGPoint(x:bounds.maxX, y:midY))
+
+		_label.textColor.colorWithAlphaComponent(0.5).set()
+		stroke.lineWidth = 1
+		stroke.stroke()
+	}
+
+	override func intrinsicContentSize() -> CGSize {
+		self.layoutIfNeeded()
+		let rect = _label.textRectForBounds(_label.bounds, limitedToNumberOfLines: 0)
+		return CGSize(width:UIViewNoIntrinsicMetric, height: rect.height + 2*margins.1)
+	}
+
+	private func commonInit() {
+		opaque = false
+		backgroundColor = UIColor.clearColor()
+
+		_label = UILabel(frame: CGRect.zeroRect)
+		_label.numberOfLines = 0
+		_label.lineBreakMode = .ByWordWrapping
+		_label.textColor = UIColor.whiteColor()
+		addSubview(_label)
+	}
+
+}
