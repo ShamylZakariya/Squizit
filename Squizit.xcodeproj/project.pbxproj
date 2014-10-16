@@ -20,6 +20,8 @@
 		636CEA24199E586400BEBF53 /* DrawingInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA23199E586400BEBF53 /* DrawingInputController.swift */; };
 		636CEA29199F251200BEBF53 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA28199F251200BEBF53 /* Match.swift */; };
 		636CEA2B199F25F000BEBF53 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA2A199F25F000BEBF53 /* MatchView.swift */; };
+		6376756119F00F9F00AAB604 /* BinaryCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6376756019F00F9F00AAB604 /* BinaryCoding.swift */; };
+		6376756219F00F9F00AAB604 /* BinaryCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6376756019F00F9F00AAB604 /* BinaryCoding.swift */; };
 		638576EC19A6481500581DE8 /* SquizitTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EB19A6481500581DE8 /* SquizitTheme.swift */; };
 		638576F019A65B4500581DE8 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EF19A65B4500581DE8 /* Geometry.swift */; };
 		638E459219C88EEC008D8CD9 /* RootBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638E459119C88EEC008D8CD9 /* RootBorderView.swift */; };
@@ -85,6 +87,7 @@
 		636CEA23199E586400BEBF53 /* DrawingInputController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingInputController.swift; sourceTree = "<group>"; };
 		636CEA28199F251200BEBF53 /* Match.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		636CEA2A199F25F000BEBF53 /* MatchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchView.swift; sourceTree = "<group>"; };
+		6376756019F00F9F00AAB604 /* BinaryCoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinaryCoding.swift; sourceTree = "<group>"; };
 		638576EB19A6481500581DE8 /* SquizitTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SquizitTheme.swift; sourceTree = "<group>"; };
 		638576EF19A65B4500581DE8 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 		638E459119C88EEC008D8CD9 /* RootBorderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootBorderView.swift; sourceTree = "<group>"; };
@@ -298,6 +301,7 @@
 				63EFB1AC19D06C8100253560 /* CancelableAction.swift */,
 				63B5252219D73F0E00BB550F /* ShareToTwitter.h */,
 				63B5252419D73F5D00BB550F /* ShareToTwitter.m */,
+				6376756019F00F9F00AAB604 /* BinaryCoding.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -425,6 +429,7 @@
 				63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */,
 				63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */,
 				636CEA24199E586400BEBF53 /* DrawingInputController.swift in Sources */,
+				6376756119F00F9F00AAB604 /* BinaryCoding.swift in Sources */,
 				636CEA29199F251200BEBF53 /* Match.swift in Sources */,
 				63267AD319CC7CE800B22242 /* FullscreenModalTransitionManager.swift in Sources */,
 				6350C5EC19A24790008CE4F5 /* RootViewController.swift in Sources */,
@@ -473,6 +478,7 @@
 				63B44AF519990DA100AE7B62 /* Stroke.swift in Sources */,
 				63B44AF619990DA100AE7B62 /* Drawing.swift in Sources */,
 				63B44AF719990DA100AE7B62 /* Result.swift in Sources */,
+				6376756219F00F9F00AAB604 /* BinaryCoding.swift in Sources */,
 				63BBECA719967A2300F6E2B3 /* SquizitTests.swift in Sources */,
 				63BC820219E43F7B0047D414 /* IntegerString.swift in Sources */,
 			);

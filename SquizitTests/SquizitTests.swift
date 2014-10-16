@@ -29,6 +29,190 @@ private func randomPoint() -> CGPoint {
 	return CGPoint(x: randRange(-100, 100), y: randRange(-100, 100))
 }
 
+class BinaryCoderTests: XCTestCase {
+
+    override func setUp() {
+        super.setUp()
+	}
+
+    override func tearDown() {
+        super.tearDown()
+    }
+
+	func testUInt8Coding() {
+		var coder = BinaryCoder(order: nativeOrder())
+
+		let ints:[UInt8] = [0,1,2,3,4,5,6,7,8]
+		for i in ints {
+			coder.putUInt8(i)
+		}
+
+		coder.rewind()
+
+		for i in ints {
+			let v = coder.getUInt8()
+			XCTAssertEqual(i, v, "Deserialized UInt8s should be same")
+		}
+	}
+
+	func testUInt8ArrayCoding() {
+		var coder = BinaryCoder(order: nativeOrder())
+
+		let ints:[UInt8] = [0,1,2,3,4,5,6,7,8]
+		coder.putUInt8(ints)
+		coder.rewind()
+
+		let deserialized:[UInt8] = coder.getUInt8(ints.count)
+		for (index,value) in enumerate(ints) {
+			XCTAssertEqual(value, deserialized[index], "Deserialized UInt8s should be same")
+		}
+	}
+
+	func testUInt16Coding() {
+		var coder = BinaryCoder(order: nativeOrder())
+		let ints:[UInt16] = [UInt16.min,1000,1001,1002,1003,UInt16.max]
+		for i in ints {
+			coder.putUInt16(i)
+		}
+
+		coder.rewind()
+
+		for i in ints {
+			let v = coder.getUInt16()
+			XCTAssertEqual(i, v, "Deserialized UInt16s should be same")
+		}
+	}
+
+	func testUInt16ArrayCoding() {
+		var coder = BinaryCoder(order: nativeOrder())
+
+		let ints:[UInt16] = [UInt16.min,1000,1001,1002,1003,UInt16.max]
+		coder.putUInt16(ints)
+		coder.rewind()
+
+		let deserialized:[UInt16] = coder.getUInt16(ints.count)
+		for (index,value) in enumerate(ints) {
+			XCTAssertEqual(value, deserialized[index], "Deserialized UInt8s should be same")
+		}
+	}
+
+	func testUInt32Coding() {
+		var coder = BinaryCoder(order: nativeOrder())
+		let ints:[UInt32] = [UInt32.min,1000000,1000001,1000002,1000003,UInt32.max]
+		for i in ints {
+			coder.putUInt32(i)
+		}
+
+		coder.rewind()
+
+		for i in ints {
+			let v = coder.getUInt32()
+			XCTAssertEqual(i, v, "Deserialized UInt32s should be same")
+		}
+	}
+
+	func testUInt32ArrayCoding() {
+		var coder = BinaryCoder(order: nativeOrder())
+
+		let ints:[UInt32] = [UInt32.min,1000000,1000001,1000002,1000003,UInt32.max]
+		coder.putUInt32(ints)
+		coder.rewind()
+
+		let deserialized:[UInt32] = coder.getUInt32(ints.count)
+		for (index,value) in enumerate(ints) {
+			XCTAssertEqual(value, deserialized[index], "Deserialized UInt32s should be same")
+		}
+	}
+
+	func testFloat32Coding() {
+		var coder = BinaryCoder(order: nativeOrder())
+
+		var floats:[Float32] = []
+		for i in 0 ..< 100 {
+			floats.append( Float32(i) * Float32(M_PI) )
+		}
+
+		for i in floats {
+			coder.putFloat32(i)
+		}
+
+		coder.rewind()
+
+		for i in floats {
+			let v = coder.getFloat32()
+			XCTAssertEqual(i, v, "Deserialized Float32s should be same")
+		}
+	}
+
+	func testFloat32ArrayCoding() {
+		var coder = BinaryCoder(order: nativeOrder())
+
+		var floats:[Float32] = []
+		for i in 0 ..< 100 {
+			floats.append( Float32(i) * Float32(M_PI) )
+		}
+
+		coder.putFloat32(floats)
+		coder.rewind()
+
+		let deserialized:[Float32] = coder.getFloat32(floats.count)
+		for (index,value) in enumerate(floats) {
+			XCTAssertEqual(value, deserialized[index], "Deserialized Float32s should be same")
+		}
+	}
+
+	func testFloat64Coding() {
+		var coder = BinaryCoder(order: nativeOrder())
+
+		var floats:[Float64] = []
+		for i in 0 ..< 100 {
+			floats.append( Float64(i) * Float64(M_PI) * 111222333.555 )
+		}
+
+		for i in floats {
+			coder.putFloat64(i)
+		}
+
+		coder.rewind()
+
+		for i in floats {
+			let v = coder.getFloat64()
+			XCTAssertEqual(i, v, "Deserialized Float64s should be same")
+		}
+	}
+
+	func testFloat64ArrayCoding() {
+		var coder = BinaryCoder(order: nativeOrder())
+
+		var floats:[Float64] = []
+		for i in 0 ..< 100 {
+			floats.append( Float64(i) * Float64(M_PI) * 111222333.555 )
+		}
+
+		coder.putFloat64(floats)
+		coder.rewind()
+
+		let deserialized:[Float64] = coder.getFloat64(floats.count)
+		for (index,value) in enumerate(floats) {
+			XCTAssertEqual(value, deserialized[index], "Deserialized Float64s should be same")
+		}
+	}
+
+	func testUTF8Encoding() {
+		var coder = BinaryCoder(order: nativeOrder())
+//		let str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+
+		let str = "Who!"
+
+		coder.putTerminatedUTF8(str)
+		coder.rewind()
+
+		let deserialized = coder.getTerminatedUTF8()
+		XCTAssertEqual(str, deserialized, "Deserialized UTF8 strings should be same")
+	}
+
+}
+
 class SquizitTests: XCTestCase {
     
     override func setUp() {
