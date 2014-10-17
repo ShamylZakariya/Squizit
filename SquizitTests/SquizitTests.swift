@@ -40,7 +40,7 @@ class BinaryCoderTests: XCTestCase {
     }
 
 	func testUInt8Coding() {
-		var coder = BinaryCoder(order: nativeOrder())
+		var coder = MutableBinaryCoder(order: nativeOrder())
 
 		let ints:[UInt8] = [0,1,2,3,4,5,6,7,8]
 		for i in ints {
@@ -56,7 +56,7 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testUInt8ArrayCoding() {
-		var coder = BinaryCoder(order: nativeOrder())
+		var coder = MutableBinaryCoder(order: nativeOrder())
 
 		let ints:[UInt8] = [0,1,2,3,4,5,6,7,8]
 		coder.putUInt8(ints)
@@ -69,7 +69,7 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testUInt16Coding() {
-		var coder = BinaryCoder(order: nativeOrder())
+		var coder = MutableBinaryCoder(order: nativeOrder())
 		let ints:[UInt16] = [UInt16.min,1000,1001,1002,1003,UInt16.max]
 		for i in ints {
 			coder.putUInt16(i)
@@ -84,7 +84,7 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testUInt16ArrayCoding() {
-		var coder = BinaryCoder(order: nativeOrder())
+		var coder = MutableBinaryCoder(order: nativeOrder())
 
 		let ints:[UInt16] = [UInt16.min,1000,1001,1002,1003,UInt16.max]
 		coder.putUInt16(ints)
@@ -97,7 +97,7 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testUInt32Coding() {
-		var coder = BinaryCoder(order: nativeOrder())
+		var coder = MutableBinaryCoder(order: nativeOrder())
 		let ints:[UInt32] = [UInt32.min,1000000,1000001,1000002,1000003,UInt32.max]
 		for i in ints {
 			coder.putUInt32(i)
@@ -112,7 +112,7 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testUInt32ArrayCoding() {
-		var coder = BinaryCoder(order: nativeOrder())
+		var coder = MutableBinaryCoder(order: nativeOrder())
 
 		let ints:[UInt32] = [UInt32.min,1000000,1000001,1000002,1000003,UInt32.max]
 		coder.putUInt32(ints)
@@ -125,7 +125,7 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testFloat32Coding() {
-		var coder = BinaryCoder(order: nativeOrder())
+		var coder = MutableBinaryCoder(order: nativeOrder())
 
 		var floats:[Float32] = []
 		for i in 0 ..< 100 {
@@ -145,7 +145,7 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testFloat32ArrayCoding() {
-		var coder = BinaryCoder(order: nativeOrder())
+		var coder = MutableBinaryCoder(order: nativeOrder())
 
 		var floats:[Float32] = []
 		for i in 0 ..< 100 {
@@ -162,7 +162,7 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testFloat64Coding() {
-		var coder = BinaryCoder(order: nativeOrder())
+		var coder = MutableBinaryCoder(order: nativeOrder())
 
 		var floats:[Float64] = []
 		for i in 0 ..< 100 {
@@ -182,7 +182,7 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testFloat64ArrayCoding() {
-		var coder = BinaryCoder(order: nativeOrder())
+		var coder = MutableBinaryCoder(order: nativeOrder())
 
 		var floats:[Float64] = []
 		for i in 0 ..< 100 {
@@ -199,10 +199,8 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testUTF8Encoding() {
-		var coder = BinaryCoder(order: nativeOrder())
-//		let str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-
-		let str = "Who!"
+		var coder = MutableBinaryCoder(order: nativeOrder())
+		let str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
 		coder.putTerminatedUTF8(str)
 		coder.rewind()

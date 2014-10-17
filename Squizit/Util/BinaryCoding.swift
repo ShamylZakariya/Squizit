@@ -9,34 +9,54 @@
 import Foundation
 
 /**
-	Adaptation of https://github.com/jkolb/Lilliput
-	BinaryCoder wraps an NSMutableData instance, and makes it easy to put or get basic types like ints, floats, strings, in an endian-safe manner.
+	BinaryCoding
+	Adaptation of the endian-safe ByteBuffer from https://github.com/jkolb/Lilliput
+
+	BinaryCoder is a read only adapter around NSData. You initialize it with an NSData instance, or from the contents of a file
+	MutableBinaryCoder is a mutable subclass
+
 */
 
-class BinaryCoder {
+class BinaryCoder : NSCopying, NSMutableCopying {
 
-	private var _data:NSMutableData!
+	private var _data:NSData!
 	private var _order:ByteOrder!
 	private let _bits = UnsafeMutablePointer<UInt8>.alloc(sizeof(UIntMax))
 	private var _position:Int = 0
 
 	init( order:ByteOrder ) {
 		_order = order;
-		_data = NSMutableData(capacity: 0)
+		_data = NSData()
 	}
 
 	init( order:ByteOrder, data:NSData ) {
 		_order = order;
-		_data = NSMutableData(data: data)
+		_data = data
 	}
 
 	init( order:ByteOrder, contentsOfURL url:NSURL ) {
 		_order = order;
-		_data = NSMutableData(contentsOfURL:url)
+		_data = NSData(contentsOfURL:url)
 	}
 
 	deinit {
 		_bits.dealloc(sizeof(UIntMax))
+	}
+
+	func copyWithZone(zone: NSZone) -> AnyObject {
+		return BinaryCoder(order: _order, data: data.copyWithZone(zone) as NSData)
+	}
+
+	func mutableCopyWithZone(zone: NSZone) -> AnyObject? {
+		return MutableBinaryCoder(order: _order, mutableData: data.mutableCopyWithZone(zone) as NSMutableData)
+	}
+
+	var data:NSData {
+		return _data
+	}
+
+	var order:ByteOrder {
+		return _order
 	}
 
 	var position: Int {
@@ -45,7 +65,7 @@ class BinaryCoder {
 		}
 		set {
 
-			if (newValue < 0 || newValue > _data.length) {
+			if (newValue < 0 || newValue > data.length) {
 				fatalError("Illegal position")
 			}
 
@@ -55,7 +75,7 @@ class BinaryCoder {
 
 	func rewind() { position = 0; }
 
-	var length:Int { return _data.length }
+	var length:Int { return data.length }
 
 	// MARK: Reading
 
@@ -76,7 +96,7 @@ class BinaryCoder {
 	}
 
 	func getUInt8() -> UInt8 {
-		return UnsafePointer<UInt8>(_data.bytes)[position++]
+		return UnsafePointer<UInt8>(data.bytes)[position++]
 	}
 
 	func getUInt16() -> UInt16 {
@@ -212,17 +232,43 @@ class BinaryCoder {
 
 	func getBits<T>() -> T {
 
-		// FIXME: This will explode
-
-		let bytes = UnsafePointer<UInt8>(_data.bytes)
+		let bytes = UnsafePointer<UInt8>(data.bytes)
 		for index in 0..<sizeof(T) {
 			_bits[index] = bytes[position++]
 		}
 
 		return UnsafePointer<T>(_bits).memory
 	}
+}
 
-	// MARK: Writing
+/**
+	Mutable subclass of BinaryCoder
+*/
+class MutableBinaryCoder : BinaryCoder {
+
+	private var _mutableData:NSMutableData!
+	var mutableData:NSMutableData {
+		return _mutableData
+	}
+
+	override init( order:ByteOrder ) {
+		super.init(order: order)
+		_mutableData = NSMutableData(capacity: 0)
+		_data = _mutableData
+	}
+
+	override init( order:ByteOrder, data:NSData ) {
+		super.init(order: order, data: data)
+		_mutableData = NSMutableData(data: data)
+		_data = _mutableData
+	}
+
+	init( order:ByteOrder, mutableData:NSMutableData ) {
+		super.init(order: order)
+		_mutableData = mutableData
+		_data = _mutableData
+	}
+
 
 	func putInt8(value: Int8) {
 		putUInt8(UInt8(bitPattern: value))
@@ -241,8 +287,8 @@ class BinaryCoder {
 	}
 
 	func putUInt8(value: UInt8) {
-		_data.increaseLengthBy(sizeof(UInt8))
-		var bytes = UnsafeMutablePointer<UInt8>(_data.mutableBytes)
+		mutableData.increaseLengthBy(sizeof(UInt8))
+		var bytes = UnsafeMutablePointer<UInt8>(mutableData.mutableBytes)
 		bytes[position++] = value
 	}
 
@@ -289,9 +335,9 @@ class BinaryCoder {
 	}
 
 	func putUInt8(source: Array<UInt8>) {
-		_data.increaseLengthBy(sizeof(UInt8) * source.count )
+		mutableData.increaseLengthBy(sizeof(UInt8) * source.count )
 
-		var bytes = UnsafeMutablePointer<UInt8>(_data.mutableBytes)
+		var bytes = UnsafeMutablePointer<UInt8>(mutableData.mutableBytes)
 		for v in source {
 			bytes[position++] = v
 		}
@@ -331,10 +377,15 @@ class BinaryCoder {
 	func putBits<T>(value: T) {
 		UnsafeMutablePointer<T>(_bits).memory = value
 
-		_data.increaseLengthBy(sizeof(T))
-		var bytes = UnsafeMutablePointer<UInt8>(_data.mutableBytes)
+		mutableData.increaseLengthBy(sizeof(T))
+		var bytes = UnsafeMutablePointer<UInt8>(mutableData.mutableBytes)
 		for index in 0..<sizeof(T) {
 			bytes[position++] = _bits[index]
 		}
 	}
+
 }
+
+
+
+
