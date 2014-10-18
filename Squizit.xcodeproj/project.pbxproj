@@ -40,14 +40,6 @@
 		63BBECA719967A2300F6E2B3 /* SquizitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECA619967A2300F6E2B3 /* SquizitTests.swift */; };
 		63BBECB619967ACC00F6E2B3 /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB519967ACC00F6E2B3 /* Drawing.swift */; };
 		63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBB19967B0C00F6E2B3 /* Stroke.swift */; };
-		63BC81FB19E43F7B0047D414 /* BinaryFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC81F719E43F7B0047D414 /* BinaryFile.swift */; };
-		63BC81FC19E43F7B0047D414 /* BinaryFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC81F719E43F7B0047D414 /* BinaryFile.swift */; };
-		63BC81FD19E43F7B0047D414 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC81F819E43F7B0047D414 /* ByteBuffer.swift */; };
-		63BC81FE19E43F7B0047D414 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC81F819E43F7B0047D414 /* ByteBuffer.swift */; };
-		63BC81FF19E43F7B0047D414 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC81F919E43F7B0047D414 /* ByteOrder.swift */; };
-		63BC820019E43F7B0047D414 /* ByteOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC81F919E43F7B0047D414 /* ByteOrder.swift */; };
-		63BC820119E43F7B0047D414 /* IntegerString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC81FA19E43F7B0047D414 /* IntegerString.swift */; };
-		63BC820219E43F7B0047D414 /* IntegerString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC81FA19E43F7B0047D414 /* IntegerString.swift */; };
 		63BC820419E441290047D414 /* HowToPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC820319E441290047D414 /* HowToPlayViewController.swift */; };
 		63EBB83819A65C45003C3EC2 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EF19A65B4500581DE8 /* Geometry.swift */; };
 		63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB83A19A78BAA003C3EC2 /* MatchShieldView.swift */; };
@@ -106,10 +98,6 @@
 		63BBECA619967A2300F6E2B3 /* SquizitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquizitTests.swift; sourceTree = "<group>"; };
 		63BBECB519967ACC00F6E2B3 /* Drawing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drawing.swift; sourceTree = "<group>"; };
 		63BBECBB19967B0C00F6E2B3 /* Stroke.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stroke.swift; sourceTree = "<group>"; };
-		63BC81F719E43F7B0047D414 /* BinaryFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinaryFile.swift; sourceTree = "<group>"; };
-		63BC81F819E43F7B0047D414 /* ByteBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBuffer.swift; sourceTree = "<group>"; };
-		63BC81F919E43F7B0047D414 /* ByteOrder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteOrder.swift; sourceTree = "<group>"; };
-		63BC81FA19E43F7B0047D414 /* IntegerString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegerString.swift; sourceTree = "<group>"; };
 		63BC820319E441290047D414 /* HowToPlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HowToPlayViewController.swift; sourceTree = "<group>"; };
 		63EBB83A19A78BAA003C3EC2 /* MatchShieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchShieldView.swift; sourceTree = "<group>"; };
 		63EBB83C19A97BFD003C3EC2 /* RootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -176,7 +164,6 @@
 		63BBEC8119967A2300F6E2B3 = {
 			isa = PBXGroup;
 			children = (
-				63ECA73319E4364B008F139D /* Lilliput */,
 				63BBEC8C19967A2300F6E2B3 /* Squizit */,
 				63BBECA319967A2300F6E2B3 /* SquizitTests */,
 				63BBEC8B19967A2300F6E2B3 /* Products */,
@@ -281,18 +268,6 @@
 				63EBB83C19A97BFD003C3EC2 /* RootView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		63ECA73319E4364B008F139D /* Lilliput */ = {
-			isa = PBXGroup;
-			children = (
-				63BC81F719E43F7B0047D414 /* BinaryFile.swift */,
-				63BC81F819E43F7B0047D414 /* ByteBuffer.swift */,
-				63BC81F919E43F7B0047D414 /* ByteOrder.swift */,
-				63BC81FA19E43F7B0047D414 /* IntegerString.swift */,
-			);
-			name = Lilliput;
-			path = Lilliput/Lilliput;
 			sourceTree = "<group>";
 		};
 		63EFB1AA19D06C7100253560 /* Util */ = {
@@ -424,8 +399,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				63A4B7ED19D46C9700975048 /* Images.xcassets in Sources */,
-				63BC81FD19E43F7B0047D414 /* ByteBuffer.swift in Sources */,
-				63BC81FB19E43F7B0047D414 /* BinaryFile.swift in Sources */,
 				63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */,
 				63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */,
 				636CEA24199E586400BEBF53 /* DrawingInputController.swift in Sources */,
@@ -442,7 +415,6 @@
 				63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */,
 				63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */,
 				638E459219C88EEC008D8CD9 /* RootBorderView.swift in Sources */,
-				63BC81FF19E43F7B0047D414 /* ByteOrder.swift in Sources */,
 				63EBB87319AEC0DD003C3EC2 /* GalleryStore.swift in Sources */,
 				63533B1019BCCD6C00ED8B7A /* QuitGameButton.swift in Sources */,
 				63FDE7321998249A0006B7E4 /* Result.swift in Sources */,
@@ -461,7 +433,6 @@
 				63EBB83D19A97BFE003C3EC2 /* RootView.swift in Sources */,
 				635DFA8519BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift in Sources */,
 				63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */,
-				63BC820119E43F7B0047D414 /* IntegerString.swift in Sources */,
 				63BC820419E441290047D414 /* HowToPlayViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,17 +441,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63BC820019E43F7B0047D414 /* ByteOrder.swift in Sources */,
 				63EBB83819A65C45003C3EC2 /* Geometry.swift in Sources */,
-				63BC81FE19E43F7B0047D414 /* ByteBuffer.swift in Sources */,
-				63BC81FC19E43F7B0047D414 /* BinaryFile.swift in Sources */,
 				63B44AFD199A66B400AE7B62 /* UIColor_Serialization.swift in Sources */,
 				63B44AF519990DA100AE7B62 /* Stroke.swift in Sources */,
 				63B44AF619990DA100AE7B62 /* Drawing.swift in Sources */,
 				63B44AF719990DA100AE7B62 /* Result.swift in Sources */,
 				6376756219F00F9F00AAB604 /* BinaryCoding.swift in Sources */,
 				63BBECA719967A2300F6E2B3 /* SquizitTests.swift in Sources */,
-				63BC820219E43F7B0047D414 /* IntegerString.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

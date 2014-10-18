@@ -8,6 +8,93 @@
 
 import Foundation
 
+public protocol ByteOrder {
+    func toNative(value: UInt16) -> UInt16
+    func toNative(value: UInt32) -> UInt32
+    func toNative(value: UInt64) -> UInt64
+    
+    func fromNative(value: UInt16) -> UInt16
+    func fromNative(value: UInt32) -> UInt32
+    func fromNative(value: UInt64) -> UInt64
+}
+
+public func nativeOrder() -> ByteOrder {
+    if (UInt16(littleEndian: 1) == UInt16(1).littleEndian) {
+        return LittleEndian()
+    } else if (UInt16(bigEndian: 1) == UInt16(1).bigEndian) {
+        return BigEndian()
+    } else {
+        fatalError("Unknown byte order")
+    }
+}
+
+public func foreignOrder() -> ByteOrder {
+    if (UInt16(littleEndian: 1) == UInt16(1).littleEndian) {
+        return BigEndian()
+    } else if (UInt16(bigEndian: 1) == UInt16(1).bigEndian) {
+        return LittleEndian()
+    } else {
+        fatalError("Unknown byte order")
+    }
+}
+
+
+public struct LittleEndian : ByteOrder {
+    public init() { }
+    
+    public func toNative(value: UInt16) -> UInt16 {
+        return UInt16(littleEndian: value)
+    }
+    
+    public func toNative(value: UInt32) -> UInt32 {
+        return UInt32(littleEndian: value)
+    }
+    
+    public func toNative(value: UInt64) -> UInt64 {
+        return UInt64(littleEndian: value)
+    }
+    
+    public func fromNative(value: UInt16) -> UInt16 {
+        return value.littleEndian
+    }
+    
+    public func fromNative(value: UInt32) -> UInt32 {
+        return value.littleEndian
+    }
+    
+    public func fromNative(value: UInt64) -> UInt64 {
+        return value.littleEndian
+    }
+}
+
+public struct BigEndian : ByteOrder {
+    public init() { }
+    
+    public func toNative(value: UInt16) -> UInt16 {
+        return UInt16(bigEndian: value)
+    }
+    
+    public func toNative(value: UInt32) -> UInt32 {
+        return UInt32(bigEndian: value)
+    }
+    
+    public func toNative(value: UInt64) -> UInt64 {
+        return UInt64(bigEndian: value)
+    }
+
+    public func fromNative(value: UInt16) -> UInt16 {
+        return value.bigEndian
+    }
+    
+    public func fromNative(value: UInt32) -> UInt32 {
+        return value.bigEndian
+    }
+    
+    public func fromNative(value: UInt64) -> UInt64 {
+        return value.bigEndian
+    }
+}
+
 /**
 	BinaryCoding
 	Adaptation of the endian-safe ByteBuffer from https://github.com/jkolb/Lilliput
