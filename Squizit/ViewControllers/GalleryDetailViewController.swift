@@ -182,19 +182,16 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 		let loader = CancelableAction<(GalleryDrawing,Match,UIImage)>(action: { done, canceled in
 
 			dispatch_async( queue ) {
-				var buffer = BinaryCoder(order: BigEndian(), data: drawing.match)
-				if !canceled() {
-					var matchLoadResult = buffer.getMatch()
-					if let error = matchLoadResult.error {
-						NSLog("Unable to load match from data, error: %@", error.message )
-						assertionFailure("Unable to load match from data, bailing" )
-					}
+				let loadResult = Match.load(drawing.match)
+				if let error = loadResult.error {
+					NSLog("Unable to load match from data, error: %@", error.message )
+					assertionFailure("Unable to load match from data, bailing" )
+				}
 
-					var match = matchLoadResult.value
-					if !canceled() {
-						var rendering = match.render( backgroundColor: backgroundColor )
-						done( result:(drawing,match,rendering))
-					}
+				var match = loadResult.value
+				if !canceled() {
+					var rendering = match.render( backgroundColor: backgroundColor )
+					done( result:(drawing,match,rendering))
 				}
 			}
 		})

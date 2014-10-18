@@ -48,11 +48,27 @@ class Match {
 		return reader.getMatch()
 	}
 
+	class func load( data:NSData ) -> Result<Match> {
+
+		// first try native byte ordering
+		var reader = BinaryCoder(order:nativeOrder(), data: data)
+		var readResult = reader.getMatch()
+		switch readResult {
+			case .Success( let value ):
+				return .Success(value())
+
+			case .Failure:
+				// native failed, this is an older file, in BigEndian
+				reader = BinaryCoder(order:foreignOrder(), data: data)
+				return reader.getMatch()
+		}
+	}
+
 	func serialize() -> Result<NSData> {
 
 		// there's no failure case here, but in the future there might be, so I'm keeing the Result<NSData>
 
-		let writer = MutableBinaryCoder(order:BigEndian())
+		let writer = MutableBinaryCoder(order:nativeOrder())
 		writer.putMatch(self)
 		return .Success(writer.data)
 	}
