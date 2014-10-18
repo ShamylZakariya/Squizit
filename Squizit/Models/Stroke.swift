@@ -130,183 +130,7 @@ func == (left:Stroke, right:Stroke) -> Bool {
 	return true
 }
 
-extension ByteBuffer {
-
-	public class func requiredSizeForFill() -> Int {
-		return sizeof(UInt8)
-	}
-
-	func putFill( fill:Fill ) -> Bool {
-		if remaining >= ByteBuffer.requiredSizeForFill() {
-			switch fill {
-				case .Pencil:
-					putUInt8(0)
-
-				case .Brush:
-					putUInt8(1)
-
-				case .Eraser:
-					putUInt8(2)
-			}
-			return true
-		}
-
-		return false
-	}
-
-	func getFill() -> Fill {
-		switch( getUInt8() ) {
-			case 0: return .Pencil
-			case 1: return .Brush
-			case 2: return .Eraser
-			default: return .Pencil
-		}
-	}
-
-	class func requiredSizeForControlPoint() -> Int {
-		return 4*sizeof(Float64)
-	}
-
-	func putControlPoint( cp:ControlPoint ) -> Bool {
-		if remaining >= ByteBuffer.requiredSizeForControlPoint() {
-			putFloat64(Float64(cp.position.x))
-			putFloat64(Float64(cp.position.y))
-			putFloat64(Float64(cp.control.x))
-			putFloat64(Float64(cp.control.y))
-			return true
-		}
-
-		return false
-	}
-
-	func getControlPoint() -> ControlPoint {
-		return ControlPoint(
-			position: CGPoint( x:CGFloat(getFloat64()), y: CGFloat(getFloat64()) ),
-			control: CGPoint( x:CGFloat(getFloat64()), y: CGFloat(getFloat64()) ))
-	}
-
-	class func requiredSizeForStrokeChunk( chunk:Stroke.Chunk ) -> Int {
-		return 4 * requiredSizeForControlPoint()
-	}
-
-	func putStrokeChunk( chunk:Stroke.Chunk ) -> Bool {
-		if remaining < ByteBuffer.requiredSizeForStrokeChunk( chunk ) {
-			return false
-		}
-
-		putControlPoint(chunk.start.a)
-		putControlPoint(chunk.start.b)
-		putControlPoint(chunk.end.a)
-		putControlPoint(chunk.end.b)
-
-		return true
-	}
-
-	func getStrokeChunk() -> Stroke.Chunk {
-		return Stroke.Chunk(
-			start: Stroke.Chunk.Spar( a: getControlPoint(), b: getControlPoint() ),
-			end: Stroke.Chunk.Spar( a: getControlPoint(), b: getControlPoint() )
-		)
-	}
-
-	class func requiredSizeForStroke( stroke:Stroke ) -> Int {
-		return requiredSizeForFill() +
-			sizeof(Int32) + // number of chunks
-			stroke.chunks.reduce(0, combine: { (total:Int, chunk:Stroke.Chunk) -> Int in
-				return total + ByteBuffer.requiredSizeForStrokeChunk( chunk )
-			})
-	}
-
-	func putStroke( stroke:Stroke ) -> Bool {
-
-		if !putFill(stroke.fill) {
-			return false
-		}
-
-		if remaining < sizeof(Int32) {
-			return false
-		}
-
-		putInt32(Int32(stroke.chunks.count))
-
-		for chunk in stroke.chunks {
-			if !putStrokeChunk(chunk) {
-				return false
-			}
-		}
-
-		return true
-	}
-
-	func getStroke() -> Stroke {
-		var stroke = Stroke( fill: getFill() )
-		let count = getInt32()
-		for i in 0 ..< count {
-			stroke.chunks.append( getStrokeChunk() )
-		}
-
-		return stroke
-	}
-
-	class func requiredSizeForCGRect() -> Int {
-		return 4 * sizeof(Float64)
-	}
-
-	func putCGRect( t:CGRect ) -> Bool {
-		if remaining < ByteBuffer.requiredSizeForCGRect() {
-			return false
-		}
-
-		putFloat64( Float64(t.origin.x))
-		putFloat64( Float64(t.origin.y))
-		putFloat64( Float64(t.size.width))
-		putFloat64( Float64(t.size.height))
-
-		return true
-	}
-
-	func getCGRect() -> CGRect? {
-		if remaining < ByteBuffer.requiredSizeForCGRect() {
-			return nil
-		}
-
-		return CGRect(x: CGFloat(getFloat64()), y: CGFloat(getFloat64()), width: CGFloat(getFloat64()), height: CGFloat(getFloat64()))
-	}
-
-	class func requiredSizeForCGAffineTransform() -> Int {
-		return 6 * sizeof(Float64)
-	}
-
-	func putCGAffineTransform( t:CGAffineTransform ) -> Bool {
-		if remaining < ByteBuffer.requiredSizeForCGAffineTransform() {
-			return false
-		}
-
-		putFloat64( Float64(t.a))
-		putFloat64( Float64(t.b))
-		putFloat64( Float64(t.c))
-		putFloat64( Float64(t.d))
-		putFloat64( Float64(t.tx))
-		putFloat64( Float64(t.ty))
-
-		return true
-	}
-
-	func getCGAffineTransform() -> CGAffineTransform? {
-		if remaining < ByteBuffer.requiredSizeForCGAffineTransform() {
-			return nil
-		}
-
-		return CGAffineTransformMake(
-			CGFloat(getFloat64()),
-			CGFloat(getFloat64()),
-			CGFloat(getFloat64()),
-			CGFloat(getFloat64()),
-			CGFloat(getFloat64()),
-			CGFloat(getFloat64()))
-	}
-
-}
+// MARK: Bezier Interpolator
 
 struct ControlPointCubicBezierInterpolator {
 
@@ -348,5 +172,147 @@ struct ControlPointCubicBezierInterpolator {
 		let Slope:CGFloat = 0.6
 
 		return Int(ceil(sqrt( (Segs*Segs) * Slope + (Min*Min))))
+	}
+}
+
+// MARK: Serialization
+
+extension BinaryCoder {
+
+	func getFill() -> Fill? {
+		if remaining < sizeof(UInt8) {
+			return nil
+		}
+
+		switch( getUInt8() ) {
+			case 0: return .Pencil
+			case 1: return .Brush
+			case 2: return .Eraser
+			default: return .Pencil
+		}
+	}
+
+	func getControlPoint() -> ControlPoint? {
+		if remaining < 4 * sizeof(Float64) {
+			return nil
+		}
+
+		return ControlPoint(
+			position: CGPoint( x:CGFloat(getFloat64()), y: CGFloat(getFloat64()) ),
+			control: CGPoint( x:CGFloat(getFloat64()), y: CGFloat(getFloat64()) ))
+	}
+
+	func getStrokeChunk() -> Stroke.Chunk? {
+		let sa = getControlPoint()
+		let sb = getControlPoint()
+		let ea = getControlPoint()
+		let eb = getControlPoint()
+
+		if sa != nil && sb != nil && ea != nil && eb != nil {
+			return Stroke.Chunk(
+				start: Stroke.Chunk.Spar( a: sa!, b: sb! ),
+				end: Stroke.Chunk.Spar( a: ea!, b: eb! )
+			)
+		}
+
+		return nil
+	}
+
+	func getStroke() -> Stroke? {
+		if let fill = getFill() {
+			if remaining > 0 {
+				var stroke = Stroke( fill: fill )
+				let count = getInt32()
+				for i in 0 ..< count {
+					if let chunk = getStrokeChunk() {
+						stroke.chunks.append( chunk )
+					} else {
+						return nil
+					}
+				}
+
+				return stroke
+			}
+		}
+
+		return nil
+	}
+
+	func getCGRect() -> CGRect? {
+		if remaining < 4 * sizeof(Float64) {
+			return nil
+		}
+
+		return CGRect(x: CGFloat(getFloat64()), y: CGFloat(getFloat64()), width: CGFloat(getFloat64()), height: CGFloat(getFloat64()))
+	}
+
+	func getCGAffineTransform() -> CGAffineTransform? {
+		if remaining < 6 * sizeof(Float64) {
+			return nil
+		}
+
+		return CGAffineTransformMake(
+			CGFloat(getFloat64()),
+			CGFloat(getFloat64()),
+			CGFloat(getFloat64()),
+			CGFloat(getFloat64()),
+			CGFloat(getFloat64()),
+			CGFloat(getFloat64()))
+	}
+}
+
+extension MutableBinaryCoder {
+
+	func putFill( fill:Fill ) {
+		switch fill {
+			case .Pencil:
+				putUInt8(0)
+
+			case .Brush:
+				putUInt8(1)
+
+			case .Eraser:
+				putUInt8(2)
+		}
+	}
+
+	func putControlPoint( cp:ControlPoint ) {
+		putFloat64(Float64(cp.position.x))
+		putFloat64(Float64(cp.position.y))
+		putFloat64(Float64(cp.control.x))
+		putFloat64(Float64(cp.control.y))
+	}
+
+	func putStrokeChunk( chunk:Stroke.Chunk ) {
+		putControlPoint(chunk.start.a)
+		putControlPoint(chunk.start.b)
+		putControlPoint(chunk.end.a)
+		putControlPoint(chunk.end.b)
+	}
+
+	func putStroke( stroke:Stroke ) {
+
+		putFill(stroke.fill)
+		putInt32(Int32(stroke.chunks.count))
+
+		for chunk in stroke.chunks {
+			putStrokeChunk(chunk)
+		}
+	}
+
+	func putCGRect( t:CGRect ) {
+		putFloat64( Float64(t.origin.x))
+		putFloat64( Float64(t.origin.y))
+		putFloat64( Float64(t.size.width))
+		putFloat64( Float64(t.size.height))
+	}
+
+	func putCGAffineTransform( t:CGAffineTransform ) {
+		putFloat64( Float64(t.a))
+		putFloat64( Float64(t.b))
+		putFloat64( Float64(t.c))
+		putFloat64( Float64(t.d))
+		putFloat64( Float64(t.tx))
+		putFloat64( Float64(t.ty))
 	}
 }

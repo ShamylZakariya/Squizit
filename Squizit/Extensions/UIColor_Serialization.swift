@@ -9,36 +9,27 @@
 import Foundation
 import UIKit
 
-extension ByteBuffer {
-
-	class func requiredSpaceForColor() -> Int {
-		return 4 * sizeof(Float)
-	}
-
-	func putColor( color:UIColor ) -> Bool {
-		if self.remaining >= ByteBuffer.requiredSpaceForColor() {
-			if color.hasRGBComponents {
-				let red = Float(color.redComponent!)
-				let green = Float(color.greenComponent!)
-				let blue = Float(color.blueComponent!)
-				let alpha = Float(color.alphaComponent!)
-				self.putFloat32([red,green,blue,alpha])
-				return true
-			}
-		}
-
-		return false
-	}
-
+extension BinaryCoder {
 	func getColor() -> UIColor? {
-		if self.remaining >= ByteBuffer.requiredSpaceForColor() {
+		if self.remaining >= 4 * sizeof(Float) {
 			let components = self.getFloat32(4)
 			return UIColor(red: CGFloat(components[0]), green: CGFloat(components[1]), blue: CGFloat(components[2]), alpha: CGFloat(components[3]))
 		}
 
 		return nil
 	}
+}
 
+extension MutableBinaryCoder {
+	func putColor( color:UIColor ) {
+		if color.hasRGBComponents {
+			let red = Float(color.redComponent!)
+			let green = Float(color.greenComponent!)
+			let blue = Float(color.blueComponent!)
+			let alpha = Float(color.alphaComponent!)
+			self.putFloat32([red,green,blue,alpha])
+		}
+	}
 }
 
 extension UIColor {

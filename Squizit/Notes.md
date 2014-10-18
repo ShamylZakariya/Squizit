@@ -4,6 +4,9 @@
 	- on Debug podcast was discussion that Apple made public touch APIs to determine touch intensity - could use this to modulate line width -- see UITouch -majorRadius
 	- SquizitThemeLabel line is 2px thick sometimes on non-retina
 	
+	BinaryCoder Transition
+		My get methods should return optionals, or a Result<Foo,Error>
+	
 #FIXME
 
 	- Terrible performance on iPad3

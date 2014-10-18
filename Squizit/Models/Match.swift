@@ -43,65 +43,29 @@ class Match {
 	var viewports:[CGRect] { return _viewports }
 	var overlap:CGFloat { return _overlap }
 
-	class func load( path:String ) -> Result<Match> {
-		let openResult = BinaryFile.openForReading(path)
-
-		if let error = openResult.error {
-			return .Failure(Error(message: "unable to open \(path)"))
-		}
-
-		let file = openResult.binaryFile
-		let size = file.size()
-
-		if let error = size.error {
-			return .Failure(Error(message: "unable to get file size from \(path)"))
-		}
-
-		let buffer = ByteBuffer(order: BigEndian(), capacity: Int(size.fileSize))
-		let readResult = file.readBuffer(buffer)
-
-		if let error = readResult.error {
-			return .Failure(Error(message: "unable to read from \(path)"))
-		}
-
-		buffer.flip()
-
-		return buffer.getMatch()
+	class func load( fileUrl:NSURL ) -> Result<Match> {
+		var reader = BinaryCoder(order: BigEndian(), contentsOfURL: fileUrl )
+		return reader.getMatch()
 	}
 
 	func serialize() -> Result<NSData> {
-		var buffer = ByteBuffer(order: BigEndian(), capacity: ByteBuffer.requiredSizeForMatch(self))
-		if buffer.putMatch(self) {
-			return .Success( NSData( buffer:buffer ))
-		} else {
-			return .Failure(Error(message: "unable to serialize to buffer - probably under capacity"))
-		}
+
+		// there's no failure case here, but in the future there might be, so I'm keeing the Result<NSData>
+
+		let writer = MutableBinaryCoder(order:BigEndian())
+		writer.putMatch(self)
+		return .Success(writer.data)
 	}
 
-	func save( path:String ) -> Result<Int> {
+	func save( fileUrl:NSURL ) -> Result<Int> {
 
-		var buffer = ByteBuffer(order: BigEndian(), capacity: ByteBuffer.requiredSizeForMatch(self))
-		if buffer.putMatch(self) {
-
-			buffer.flip()
-			var fileOpenResult = BinaryFile.openForWriting(path, create: true)
-
-			if let error = fileOpenResult.error {
-				return .Failure(Error(message: "unable to open file \(path)"))
-			}
-
-			var file = fileOpenResult.binaryFile
-			var fileWriteResult = file.writeBuffer(buffer)
-
-			if let error = fileWriteResult.error {
-				return .Failure(Error(message: "unable to write buffer to file \(path)"))
-			}
-
-			return .Success(fileWriteResult.byteCount)
-
-		} else {
-			return .Failure(Error(message: "unable to serialize to buffer - probably under capacity"))
+		let serializationResult = serialize()
+		if let error = serializationResult.error {
+			return Result.Failure(error)
 		}
+
+		serializationResult.value.writeToURL(fileUrl, atomically: true)
+		return .Success(serializationResult.value.length)
 	}
 
 	func render( backgroundColor:UIColor? = nil, scale:CGFloat = 0, watermark:Bool = false ) -> UIImage {
@@ -172,50 +136,28 @@ class Match {
 	}
 }
 
-extension ByteBuffer {
-
-	class func requiredSizeForMatch( match:Match ) -> Int {
-		return sizeof(UInt8)*MatchSerializationCookie.count // #cookie
-			+ 1*sizeof(Int32) // version #
-			+ 2*sizeof(Float64) // width + height
-			+ 1*sizeof(Float64) // overlap
-			+ sizeof(Int32) // count of viewports & drawings
-			+ match.players * ByteBuffer.requiredSizeForCGRect() // total space for viewports
-			+ match.drawings.reduce(0, combine: { (totalSize:Int, drawing:Drawing) -> Int in
-				return totalSize + ByteBuffer.requiredSizeForDrawing(drawing) // total space for drawings
-			})
-	}
-
-	func putMatch( match:Match ) -> Bool {
-		putUInt8(MatchSerializationCookie)
-		putInt32(MatchSerializationVersion_V0)
-		putFloat64(Float64(match._stageSize.width))
-		putFloat64(Float64(match._stageSize.height))
-		putFloat64(Float64(match._overlap))
-		putInt32(Int32(match.players))
-
-		for i in 0 ..< match.players {
-			putCGRect(match.viewports[i])
-			if !putDrawing(match.drawings[i]) {
-				return false
-			}
-		}
-
-		return true;
-	}
+extension BinaryCoder {
 
 	func getMatch() -> Result<Match> {
+		if remaining < 4 * sizeof(UInt8) {
+			return .Failure(Error(message: "Unable to read cookie -- empty file? file length:\(length)"))
+		}
+
 		let cookie:[UInt8] = getUInt8(4)
-
 		if ( cookie == MatchSerializationCookie ) {
-			let version:Int32 = getInt32()
 
-			switch version {
-				case MatchSerializationVersion_V0:
-					return inflate_V0()
+			if remaining >= sizeof(Int32) {
+				let version:Int32 = getInt32()
 
-				default:
-					return .Failure(Error(message: "version # mismatch, unrecognized version: \(version)"))
+				switch version {
+					case MatchSerializationVersion_V0:
+						return inflate_V0()
+
+					default:
+						return .Failure(Error(message: "version # mismatch, unrecognized version: \(version)"))
+				}
+			} else {
+				return .Failure(Error(message: "Data exhausted. Unable to extract version #. Remaining bytes: \(remaining)"))
 			}
 		} else {
 			return .Failure(Error(message: "Match cookie mismatch - expected: \(MatchSerializationCookie) got: \(cookie)"))
@@ -252,6 +194,23 @@ extension ByteBuffer {
 		//
 
 		return .Success(match)
+	}
+}
+
+extension MutableBinaryCoder {
+
+	func putMatch( match:Match ) {
+		putUInt8(MatchSerializationCookie)
+		putInt32(MatchSerializationVersion_V0)
+		putFloat64(Float64(match._stageSize.width))
+		putFloat64(Float64(match._stageSize.height))
+		putFloat64(Float64(match._overlap))
+		putInt32(Int32(match.players))
+
+		for i in 0 ..< match.players {
+			putCGRect(match.viewports[i])
+			putDrawing(match.drawings[i])
+		}
 	}
 
 }

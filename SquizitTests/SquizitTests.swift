@@ -224,20 +224,22 @@ class SquizitTests: XCTestCase {
     }
 
 	func testControlPointSerialization() {
-		var buffer:ByteBuffer = ByteBuffer(order: BigEndian(), capacity: 4096)
+		var buffer = MutableBinaryCoder(order: BigEndian())
 
 		let cpA = ControlPoint(position: CGPoint(x: 0, y: 0), control: CGPoint(x: 100, y: 100))
 
 		buffer.putControlPoint(cpA)
-		buffer.flip()
-		let cpAPrime = buffer.getControlPoint()
-
-		XCTAssertEqual( cpA, cpAPrime, "Deserialized ControlPoint should equal original")
+		buffer.rewind()
+		if let cpAPrime = buffer.getControlPoint() {
+			XCTAssertEqual( cpA, cpAPrime, "Deserialized ControlPoint should equal original")
+		} else {
+			XCTFail("Expected to deserialize control point - got nil")
+		}
 	}
     
     func testStrokeSerialization() {
 
-		var buffer:ByteBuffer = ByteBuffer(order: BigEndian(), capacity: 4096)
+		var buffer = MutableBinaryCoder(order: BigEndian())
 
 		var strokeA = Stroke(fill: Fill.Pencil)
 		srand48(123)
@@ -256,18 +258,18 @@ class SquizitTests: XCTestCase {
 		}
 
 		buffer.putStroke(strokeA)
-		buffer.flip()
+		buffer.rewind()
 
-		let strokeAPrime = buffer.getStroke()
-
-		XCTAssertEqual(strokeA, strokeAPrime, "Deserialized Stroke should equal original")
+		if let strokeAPrime = buffer.getStroke() {
+			XCTAssertEqual(strokeA, strokeAPrime, "Deserialized Stroke should equal original")
+		} else {
+			XCTFail("Wasn't able to deserialize Stroke")
+		}
     }
 
 	func testColorSerialization() {
 		let count = 33
-
-		// make buffer big enough for our random colors
-		var buffer:ByteBuffer = ByteBuffer(order: BigEndian(), capacity: count * ByteBuffer.requiredSpaceForColor())
+		var buffer = MutableBinaryCoder(order: BigEndian())
 
 		var colors:[UIColor] = []
 		for i in 0 ..< count {
@@ -276,7 +278,7 @@ class SquizitTests: XCTestCase {
 			buffer.putColor(color)
 		}
 
-		buffer.flip()
+		buffer.rewind()
 
 		for i in 0 ..< count {
 			var maybeColorPrime = buffer.getColor()
@@ -329,12 +331,12 @@ class SquizitTests: XCTestCase {
 	func testDrawingSerialization() {
 
 		var drawing = newDrawing()
+		var buffer = MutableBinaryCoder(order: BigEndian())
+		buffer.putDrawing(drawing)
 
-		var buffer = ByteBuffer(order: BigEndian(), capacity: ByteBuffer.requiredSizeForDrawing(drawing))
-		XCTAssert( buffer.putDrawing(drawing), "Expect to serialize drawing" )
+		XCTAssertGreaterThan(buffer.length, 0, "Expect serialized drawing to take up more than zero bytes")
 
-
-		buffer.flip()
+		buffer.rewind()
 		var drawingPrimeResult = buffer.getDrawing()
 		XCTAssert(drawingPrimeResult.error == nil, "Expect to successfully deserialize drawing from buffer")
 
@@ -360,12 +362,4 @@ class SquizitTests: XCTestCase {
 		// now check bytes, see if ==
 		XCTAssert(drawingImageData.isEqualToData(drawingImageDataPrime), "Expect deserialized drawing's rendered image data to equal source")
 	}
-    
-//    func testPerformanceExample() {
-//        // This is an example of a performance test case.
-//        self.measureBlock() {
-//            // Put the code you want to measure the time of here.
-//        }
-//    }
-
 }

@@ -182,7 +182,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 		let loader = CancelableAction<(GalleryDrawing,Match,UIImage)>(action: { done, canceled in
 
 			dispatch_async( queue ) {
-				var buffer = ByteBuffer(order: BigEndian(), data: drawing.match)
+				var buffer = BinaryCoder(order: BigEndian(), data: drawing.match)
 				if !canceled() {
 					var matchLoadResult = buffer.getMatch()
 					if let error = matchLoadResult.error {

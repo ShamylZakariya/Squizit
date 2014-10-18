@@ -298,37 +298,7 @@ class Drawing {
 }
 
 
-extension ByteBuffer  {
-
-	class func requiredSizeForDrawing( drawing:Drawing ) -> Int {
-		let headerSize = sizeof(UInt8)*DrawingSerializationCookie.count // #cookie
-			+ 4*sizeof(Int32) // version # + width + height + #strokes
-			+ ByteBuffer.requiredSpaceForColor()
-
-		var strokeSize = 0
-		for stroke in drawing.strokes {
-			strokeSize += ByteBuffer.requiredSizeForStroke(stroke)
-		}
-
-		return headerSize + strokeSize
-	}
-
-	func putDrawing( drawing:Drawing ) -> Bool {
-		if remaining < ByteBuffer.requiredSizeForDrawing( drawing ) {
-			return false
-		}
-
-		putUInt8(DrawingSerializationCookie)
-		putInt32(Int32(DrawingSerializationVersion_V0))
-		putInt32(Int32(drawing.strokes.count))
-		for stroke in drawing.strokes {
-			if !putStroke(stroke) {
-				return false
-			}
-		}
-
-		return true;
-	}
+extension BinaryCoder {
 
 	func getDrawing() -> Result<Drawing> {
 		let cookie:[UInt8] = getUInt8(4)
@@ -345,13 +315,29 @@ extension ByteBuffer  {
 
 			let strokesCount = getInt32()
 			for i in 0 ..< strokesCount {
-				drawing!.addStroke( getStroke() )
+				if let stroke = getStroke() {
+					drawing!.addStroke( stroke )
+				} else {
+					return .Failure(Error(message: "Unable to deserialize stroke \(i) of \(strokesCount) - remaining data bytes:\(remaining)"))
+				}
 			}
 		} else {
 			return .Failure(Error(message: "version # mismatch, unrecognized version: \(version)"))
 		}
 
 		return .Success(drawing!)
+	}
+}
+
+extension MutableBinaryCoder {
+
+	func putDrawing( drawing:Drawing ) {
+		putUInt8(DrawingSerializationCookie)
+		putInt32(Int32(DrawingSerializationVersion_V0))
+		putInt32(Int32(drawing.strokes.count))
+		for stroke in drawing.strokes {
+			putStroke(stroke)
+		}
 	}
 
 }

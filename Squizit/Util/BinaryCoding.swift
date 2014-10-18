@@ -73,6 +73,10 @@ class BinaryCoder : NSCopying, NSMutableCopying {
 		}
 	}
 
+	var remaining:Int {
+		return length - position
+	}
+
 	func rewind() { position = 0; }
 
 	var length:Int { return data.length }
