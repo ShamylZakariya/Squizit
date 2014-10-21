@@ -10,19 +10,15 @@
 	<string>Squizit</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>E546750FD2F0F626775A683A958153F4B6CF8E3A</key>
-		<string>git://github.com/ShamylZakariya/Lilliput.git</string>
 		<key>EA8CCA9B72AAC3B7C1F34B59E92318F9A6C5D712</key>
 		<string>https://github.com/ShamylZakariya/Squizit.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Squizit.xcodeproj</string>
+	<string>Squizit.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>E546750FD2F0F626775A683A958153F4B6CF8E3A</key>
-		<string>../../Lilliput</string>
 		<key>EA8CCA9B72AAC3B7C1F34B59E92318F9A6C5D712</key>
-		<string>../..</string>
+		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/ShamylZakariya/Squizit.git</string>
@@ -32,14 +28,6 @@
 	<string>EA8CCA9B72AAC3B7C1F34B59E92318F9A6C5D712</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>E546750FD2F0F626775A683A958153F4B6CF8E3A</string>
-			<key>IDESourceControlWCCName</key>
-			<string>Lilliput</string>
-		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>

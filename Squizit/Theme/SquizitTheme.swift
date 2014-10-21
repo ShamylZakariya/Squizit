@@ -21,19 +21,23 @@ class SquizitTheme {
 		let navAppearance = UINavigationBar.appearance()
 		navAppearance.barStyle = UIBarStyle.Black
 		navAppearance.translucent = true
-		navAppearance.titleTextAttributes = [
-			NSFontAttributeName: UIFont(name: "Baskerville-Bold", size: 21),
-			NSForegroundColorAttributeName: UIColor.whiteColor()
-		]
+
+		// apparently, titleTextAttributes won't accept a swift dictionary?!
+		var tta = NSMutableDictionary()
+		tta[NSFontAttributeName] = UIFont(name: "Baskerville-Bold", size: 21)
+		tta[NSForegroundColorAttributeName] = UIColor.whiteColor()
+		navAppearance.titleTextAttributes = tta
 
 		//
 		//	UIBarButtonItem
+		//	As above, titleTextAttributes won't accept a swift dictionary?!
 		//
 
+		tta = NSMutableDictionary()
+		tta[NSFontAttributeName] = UIFont(name: "Baskerville", size: 18)
+
 		let bbiAppearance = UIBarButtonItem.appearance()
-		bbiAppearance.setTitleTextAttributes([
-			NSFontAttributeName: UIFont(name: "Baskerville", size: 18),
-		], forState: UIControlState.Normal)
+		bbiAppearance.setTitleTextAttributes(tta, forState: .Normal)
 
 		//
 		//	Swift doesn't support appearanceWhenContainedIn... so we need to bridge to ObjC
@@ -44,25 +48,25 @@ class SquizitTheme {
 	}
 
 	class func cubeBackgroundImage() -> UIImage {
-		return UIImage(named: "cube-pattern")
+		return UIImage(named: "cube-pattern")!
 	}
 
 	class func leatherBackgroundImage() -> UIImage {
-		return UIImage(named: "leather-pattern")
+		return UIImage(named: "leather-pattern")!
 	}
 
 	class func paperBackgroundImage( scale:CGFloat = 0 ) -> UIImage {
 		let paperImageName = "paper-pattern"
 		if scale == 0 {
-			return UIImage(named: paperImageName)
+			return UIImage(named: paperImageName)!
 		}
 
 		let tc = UITraitCollection(displayScale: scale)
-		return UIImage(named: paperImageName, inBundle: nil, compatibleWithTraitCollection: tc)
+		return UIImage(named: paperImageName, inBundle: nil, compatibleWithTraitCollection: tc)!
 	}
 
 	class func thumbnailPaperBackgroundImage() -> UIImage {
-		return UIImage(named: "thumbnail-paper-pattern")
+		return UIImage(named: "thumbnail-paper-pattern")!
 	}
 
 	class func rootScreenBackgroundColor() -> UIColor {
@@ -80,7 +84,7 @@ class SquizitTheme {
 	}
 
 	class func exportWatermarkImage() -> UIImage {
-		return UIImage(named:"export-watermark")
+		return UIImage(named:"export-watermark")!
 	}
 
 	// background color for the match view
@@ -246,7 +250,7 @@ class SquizitThemeSearchField : UITextField {
 	private func commonInit() {
 
 		var clearButton:UIButton = UIButton.buttonWithType(UIButtonType.Custom) as UIButton
-		var closeImage = UIImage(named: "gallery-clear-search-button").imageWithRenderingMode(.AlwaysTemplate)
+		var closeImage = UIImage(named: "gallery-clear-search-button")!.imageWithRenderingMode(.AlwaysTemplate)
 		clearButton.setImage(closeImage, forState: .Normal)
 		clearButton.frame = CGRect(x: 0, y: 0, width: closeImage.size.width, height: closeImage.size.height)
 		clearButton.addTarget(self, action: "clearButtonTapped:", forControlEvents: .TouchUpInside)

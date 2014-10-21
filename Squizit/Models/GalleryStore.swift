@@ -15,19 +15,6 @@ let GalleryStoreErrorCodeInitializationError = 0001
 
 extension GalleryDrawing {
 
-//	var artistDisplayNames:String {
-//		if artists.count > 0 {
-//			var artistNames:[String] = []
-//			for artist in artists {
-//				artistNames.append(artist.name)
-//			}
-//
-//			return (artistNames as NSArray).componentsJoinedByString(", ")
-//		}
-//
-//		return NSLocalizedString("Anonymous", comment: "No artist specified for gallery detail image")
-//	}
-
 	var artistDisplayNames:String {
 		var artistNames:[String] = []
 
@@ -51,7 +38,6 @@ extension GalleryDrawing {
 				return str
 		}
 	}
-
 }
 
 class GalleryStore {
@@ -156,7 +142,7 @@ class GalleryStore {
 
 	lazy var managedObjectModel: NSManagedObjectModel = {
 	    let modelURL = NSBundle.mainBundle().URLForResource("GalleryStore", withExtension: "momd")
-	    return NSManagedObjectModel(contentsOfURL: modelURL!)
+	    return NSManagedObjectModel(contentsOfURL: modelURL!)!
 	}()
 
 	lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
@@ -175,7 +161,7 @@ class GalleryStore {
 	        dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
 	        dict[NSLocalizedFailureReasonErrorKey] = failureReason
 	        dict[NSUnderlyingErrorKey] = error
-	        error = NSError.errorWithDomain(GalleryStoreErrorDomain, code: GalleryStoreErrorCodeInitializationError, userInfo: dict)
+			error = NSError(domain: GalleryStoreErrorDomain, code: GalleryStoreErrorCodeInitializationError, userInfo: dict)
 
 	        // Replace this with code to handle the error appropriately.
 	        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.

@@ -256,9 +256,9 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		// create the tool selector
 
 		toolSelector = DrawingToolSelector(frame: CGRectZero)
-		toolSelector.addTool("Pencil", icon: UIImage(named: "tool-pencil"))
-		toolSelector.addTool("Brush", icon: UIImage(named: "tool-brush"))
-		toolSelector.addTool("Eraser", icon: UIImage(named: "tool-eraser"))
+		toolSelector.addTool("Pencil", icon: UIImage(named: "tool-pencil")!)
+		toolSelector.addTool("Brush", icon: UIImage(named: "tool-brush")!)
+		toolSelector.addTool("Eraser", icon: UIImage(named: "tool-eraser")!)
 		toolSelector.addTarget(self, action: "toolSelected:", forControlEvents: UIControlEvents.ValueChanged)
 		view.addSubview(toolSelector)
 
@@ -312,13 +312,15 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 
-		switch segue.identifier {
-			case "showSaveToGallery":
-				let saveToGalleryVC = segue.destinationViewController as SaveToGalleryViewController
-				saveToGalleryVC.nameCount = numPlayers
-				saveToGalleryVC.delegate = self
+		if let identifier = segue.identifier {
+			switch identifier {
+				case "showSaveToGallery":
+					let saveToGalleryVC = segue.destinationViewController as SaveToGalleryViewController
+					saveToGalleryVC.nameCount = numPlayers
+					saveToGalleryVC.delegate = self
 
-			default: break;
+				default: break;
+			}
 		}
 	}
 

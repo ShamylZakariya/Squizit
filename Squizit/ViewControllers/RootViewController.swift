@@ -109,43 +109,46 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 		let destinationVC = segue.destinationViewController as UIViewController
 		destinationVC.transitioningDelegate = transitionManager
 
-		switch ( segue.identifier ) {
-			case "showGallery":
-				let navVC = destinationVC as UINavigationController
-				if let galleryVC = navVC.childViewControllers.first as? GalleryViewController {
-					galleryVC.store = (UIApplication.sharedApplication().delegate as? AppDelegate)!.galleryStore
-					galleryVC.delegate = self
-				} else {
-					assertionFailure("Unable to extract GalleryViewController from segue")
-				}
+		if let identifier = segue.identifier {
+			switch ( identifier ) {
+				case "showGallery":
+					let navVC = destinationVC as UINavigationController
+					if let galleryVC = navVC.childViewControllers.first as? GalleryViewController {
+						galleryVC.store = (UIApplication.sharedApplication().delegate as? AppDelegate)!.galleryStore
+						galleryVC.delegate = self
+					} else {
+						assertionFailure("Unable to extract GalleryViewController from segue")
+					}
 
-			case "beginTwoPlayerMatch", "beginThreePlayerMatch":
-				var players = 0
-				if segue.identifier == "beginTwoPlayerMatch" {
-					players = 2
-				} else {
-					players = 3
-				}
+				case "beginTwoPlayerMatch", "beginThreePlayerMatch":
+					var players = 0
+					if segue.identifier == "beginTwoPlayerMatch" {
+						players = 2
+					} else {
+						players = 3
+					}
 
-				let matchVC = destinationVC as MatchViewController
-				let screenBounds = UIScreen.mainScreen().bounds
-				matchVC.match = Match(players: players, stageSize: CGSize(width: screenBounds.width, height: screenBounds.height), overlap: 4)
+					let matchVC = destinationVC as MatchViewController
+					let screenBounds = UIScreen.mainScreen().bounds
+					matchVC.match = Match(players: players, stageSize: CGSize(width: screenBounds.width, height: screenBounds.height), overlap: 4)
 
-			case "showTestDrawingView", "showHowToPlay":
-				// no setup needed for these two
-				break;
+				case "showTestDrawingView", "showHowToPlay":
+					// no setup needed for these two
+					break;
 
-			default:
-				assertionFailure("Unrecognized segue")
-				break;
+				default:
+					assertionFailure("Unrecognized segue")
+					break;
+			}
 		}
 	}
 
 	// MARK: Actions
 
 	@IBAction func onTwitterButtonTapped(sender: AnyObject) {
-		let twitterURL = NSURL(string: "https://twitter.com/squizitapp")
-		UIApplication.sharedApplication().openURL(twitterURL)
+		if let twitterURL = NSURL(string: "https://twitter.com/squizitapp") {
+			UIApplication.sharedApplication().openURL(twitterURL)
+		}
 	}
 
 	dynamic func showTestDrawingView( sender:AnyObject ) {
