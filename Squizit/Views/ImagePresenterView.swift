@@ -25,8 +25,10 @@ class ImagePresenterView : UIView {
 
 	var image:UIImage? {
 		didSet {
-			_imageView.image = image
-			update()
+			if image !== oldValue || image == nil {
+				_imageView.image = image
+				update()
+			}
 		}
 	}
 
@@ -61,7 +63,7 @@ class ImagePresenterView : UIView {
 		let imageView = _imageView
 
 		if animate {
-			let duration:NSTimeInterval = 0.2
+			let duration:NSTimeInterval = 0.15
 
 			if let image = self.image {
 

@@ -69,6 +69,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 		// set background color of imageview to the thumbnail background to minimize flashing as images are lazily loaded
 		imageView.backgroundColor = SquizitTheme.thumbnailBackgroundColor()
+		imageView.contentMode = .Center
 
 		// add shadows because we're a little skeumorphic here
 		imageView.layer.shouldRasterize = true
@@ -201,6 +202,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 	var _thumbnailCompositorQueue = dispatch_queue_create("com.zakariya.squizit.GalleryThumbnailCompositorQueue", nil)
 	var _thumbnailBackgroundColor = SquizitTheme.thumbnailBackgroundColor()
+	var _renderedIconCache = NSCache()
 
 	override init( store:GalleryStore, collectionView:UICollectionView ) {
 		super.init(store: store, collectionView:collectionView)
@@ -263,7 +265,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 		let store = self.store
 		let flowLayout = self.collectionView.collectionViewLayout as UICollectionViewFlowLayout
 		let itemSize = flowLayout.itemSize
-		let thumbnailHeight = itemSize.height * 0.8
+		let thumbnailHeight = round(itemSize.height * 0.8)
 
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
@@ -278,7 +280,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 			// use the thumbnail's size to set the cell image size & aspect ratio
 			let thumbnailActualHeight = CGFloat(drawing.thumbnailHeight)
 			let thumbnailActualWidth = CGFloat(drawing.thumbnailWidth)
-			let thumbnailWidth = thumbnailActualWidth * (thumbnailHeight/thumbnailActualHeight)
+			let thumbnailWidth = round(thumbnailActualWidth * (thumbnailHeight/thumbnailActualHeight))
 			galleryCell.imageViewHeightConstraint.constant = thumbnailHeight
 			galleryCell.imageViewWidthConstraint.constant = thumbnailWidth
 
@@ -304,33 +306,49 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 				}
 			}
 
-			let queue = _thumbnailCompositorQueue
-			galleryCell.thumbnailLoadAction = CancelableAction<UIImage>(action: { done, canceled in
+			let cache = _renderedIconCache
+			if let renderedIcon = cache.objectForKey(drawing.uuid) as? UIImage {
 
-				dispatch_async( queue ) {
+				galleryCell.imageView.animate = false
+				galleryCell.imageView.image = renderedIcon
 
-					var thumbnail = UIImage( data: drawing.thumbnail )!
-					let size = thumbnail.size
-					let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-					UIGraphicsBeginImageContextWithOptions(size, true, 0)
+			} else {
 
-					self._thumbnailBackgroundColor.set()
-					UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
+				let queue = _thumbnailCompositorQueue
+				galleryCell.thumbnailLoadAction = CancelableAction<UIImage>(action: { done, canceled in
 
-					if !canceled() {
-						thumbnail.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
-						thumbnail = UIGraphicsGetImageFromCurrentImageContext()
-						UIGraphicsEndImageContext()
-						done( result:thumbnail )
-					} else {
-						UIGraphicsEndImageContext()
+					dispatch_async( queue ) {
+
+						let size = CGSize( width: thumbnailWidth, height: thumbnailHeight )
+						let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+
+						var thumbnail = UIImage( data: drawing.thumbnail )!
+						thumbnail = thumbnail.imageByScalingToSize(size, contentMode: .ScaleAspectFit, scale: 0)
+
+						UIGraphicsBeginImageContextWithOptions(size, true, 0)
+
+						self._thumbnailBackgroundColor.set()
+						UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
+
+						if !canceled() {
+							thumbnail.drawAtPoint(CGPoint.zeroPoint, blendMode: kCGBlendModeMultiply, alpha: 1)
+							thumbnail = UIGraphicsGetImageFromCurrentImageContext()
+							UIGraphicsEndImageContext()
+
+							// we're done - add to icon cache and finish
+							cache.setObject(thumbnail, forKey: drawing.uuid)
+							done( result:thumbnail )
+						} else {
+							UIGraphicsEndImageContext()
+						}
 					}
-				}
-			}, done: { ( result:UIImage ) -> () in
-				dispatch_async(dispatch_get_main_queue() ) {
-					galleryCell.imageView.image = result
-				}
-			})
+				}, done: { ( result:UIImage ) -> () in
+					dispatch_main {
+						galleryCell.imageView.animate = true
+						galleryCell.imageView.image = result
+					}
+				})
+			}
 
 		} else {
 			assertionFailure("Unable to vend a GalleryDrawing for index path")

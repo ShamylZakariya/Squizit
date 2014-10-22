@@ -103,7 +103,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 		let backgroundColor = _drawingBackgroundColor
 		let flowLayout = self.collectionView.collectionViewLayout as UICollectionViewFlowLayout
 		let itemSize = flowLayout.itemSize
-		let thumbnailHeight = itemSize.height * 0.85
+		let thumbnailHeight = round(itemSize.height * 0.85)
 
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
@@ -122,7 +122,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 			// use the thumbnail's size to set the cell image size & aspect ratio
 			let thumbnailActualHeight = CGFloat(drawing.thumbnailHeight)
 			let thumbnailActualWidth = CGFloat(drawing.thumbnailWidth)
-			let thumbnailWidth = thumbnailActualWidth * (thumbnailHeight/thumbnailActualHeight)
+			let thumbnailWidth = round(thumbnailActualWidth * (thumbnailHeight/thumbnailActualHeight))
 			galleryCell.imageViewHeightConstraint.constant = thumbnailHeight
 			galleryCell.imageViewWidthConstraint.constant = thumbnailWidth
 
