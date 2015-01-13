@@ -118,6 +118,7 @@ class HowToPlayViewController: UIViewController {
 	var instructionsText2: SquizitThemeLabel!
 	var instructionsText3: SquizitThemeLabel!
 	var instructionsText4: UILabel!
+	var overlapHighlightView: UIView!
 
 	var duration:NSTimeInterval = 0.5
 	var instructionsDrawingHolderDefaultFrame:CGRect = CGRect.zeroRect
@@ -133,6 +134,13 @@ class HowToPlayViewController: UIViewController {
 		instructionsDrawingsHolder.clipsToBounds = false
 		instructionsDrawingViewTop.backgroundColor = SquizitTheme.paperBackgroundColor()
 		instructionsDrawingViewBottom.backgroundColor = SquizitTheme.paperBackgroundColor()
+
+		overlapHighlightView = UIView(frame: CGRect.zeroRect)
+		overlapHighlightView.backgroundColor = UIColor.redColor().colorWithAlphaComponent(0.5)
+		overlapHighlightView.opaque = false
+		overlapHighlightView.alpha = 0
+		overlapHighlightView.hidden = true
+		view.addSubview(overlapHighlightView);
 
 		instructionsText1 = SquizitThemeLabel(frame: CGRect.zeroRect)
 		instructionsText2 = SquizitThemeLabel(frame: CGRect.zeroRect)
@@ -260,7 +268,7 @@ class HowToPlayViewController: UIViewController {
 				case .EmptyPaper: showEmptyPaper()
 				case .ShowTopHalf: showTopHalf()
 				case .ShowTopDrawing: showTopHalfWithDrawing()
-				case .ShowBottomHalfWithGuide: showBottomHalfWithGuide()
+				case .ShowBottomHalfWithGuide: showBottomHalfWithOverlap()
 				case .ShowBottomDrawing: showBottomHalfWithDrawing()
 				case .ShowFinalDrawing: showFinalDrawing()
 			}
@@ -326,8 +334,8 @@ class HowToPlayViewController: UIViewController {
 		})
 	}
 
-	func showBottomHalfWithGuide() {
-		//println("showBottomHalfWithGuide")
+	func showBottomHalfWithOverlap() {
+		//println("showBottomHalfWithOverlap")
 
 		// unfold bottom half, and when complete, fold top half behind bottom half
 		self.instructionsDrawingViewBottom.image = UIImage(named:"instructions-drawing-bottom-guide")
@@ -339,22 +347,49 @@ class HowToPlayViewController: UIViewController {
 			self.instructionsDrawingViewBottom.layer.transform = CATransform3DIdentity
 			self.nextButton.alpha = 0
 
+
 		}) { [unowned self] completed in
+			self.highlightBottomHalfOverlap()
+		}
+	}
 
-			self.instructionsDrawingsHolder.sendSubviewToBack(self.instructionsDrawingViewTop)
+	func highlightBottomHalfOverlap() {
 
-			UIView.animateWithDuration(self.duration, animations: { () -> Void in
-				var trans = CATransform3DIdentity
-				trans.m34 = 1 / self.zDistance
+		var highlightView = self.overlapHighlightView;
+		let highlightHeight = CGFloat(8);
+		let bottomFrame = instructionsDrawingHolderDefaultFrame
+			.rectByOffsetting(dx: 0, dy: instructionsDrawingHolderDefaultFrame.height/2)
+			.rectByInsetting(dx: 20, dy: 0)
 
-				trans = CATransform3DRotate(trans, CGFloat(M_PI * 0.99), 1, 0, 0)
-				self.instructionsDrawingViewTop.layer.transform = trans
+		highlightView.frame = CGRect(x: bottomFrame.minX, y: bottomFrame.minY, width: bottomFrame.width, height: highlightHeight);
+		highlightView.hidden = false
 
-			})
+		self.instructionsDrawingsHolder.sendSubviewToBack(self.instructionsDrawingViewTop)
 
-			delay(1){
-				self.forward()
-			}
+		UIView.animateWithDuration(self.duration, animations: { () -> Void in
+			var trans = CATransform3DIdentity
+			trans.m34 = 1 / self.zDistance
+
+			trans = CATransform3DRotate(trans, CGFloat(M_PI * 0.99), 1, 0, 0)
+			self.instructionsDrawingViewTop.layer.transform = trans
+		}, completion: nil)
+
+		// now, blink the highlight rect
+		UIView.animateKeyframesWithDuration(1, delay: self.duration, options: UIViewKeyframeAnimationOptions(0),
+			animations: { [unowned self] in
+				let stops = [0.25,0.5,0.75,1.0]
+				let duration = 0.25
+				for (i,stop) in enumerate(stops) {
+					UIView.addKeyframeWithRelativeStartTime(stop, relativeDuration: duration, animations: {
+						//	because of an LLVM bug as of Xcode 6.1.1, I can't use an unowned self to refer to
+						//	self.overlapHighlightView here... it causes an compiler failure
+						highlightView.alpha = i % 2 == 0 ? 1 : 0
+					})
+				}
+			}, completion: nil)
+
+		delay(2){
+			self.forward()
 		}
 	}
 
