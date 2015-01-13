@@ -281,21 +281,21 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = SquizitTheme.galleryBackgroundColor()
-		collectionView.backgroundColor = SquizitTheme.galleryBackgroundColor()
-		_dataSource = GalleryDetailCollectionViewDataSource(store: store, collectionView: collectionView)
+		collectionView!.backgroundColor = SquizitTheme.galleryBackgroundColor()
+		_dataSource = GalleryDetailCollectionViewDataSource(store: store, collectionView: collectionView!)
 		_dataSource.scrollDelegate = self
 
 		if let fp = filterPredicate {
 			_dataSource.filterPredicate = filterPredicate
 		}
 
-		var flow = collectionView.collectionViewLayout as UICollectionViewFlowLayout
+		var flow = collectionView!.collectionViewLayout as UICollectionViewFlowLayout
 		flow.minimumInteritemSpacing = 0
 		flow.minimumLineSpacing = 0
 		flow.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 		updateItemSize()
 
-		let numItems = _dataSource.collectionView(collectionView, numberOfItemsInSection: 0)
+		let numItems = _dataSource.collectionView(collectionView!, numberOfItemsInSection: 0)
 		if numItems == 1 {
 			if let drawing = _dataSource.fetchedResultsController.objectAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as? GalleryDrawing {
 				self.title = drawing.artistDisplayNames
@@ -322,7 +322,7 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		if let targetIndexPath = initialIndexPath {
-			collectionView.scrollToItemAtIndexPath(targetIndexPath,
+			collectionView!.scrollToItemAtIndexPath(targetIndexPath,
 				atScrollPosition: .CenteredVertically | .CenteredHorizontally,
 				animated: false)
 		}
@@ -338,7 +338,7 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 	}
 
 	private func updateItemSize() {
-		var flow = collectionView.collectionViewLayout as UICollectionViewFlowLayout
+		var flow = collectionView!.collectionViewLayout as UICollectionViewFlowLayout
 		let width = view.bounds.width
 		let height = view.bounds.height - 44
 		flow.itemSize = CGSize(width: width, height: height)
@@ -387,7 +387,7 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 	}
 
 	func export( done:(drawing:GalleryDrawing, rendering:UIImage! )->Void ) {
-		if let indexPath = self.collectionView.indexPathsForVisibleItems().first as? NSIndexPath {
+		if let indexPath = self.collectionView!.indexPathsForVisibleItems().first as? NSIndexPath {
 			let action = _dataSource.loaderFor( indexPath.item )
 			if let (drawing,match,_) = action.result {
 				dispatch_async(_exportQueue) {
@@ -423,12 +423,12 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 				[weak self] () -> () in
 				if let sself = self {
 
-					let flow = sself.collectionView.collectionViewLayout as UICollectionViewFlowLayout
-					let numItems = sself._dataSource.collectionView(sself.collectionView, numberOfItemsInSection: 0)
+					let flow = sself.collectionView!.collectionViewLayout as UICollectionViewFlowLayout
+					let numItems = sself._dataSource.collectionView(sself.collectionView!, numberOfItemsInSection: 0)
 
 					let itemWidth = flow.itemSize.width
-					let totalWidth = sself.collectionView.contentSize.width
-					let position = sself.collectionView.contentOffset.x / totalWidth
+					let totalWidth = sself.collectionView!.contentSize.width
+					let position = sself.collectionView!.contentOffset.x / totalWidth
 
 					sself.scrollPageIndex = max(Int(floor( CGFloat(position) * CGFloat(numItems) + CGFloat(0.5))), 0 )
 				}
