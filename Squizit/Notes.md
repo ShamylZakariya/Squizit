@@ -1,3 +1,8 @@
+#VERSION 2.0
+
+	- add turn-based gamecenter play
+
+
 #TODO
 
 	- add tweet + share buttons to the save-to-gallery vc's dialog, perhaps /outside/ the dialog, over the grey blanker

@@ -26,6 +26,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			println("Documents: \(NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as NSURL)")
 		#endif
 
+		// fire up game center
+		TurnBasedMatchHelper.sharedInstance.authenticateLocalPlayer()
+
 		return true
 	}
 
