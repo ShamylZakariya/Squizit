@@ -18,33 +18,26 @@ class SquizitTheme {
 		//	UINavbar
 		//
 
-		let navAppearance = UINavigationBar.appearance()
-		navAppearance.barStyle = UIBarStyle.Black
-		navAppearance.translucent = true
-
-		// apparently, titleTextAttributes won't accept a swift dictionary?!
-		var tta = NSMutableDictionary()
-		tta[NSFontAttributeName] = UIFont(name: "Baskerville-Bold", size: 21)
-		tta[NSForegroundColorAttributeName] = UIColor.whiteColor()
-		navAppearance.titleTextAttributes = tta
+		UINavigationBar.appearance().barStyle = UIBarStyle.Black
+		UINavigationBar.appearance().translucent = true
+		UINavigationBar.appearance().titleTextAttributes = [
+			NSFontAttributeName: UIFont(name: "Baskerville-Bold", size: 21) as! AnyObject,
+			NSForegroundColorAttributeName: UIColor.whiteColor() as AnyObject
+		]
 
 		//
 		//	UIBarButtonItem
-		//	As above, titleTextAttributes won't accept a swift dictionary?!
 		//
 
-		tta = NSMutableDictionary()
-		tta[NSFontAttributeName] = UIFont(name: "Baskerville", size: 18)
-
-		let bbiAppearance = UIBarButtonItem.appearance()
-		bbiAppearance.setTitleTextAttributes(tta, forState: .Normal)
+		UIBarButtonItem.appearance().setTitleTextAttributes([
+			NSFontAttributeName: UIFont(name: "Baskerville", size: 18) as! AnyObject
+		], forState: UIControlState.Normal)
 
 		//
 		//	Swift doesn't support appearanceWhenContainedIn... so we need to bridge to ObjC
 		//
 
 		SquizitTheme_ConfigureAppearanceProxies()
-
 	}
 
 	class func cubeBackgroundImage() -> UIImage {
@@ -249,7 +242,7 @@ class SquizitThemeSearchField : UITextField {
 
 	private func commonInit() {
 
-		var clearButton:UIButton = UIButton.buttonWithType(UIButtonType.Custom) as UIButton
+		var clearButton:UIButton = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
 		var closeImage = UIImage(named: "gallery-clear-search-button")!.imageWithRenderingMode(.AlwaysTemplate)
 		clearButton.setImage(closeImage, forState: .Normal)
 		clearButton.frame = CGRect(x: 0, y: 0, width: closeImage.size.width, height: closeImage.size.height)

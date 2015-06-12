@@ -41,28 +41,30 @@ class DrawingTestView : UIView {
 		controller!.draw(ctx)
 	}
 
-	override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+	override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
 
 		if touches.count > 1 {
 			return
 		}
 
-		let location = touches.anyObject()!.locationInView(self)
+		let touch = touches.first as! UITouch
+		let location = touch.locationInView(self)
 		controller!.touchBegan(location)
 		_tracking = true
 	}
 
-	override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
+	override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
 
 		if !_tracking {
 			return
 		}
 
-		let location = touches.anyObject()!.locationInView(self)
+		let touch = touches.first as! UITouch
+		let location = touch.locationInView(self)
 		controller!.touchMoved(location)
 	}
 
-	override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
+	override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
 
 		if !_tracking {
 			return
@@ -72,7 +74,7 @@ class DrawingTestView : UIView {
 		_tracking = false
 	}
 
-	override func touchesCancelled(touches: NSSet, withEvent event: UIEvent) {
+	override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent) {
 		touchesEnded(touches, withEvent: event)
 	}
 

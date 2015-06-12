@@ -21,7 +21,7 @@ class SaveToGalleryTransitionManager: NSObject, UIViewControllerAnimatedTransiti
 		let container = transitionContext.containerView()
 		let baseView = transitionContext.viewForKey(presenting ? UITransitionContextFromViewKey : UITransitionContextToViewKey)!
 		let dialogView = transitionContext.viewForKey(presenting ? UITransitionContextToViewKey : UITransitionContextFromViewKey)!
-		let dialogViewController = transitionContext.viewControllerForKey(presenting ? UITransitionContextToViewControllerKey : UITransitionContextFromViewControllerKey)! as SaveToGalleryViewController
+		let dialogViewController = transitionContext.viewControllerForKey(presenting ? UITransitionContextToViewControllerKey : UITransitionContextFromViewControllerKey)! as! SaveToGalleryViewController
 
 		container.addSubview(baseView)
 		container.addSubview(dialogView)

@@ -178,7 +178,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 		for nameField in fields {
 			var name = sanitize(nameField.text)
-			if countElements(name) == 0 {
+			if name.isEmpty {
 				name = NSLocalizedString("Anonymous", comment: "AnonymousPlayerIdentifier")
 			} else {
 				namesEnteredByUser++
@@ -216,12 +216,12 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 	// MARK: UITextFieldDelegate
 
-	func textFieldShouldEndEditing(textField: UITextField!) -> Bool {
+	func textFieldShouldEndEditing(textField: UITextField) -> Bool {
 		textField.text = sanitize(textField.text)
 		return true
 	}
 
-	func textFieldShouldReturn(textField: UITextField!) -> Bool {
+	func textFieldShouldReturn(textField: UITextField) -> Bool {
 
 		if let tf = textField as? SquizitThemeNameInputField {
 			tf.nextField?.becomeFirstResponder()

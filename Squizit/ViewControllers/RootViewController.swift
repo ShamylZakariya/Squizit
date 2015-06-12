@@ -106,13 +106,13 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 
-		let destinationVC = segue.destinationViewController as UIViewController
+		let destinationVC = segue.destinationViewController as! UIViewController
 		destinationVC.transitioningDelegate = transitionManager
 
 		if let identifier = segue.identifier {
 			switch ( identifier ) {
 				case "showGallery":
-					let navVC = destinationVC as UINavigationController
+					let navVC = destinationVC as! UINavigationController
 					if let galleryVC = navVC.childViewControllers.first as? GalleryViewController {
 						galleryVC.store = (UIApplication.sharedApplication().delegate as? AppDelegate)!.galleryStore
 						galleryVC.delegate = self
@@ -128,7 +128,7 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 						players = 3
 					}
 
-					let matchVC = destinationVC as MatchViewController
+					let matchVC = destinationVC as! MatchViewController
 					let screenBounds = UIScreen.mainScreen().bounds
 					matchVC.match = Match(players: players, stageSize: CGSize(width: screenBounds.width, height: screenBounds.height), overlap: 4)
 

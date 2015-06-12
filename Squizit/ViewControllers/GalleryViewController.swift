@@ -211,7 +211,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 	var editMode:Bool = false {
 		didSet {
 			for cell in collectionView.visibleCells() {
-				(cell as GalleryCollectionViewCell).deleteButtonVisible = editMode
+				(cell as! GalleryCollectionViewCell).deleteButtonVisible = editMode
 			}
 
 			if let emc = editModeChanged {
@@ -235,7 +235,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 			var predicate:NSPredicate? = nil
 			if artistNameFilter != oldValue {
 				if let filter = artistNameFilter {
-					if countElements(filter) > 0 {
+					if !filter.isEmpty {
 						predicate = NSPredicate(format: "SUBQUERY(artists, $artist, $artist.name BEGINSWITH[cd] \"\(filter)\").@count > 0")
 					}
 				}
@@ -263,13 +263,13 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 	override func configureCell( cell:UICollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
 		let store = self.store
-		let flowLayout = self.collectionView.collectionViewLayout as UICollectionViewFlowLayout
+		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
 		let itemSize = flowLayout.itemSize
 		let thumbnailHeight = round(itemSize.height * 0.8)
 
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
-			var galleryCell = cell as GalleryCollectionViewCell
+			var galleryCell = cell as! GalleryCollectionViewCell
 			galleryCell.namesLabel.text = drawing.artistDisplayNames
 			galleryCell.dateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
 			galleryCell.deleteButtonVisible = self.editMode

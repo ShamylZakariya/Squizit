@@ -14,7 +14,7 @@ class TextActivityItemProvider : UIActivityItemProvider {
 	override func item() -> AnyObject! {
 
 		if let playerNames = self.placeholderItem as? String {
-			if countElements(playerNames) > 0 {
+			if !playerNames.isEmpty {
 				switch activityType! {
 					case UIActivityTypePostToTwitter:
 						return "@squizitapp match between " + playerNames
@@ -101,7 +101,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 	override func configureCell( cell:UICollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
 		let store = self.store
 		let backgroundColor = _drawingBackgroundColor
-		let flowLayout = self.collectionView.collectionViewLayout as UICollectionViewFlowLayout
+		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
 		let itemSize = flowLayout.itemSize
 		let thumbnailHeight = round(itemSize.height * 0.85)
 
@@ -113,7 +113,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 			//	it over the paper texture to make a viable thumbnail image
 			//
 
-			var galleryCell = cell as GalleryDetailCollectionViewCell
+			var galleryCell = cell as! GalleryDetailCollectionViewCell
 
 			galleryCell.playerNamesLabel.text = drawing.artistDisplayNames
 			galleryCell.matchDateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
@@ -146,12 +146,15 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 				galleryCell.imageView.image = image
 			} else {
 				galleryCell.renderAction = loader
-				galleryCell.renderAction!.done = { result in
-					dispatch_main {
-						galleryCell.imageView.animate = true
-						galleryCell.imageView.image = result.2
-					}
-				}
+
+				println("GalleryDetailViewController.swift:150 - WARNING!!!! NOT ASSIGNING renderAction.done OP, because WTF")
+//				galleryCell.renderAction!.done = { result in
+//					dispatch_main {
+//						galleryCell.imageView.animate = true
+//						galleryCell.imageView.image = result.2
+//					}
+//				}
+
 			}
 
 			// preload neighbor drawings, and prune drawings that are farther away
@@ -166,7 +169,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 
 	private func loaderFor( index:Int ) -> CancelableAction<(GalleryDrawing,Match,UIImage)> {
 		let indexPath = NSIndexPath(forItem: index, inSection: 0 )
-		let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as GalleryDrawing
+		let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as! GalleryDrawing
 
 		// check for an existing loader @ index
 		if let maybeExistingLoader = _loaders[index] {
@@ -289,7 +292,7 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 			_dataSource.filterPredicate = filterPredicate
 		}
 
-		var flow = collectionView!.collectionViewLayout as UICollectionViewFlowLayout
+		var flow = collectionView!.collectionViewLayout as! UICollectionViewFlowLayout
 		flow.minimumInteritemSpacing = 0
 		flow.minimumLineSpacing = 0
 		flow.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -338,7 +341,7 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 	}
 
 	private func updateItemSize() {
-		var flow = collectionView!.collectionViewLayout as UICollectionViewFlowLayout
+		var flow = collectionView!.collectionViewLayout as! UICollectionViewFlowLayout
 		let width = view.bounds.width
 		let height = view.bounds.height - 44
 		flow.itemSize = CGSize(width: width, height: height)
@@ -378,7 +381,7 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 				let items = [rendering, textItem]
 
 				let activityController = UIActivityViewController( activityItems: items, applicationActivities: nil)
-				activityController.popoverPresentationController?.barButtonItem = sender as UIBarButtonItem
+				activityController.popoverPresentationController?.barButtonItem = sender as! UIBarButtonItem
 				activityController.view.tintColor = SquizitTheme.alertTintColor()
 				sself.presentViewController(activityController, animated: true, completion: nil)
 
@@ -423,7 +426,7 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 				[weak self] () -> () in
 				if let sself = self {
 
-					let flow = sself.collectionView!.collectionViewLayout as UICollectionViewFlowLayout
+					let flow = sself.collectionView!.collectionViewLayout as! UICollectionViewFlowLayout
 					let numItems = sself._dataSource.collectionView(sself.collectionView!, numberOfItemsInSection: 0)
 
 					let itemWidth = flow.itemSize.width

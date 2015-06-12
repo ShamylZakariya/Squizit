@@ -55,7 +55,7 @@ class Match {
 		var readResult = reader.getMatch()
 		switch readResult {
 			case .Success( let value ):
-				return .Success(value())
+				return .Success(value)
 
 			case .Failure:
 				// native failed, this is an older file, in BigEndian
@@ -70,7 +70,7 @@ class Match {
 
 		let writer = MutableBinaryCoder(order:nativeOrder())
 		writer.putMatch(self)
-		return .Success(writer.data)
+		return .Success(Box(writer.data))
 	}
 
 	func save( fileUrl:NSURL ) -> Result<Int> {
@@ -81,7 +81,7 @@ class Match {
 		}
 
 		serializationResult.value.writeToURL(fileUrl, atomically: true)
-		return .Success(serializationResult.value.length)
+		return .Success(Box(serializationResult.value.length))
 	}
 
 	func render( backgroundColor:UIColor? = nil, scale:CGFloat = 0, watermark:Bool = false ) -> UIImage {
@@ -209,7 +209,7 @@ extension BinaryCoder {
 		//	Success
 		//
 
-		return .Success(match)
+		return .Success(Box(match))
 	}
 }
 

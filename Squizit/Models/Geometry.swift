@@ -63,8 +63,18 @@ extension CGPoint {
 }
 
 struct LineSegment {
-	let firstPoint = CGPoint()
-	let secondPoint = CGPoint()
+	let firstPoint:CGPoint
+	let secondPoint:CGPoint
+
+	init() {
+		self.firstPoint = CGPoint.zeroPoint
+		self.secondPoint = CGPoint.zeroPoint
+	}
+
+	init(firstPoint:CGPoint, secondPoint:CGPoint) {
+		self.firstPoint = firstPoint
+		self.secondPoint = secondPoint
+	}
 
 	func perpendicular( relativeLength fraction:CGFloat ) -> LineSegment {
 		let x0 = firstPoint.x

@@ -325,7 +325,7 @@ extension BinaryCoder {
 			return .Failure(Error(message: "version # mismatch, unrecognized version: \(version)"))
 		}
 
-		return .Success(drawing!)
+		return .Success(Box(drawing!))
 	}
 }
 

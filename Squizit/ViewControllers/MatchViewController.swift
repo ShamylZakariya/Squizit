@@ -264,14 +264,14 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 		// create the various buttons
 
-		stepForwardButton = SquizitThemeButton.buttonWithType(UIButtonType.Custom) as SquizitThemeButton
+		stepForwardButton = SquizitThemeButton.buttonWithType(UIButtonType.Custom) as! SquizitThemeButton
 		stepForwardButton.setTitle(NSLocalizedString("Next", comment: "MatchNextButtonTitle" ).uppercaseString, forState: UIControlState.Normal)
 		stepForwardButton.addTarget(self, action: "stepForward", forControlEvents: .TouchUpInside)
 		stepForwardButton.frame = CGRect(x: 0, y: 0, width: 200, height: 44)
 		stepForwardButton.enabled = false
 		view.addSubview(stepForwardButton)
 
-		undoButton = SquizitThemeButton.buttonWithType(UIButtonType.Custom) as SquizitThemeButton
+		undoButton = SquizitThemeButton.buttonWithType(UIButtonType.Custom) as! SquizitThemeButton
 		undoButton.setTitle(NSLocalizedString("Undo", comment: "MatchUndoButtonTitle" ).uppercaseString, forState: UIControlState.Normal)
 		undoButton.addTarget( self, action: "undo", forControlEvents:.TouchUpInside)
 		undoButton.frame = CGRect(x:0, y: 0, width: 100, height: 44)
@@ -279,7 +279,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		undoButton.bordered = false
 		view.addSubview(undoButton)
 
-		clearButton = SquizitThemeButton.buttonWithType(UIButtonType.Custom) as SquizitThemeButton
+		clearButton = SquizitThemeButton.buttonWithType(UIButtonType.Custom) as! SquizitThemeButton
 		clearButton.setTitle(NSLocalizedString("Clear", comment: "MatchClearButtonTitle" ).uppercaseString, forState: UIControlState.Normal)
 		clearButton.addTarget( self, action: "queryClear", forControlEvents:.TouchUpInside)
 		clearButton.frame = CGRect(x:0, y: 0, width: 100, height: 44)
@@ -315,7 +315,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		if let identifier = segue.identifier {
 			switch identifier {
 				case "showSaveToGallery":
-					let saveToGalleryVC = segue.destinationViewController as SaveToGalleryViewController
+					let saveToGalleryVC = segue.destinationViewController as! SaveToGalleryViewController
 					saveToGalleryVC.nameCount = numPlayers
 					saveToGalleryVC.delegate = self
 
@@ -597,7 +597,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	func didSaveToGalleryWithNames(names: [String]? ) {
 		if let match = self.match {
 
-			let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+			let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 			let galleryStore = appDelegate.galleryStore
 			if let moc = galleryStore.managedObjectContext {
 
@@ -676,7 +676,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	}
 
 	private func DEBUG_saveImage( image:UIImage, path:String ) {
-	    let folderURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as NSURL
+	    let folderURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as! NSURL
 		let targetURL = folderURL.URLByAppendingPathComponent(path, isDirectory: false)
 
 		println("saving image to \(targetURL)")

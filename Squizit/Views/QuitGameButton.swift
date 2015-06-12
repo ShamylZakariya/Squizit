@@ -11,7 +11,7 @@ import UIKit
 class QuitGameButton: UIButton {
 
 	class func quitGameButton() -> QuitGameButton {
-		var btn = self.buttonWithType(UIButtonType.Custom) as QuitGameButton
+		var btn = self.buttonWithType(UIButtonType.Custom) as! QuitGameButton
 		var icon = UIImage( named:"quit-game-button-icon")
 		btn.setImage( icon, forState: UIControlState.Normal )
 

@@ -59,7 +59,7 @@ class GalleryStore {
 		if let results = self.managedObjectContext?.executeFetchRequest(fr, error: &error ) {
 
 			if !results.isEmpty {
-				return results.first as GalleryArtist?
+				return results.first as! GalleryArtist?
 			}
 		}
 
@@ -87,7 +87,7 @@ class GalleryStore {
 
 		var error: NSError? = nil
 		if let results = self.managedObjectContext?.executeFetchRequest(fr, error: &error ) {
-			return results as [GalleryArtist]
+			return results as! [GalleryArtist]
 		}
 
 		return []
@@ -110,7 +110,7 @@ class GalleryStore {
 		if let results = self.managedObjectContext?.executeFetchRequest(fr, error: &error ) {
 
 			if !results.isEmpty {
-				return results as [GalleryArtist]
+				return results as! [GalleryArtist]
 			}
 		}
 
@@ -133,7 +133,7 @@ class GalleryStore {
 		if let results = self.managedObjectContext?.executeFetchRequest(fr, error: &error ) {
 
 			if !results.isEmpty {
-				return results as [GalleryDrawing]
+				return results as! [GalleryDrawing]
 			}
 		}
 
@@ -157,10 +157,19 @@ class GalleryStore {
 	        coordinator = nil
 
 	        // Report any error we got.
+			/*
 	        let dict = NSMutableDictionary()
 	        dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
 	        dict[NSLocalizedFailureReasonErrorKey] = failureReason
 	        dict[NSUnderlyingErrorKey] = error
+			*/
+
+			var dict = [NSObject:AnyObject]()
+			dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
+			dict[NSLocalizedFailureReasonErrorKey] = failureReason
+			dict[NSUnderlyingErrorKey] = error
+
+
 			error = NSError(domain: GalleryStoreErrorDomain, code: GalleryStoreErrorCodeInitializationError, userInfo: dict)
 
 	        // Replace this with code to handle the error appropriately.
@@ -201,7 +210,7 @@ class GalleryStore {
 
 	private lazy var applicationDocumentsDirectory: NSURL = {
 	    let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-		return urls.last as NSURL
+		return urls.last as! NSURL
 	}()
 
 
