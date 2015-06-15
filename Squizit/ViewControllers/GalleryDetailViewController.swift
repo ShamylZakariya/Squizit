@@ -40,6 +40,12 @@ class TextActivityItemProvider : UIActivityItemProvider {
 
 let DebugLayout = false
 
+struct RenderActionContext {
+	var drawing:GalleryDrawing
+	var match:Match
+	var image:UIImage
+}
+
 class GalleryDetailCollectionViewCell : UICollectionViewCell {
 	@IBOutlet weak var imageView: ImagePresenterView!
 	@IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
@@ -48,7 +54,7 @@ class GalleryDetailCollectionViewCell : UICollectionViewCell {
 	@IBOutlet weak var playerNamesLabel: UILabel!
 	@IBOutlet weak var matchDateLabel: UILabel!
 
-	var renderAction:CancelableAction<(GalleryDrawing,Match,UIImage)>?
+	var renderAction:CancelableAction<RenderActionContext>?
 
 	class func identifier() ->String { return "GalleryDetailCollectionViewCell" }
 
@@ -140,21 +146,18 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 			//	action to assign the image
 			//
 
-			if let (drawing,match,image) = loader.result {
+			if let result = loader.result {
 				galleryCell.renderAction = nil
 				galleryCell.imageView.animate = false
-				galleryCell.imageView.image = image
+				galleryCell.imageView.image = result.image
 			} else {
 				galleryCell.renderAction = loader
-
-				println("GalleryDetailViewController.swift:150 - WARNING!!!! NOT ASSIGNING renderAction.done OP, because WTF")
-//				galleryCell.renderAction!.done = { result in
-//					dispatch_main {
-//						galleryCell.imageView.animate = true
-//						galleryCell.imageView.image = result.2
-//					}
-//				}
-
+				galleryCell.renderAction!.done = { result in
+					dispatch_main {
+						galleryCell.imageView.animate = true
+						galleryCell.imageView.image = result.image
+					}
+				}
 			}
 
 			// preload neighbor drawings, and prune drawings that are farther away
@@ -165,9 +168,9 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 		}
 	}
 
-	private var _loaders:[Int:CancelableAction<(GalleryDrawing,Match,UIImage)>?] = [:]
+	private var _loaders:[Int:CancelableAction<RenderActionContext>?] = [:]
 
-	private func loaderFor( index:Int ) -> CancelableAction<(GalleryDrawing,Match,UIImage)> {
+	private func loaderFor( index:Int ) -> CancelableAction<RenderActionContext> {
 		let indexPath = NSIndexPath(forItem: index, inSection: 0 )
 		let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as! GalleryDrawing
 
@@ -182,7 +185,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 
 		let queue = _renderQueue
 		let backgroundColor = _drawingBackgroundColor
-		let loader = CancelableAction<(GalleryDrawing,Match,UIImage)>(action: { done, canceled in
+		let loader = CancelableAction<RenderActionContext>(action: { done, canceled in
 
 			dispatch_async( queue ) {
 				let loadResult = Match.load(drawing.match)
@@ -194,7 +197,7 @@ class GalleryDetailCollectionViewDataSource : BasicGalleryCollectionViewDataSour
 				var match = loadResult.value
 				if !canceled() {
 					var rendering = match.render( backgroundColor: backgroundColor )
-					done( result:(drawing,match,rendering))
+					done( result:RenderActionContext(drawing:drawing,match:match,image:rendering))
 				}
 			}
 		})
@@ -392,14 +395,14 @@ class GalleryDetailViewController: UICollectionViewController, UIScrollViewDeleg
 	func export( done:(drawing:GalleryDrawing, rendering:UIImage! )->Void ) {
 		if let indexPath = self.collectionView!.indexPathsForVisibleItems().first as? NSIndexPath {
 			let action = _dataSource.loaderFor( indexPath.item )
-			if let (drawing,match,_) = action.result {
+			if let result = action.result {
 				dispatch_async(_exportQueue) {
 
 					var background = SquizitTheme.exportedMatchBackgroundColor()
-					var rendering = match.render( backgroundColor: background, scale:2, watermark: true )
+					var rendering = result.match.render( backgroundColor: background, scale:2, watermark: true )
 
 					dispatch_main {
-						done( drawing:drawing, rendering:rendering )
+						done( drawing:result.drawing, rendering:rendering )
 					}
 				}
 			} else {
