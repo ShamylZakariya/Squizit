@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		63267AD319CC7CE800B22242 /* FullscreenModalTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63267AD219CC7CE700B22242 /* FullscreenModalTransitionManager.swift */; };
 		6327299819C3403F003BCD76 /* ImagePresenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6327299719C3403F003BCD76 /* ImagePresenterView.swift */; };
+		6329ED311B305D000000B19A /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6329ED301B305D000000B19A /* Launch Screen.xib */; };
 		6350C5EA19A1727B008CE4F5 /* MatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350C5E919A1727B008CE4F5 /* MatchViewController.swift */; };
 		6350C5EC19A24790008CE4F5 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350C5EB19A24790008CE4F5 /* RootViewController.swift */; };
 		63533B1019BCCD6C00ED8B7A /* QuitGameButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63533B0F19BCCD6C00ED8B7A /* QuitGameButton.swift */; };
@@ -46,7 +47,6 @@
 		63BC820419E441290047D414 /* HowToPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC820319E441290047D414 /* HowToPlayViewController.swift */; };
 		63EBB83819A65C45003C3EC2 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EF19A65B4500581DE8 /* Geometry.swift */; };
 		63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB83A19A78BAA003C3EC2 /* MatchShieldView.swift */; };
-		63EBB83D19A97BFE003C3EC2 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB83C19A97BFD003C3EC2 /* RootView.swift */; };
 		63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */; };
 		63EBB87319AEC0DD003C3EC2 /* GalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87219AEC0DD003C3EC2 /* GalleryStore.swift */; };
 		63EBB87619AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87419AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld */; };
@@ -70,6 +70,7 @@
 /* Begin PBXFileReference section */
 		63267AD219CC7CE700B22242 /* FullscreenModalTransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullscreenModalTransitionManager.swift; sourceTree = "<group>"; };
 		6327299719C3403F003BCD76 /* ImagePresenterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePresenterView.swift; sourceTree = "<group>"; };
+		6329ED301B305D000000B19A /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 		6350C5E919A1727B008CE4F5 /* MatchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchViewController.swift; sourceTree = "<group>"; };
 		6350C5EB19A24790008CE4F5 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		63533B0F19BCCD6C00ED8B7A /* QuitGameButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuitGameButton.swift; sourceTree = "<group>"; };
@@ -106,7 +107,6 @@
 		63BBECBB19967B0C00F6E2B3 /* Stroke.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stroke.swift; sourceTree = "<group>"; };
 		63BC820319E441290047D414 /* HowToPlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HowToPlayViewController.swift; sourceTree = "<group>"; };
 		63EBB83A19A78BAA003C3EC2 /* MatchShieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchShieldView.swift; sourceTree = "<group>"; };
-		63EBB83C19A97BFD003C3EC2 /* RootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		63EBB83E19AB821D003C3EC2 /* Notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Notes.md; sourceTree = "<group>"; };
 		63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToGalleryViewController.swift; sourceTree = "<group>"; };
 		63EBB87219AEC0DD003C3EC2 /* GalleryStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryStore.swift; sourceTree = "<group>"; };
@@ -212,6 +212,7 @@
 				63BBEC9A19967A2300F6E2B3 /* Images.xcassets */,
 				63BBEC8D19967A2300F6E2B3 /* Supporting Files */,
 				63EBB83E19AB821D003C3EC2 /* Notes.md */,
+				6329ED301B305D000000B19A /* Launch Screen.xib */,
 			);
 			path = Squizit;
 			sourceTree = "<group>";
@@ -282,7 +283,6 @@
 				636CEA2A199F25F000BEBF53 /* MatchView.swift */,
 				63533B0F19BCCD6C00ED8B7A /* QuitGameButton.swift */,
 				638E459119C88EEC008D8CD9 /* RootBorderView.swift */,
-				63EBB83C19A97BFD003C3EC2 /* RootView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -388,6 +388,7 @@
 			files = (
 				63BBEC9919967A2300F6E2B3 /* Main.storyboard in Resources */,
 				63BBEC9B19967A2300F6E2B3 /* Images.xcassets in Resources */,
+				6329ED311B305D000000B19A /* Launch Screen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,7 +456,6 @@
 				63EBB87619AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld in Sources */,
 				636CEA2B199F25F000BEBF53 /* MatchView.swift in Sources */,
 				635DFA8319BA025600102B6A /* GalleryDetailViewController.swift in Sources */,
-				63EBB83D19A97BFE003C3EC2 /* RootView.swift in Sources */,
 				635DFA8519BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift in Sources */,
 				63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */,
 				63BC820419E441290047D414 /* HowToPlayViewController.swift in Sources */,
@@ -581,7 +581,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -600,7 +599,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

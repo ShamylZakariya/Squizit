@@ -62,8 +62,8 @@ class SquizitTheme {
 		return UIImage(named: "thumbnail-paper-pattern")!
 	}
 
-	class func rootScreenBackgroundColor() -> UIColor {
-		return UIColor( patternImage: self.cubeBackgroundImage() )
+	class func rootScreenBackgroundImage() -> UIImage {
+		return UIImage(named: "universal-cube-pattern")!
 	}
 
 	// background color of paper surface (e.g., background of drawing canvas)
