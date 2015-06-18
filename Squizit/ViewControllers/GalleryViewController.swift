@@ -315,7 +315,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 			} else {
 
 				let queue = _thumbnailCompositorQueue
-				galleryCell.thumbnailLoadAction = CancelableAction<UIImage>(action: { done, canceled in
+				galleryCell.thumbnailLoadAction = CancelableAction<UIImage>(action: { (done, canceled) in
 
 					dispatch_async( queue ) {
 

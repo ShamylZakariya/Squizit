@@ -40,10 +40,6 @@ class SquizitTheme {
 		SquizitTheme_ConfigureAppearanceProxies()
 	}
 
-	class func cubeBackgroundImage() -> UIImage {
-		return UIImage(named: "cube-pattern")!
-	}
-
 	class func leatherBackgroundImage() -> UIImage {
 		return UIImage(named: "leather-pattern")!
 	}

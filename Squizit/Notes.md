@@ -1,12 +1,16 @@
 #VERSION 2.0
 	
-	- add turn-based gamecenter play
+	- square matches
+		- right now match size is determined in RootViewController.prepareForSegue and is set to screen size (!)
+		- how does UI change if user is acting on a slice of a square?
 
+	- let user pan/zoom(?) match screen with two-finger swipes (can simply be a panning of match view!)
+
+	- add turn-based gamecenter play
 
 #TODO
 
 	- add tweet + share buttons to the save-to-gallery vc's dialog, perhaps /outside/ the dialog, over the grey blanker
-	- on Debug podcast was discussion that Apple made public touch APIs to determine touch intensity - could use this to modulate line width -- see UITouch -majorRadius
 	
 #FIXME
 
