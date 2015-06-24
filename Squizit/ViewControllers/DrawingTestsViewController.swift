@@ -11,9 +11,9 @@ import UIKit
 
 class DrawingTestView : UIView {
 
-	var drawing:Drawing?
-	var controller:DrawingInputController?
-	var _tracking:Bool = false
+	private var drawing:Drawing?
+	private var controller:DrawingInputController?
+	private var tracking:Bool = false
 
 	override init(frame:CGRect) {
 		super.init( frame: frame )
@@ -35,8 +35,10 @@ class DrawingTestView : UIView {
 			UIRectFill(vp)
 		}
 
-		UIColor.redColor().colorWithAlphaComponent(0.5).set()
-		UIRectFrameUsingBlendMode(rect, kCGBlendModeNormal)
+		if drawing!.debugRender {
+			UIColor.redColor().colorWithAlphaComponent(0.5).set()
+			UIRectFrameUsingBlendMode(rect, kCGBlendModeNormal)
+		}
 
 		controller!.draw(ctx)
 	}
@@ -50,12 +52,12 @@ class DrawingTestView : UIView {
 		let touch = touches.first as! UITouch
 		let location = touch.locationInView(self)
 		controller!.touchBegan(location)
-		_tracking = true
+		tracking = true
 	}
 
 	override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
 
-		if !_tracking {
+		if !tracking {
 			return
 		}
 
@@ -66,12 +68,12 @@ class DrawingTestView : UIView {
 
 	override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
 
-		if !_tracking {
+		if !tracking {
 			return
 		}
 
 		controller!.touchEnded()
-		_tracking = false
+		tracking = false
 	}
 
 	override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -82,7 +84,8 @@ class DrawingTestView : UIView {
 
 class DrawingTestsViewController : UIViewController {
 
-	var drawingView:DrawingTestView = DrawingTestView(frame: CGRect.zeroRect)
+	private var drawingView:DrawingTestView = DrawingTestView(frame: CGRect.zeroRect)
+	private var currentPanTranslation:CGPoint = CGPoint.zeroPoint
 
 	override func viewDidLoad() {
 
@@ -96,38 +99,65 @@ class DrawingTestsViewController : UIViewController {
 		let controller = DrawingInputController()
 		controller.drawing = drawingView.drawing!
 		controller.view = drawingView
-		controller.viewport = CGRect(x: 0, y: 0, width: 768, height: 1024).rectByInsetting(dx: 100, dy: 100)
+		controller.viewport = self.view.bounds
 		controller.fill = Fill.Brush
 		drawingView.controller = controller
 
 		view.addSubview(drawingView)
 
-		var tgr = UITapGestureRecognizer(target: self, action: "eraseDrawing:")
+		var tgr = UITapGestureRecognizer(target: self, action: "onEraseDrawing:")
 		tgr.numberOfTapsRequired = 2
 		tgr.numberOfTouchesRequired = 1
-		drawingView.addGestureRecognizer(tgr)
+		view.addGestureRecognizer(tgr)
 
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "DEBUG", style: UIBarButtonItemStyle.Plain, target: self, action: "toggleDebugRendering:")
+		var pgr = UIPanGestureRecognizer(target: self, action: "onPan:")
+		pgr.minimumNumberOfTouches = 2
+		view.addGestureRecognizer(pgr)
 
-		self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "UNFO", style: UIBarButtonItemStyle.Plain, target: self, action: "undo:")
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "DEBUG", style: UIBarButtonItemStyle.Plain, target: self, action: "onToggleDebugRendering:")
+		self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "UNDO", style: UIBarButtonItemStyle.Plain, target: self, action: "onUndo:")
 	}
 
 	override func viewWillLayoutSubviews() {
 		drawingView.frame = view.bounds
+		drawingView.controller?.viewport = self.view.bounds
 	}
 
-	dynamic func undo( sender:AnyObject ) {
+	// MARK: - Actions
+
+	dynamic private func onUndo( sender:AnyObject ) {
 		drawingView.controller!.undo()
 	}
 
-	dynamic func eraseDrawing( sender:AnyObject ) {
+	dynamic private func onEraseDrawing( sender:AnyObject ) {
 		drawingView.drawing!.clear()
 		drawingView.setNeedsDisplay()
 	}
 
-	dynamic func toggleDebugRendering( sender:AnyObject ) {
+	dynamic private func onToggleDebugRendering( sender:AnyObject ) {
 		drawingView.drawing!.debugRender = !drawingView.drawing!.debugRender
 		drawingView.setNeedsDisplay()
+	}
+
+	dynamic private func onPan(pgr:UIPanGestureRecognizer) {
+		let translation = pgr.translationInView(view)
+
+		switch pgr.state {
+		case .Possible:
+			break;
+		case .Began:
+			println("began translation:\(translation)")
+			let affine = CATransform3DGetAffineTransform(drawingView.layer.transform)
+			currentPanTranslation.x = affine.tx
+			currentPanTranslation.y = affine.ty
+			println("current tx:\(affine.tx) ty:\(affine.ty)")
+			drawingView.layer.transform = CATransform3DMakeTranslation(currentPanTranslation.x + translation.x, currentPanTranslation.y + translation.y, 0)
+		case .Changed:
+			println("changed translation:\(translation)")
+			drawingView.layer.transform = CATransform3DMakeTranslation(currentPanTranslation.x + translation.x, currentPanTranslation.x + translation.y, 0)
+		case .Ended,.Cancelled,.Failed:
+			currentPanTranslation = CGPoint.zeroPoint
+		}
 	}
 
 }
