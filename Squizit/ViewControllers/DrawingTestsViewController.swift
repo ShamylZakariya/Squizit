@@ -17,12 +17,10 @@ class DrawingTestView : UIView {
 
 	override init(frame:CGRect) {
 		super.init( frame: frame )
-		backgroundColor = UIColor.yellowColor()
 	}
 
 	required init(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
-		backgroundColor = UIColor.yellowColor()
 	}
 
 	override func drawRect(rect: CGRect) {
@@ -91,19 +89,22 @@ class DrawingTestsViewController : UIViewController {
 
 		NSLog( "DrawingTestsViewController" )
 
-		self.title = "Drawing Tests..."
+		title = "Drawing Tests..."
+		view.backgroundColor = UIColor.yellowColor()
 
+		let drawingFrame = CGRect(x: 0, y: 0, width: 1024, height: 1024)
 		drawingView.drawing = Drawing()
 		drawingView.drawing!.debugRender = true
+		drawingView.frame = drawingFrame
+		view.addSubview(drawingView)
 
 		let controller = DrawingInputController()
 		controller.drawing = drawingView.drawing!
 		controller.view = drawingView
-		controller.viewport = self.view.bounds
+		controller.viewport = drawingFrame
 		controller.fill = Fill.Brush
 		drawingView.controller = controller
 
-		view.addSubview(drawingView)
 
 		var tgr = UITapGestureRecognizer(target: self, action: "onEraseDrawing:")
 		tgr.numberOfTapsRequired = 2
@@ -119,8 +120,6 @@ class DrawingTestsViewController : UIViewController {
 	}
 
 	override func viewWillLayoutSubviews() {
-		drawingView.frame = view.bounds
-		drawingView.controller?.viewport = self.view.bounds
 	}
 
 	// MARK: - Actions
@@ -140,23 +139,22 @@ class DrawingTestsViewController : UIViewController {
 	}
 
 	dynamic private func onPan(pgr:UIPanGestureRecognizer) {
-		let translation = pgr.translationInView(view)
+		var translation = pgr.translationInView(view)
+		translation.x = round(translation.x)
+		translation.y = round(translation.y)
 
 		switch pgr.state {
-		case .Possible:
-			break;
 		case .Began:
-			println("began translation:\(translation)")
 			let affine = CATransform3DGetAffineTransform(drawingView.layer.transform)
 			currentPanTranslation.x = affine.tx
 			currentPanTranslation.y = affine.ty
-			println("current tx:\(affine.tx) ty:\(affine.ty)")
 			drawingView.layer.transform = CATransform3DMakeTranslation(currentPanTranslation.x + translation.x, currentPanTranslation.y + translation.y, 0)
+
 		case .Changed:
-			println("changed translation:\(translation)")
 			drawingView.layer.transform = CATransform3DMakeTranslation(currentPanTranslation.x + translation.x, currentPanTranslation.x + translation.y, 0)
-		case .Ended,.Cancelled,.Failed:
-			currentPanTranslation = CGPoint.zeroPoint
+
+		case .Possible, .Ended,.Cancelled,.Failed:
+			break;
 		}
 	}
 
