@@ -12,7 +12,7 @@ class QuitGameButton: UIButton {
 
 	class func quitGameButton() -> QuitGameButton {
 		var btn = self.buttonWithType(UIButtonType.Custom) as! QuitGameButton
-		var icon = UIImage( named:"quit-game-button-icon")
+		var icon = UIImage( named:"quit-game-button")?.imageWithRenderingMode(.AlwaysTemplate)
 		btn.setImage( icon, forState: UIControlState.Normal )
 
 		return btn
@@ -40,14 +40,13 @@ class QuitGameButton: UIButton {
 	}
 
 	private func update() {
-		layer.cornerRadius = 22
-		layer.borderWidth = 1
-		layer.backgroundColor = UIColor(white: 0.19, alpha: 0.2).CGColor
-		layer.borderColor = self.tintColor!.colorWithAlphaComponent(0.2).CGColor
+		alpha = 0.5
+		layer.cornerRadius = 22.5
+		layer.backgroundColor = UIColor(white: 0.19, alpha: 0.3).CGColor
 	}
 
 	override func intrinsicContentSize() -> CGSize {
-		return CGSize(width: 44, height: 44)
+		return CGSize(width: 45, height: 45)
 	}
 
 }

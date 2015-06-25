@@ -3,16 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "splash.png"
+      "filename" : "quit-game-button.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "splash@2x.png"
+      "filename" : "quit-game-button@2x.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x"
+      "scale" : "3x",
+      "filename" : "quit-game-button@3x.png"
     }
   ],
   "info" : {

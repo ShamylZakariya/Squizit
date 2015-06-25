@@ -22,7 +22,7 @@ class ToolIconView : UIView {
 		super.init(frame: frame)
 		self.opaque = false
 		imageView = UIImageView(image: icon.imageWithRenderingMode(.AlwaysTemplate))
-		imageView.contentMode = UIViewContentMode.ScaleAspectFit
+		imageView.contentMode = .Center
 		addSubview(imageView)
 	}
 
@@ -49,7 +49,6 @@ class ToolIconView : UIView {
 			border.stroke()
 		}
 	}
-
 }
 
 /**
@@ -70,13 +69,13 @@ class DrawingToolSelector : UIControl {
 		commonInit()
 	}
 
-	var margin:CGFloat = 40 {
+	var toolSeparation:CGFloat = 20 {
 		didSet {
 			setNeedsLayout()
 		}
 	}
 
-	var buttonSize:CGFloat = 88 {
+	var toolSize:CGFloat = 45 {
 		didSet {
 			setNeedsLayout()
 		}
@@ -135,17 +134,16 @@ class DrawingToolSelector : UIControl {
 
 	func layoutTools() {
 		let width = self.bounds.width
-		let maxButtonSize:CGFloat = (width - ((CGFloat(_tools.count)-1)*margin)) / CGFloat(_tools.count)
-		let size = min( min(bounds.height,buttonSize), maxButtonSize )
-		let inset = size * 0.25
-		let contentWidth = CGFloat(_tools.count) * size + (CGFloat(_tools.count) - 1.0) * margin;
+		let maxButtonSize:CGFloat = (width - ((CGFloat(_tools.count)-1)*toolSeparation)) / CGFloat(_tools.count)
+		let size = round(min( min(bounds.height,toolSize), maxButtonSize ))
+		let contentWidth = CGFloat(_tools.count) * size + (CGFloat(_tools.count) - 1.0) * toolSeparation;
 		var x = width/2 - contentWidth/2
 		var y = bounds.height/2 - size/2
 
 		for tool in _tools {
-			let frame = CGRect(x: x, y: y, width: size, height: size).integerRect
+			let frame = CGRect(x: round(x), y: round(y), width: size, height: size)
 			tool.frame = frame
-			x += margin + size
+			x += toolSeparation + size
 		}
 	}
 

@@ -16,6 +16,7 @@ class ScalingDrawingContainer : UIView {
 
 	private var panning:Bool = false {
 		didSet {
+			// reset position to be centered in view
 			currentPanTranslation = CGPoint(x: bounds.width/2 - drawingSize.width/2, y: bounds.height/2 - drawingSize.height/2)
 			updateLayout()
 		}
@@ -98,7 +99,6 @@ class ScalingDrawingContainer : UIView {
 
 	private func updateLayout() {
 		if let drawingView = drawingView {
-
 			if !panning {
 
 				// compute max scale to fit drawingView in view
