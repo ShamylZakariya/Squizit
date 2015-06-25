@@ -60,6 +60,9 @@ extension CGPoint {
 		return sqrt((Dx*Dx) + (Dy*Dy))
 	}
 
+	func integerPoint() -> CGPoint {
+		return CGPoint(x: round(x), y: round(y))
+	}
 }
 
 struct LineSegment {

@@ -76,6 +76,10 @@ class SquizitTheme {
 		return UIImage(named:"export-watermark")!
 	}
 
+	class func leatherBackgroundColor() -> UIColor {
+		return UIColor( patternImage: self.leatherBackgroundImage() )
+	}
+
 	// background color for the match view
 	class func matchBackgroundColor() -> UIColor {
 		return UIColor( patternImage: self.leatherBackgroundImage() )
