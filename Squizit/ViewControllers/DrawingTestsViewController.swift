@@ -17,7 +17,7 @@ class ScalingDrawingContainer : UIView {
 	private var panning:Bool = false {
 		didSet {
 			currentPanTranslation = CGPoint(x: bounds.width/2 - drawingSize.width/2, y: bounds.height/2 - drawingSize.height/2)
-			setNeedsLayout()
+			updateLayout()
 		}
 	}
 
@@ -55,13 +55,48 @@ class ScalingDrawingContainer : UIView {
 		addGestureRecognizer(pgr)
 
 		var tgr = UITapGestureRecognizer(target: self, action: "onTogglePanning:")
-		tgr.numberOfTouchesRequired = 2
+		tgr.numberOfTouchesRequired = 1
 		tgr.numberOfTapsRequired = 2
 		addGestureRecognizer(tgr)
 	}
 
 	override func layoutSubviews() {
 		super.layoutSubviews()
+		updateLayout()
+	}
+
+	private dynamic func onPan(pgr:UIPanGestureRecognizer) {
+		if let drawingView = drawingView where panning {
+			var translation = pgr.translationInView(self)
+			translation.x = round(translation.x)
+			translation.y = round(translation.y)
+
+			switch pgr.state {
+			case .Began:
+				// kill stroke that was started
+				drawingView.controller!.undo()
+
+				initialPanTranslation.x = currentPanTranslation.x
+				initialPanTranslation.y = currentPanTranslation.y
+				currentPanTranslation.x = initialPanTranslation.x + translation.x
+				currentPanTranslation.y = initialPanTranslation.y + translation.y
+				updatePan()
+
+			case .Changed, .Ended:
+				currentPanTranslation.x = initialPanTranslation.x + translation.x
+				currentPanTranslation.y = initialPanTranslation.y + translation.y
+				updatePan()
+
+			case .Possible:
+				break;
+
+			case .Cancelled,.Failed:
+				break;
+			}
+		}
+	}
+
+	private func updateLayout() {
 		if let drawingView = drawingView {
 
 			if !panning {
@@ -95,34 +130,6 @@ class ScalingDrawingContainer : UIView {
 		}
 	}
 
-	private dynamic func onPan(pgr:UIPanGestureRecognizer) {
-		if let drawingView = drawingView where panning {
-			var translation = pgr.translationInView(self)
-			translation.x = round(translation.x)
-			translation.y = round(translation.y)
-
-			switch pgr.state {
-			case .Began:
-				initialPanTranslation.x = currentPanTranslation.x
-				initialPanTranslation.y = currentPanTranslation.y
-				currentPanTranslation.x = initialPanTranslation.x + translation.x
-				currentPanTranslation.y = initialPanTranslation.y + translation.y
-				updatePan()
-
-			case .Changed, .Ended:
-				currentPanTranslation.x = initialPanTranslation.x + translation.x
-				currentPanTranslation.y = initialPanTranslation.y + translation.y
-				updatePan()
-
-			case .Possible:
-				break;
-
-			case .Cancelled,.Failed:
-				break;
-			}
-		}
-	}
-
 	private func updatePan() {
 		if let drawingView = drawingView {
 			let size = drawingView.controller!.viewport.size
@@ -132,7 +139,11 @@ class ScalingDrawingContainer : UIView {
 	}
 
 	private dynamic func onTogglePanning(tgr:UITapGestureRecognizer) {
-		panning = !panning
+
+		// no animation happens because self.panning performs layout by calling setNeedsLayout
+		UIView.animateWithDuration(0.2) {
+			self.panning = !self.panning
+		}
 	}
 }
 
