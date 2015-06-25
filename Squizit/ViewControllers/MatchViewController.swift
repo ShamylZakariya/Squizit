@@ -28,7 +28,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	@IBOutlet var matchView: MatchView!
 
-	var quitButton:QuitGameButton!
+	var quitButton:GameControlButton!
 	var toolSelector:DrawingToolSelector!
 	var stepForwardButton:SquizitThemeButton!
 	var undoButton:SquizitThemeButton!
@@ -287,7 +287,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 		clearButton.bordered = false
 		view.addSubview(clearButton)
 
-		quitButton = QuitGameButton.quitGameButton()
+		quitButton = GameControlButton.quitGameButton()
 		quitButton.addTarget(self, action: "queryQuitMatch", forControlEvents: UIControlEvents.TouchUpInside)
 		view.addSubview(quitButton)
 

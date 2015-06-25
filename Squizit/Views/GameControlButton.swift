@@ -1,5 +1,5 @@
 //
-//  QuitGameButton.swift
+//  GameControlButton
 //  Squizit
 //
 //  Created by Shamyl Zakariya on 9/7/14.
@@ -8,15 +8,24 @@
 
 import UIKit
 
-class QuitGameButton: UIButton {
+class GameControlButton : UIButton {
 
-	class func quitGameButton() -> QuitGameButton {
-		var btn = self.buttonWithType(UIButtonType.Custom) as! QuitGameButton
+	class func quitGameButton() -> GameControlButton {
+		var btn = self.buttonWithType(UIButtonType.Custom) as! GameControlButton
 		var icon = UIImage( named:"quit-game-button")?.imageWithRenderingMode(.AlwaysTemplate)
 		btn.setImage( icon, forState: UIControlState.Normal )
 
 		return btn
 	}
+
+	class func finishTurnButton() -> GameControlButton {
+		var btn = self.buttonWithType(UIButtonType.Custom) as! GameControlButton
+		var icon = UIImage( named:"finish-turn-button")?.imageWithRenderingMode(.AlwaysTemplate)
+		btn.setImage( icon, forState: UIControlState.Normal )
+
+		return btn
+	}
+
 
 	override func didMoveToSuperview() {
 		super.didMoveToSuperview()
@@ -48,5 +57,4 @@ class QuitGameButton: UIButton {
 	override func intrinsicContentSize() -> CGSize {
 		return CGSize(width: 45, height: 45)
 	}
-
 }

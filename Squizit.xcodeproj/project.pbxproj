@@ -12,7 +12,7 @@
 		6329ED311B305D000000B19A /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6329ED301B305D000000B19A /* Launch Screen.xib */; };
 		6350C5EA19A1727B008CE4F5 /* MatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350C5E919A1727B008CE4F5 /* MatchViewController.swift */; };
 		6350C5EC19A24790008CE4F5 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350C5EB19A24790008CE4F5 /* RootViewController.swift */; };
-		63533B1019BCCD6C00ED8B7A /* QuitGameButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63533B0F19BCCD6C00ED8B7A /* QuitGameButton.swift */; };
+		63533B1019BCCD6C00ED8B7A /* GameControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63533B0F19BCCD6C00ED8B7A /* GameControlButton.swift */; };
 		63533B1319BE033A00ED8B7A /* DrawingTestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63533B1219BE033A00ED8B7A /* DrawingTestsViewController.swift */; };
 		635DFA8119B76B6900102B6A /* Appearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 635DFA8019B76B6900102B6A /* Appearance.m */; };
 		635DFA8319BA025600102B6A /* GalleryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635DFA8219BA025600102B6A /* GalleryDetailViewController.swift */; };
@@ -72,7 +72,7 @@
 		6329ED301B305D000000B19A /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 		6350C5E919A1727B008CE4F5 /* MatchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchViewController.swift; sourceTree = "<group>"; };
 		6350C5EB19A24790008CE4F5 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
-		63533B0F19BCCD6C00ED8B7A /* QuitGameButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuitGameButton.swift; sourceTree = "<group>"; };
+		63533B0F19BCCD6C00ED8B7A /* GameControlButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameControlButton.swift; sourceTree = "<group>"; };
 		63533B1219BE033A00ED8B7A /* DrawingTestsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingTestsViewController.swift; sourceTree = "<group>"; };
 		635DFA7F19B76B5900102B6A /* Appearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Appearance.h; sourceTree = "<group>"; };
 		635DFA8019B76B6900102B6A /* Appearance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Appearance.m; sourceTree = "<group>"; };
@@ -279,7 +279,7 @@
 				6327299719C3403F003BCD76 /* ImagePresenterView.swift */,
 				63EBB83A19A78BAA003C3EC2 /* MatchShieldView.swift */,
 				636CEA2A199F25F000BEBF53 /* MatchView.swift */,
-				63533B0F19BCCD6C00ED8B7A /* QuitGameButton.swift */,
+				63533B0F19BCCD6C00ED8B7A /* GameControlButton.swift */,
 				638E459119C88EEC008D8CD9 /* RootBorderView.swift */,
 			);
 			path = Views;
@@ -438,7 +438,7 @@
 				63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */,
 				638E459219C88EEC008D8CD9 /* RootBorderView.swift in Sources */,
 				63EBB87319AEC0DD003C3EC2 /* GalleryStore.swift in Sources */,
-				63533B1019BCCD6C00ED8B7A /* QuitGameButton.swift in Sources */,
+				63533B1019BCCD6C00ED8B7A /* GameControlButton.swift in Sources */,
 				63FDE7321998249A0006B7E4 /* Result.swift in Sources */,
 				63EBB88319B0CBE6003C3EC2 /* GalleryViewController.swift in Sources */,
 				63533B1319BE033A00ED8B7A /* DrawingTestsViewController.swift in Sources */,
