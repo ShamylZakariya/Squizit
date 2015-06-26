@@ -51,7 +51,7 @@ class GameControlButton : UIButton {
 	private func update() {
 		alpha = 0.5
 		layer.cornerRadius = 22.5
-		layer.backgroundColor = UIColor(white: 0.19, alpha: 0.3).CGColor
+		layer.backgroundColor = SquizitTheme.matchBackgroundColor().colorWithAlphaComponent(0.3).CGColor
 	}
 
 	override func intrinsicContentSize() -> CGSize {

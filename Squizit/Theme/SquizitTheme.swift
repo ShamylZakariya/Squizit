@@ -82,7 +82,7 @@ class SquizitTheme {
 
 	// background color for the match view
 	class func matchBackgroundColor() -> UIColor {
-		return UIColor( patternImage: self.leatherBackgroundImage() )
+		return UIColor( white: 0.2, alpha: 1)
 	}
 
 	// background color for the shields displayed during matches
@@ -120,6 +120,13 @@ class SquizitTheme {
 }
 
 class SquizitThemeButton : UIButton {
+
+	class func create(title:String, bordered:Bool = true) ->SquizitThemeButton {
+		var button = SquizitThemeButton.buttonWithType(.Custom) as! SquizitThemeButton
+		button.setTitle(title, forState: .Normal)
+		button.bordered = bordered
+		return button
+	}
 
 	var bordered:Bool = true {
 		didSet {
@@ -171,7 +178,6 @@ class SquizitThemeButton : UIButton {
 			layer.borderColor = self.tintColor!.colorWithAlphaComponent(0.2).CGColor
 		} else {
 			layer.borderWidth = 0
-			layer.backgroundColor = UIColor.clearColor().CGColor
 		}
 	}
 

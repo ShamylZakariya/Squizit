@@ -9,7 +9,8 @@
 import Foundation
 import UIKit
 
-class ScalingDrawingContainer : UIView {
+
+class ScalingDrawingContainerView : UIView {
 
 	private var currentPanTranslation = CGPoint.zeroPoint
 	private var initialPanTranslation = CGPoint.zeroPoint
@@ -22,12 +23,37 @@ class ScalingDrawingContainer : UIView {
 		}
 	}
 
-	private var drawingSize:CGSize {
+	var drawingSize:CGSize {
 		if let drawingView = drawingView {
 			return drawingView.controller!.viewport.size
 		} else {
 			return CGSize.zeroSize
 		}
+	}
+
+	func fittedDrawingSize(availableSize:CGSize) -> (size:CGSize,scale:CGFloat) {
+		if let drawingView = drawingView, controller = drawingView.controller {
+
+			let naturalSize = controller.viewport.size
+			var scaledSize = naturalSize
+			var scale = CGFloat(1)
+
+			if naturalSize.width > availableSize.width {
+				scale = availableSize.width / scaledSize.width
+				scaledSize.width = naturalSize.width * scale
+				scaledSize.height = naturalSize.height * scale
+			}
+
+			if naturalSize.height > availableSize.height {
+				scale *= availableSize.height / scaledSize.height
+				scaledSize.width = naturalSize.width * scale
+				scaledSize.height = naturalSize.height * scale
+			}
+
+			return (size:scaledSize,scale:scale)
+		}
+
+		return (size:CGSize.zeroSize,scale:0)
 	}
 
 	var drawingView:DrawingView? {
@@ -101,29 +127,17 @@ class ScalingDrawingContainer : UIView {
 		if let drawingView = drawingView {
 			if !panning {
 
+				let naturalSize = drawingSize
+
 				// compute max scale to fit drawingView in view
-				let size = drawingView.controller!.viewport.size
-				var scaledSize = size
-				var scale = CGFloat(1)
-
-				if size.width > self.bounds.width {
-					scale = self.bounds.width / scaledSize.width
-					scaledSize.width = size.width * scale
-					scaledSize.height = size.height * scale
-				}
-
-				if size.height > self.bounds.height {
-					scale *= self.bounds.height / scaledSize.height
-					scaledSize.width = size.width * scale
-					scaledSize.height = size.height * scale
-				}
+				let scaling = fittedDrawingSize(bounds.size)
 
 				// centering offset
-				let offset = CGPoint(x: (bounds.width-scaledSize.width)/2, y: (bounds.height-scaledSize.height)/2).integerPoint()
+				let offset = CGPoint(x: (bounds.width-scaling.size.width)/2, y: (bounds.height-scaling.size.height)/2).integerPoint()
 
 				// set
-				drawingView.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-				drawingView.layer.transform = CATransform3DConcat(CATransform3DMakeScale(scale, scale, 1), CATransform3DMakeTranslation(offset.x, offset.y, 1))
+				drawingView.frame = CGRect(x: 0, y: 0, width: naturalSize.width, height: naturalSize.height)
+				drawingView.layer.transform = CATransform3DConcat(CATransform3DMakeScale(scaling.scale, scaling.scale, 1), CATransform3DMakeTranslation(offset.x, offset.y, 1))
 			} else {
 				updatePan()
 			}
@@ -163,9 +177,7 @@ class DrawingView : UIView {
 		commonInit()
 	}
 
-	private func commonInit() {
-		backgroundColor = UIColor(red: 0.7, green: 1, blue: 1, alpha: 1)
-	}
+	private func commonInit() {}
 
 	override func drawRect(rect: CGRect) {
 
@@ -226,41 +238,125 @@ class DrawingView : UIView {
 
 class DrawingTestsViewController : UIViewController {
 
-	private var drawingView = DrawingView(frame: CGRect.zeroRect)
-	private var drawingViewContainer = ScalingDrawingContainer(frame: CGRect.zeroRect)
+	var quitGameButton:GameControlButton!
+	var finishTurnButton:GameControlButton!
+	var drawingToolSelector:DrawingToolSelector!
+	var undoButton:SquizitThemeButton!
+	var clearButton:SquizitThemeButton!
+	var drawingContainerView:ScalingDrawingContainerView!
+	var drawingView:DrawingView!
 
 	override func viewDidLoad() {
 		title = "Drawing Tests..."
-		view.backgroundColor = SquizitTheme.leatherBackgroundColor()
+		view.backgroundColor = SquizitTheme.matchBackgroundColor()
 
-		let drawingFrame = CGRect(x: 0, y: 0, width: 1024, height: 512)
+		quitGameButton = GameControlButton.quitGameButton()
+		finishTurnButton = GameControlButton.finishTurnButton()
+
+		drawingToolSelector = DrawingToolSelector(frame: CGRect.zeroRect)
+		drawingToolSelector.addTool("Pencil", icon: UIImage(named: "tool-pencil")!)
+		drawingToolSelector.addTool("Brush", icon: UIImage(named: "tool-brush")!)
+		drawingToolSelector.addTool("Eraser", icon: UIImage(named: "tool-eraser")!)
+		drawingToolSelector.addTarget(self, action: "onDrawingToolSelected:", forControlEvents: .ValueChanged)
+
+		undoButton = SquizitThemeButton.create("Undo", bordered: false)
+		undoButton.addTarget(self, action: "onUndo:", forControlEvents: .TouchUpInside)
+
+		clearButton = SquizitThemeButton.create("Clear", bordered: false)
+		clearButton.addTarget(self, action: "onClear:", forControlEvents: .TouchUpInside)
+
+		drawingContainerView = ScalingDrawingContainerView(frame: CGRect.zeroRect)
+
+		drawingView = DrawingView(frame: CGRect.zeroRect)
 		drawingView.drawing = Drawing()
-		drawingView.drawing!.debugRender = true
-		drawingView.frame = drawingFrame
+		drawingContainerView.drawingView = drawingView
 
-		view.addSubview(drawingViewContainer)
-		drawingViewContainer.drawingView = drawingView
+
+
+		view.addSubview(drawingContainerView)
+		view.addSubview(clearButton)
+		view.addSubview(undoButton)
+		view.addSubview(drawingToolSelector)
+		view.addSubview(finishTurnButton)
+		view.addSubview(quitGameButton)
+
 
 		let controller = DrawingInputController()
 		controller.drawing = drawingView.drawing!
 		controller.view = drawingView
-		controller.viewport = drawingFrame
+		controller.viewport = CGRect(x: 0, y: 0, width: 1024, height: 512)
 		controller.fill = Fill.Brush
 		drawingView.controller = controller
 
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "DEBUG", style: UIBarButtonItemStyle.Plain, target: self, action: "onToggleDebugRendering:")
-		self.navigationItem.leftBarButtonItems = [
-			UIBarButtonItem(title: "UNDO", style: UIBarButtonItemStyle.Plain, target: self, action: "onUndo:"),
-			UIBarButtonItem(title: "CLEAR", style: UIBarButtonItemStyle.Plain, target: self, action: "onClear:"),
-		]
 
+		drawingToolSelector.selectedToolIndex = 0
+	}
+
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		setNeedsStatusBarAppearanceUpdate()
+	}
+
+	override func prefersStatusBarHidden() -> Bool {
+		return true
+	}
+
+	override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+		println("traitCollectionDidChange previous: \(previousTraitCollection) new:\(traitCollection)")
 	}
 
 	override func viewWillLayoutSubviews() {
-		drawingViewContainer.frame = CGRect(x: 0, y: topLayoutGuide.length, width: view.bounds.width, height: view.bounds.height - (topLayoutGuide.length+bottomLayoutGuide.length))
+
+		// generally, the drawingContainerView will fill the available space.
+		// quit is on top left, finish-turn on top right, undo and clear in top-middle
+		// and the tool picker in center bottom.
+		// but in tight scenarios, like a phone in landscape, the drawingContainer will
+		// leave 44dp at top for all controls, which will be positioned across the top
+
+		let layoutRect = CGRect(x: 0, y: topLayoutGuide.length, width: view.bounds.width, height: view.bounds.height - (topLayoutGuide.length+bottomLayoutGuide.length))
+		let naturalDrawingSize = drawingContainerView.drawingSize
+		let (scaledDrawingSize,scaledDrawingScale) = drawingContainerView.fittedDrawingSize(layoutRect.size)
+		let drawingToolSize = drawingToolSelector.intrinsicContentSize()
+		let buttonSize = quitGameButton.intrinsicContentSize().height
+		let margin = CGFloat(traitCollection.horizontalSizeClass == .Compact ? 20 : 36)
+
+		var textButtonWidth = margin/2 + max(undoButton.intrinsicContentSize().width,clearButton.intrinsicContentSize().width)
+
+
+		if (scaledDrawingSize.height + 2*drawingToolSize.height) < layoutRect.height {
+			// we can perform normal layout
+			drawingContainerView.frame = view.bounds
+			quitGameButton.frame = CGRect(x: margin, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
+			finishTurnButton.frame = CGRect(x: layoutRect.maxX - margin - buttonSize, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
+
+			var textButtonTotalWidth = 2*textButtonWidth + margin
+			undoButton.frame = CGRect(x: layoutRect.midX - textButtonWidth - margin/2, y: layoutRect.minY + margin, width: textButtonWidth, height: buttonSize)
+			clearButton.frame = CGRect(x: layoutRect.midX + margin/2, y: layoutRect.minY + margin, width: textButtonWidth, height: buttonSize)
+
+			drawingToolSelector.frame = CGRect(x: layoutRect.midX - drawingToolSize.width/2, y: layoutRect.maxY - drawingToolSize.height - margin, width: drawingToolSize.width, height: drawingToolSize.height)
+		} else {
+			// compact layout needed
+			
+			
+		}
 	}
 
 	// MARK: - Actions
+
+	dynamic private func onDrawingToolSelected( sender:DrawingToolSelector ) {
+		if let idx = sender.selectedToolIndex {
+			var fill = Fill.Pencil
+			switch idx {
+			case 0: fill = Fill.Pencil
+			case 1: fill = Fill.Brush
+			case 2: fill = Fill.Eraser
+			default: break;
+			}
+
+			drawingView.controller!.fill = fill
+		}
+	}
 
 	dynamic private func onUndo( sender:AnyObject ) {
 		drawingView.controller!.undo()

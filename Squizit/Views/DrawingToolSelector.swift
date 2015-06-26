@@ -130,6 +130,12 @@ class DrawingToolSelector : UIControl {
 		return false
 	}
 
+	override func intrinsicContentSize() -> CGSize {
+		let toolsWidth = CGFloat(_tools.count) * toolSize
+		let toolsSeparation = CGFloat(_tools.count-1) * toolSeparation
+		return CGSize(width: toolsWidth + toolsSeparation, height: toolSize)
+	}
+
 	// MARK: Private
 
 	func layoutTools() {

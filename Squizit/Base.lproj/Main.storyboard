@@ -188,7 +188,7 @@
                         <outlet property="twitterButton" destination="3Bt-N9-Av2" id="FLQ-Ll-R39"/>
                         <outlet property="twitterButtonBottomConstraint" destination="OLa-Dz-2xI" id="TPR-Xr-uk3"/>
                         <outlet property="twoPlayersButton" destination="91w-da-Nqx" id="wXJ-Y5-FmO"/>
-                        <segue destination="2U9-PO-2Cg" kind="presentation" identifier="showTestDrawingView" id="nlD-cw-RuA"/>
+                        <segue destination="jpW-xH-26M" kind="presentation" identifier="showTestDrawingView" modalPresentationStyle="fullScreen" id="R4E-6a-Qyd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hj4-9L-CMp" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -675,24 +675,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nD8-DZ-kpr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1819" y="1449"/>
-        </scene>
-        <!--Drawing Test Navigation Controller-->
-        <scene sceneID="tiY-kb-hEj">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2U9-PO-2Cg" userLabel="Drawing Test Navigation Controller" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="yT5-oZ-X1J">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="jpW-xH-26M" kind="relationship" relationship="rootViewController" id="iOa-Hb-m4C"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ilg-6Z-Wx8" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1018" y="2377"/>
         </scene>
     </scenes>
     <resources>
