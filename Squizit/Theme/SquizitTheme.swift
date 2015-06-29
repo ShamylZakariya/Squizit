@@ -85,6 +85,10 @@ class SquizitTheme {
 		return UIColor( white: 0.2, alpha: 1)
 	}
 
+	class func matchButtonBackgroundColor() -> UIColor {
+		return matchBackgroundColor().colorWithAlphaComponent(0.3)
+	}
+
 	// background color for the shields displayed during matches
 	class func matchShieldBackgroundColor() -> UIColor {
 		return UIColor( patternImage: self.leatherBackgroundImage() )
@@ -120,13 +124,6 @@ class SquizitTheme {
 }
 
 class SquizitThemeButton : UIButton {
-
-	class func create(title:String, bordered:Bool = true) ->SquizitThemeButton {
-		var button = SquizitThemeButton.buttonWithType(.Custom) as! SquizitThemeButton
-		button.setTitle(title, forState: .Normal)
-		button.bordered = bordered
-		return button
-	}
 
 	var bordered:Bool = true {
 		didSet {
@@ -182,9 +179,54 @@ class SquizitThemeButton : UIButton {
 	}
 
 	override func intrinsicContentSize() -> CGSize {
-		return CGSize(width: super.intrinsicContentSize().width, height: 44)
+		return CGSize(width: super.intrinsicContentSize().width + 44, height: 44)
+	}
+}
+
+class SquizitGameTextButton : UIButton {
+
+	class func create(title:String) ->SquizitGameTextButton {
+		var button = SquizitGameTextButton.buttonWithType(.Custom) as! SquizitGameTextButton
+		button.setTitle(title, forState: .Normal)
+		return button
 	}
 
+	override func setTitle(title: String!, forState state: UIControlState) {
+		super.setTitle(title.uppercaseString, forState: state)
+	}
+
+	override func didMoveToSuperview() {
+		super.didMoveToSuperview()
+		update()
+	}
+
+	override func didMoveToWindow() {
+		super.didMoveToWindow()
+		update()
+	}
+
+	override var enabled:Bool {
+		didSet {
+			UIView.animateWithDuration(0.3, animations: { [unowned self] in
+				self.layer.opacity = self.enabled ? 1 : 0.3
+				})
+		}
+	}
+
+	override func tintColorDidChange() {
+		super.tintColorDidChange()
+		update()
+	}
+
+	private func update() {
+		titleLabel!.font = UIFont(name: "Avenir-Light", size: UIFont.buttonFontSize())
+		layer.cornerRadius = 0
+		backgroundColor = SquizitTheme.matchButtonBackgroundColor()
+	}
+
+	override func intrinsicContentSize() -> CGSize {
+		return CGSize(width: super.intrinsicContentSize().width + 22, height: 44)
+	}
 }
 
 class SquizitThemeNameInputField : UITextField {

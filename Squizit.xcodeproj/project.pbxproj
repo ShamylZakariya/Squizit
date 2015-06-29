@@ -53,6 +53,7 @@
 		63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */; };
 		63EBB88319B0CBE6003C3EC2 /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */; };
 		63EFB1AD19D06C8100253560 /* CancelableAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EFB1AC19D06C8100253560 /* CancelableAction.swift */; };
+		63FAAC3C1B3F48B100B9C5CC /* UIImage_Alpha.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FAAC3B1B3F48B100B9C5CC /* UIImage_Alpha.swift */; };
 		63FDE7321998249A0006B7E4 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
 /* End PBXBuildFile section */
 
@@ -115,6 +116,7 @@
 		63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage_sizing.swift; sourceTree = "<group>"; };
 		63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		63EFB1AC19D06C8100253560 /* CancelableAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CancelableAction.swift; sourceTree = "<group>"; };
+		63FAAC3B1B3F48B100B9C5CC /* UIImage_Alpha.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage_Alpha.swift; sourceTree = "<group>"; };
 		63FDE7311998249A0006B7E4 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -170,6 +172,7 @@
 				63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */,
 				63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */,
 				636BFA9619B3DDD100A90A75 /* GCD.swift */,
+				63FAAC3B1B3F48B100B9C5CC /* UIImage_Alpha.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -455,6 +458,7 @@
 				635DFA8519BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift in Sources */,
 				63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */,
 				63BC820419E441290047D414 /* HowToPlayViewController.swift in Sources */,
+				63FAAC3C1B3F48B100B9C5CC /* UIImage_Alpha.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

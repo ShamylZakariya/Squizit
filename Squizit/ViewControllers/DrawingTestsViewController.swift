@@ -241,8 +241,8 @@ class DrawingTestsViewController : UIViewController {
 	var quitGameButton:GameControlButton!
 	var finishTurnButton:GameControlButton!
 	var drawingToolSelector:DrawingToolSelector!
-	var undoButton:SquizitThemeButton!
-	var clearButton:SquizitThemeButton!
+	var undoButton:SquizitGameTextButton!
+	var clearButton:SquizitGameTextButton!
 	var drawingContainerView:ScalingDrawingContainerView!
 	var drawingView:DrawingView!
 
@@ -259,10 +259,10 @@ class DrawingTestsViewController : UIViewController {
 		drawingToolSelector.addTool("Eraser", icon: UIImage(named: "tool-eraser")!)
 		drawingToolSelector.addTarget(self, action: "onDrawingToolSelected:", forControlEvents: .ValueChanged)
 
-		undoButton = SquizitThemeButton.create("Undo", bordered: false)
+		undoButton = SquizitGameTextButton.create("Undo")
 		undoButton.addTarget(self, action: "onUndo:", forControlEvents: .TouchUpInside)
 
-		clearButton = SquizitThemeButton.create("Clear", bordered: false)
+		clearButton = SquizitGameTextButton.create("Clear")
 		clearButton.addTarget(self, action: "onClear:", forControlEvents: .TouchUpInside)
 
 		drawingContainerView = ScalingDrawingContainerView(frame: CGRect.zeroRect)
@@ -319,9 +319,9 @@ class DrawingTestsViewController : UIViewController {
 		let (scaledDrawingSize,scaledDrawingScale) = drawingContainerView.fittedDrawingSize(layoutRect.size)
 		let drawingToolSize = drawingToolSelector.intrinsicContentSize()
 		let buttonSize = quitGameButton.intrinsicContentSize().height
-		let margin = CGFloat(traitCollection.horizontalSizeClass == .Compact ? 20 : 36)
+		let margin = CGFloat(traitCollection.horizontalSizeClass == .Compact ? 8 : 36)
 
-		var textButtonWidth = margin/2 + max(undoButton.intrinsicContentSize().width,clearButton.intrinsicContentSize().width)
+		var textButtonWidth = max(undoButton.intrinsicContentSize().width,clearButton.intrinsicContentSize().width)
 
 
 		if (scaledDrawingSize.height + 2*drawingToolSize.height) < layoutRect.height {
@@ -334,11 +334,23 @@ class DrawingTestsViewController : UIViewController {
 			undoButton.frame = CGRect(x: layoutRect.midX - textButtonWidth - margin/2, y: layoutRect.minY + margin, width: textButtonWidth, height: buttonSize)
 			clearButton.frame = CGRect(x: layoutRect.midX + margin/2, y: layoutRect.minY + margin, width: textButtonWidth, height: buttonSize)
 
-			drawingToolSelector.frame = CGRect(x: layoutRect.midX - drawingToolSize.width/2, y: layoutRect.maxY - drawingToolSize.height - margin, width: drawingToolSize.width, height: drawingToolSize.height)
+			drawingToolSelector.frame = CGRect(x: round(layoutRect.midX - drawingToolSize.width/2), y: round(layoutRect.maxY - drawingToolSize.height - margin), width: drawingToolSize.width, height: drawingToolSize.height)
 		} else {
 			// compact layout needed
-			
-			
+			let toolsHeight = max(drawingToolSize.height,buttonSize)
+			let toolBarRect = CGRect(x: margin, y: layoutRect.minY + margin, width: layoutRect.width-(2*margin), height: toolsHeight)
+
+			drawingContainerView.frame = CGRect(x: layoutRect.minX, y: toolBarRect.maxY + margin, width: layoutRect.width, height: (layoutRect.maxY - toolBarRect.maxY) - 2*margin)
+			quitGameButton.frame = CGRect(x: margin, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
+			finishTurnButton.frame = CGRect(x: layoutRect.maxX - margin - buttonSize, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
+			drawingToolSelector.frame = CGRect(x: round(layoutRect.midX - drawingToolSize.width/2), y: margin, width: drawingToolSize.width, height: drawingToolSize.height)
+
+			// undo button goes between quit button right edge and the drawingToolSelector left edge
+			undoButton.frame = CGRect(x: round((quitGameButton.frame.maxX + drawingToolSelector.frame.minX)/2 - textButtonWidth/2),
+				y: margin, width: textButtonWidth, height: buttonSize)
+
+			clearButton.frame = CGRect(x: round((drawingToolSelector.frame.maxX + finishTurnButton.frame.minX)/2 - textButtonWidth/2),
+				y: margin, width: textButtonWidth, height: buttonSize)
 		}
 	}
 

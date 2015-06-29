@@ -14,6 +14,7 @@ class ToolIconView : UIView {
 	var imageView:UIImageView!
 	var active:Bool = false {
 		didSet {
+			imageView.alpha = active ? 1.0 : 0.5
 			setNeedsDisplay()
 		}
 	}
@@ -35,18 +36,18 @@ class ToolIconView : UIView {
 	}
 
 	override func layoutSubviews() {
-		let width = bounds.width
-		let inset = width * 0.2
-		imageView.frame = self.bounds.rectByInsetting(dx: inset, dy: inset)
+		imageView.frame = self.bounds
 	}
 
 	override func drawRect(rect: CGRect) {
 		if !active {
+			let backdrop = UIBezierPath(ovalInRect: self.bounds.rectByInsetting(dx: 1, dy: 1).rectByOffsetting(dx: 0.5, dy: 0.5))
+			SquizitTheme.matchButtonBackgroundColor().set()
+			backdrop.fill()
+
 			tintColor.colorWithAlphaComponent(0.5).set()
-			let border = UIBezierPath(ovalInRect: self.bounds.rectByInsetting(dx: 1, dy: 1).rectByOffsetting(dx: 0.5, dy: 0.5))
-			border.lineWidth = 1
-			border.setLineDash([3,3], count: 2, phase: 0)
-			border.stroke()
+			backdrop.lineWidth = 1
+			backdrop.stroke()
 		}
 	}
 }
@@ -223,6 +224,10 @@ class DrawingToolSelector : UIControl {
 		_highlighter = UIView(frame: CGRectZero)
 		_highlighter.opaque = false
 		_highlighter.alpha = 1
+		_highlighter.layer.shadowColor = UIColor.blackColor().CGColor
+		_highlighter.layer.shadowOffset = CGSize(width: 0, height: 1)
+		_highlighter.layer.shadowOpacity = 0.25
+		_highlighter.layer.shadowRadius = 2
 		addSubview(_highlighter)
 	}
 

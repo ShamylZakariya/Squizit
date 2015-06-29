@@ -12,7 +12,7 @@ class GameControlButton : UIButton {
 
 	class func quitGameButton() -> GameControlButton {
 		var btn = self.buttonWithType(UIButtonType.Custom) as! GameControlButton
-		var icon = UIImage( named:"quit-game-button")?.imageWithRenderingMode(.AlwaysTemplate)
+		var icon = UIImage( named:"quit-game-button")?.imageWithAlpha(0.5).imageWithRenderingMode(.AlwaysTemplate)
 		btn.setImage( icon, forState: UIControlState.Normal )
 
 		return btn
@@ -20,12 +20,11 @@ class GameControlButton : UIButton {
 
 	class func finishTurnButton() -> GameControlButton {
 		var btn = self.buttonWithType(UIButtonType.Custom) as! GameControlButton
-		var icon = UIImage( named:"finish-turn-button")?.imageWithRenderingMode(.AlwaysTemplate)
+		var icon = UIImage( named:"finish-turn-button")?.imageWithAlpha(0.5).imageWithRenderingMode(.AlwaysTemplate)
 		btn.setImage( icon, forState: UIControlState.Normal )
 
 		return btn
 	}
-
 
 	override func didMoveToSuperview() {
 		super.didMoveToSuperview()
@@ -49,9 +48,8 @@ class GameControlButton : UIButton {
 	}
 
 	private func update() {
-		alpha = 0.5
 		layer.cornerRadius = 22.5
-		layer.backgroundColor = SquizitTheme.matchBackgroundColor().colorWithAlphaComponent(0.3).CGColor
+		layer.backgroundColor = SquizitTheme.matchButtonBackgroundColor().CGColor
 	}
 
 	override func intrinsicContentSize() -> CGSize {
