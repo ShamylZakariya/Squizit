@@ -180,3 +180,36 @@ class DrawingInputController {
 		}
 	}
 }
+
+extension DrawingInputController {
+
+	func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+
+		if touches.count > 1 {
+			return
+		}
+
+		let touch = touches.first as! UITouch
+		let location = touch.locationInView(view!)
+		touchBegan(location)
+	}
+
+	func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+
+		if touches.count > 1 {
+			return
+		}
+
+		let touch = touches.first as! UITouch
+		let location = touch.locationInView(view!)
+		touchMoved(location)
+	}
+
+	func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+		touchEnded()
+	}
+
+	func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent) {
+		touchEnded()
+	}
+}

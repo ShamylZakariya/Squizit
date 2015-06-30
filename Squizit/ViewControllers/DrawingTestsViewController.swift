@@ -163,9 +163,47 @@ class ScalingDrawingContainerView : UIView {
 
 class DrawingView : UIView {
 
-	private var drawing:Drawing?
-	private var controller:DrawingInputController?
-	private var tracking:Bool = false
+	private var drawing:Drawing? {
+		return controller?.drawing
+	}
+
+	var controller:DrawingInputController? {
+		didSet {
+			updateShadeLayer()
+		}
+	}
+
+	private var maskLayer:CAGradientLayer?
+
+	var drawingBackgroundColor:UIColor = UIColor.whiteColor() {
+		didSet {
+			setNeedsDisplay()
+		}
+	}
+
+	var shadeTop:Bool = false {
+		didSet {
+			updateShadeLayer()
+		}
+	}
+
+	var shadeBottom:Bool = false {
+		didSet {
+			updateShadeLayer()
+		}
+	}
+
+	var shadeWidth:CGFloat = 16 {
+		didSet {
+			updateShadeLayer()
+		}
+	}
+
+	var shadeColor:UIColor = UIColor.redColor() {
+		didSet {
+			updateShadeLayer()
+		}
+	}
 
 	override init(frame:CGRect) {
 		super.init(frame: frame)
@@ -180,60 +218,90 @@ class DrawingView : UIView {
 	private func commonInit() {}
 
 	override func drawRect(rect: CGRect) {
+		if let drawing = drawing, controller = controller {
 
-		let ctx = UIGraphicsGetCurrentContext()
-		CGContextClipToRect(ctx, rect)
+			let viewport = controller.viewport
+			let ctx = UIGraphicsGetCurrentContext()
+			CGContextClipToRect(ctx, rect)
 
-		if let vp = controller?.viewport {
-			UIColor.whiteColor().set()
-			UIRectFill(vp)
+			drawingBackgroundColor.set()
+			UIRectFill(viewport)
+
+			if drawing.debugRender {
+				UIColor.redColor().colorWithAlphaComponent(0.5).set()
+				UIRectFrameUsingBlendMode(rect, kCGBlendModeNormal)
+			}
+
+			controller.draw(ctx)
+
+//			let colorSpace = CGColorSpaceCreateDeviceRGB()
+//
+//			if shadeTop {
+//				CGContextSaveGState(ctx)
+//				CGContextAddRect(ctx, CGRect(x: viewport.minX, y: viewport.minY, width: viewport.width, height: shadeWidth))
+//
+//				let gradient = CGGradientCreateWithColors(colorSpace, [UIColor.redColor(),UIColor.greenColor()], [CGFloat(0),CGFloat(1)])
+//				CGContextDrawLinearGradient(ctx, gradient, CGPoint(x: viewport.minX, y: viewport.minY), CGPoint(x: viewport.minX, y: viewport.minY+shadeWidth),
+//					CGGradientDrawingOptions(kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation))
+//
+//				CGContextRestoreGState(ctx)
+//			}
+//
+//			if shadeBottom {
+//			}
+
 		}
-
-		if drawing!.debugRender {
-			UIColor.redColor().colorWithAlphaComponent(0.5).set()
-			UIRectFrameUsingBlendMode(rect, kCGBlendModeNormal)
-		}
-
-		controller!.draw(ctx)
 	}
 
 	override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-
-		if touches.count > 1 {
-			return
-		}
-
-		let touch = touches.first as! UITouch
-		let location = touch.locationInView(self)
-		controller!.touchBegan(location)
-		tracking = true
+		controller?.touchesBegan(touches, withEvent: event)
 	}
 
 	override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
-
-		if !tracking {
-			return
-		}
-
-		let touch = touches.first as! UITouch
-		let location = touch.locationInView(self)
-		controller!.touchMoved(location)
+		controller?.touchesMoved(touches, withEvent: event)
 	}
 
 	override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
-
-		if !tracking {
-			return
-		}
-
-		controller!.touchEnded()
-		tracking = false
+		controller?.touchesEnded(touches, withEvent: event)
 	}
 
 	override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent) {
-		touchesEnded(touches, withEvent: event)
+		controller?.touchesEnded(touches, withEvent: event)
 	}
 
+	private func updateShadeLayer() {
+		if let controller = controller {
+			let viewport = controller.viewport
+
+			if let maskLayer = maskLayer {
+				maskLayer.removeFromSuperlayer()
+				self.maskLayer = nil
+			}
+
+			if shadeTop || shadeBottom {
+				let opaque = UIColor.blackColor().colorWithAlphaComponent(1).CGColor
+				let transparent = UIColor.blackColor().colorWithAlphaComponent(0).CGColor
+
+				maskLayer = CAGradientLayer()
+				maskLayer!.frame = CGRect(x: 0, y: 0, width: viewport.width, height: viewport.height)
+				maskLayer!.startPoint = CGPoint(x: 0, y: 0)
+				maskLayer!.endPoint = CGPoint(x: 0, y: 1)
+
+				if shadeTop && shadeBottom {
+					maskLayer!.colors = [transparent,opaque,opaque,transparent]
+					maskLayer!.locations = [0.0, shadeWidth/viewport.height, 1.0 - shadeWidth/viewport.height,1.0]
+				} else if shadeTop {
+					maskLayer!.colors = [transparent,opaque]
+					maskLayer!.locations = [0.0, shadeWidth/viewport.height]
+				} else if shadeBottom {
+					maskLayer!.colors = [opaque,transparent]
+					maskLayer!.locations = [1.0 - shadeWidth/viewport.height,1.0]
+				}
+
+				layer.mask = maskLayer!
+			}
+		}
+	}
 }
 
 class DrawingTestsViewController : UIViewController {
@@ -268,9 +336,16 @@ class DrawingTestsViewController : UIViewController {
 		drawingContainerView = ScalingDrawingContainerView(frame: CGRect.zeroRect)
 
 		drawingView = DrawingView(frame: CGRect.zeroRect)
-		drawingView.drawing = Drawing()
+		drawingView.shadeTop = true
+		drawingView.shadeBottom = true
 		drawingContainerView.drawingView = drawingView
 
+		let controller = DrawingInputController()
+		controller.drawing = Drawing()
+		controller.view = drawingView
+		controller.viewport = CGRect(x: 0, y: 0, width: 1024, height: 512)
+		controller.fill = Fill.Brush
+		drawingView.controller = controller
 
 
 		view.addSubview(drawingContainerView)
@@ -281,12 +356,6 @@ class DrawingTestsViewController : UIViewController {
 		view.addSubview(quitGameButton)
 
 
-		let controller = DrawingInputController()
-		controller.drawing = drawingView.drawing!
-		controller.view = drawingView
-		controller.viewport = CGRect(x: 0, y: 0, width: 1024, height: 512)
-		controller.fill = Fill.Brush
-		drawingView.controller = controller
 
 
 		drawingToolSelector.selectedToolIndex = 0
@@ -303,16 +372,15 @@ class DrawingTestsViewController : UIViewController {
 
 	override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
-		println("traitCollectionDidChange previous: \(previousTraitCollection) new:\(traitCollection)")
 	}
 
 	override func viewWillLayoutSubviews() {
 
-		// generally, the drawingContainerView will fill the available space.
+		// generally, the drawingContainerView will fill the available space, rendering the drawing inside, scaled or translated.
 		// quit is on top left, finish-turn on top right, undo and clear in top-middle
 		// and the tool picker in center bottom.
 		// but in tight scenarios, like a phone in landscape, the drawingContainer will
-		// leave 44dp at top for all controls, which will be positioned across the top
+		// leave room at top for all controls, which will be positioned across the top
 
 		let layoutRect = CGRect(x: 0, y: topLayoutGuide.length, width: view.bounds.width, height: view.bounds.height - (topLayoutGuide.length+bottomLayoutGuide.length))
 		let naturalDrawingSize = drawingContainerView.drawingSize
@@ -320,9 +388,7 @@ class DrawingTestsViewController : UIViewController {
 		let drawingToolSize = drawingToolSelector.intrinsicContentSize()
 		let buttonSize = quitGameButton.intrinsicContentSize().height
 		let margin = CGFloat(traitCollection.horizontalSizeClass == .Compact ? 8 : 36)
-
-		var textButtonWidth = max(undoButton.intrinsicContentSize().width,clearButton.intrinsicContentSize().width)
-
+		let textButtonWidth = max(undoButton.intrinsicContentSize().width,clearButton.intrinsicContentSize().width)
 
 		if (scaledDrawingSize.height + 2*drawingToolSize.height) < layoutRect.height {
 			// we can perform normal layout

@@ -82,7 +82,8 @@ class SquizitTheme {
 
 	// background color for the match view
 	class func matchBackgroundColor() -> UIColor {
-		return UIColor( white: 0.2, alpha: 1)
+		return UIColor( patternImage: self.leatherBackgroundImage() )
+		//return UIColor( white: 0.2, alpha: 1)
 	}
 
 	class func matchButtonBackgroundColor() -> UIColor {
