@@ -176,6 +176,7 @@ class SquizitThemeButton : UIButton {
 			layer.borderColor = self.tintColor!.colorWithAlphaComponent(0.2).CGColor
 		} else {
 			layer.borderWidth = 0
+			layer.backgroundColor = UIColor.clearColor().CGColor
 		}
 	}
 

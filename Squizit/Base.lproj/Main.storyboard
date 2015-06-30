@@ -21,18 +21,13 @@
                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="universal-cube-pattern" translatesAutoresizingMaskIntoConstraints="NO" id="fap-G3-QBA">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="900"/>
                             </imageView>
-                            <view userInteractionEnabled="NO" contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="gao-o1-joj" customClass="RootBorderView" customModule="Squizit" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="900"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </view>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iAQ-zh-NXo">
-                                <rect key="frame" x="24" y="244" width="552" height="412"/>
+                                <rect key="frame" x="160" y="244" width="280" height="412"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="91w-da-Nqx" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="148" y="144" width="256" height="65"/>
+                                        <rect key="frame" x="0.0" y="142" width="280" height="65"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="256" id="OyP-m8-eJH"/>
-                                            <constraint firstAttribute="height" constant="65" id="wzB-L8-8Md"/>
+                                            <constraint firstAttribute="height" constant="65" id="Umo-9V-YG8"/>
                                         </constraints>
                                         <state key="normal" title="FOR TWO">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -42,10 +37,9 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rGO-wl-LMv" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="148" y="229" width="256" height="65"/>
+                                        <rect key="frame" x="0.0" y="227" width="280" height="65"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="65" id="sbN-et-rX9"/>
-                                            <constraint firstAttribute="width" constant="256" id="xOI-lR-dcF"/>
+                                            <constraint firstAttribute="height" constant="65" id="fX3-bf-uXg"/>
                                         </constraints>
                                         <state key="normal" title="OR THREE">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -55,17 +49,16 @@
                                         </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="root-or" translatesAutoresizingMaskIntoConstraints="NO" id="rHq-0U-mAh">
-                                        <rect key="frame" x="179" y="314" width="195" height="13"/>
+                                        <rect key="frame" x="42" y="312" width="195" height="13"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="195" id="kjL-us-EpC"/>
-                                            <constraint firstAttribute="height" constant="13" id="u8f-5q-0xb"/>
+                                            <constraint firstAttribute="width" constant="195" id="2nq-7V-8s8"/>
+                                            <constraint firstAttribute="width" secondItem="rHq-0U-mAh" secondAttribute="height" multiplier="15:1" id="yJF-Rk-eK5"/>
                                         </constraints>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NFM-Zv-8Ul" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="148" y="347" width="256" height="65"/>
+                                        <rect key="frame" x="0.0" y="345" width="280" height="65"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="65" id="nY1-5S-zqm"/>
-                                            <constraint firstAttribute="width" constant="256" id="pll-u5-GIm"/>
+                                            <constraint firstAttribute="height" constant="65" id="YDz-b6-goF"/>
                                         </constraints>
                                         <state key="normal" title="PERUSE THE GALLERY">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -75,105 +68,118 @@
                                         </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="root-title" translatesAutoresizingMaskIntoConstraints="NO" id="eyv-id-0vb">
-                                        <rect key="frame" x="132" y="0.0" width="289" height="61"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="280" height="59"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="289" id="DGu-vy-mFo">
-                                                <variation key="heightClass=regular-widthClass=compact" constant="256"/>
-                                            </constraint>
-                                            <constraint firstAttribute="width" secondItem="eyv-id-0vb" secondAttribute="height" multiplier="289:61" id="DrL-dM-Llp"/>
+                                            <constraint firstAttribute="width" constant="280" id="BYc-TR-wzr"/>
+                                            <constraint firstAttribute="width" secondItem="eyv-id-0vb" secondAttribute="height" multiplier="289:61" id="H6E-H3-IxT"/>
                                         </constraints>
                                         <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                                             <rect key="frame" x="149" y="27" width="256" height="54"/>
                                         </variation>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="root-subhead" translatesAutoresizingMaskIntoConstraints="NO" id="IxX-g1-QXr">
-                                        <rect key="frame" x="196" y="101" width="161" height="19"/>
+                                        <rect key="frame" x="59" y="99" width="161" height="19"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="161" id="2c6-BX-ebG"/>
-                                            <constraint firstAttribute="height" constant="19" id="9HL-2k-cSo"/>
+                                            <constraint firstAttribute="width" constant="161" id="26b-6y-yRK"/>
+                                            <constraint firstAttribute="width" secondItem="IxX-g1-QXr" secondAttribute="height" multiplier="161:19" id="rPm-YN-7XR"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="centerX" secondItem="91w-da-Nqx" secondAttribute="centerX" id="FjP-VD-KZO"/>
-                                    <constraint firstAttribute="width" constant="552" id="PzZ-EM-duB"/>
-                                    <constraint firstItem="eyv-id-0vb" firstAttribute="top" secondItem="iAQ-zh-NXo" secondAttribute="top" id="Ub3-es-rYN"/>
-                                    <constraint firstItem="rHq-0U-mAh" firstAttribute="top" secondItem="rGO-wl-LMv" secondAttribute="bottom" constant="20" id="UcP-QI-Sop"/>
-                                    <constraint firstItem="rGO-wl-LMv" firstAttribute="top" secondItem="91w-da-Nqx" secondAttribute="bottom" constant="20" id="V5D-xi-ClC"/>
-                                    <constraint firstAttribute="centerX" secondItem="eyv-id-0vb" secondAttribute="centerX" id="WN2-0M-s74"/>
-                                    <constraint firstAttribute="centerX" secondItem="rGO-wl-LMv" secondAttribute="centerX" id="Wdi-kE-FpI"/>
-                                    <constraint firstItem="IxX-g1-QXr" firstAttribute="top" secondItem="eyv-id-0vb" secondAttribute="bottom" constant="40" id="ZUY-T9-Oqa"/>
-                                    <constraint firstItem="91w-da-Nqx" firstAttribute="top" secondItem="IxX-g1-QXr" secondAttribute="bottom" constant="24" id="geg-pC-DH3"/>
-                                    <constraint firstItem="NFM-Zv-8Ul" firstAttribute="top" secondItem="rHq-0U-mAh" secondAttribute="bottom" constant="20" id="iM4-pR-jEZ"/>
-                                    <constraint firstAttribute="height" constant="412" id="ktL-G8-0SV"/>
-                                    <constraint firstAttribute="centerX" secondItem="NFM-Zv-8Ul" secondAttribute="centerX" id="lxs-v5-yKJ"/>
-                                    <constraint firstAttribute="centerX" secondItem="rHq-0U-mAh" secondAttribute="centerX" id="sn9-sF-bEf"/>
-                                    <constraint firstAttribute="centerX" secondItem="IxX-g1-QXr" secondAttribute="centerX" id="zLq-Yx-R6Q"/>
+                                    <constraint firstItem="IxX-g1-QXr" firstAttribute="top" secondItem="eyv-id-0vb" secondAttribute="bottom" constant="40" id="2FF-I8-rFB"/>
+                                    <constraint firstItem="eyv-id-0vb" firstAttribute="top" secondItem="iAQ-zh-NXo" secondAttribute="top" id="2Td-Jg-Nsx"/>
+                                    <constraint firstAttribute="centerX" secondItem="IxX-g1-QXr" secondAttribute="centerX" id="CEE-zr-dyo"/>
+                                    <constraint firstAttribute="centerX" secondItem="eyv-id-0vb" secondAttribute="centerX" id="JyD-bH-5gI"/>
+                                    <constraint firstItem="91w-da-Nqx" firstAttribute="width" secondItem="rGO-wl-LMv" secondAttribute="width" id="M50-T5-lDs"/>
+                                    <constraint firstItem="NFM-Zv-8Ul" firstAttribute="top" secondItem="rHq-0U-mAh" secondAttribute="bottom" constant="20" id="RMl-N8-Vhv"/>
+                                    <constraint firstItem="rGO-wl-LMv" firstAttribute="top" secondItem="91w-da-Nqx" secondAttribute="bottom" constant="20" id="Vdi-a9-ZcK"/>
+                                    <constraint firstItem="NFM-Zv-8Ul" firstAttribute="width" secondItem="rGO-wl-LMv" secondAttribute="width" id="Y61-7w-Qft"/>
+                                    <constraint firstAttribute="centerX" secondItem="NFM-Zv-8Ul" secondAttribute="centerX" id="af5-u3-IsQ"/>
+                                    <constraint firstItem="rHq-0U-mAh" firstAttribute="top" secondItem="rGO-wl-LMv" secondAttribute="bottom" constant="20" id="elk-M0-Nqu"/>
+                                    <constraint firstAttribute="centerX" secondItem="rHq-0U-mAh" secondAttribute="centerX" id="ezw-gc-PFD"/>
+                                    <constraint firstItem="91w-da-Nqx" firstAttribute="top" secondItem="IxX-g1-QXr" secondAttribute="bottom" constant="24" id="ke7-mz-gMl"/>
+                                    <constraint firstAttribute="centerX" secondItem="rGO-wl-LMv" secondAttribute="centerX" id="nWz-RW-cgO"/>
+                                    <constraint firstAttribute="width" secondItem="eyv-id-0vb" secondAttribute="width" id="rUi-yY-9He"/>
+                                    <constraint firstAttribute="centerX" secondItem="91w-da-Nqx" secondAttribute="centerX" id="sMo-Ja-vtE"/>
+                                    <constraint firstAttribute="height" constant="412" id="zM0-Sz-UPb"/>
+                                    <constraint firstItem="91w-da-Nqx" firstAttribute="width" secondItem="eyv-id-0vb" secondAttribute="width" id="zPe-69-2hx"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vxf-4d-4kp" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                <rect key="frame" x="172" y="737" width="256" height="44"/>
+                            <view userInteractionEnabled="NO" contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="gao-o1-joj" customClass="RootBorderView" customModule="Squizit" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="900"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="17j-Gt-Dw9" userLabel="buttonRow">
+                                <rect key="frame" x="160" y="806" width="280" height="44"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Bt-N9-Av2" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="140" y="0.0" width="140" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="N10-Op-Tfk"/>
+                                            <constraint firstAttribute="width" constant="83" id="wQq-tt-hQ4"/>
+                                        </constraints>
+                                        <state key="normal" title="@squizitapp">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="N10-Op-Tfk"/>
+                                                <exclude reference="wQq-tt-hQ4"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <action selector="onTwitterButtonTapped:" destination="7U9-N8-2K1" eventType="touchUpInside" id="skX-c9-Cnu"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vxf-4d-4kp" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="140" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="LPp-cd-50g"/>
+                                            <constraint firstAttribute="width" constant="83" id="Pad-wp-whc"/>
+                                        </constraints>
+                                        <state key="normal" title="how to play">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="LPp-cd-50g"/>
+                                                <exclude reference="Pad-wp-whc"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <segue destination="b36-Zb-Wqn" kind="custom" identifier="showHowToPlay" id="hyT-PW-Eqa"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="LPp-cd-50g"/>
-                                    <constraint firstAttribute="width" constant="83" id="Pad-wp-whc"/>
-                                    <constraint firstAttribute="height" constant="44" id="k1k-6q-VoL"/>
-                                    <constraint firstAttribute="width" constant="256" id="ta4-2E-lv2"/>
+                                    <constraint firstAttribute="trailing" secondItem="3Bt-N9-Av2" secondAttribute="trailing" id="IMw-YV-ynY"/>
+                                    <constraint firstItem="vxf-4d-4kp" firstAttribute="top" secondItem="17j-Gt-Dw9" secondAttribute="top" id="Jd6-CX-33H"/>
+                                    <constraint firstAttribute="bottom" secondItem="vxf-4d-4kp" secondAttribute="bottom" id="LO6-tf-v2h"/>
+                                    <constraint firstItem="vxf-4d-4kp" firstAttribute="leading" secondItem="17j-Gt-Dw9" secondAttribute="leading" id="OnN-6u-6c4"/>
+                                    <constraint firstItem="3Bt-N9-Av2" firstAttribute="leading" secondItem="vxf-4d-4kp" secondAttribute="trailing" id="Oxa-6c-5r4"/>
+                                    <constraint firstAttribute="height" constant="44" id="YL1-l1-b63"/>
+                                    <constraint firstItem="vxf-4d-4kp" firstAttribute="width" secondItem="3Bt-N9-Av2" secondAttribute="width" id="als-hA-fdP"/>
+                                    <constraint firstItem="3Bt-N9-Av2" firstAttribute="top" secondItem="17j-Gt-Dw9" secondAttribute="top" id="bDS-6o-WY5"/>
+                                    <constraint firstAttribute="bottom" secondItem="3Bt-N9-Av2" secondAttribute="bottom" id="iJW-3p-Ewr"/>
                                 </constraints>
-                                <state key="normal" title="how to play">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="LPp-cd-50g"/>
-                                        <exclude reference="Pad-wp-whc"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <segue destination="b36-Zb-Wqn" kind="custom" identifier="showHowToPlay" id="hyT-PW-Eqa"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Bt-N9-Av2" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                <rect key="frame" x="172" y="801" width="256" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="KjC-Ge-YXv"/>
-                                    <constraint firstAttribute="height" constant="30" id="N10-Op-Tfk"/>
-                                    <constraint firstAttribute="width" constant="256" id="fcM-p2-BFF"/>
-                                    <constraint firstAttribute="width" constant="83" id="wQq-tt-hQ4"/>
-                                </constraints>
-                                <state key="normal" title="@squizitapp">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="N10-Op-Tfk"/>
-                                        <exclude reference="wQq-tt-hQ4"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="onTwitterButtonTapped:" destination="7U9-N8-2K1" eventType="touchUpInside" id="skX-c9-Cnu"/>
-                                </connections>
-                            </button>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="gao-o1-joj" firstAttribute="leading" secondItem="dYp-Yh-uXK" secondAttribute="leading" id="0JQ-Kx-Nqc"/>
-                            <constraint firstAttribute="centerX" secondItem="3Bt-N9-Av2" secondAttribute="centerX" id="48I-3Z-992"/>
-                            <constraint firstAttribute="trailing" secondItem="gao-o1-joj" secondAttribute="trailing" id="Ghu-lE-mLU"/>
-                            <constraint firstItem="nOw-Ll-IFc" firstAttribute="top" secondItem="gao-o1-joj" secondAttribute="bottom" id="Msk-rt-yl9"/>
-                            <constraint firstAttribute="centerY" secondItem="iAQ-zh-NXo" secondAttribute="centerY" id="N22-A9-rLe"/>
-                            <constraint firstItem="nOw-Ll-IFc" firstAttribute="top" secondItem="3Bt-N9-Av2" secondAttribute="bottom" constant="55" id="OLa-Dz-2xI"/>
-                            <constraint firstAttribute="centerX" secondItem="vxf-4d-4kp" secondAttribute="centerX" id="Q6I-u0-fi8"/>
-                            <constraint firstItem="vxf-4d-4kp" firstAttribute="width" secondItem="3Bt-N9-Av2" secondAttribute="width" id="R2W-9K-EYM"/>
-                            <constraint firstItem="nOw-Ll-IFc" firstAttribute="top" secondItem="fap-G3-QBA" secondAttribute="bottom" id="SWD-25-mv3"/>
-                            <constraint firstItem="3Bt-N9-Av2" firstAttribute="top" secondItem="vxf-4d-4kp" secondAttribute="bottom" constant="20" id="VEm-Od-Bbo"/>
-                            <constraint firstItem="fap-G3-QBA" firstAttribute="leading" secondItem="dYp-Yh-uXK" secondAttribute="leading" id="e5B-5y-1Qp"/>
-                            <constraint firstAttribute="centerX" secondItem="iAQ-zh-NXo" secondAttribute="centerX" id="eGv-dj-LfV"/>
-                            <constraint firstItem="fap-G3-QBA" firstAttribute="top" secondItem="dYp-Yh-uXK" secondAttribute="top" id="otG-JK-gPB"/>
-                            <constraint firstAttribute="trailing" secondItem="fap-G3-QBA" secondAttribute="trailing" id="u35-WF-uB8"/>
-                            <constraint firstItem="gao-o1-joj" firstAttribute="top" secondItem="dYp-Yh-uXK" secondAttribute="top" id="xEu-S2-t2P">
-                                <variation key="heightClass=regular-widthClass=compact" constant="22"/>
-                            </constraint>
+                            <constraint firstAttribute="trailing" secondItem="gao-o1-joj" secondAttribute="trailing" id="3Yj-Cx-QSF"/>
+                            <constraint firstItem="eyv-id-0vb" firstAttribute="width" secondItem="17j-Gt-Dw9" secondAttribute="width" id="5sg-pC-gC8"/>
+                            <constraint firstAttribute="centerX" secondItem="iAQ-zh-NXo" secondAttribute="centerX" id="76H-i4-NeJ"/>
+                            <constraint firstItem="nOw-Ll-IFc" firstAttribute="top" secondItem="fap-G3-QBA" secondAttribute="bottom" id="9FU-kb-z46"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="17j-Gt-Dw9" secondAttribute="bottom" constant="50" id="Ab2-rQ-DBP"/>
+                            <constraint firstAttribute="centerY" secondItem="iAQ-zh-NXo" secondAttribute="centerY" id="CM0-lF-E3K"/>
+                            <constraint firstItem="gao-o1-joj" firstAttribute="top" secondItem="dYp-Yh-uXK" secondAttribute="top" id="D8S-c4-0km"/>
+                            <constraint firstItem="gao-o1-joj" firstAttribute="leading" secondItem="dYp-Yh-uXK" secondAttribute="leading" id="O8t-fE-RAa"/>
+                            <constraint firstAttribute="trailing" secondItem="fap-G3-QBA" secondAttribute="trailing" id="QnE-UW-74B"/>
+                            <constraint firstAttribute="centerX" secondItem="17j-Gt-Dw9" secondAttribute="centerX" id="Y5u-u7-5yC"/>
+                            <constraint firstItem="fap-G3-QBA" firstAttribute="leading" secondItem="dYp-Yh-uXK" secondAttribute="leading" id="ovV-r7-ntt"/>
+                            <constraint firstItem="nOw-Ll-IFc" firstAttribute="top" secondItem="gao-o1-joj" secondAttribute="bottom" id="t1m-Nu-5n2"/>
+                            <constraint firstItem="fap-G3-QBA" firstAttribute="top" secondItem="dYp-Yh-uXK" secondAttribute="top" id="xnZ-jz-W5e"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="1PA-Il-3I5"/>
@@ -182,11 +188,11 @@
                     <connections>
                         <outlet property="borderView" destination="gao-o1-joj" id="JKT-qX-sje"/>
                         <outlet property="contentView" destination="iAQ-zh-NXo" id="7ZL-yX-Aju"/>
+                        <outlet property="extraButtonsBottomConstraint" destination="Ab2-rQ-DBP" id="n24-tZ-ezy"/>
                         <outlet property="galleryButton" destination="NFM-Zv-8Ul" id="2dV-KS-jND"/>
                         <outlet property="howToPlayButton" destination="vxf-4d-4kp" id="cdv-d8-AUq"/>
                         <outlet property="threePlayersButton" destination="rGO-wl-LMv" id="uwr-7G-ObW"/>
                         <outlet property="twitterButton" destination="3Bt-N9-Av2" id="FLQ-Ll-R39"/>
-                        <outlet property="twitterButtonBottomConstraint" destination="OLa-Dz-2xI" id="TPR-Xr-uk3"/>
                         <outlet property="twoPlayersButton" destination="91w-da-Nqx" id="wXJ-Y5-FmO"/>
                         <segue destination="jpW-xH-26M" kind="presentation" identifier="showTestDrawingView" modalPresentationStyle="fullScreen" id="R4E-6a-Qyd"/>
                     </connections>

@@ -19,7 +19,7 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	@IBOutlet weak var borderView: RootBorderView!	
 	@IBOutlet weak var howToPlayButton: SquizitThemeButton!
 	@IBOutlet weak var twitterButton: SquizitThemeButton!
-	@IBOutlet weak var twitterButtonBottomConstraint: NSLayoutConstraint!
+	@IBOutlet weak var extraButtonsBottomConstraint: NSLayoutConstraint!
 
 	override func viewDidLoad() {
 
@@ -50,20 +50,16 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 			howToPlayButton.alpha = 0
 			twitterButton.alpha = 0
 		}
+	}
 
-		switch UIDevice.currentDevice().userInterfaceIdiom {
-			case UIUserInterfaceIdiom.Pad:
-				borderView.borderSize = 32
-
-			case UIUserInterfaceIdiom.Phone:
-				borderView.borderSize = 6
-
-			default:
-				break;
+	override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+		if traitCollection.horizontalSizeClass == .Compact || traitCollection.verticalSizeClass == .Compact {
+			borderView.borderSize = 6
+		} else {
+			borderView.borderSize = 32
 		}
 
-		twitterButtonBottomConstraint.constant = CGFloat(3 * borderView.borderSize)
-
+		extraButtonsBottomConstraint.constant = CGFloat(3 * borderView.borderSize)
 	}
 
 	override func viewDidAppear(animated: Bool) {
