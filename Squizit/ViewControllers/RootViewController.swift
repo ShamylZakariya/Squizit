@@ -55,8 +55,10 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
 		if traitCollection.horizontalSizeClass == .Compact || traitCollection.verticalSizeClass == .Compact {
 			borderView.borderSize = 6
+			borderView.edgeInsets = UIEdgeInsets(top: 16, left: 0, bottom: 0, right: 0)
 		} else {
 			borderView.borderSize = 32
+			borderView.edgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 		}
 
 		extraButtonsBottomConstraint.constant = CGFloat(3 * borderView.borderSize)
