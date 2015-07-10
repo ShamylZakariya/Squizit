@@ -235,11 +235,6 @@ class DrawingView : UIView {
 	}
 
 	private func updateMaskLayer() {
-		updateZigzagMaskLayer()
-		//updateShadeLayer()
-	}
-
-	private func updateZigzagMaskLayer() {
 		if let controller = controller {
 			let viewport = controller.viewport
 			if let maskLayer = maskLayer {
@@ -250,105 +245,50 @@ class DrawingView : UIView {
 			let renderTopZigzags = turn.0 > 0
 			let renderBottomZigzags = turn.0 < (turn.1 - 1)
 
-			// compute an even number of triangles roughly 8dp wide fitting in viewport,
+			// compute a whole number of triangles roughly 8dp wide fitting in viewport,
 			// and then set their height such that the triangles will be right-isosceles
 			let triangleWidth = viewport.width / round( viewport.width / 16 )
-			let triangleHeight = ceil(triangleWidth / CGFloat(M_SQRT2))
+			let triangleHeight = ceil((triangleWidth/2) / CGFloat(M_SQRT2))
 			let triangleCount = Int(viewport.width / triangleWidth)
 
 			if renderTopZigzags || renderBottomZigzags {
 
 				var bezierPath = UIBezierPath(rect: CGRect(x: 0, y: triangleHeight, width: viewport.width, height: viewport.height - 2*triangleHeight))
+				bezierPath.moveToPoint(CGPoint(x: 0, y: 0))
+
+				// we will start with top left corner, and go clockwise around
 
 				if renderTopZigzags {
-
-					let zigzags = UIBezierPath()
-					zigzags.moveToPoint(CGPoint(x: 0, y: triangleHeight))
-					zigzags.addLineToPoint(CGPoint(x: 0, y: 0))
 					for i in 0 ..< triangleCount {
-						zigzags.addLineToPoint(CGPoint(x: CGFloat(i) * triangleWidth + triangleWidth/2, y: triangleHeight))
-						zigzags.addLineToPoint(CGPoint(x: CGFloat(i+1) * triangleWidth, y: 0))
+						bezierPath.addLineToPoint(CGPoint(x: CGFloat(i) * triangleWidth + triangleWidth/2, y: triangleHeight))
+						bezierPath.addLineToPoint(CGPoint(x: CGFloat(i+1) * triangleWidth, y: 0))
 					}
-
-					zigzags.addLineToPoint(CGPoint(x: viewport.width, y: triangleHeight))
-					zigzags.closePath()
-					bezierPath.appendPath(zigzags)
-
 				} else {
-					bezierPath.appendPath(UIBezierPath(rect: CGRect(x: 0, y: 0, width: viewport.width, height: triangleHeight)))
+					bezierPath.addLineToPoint(CGPoint(x: viewport.width, y: 0))
 				}
+
+				bezierPath.addLineToPoint(CGPoint(x: viewport.width, y: viewport.height))
 
 				if renderBottomZigzags {
-					let zigzags = UIBezierPath()
 
-					zigzags.moveToPoint(CGPoint(x: 0, y: viewport.height-triangleHeight))
-					zigzags.addLineToPoint(CGPoint(x: 0, y: viewport.height))
 					for i in 0 ..< triangleCount {
-						zigzags.addLineToPoint(CGPoint(x: CGFloat(i) * triangleWidth + triangleWidth/2, y: viewport.height - triangleHeight))
-						zigzags.addLineToPoint(CGPoint(x: CGFloat(i+1) * triangleWidth, y: viewport.height))
+						bezierPath.addLineToPoint(CGPoint(x: viewport.width - (CGFloat(i) * triangleWidth + triangleWidth/2), y: viewport.height - triangleHeight))
+						bezierPath.addLineToPoint(CGPoint(x: viewport.width - (CGFloat(i+1) * triangleWidth), y: viewport.height))
 					}
 
-					zigzags.addLineToPoint(CGPoint(x: viewport.width, y: viewport.height-triangleHeight))
-					zigzags.closePath()
-					bezierPath.appendPath(zigzags)
-
 				} else {
-					bezierPath.appendPath(UIBezierPath(rect: CGRect(x: 0, y: viewport.height-triangleHeight, width: viewport.width, height: triangleHeight)))
+					bezierPath.addLineToPoint(CGPoint(x: 0, y: viewport.height))
 				}
+
+				bezierPath.closePath()
 
 				// create a shape layer using this path
 				let shapeLayer = CAShapeLayer()
 				shapeLayer.path = bezierPath.CGPath
 				shapeLayer.fillColor = UIColor.redColor().CGColor
-				shapeLayer.fillRule = kCAFillRuleNonZero
-
-				// this fixes some hairline non-watertight issues with the CAShapeLayer renderer
-				shapeLayer.shouldRasterize = true
-
-				// the rasterizer rasterizes once, and if that first render pass is the scaled down, then the 1-to-1 scale shows blurry mask edging...
-				shapeLayer.rasterizationScale = 2
 
 				layer.mask = shapeLayer
 				maskLayer = shapeLayer
-			}
-		}
-	}
-
-	private func updateShadeLayer() {
-		if let controller = controller {
-			let viewport = controller.viewport
-
-			if let maskLayer = maskLayer {
-				maskLayer.removeFromSuperlayer()
-				self.maskLayer = nil
-			}
-
-			let shadeTop = turn.0 > 0
-			let shadeBottom = turn.0 < turn.1
-			let shadeWidth = CGFloat(8)
-
-			if shadeTop || shadeBottom {
-				let opaque = UIColor.blackColor().colorWithAlphaComponent(1).CGColor
-				let transparent = UIColor.blackColor().colorWithAlphaComponent(0).CGColor
-
-				let gradientLayer = CAGradientLayer()
-				gradientLayer.frame = CGRect(x: 0, y: 0, width: viewport.width, height: viewport.height)
-				gradientLayer.startPoint = CGPoint(x: 0, y: 0)
-				gradientLayer.endPoint = CGPoint(x: 0, y: 1)
-
-				if shadeTop && shadeBottom {
-					gradientLayer.colors = [transparent,opaque,opaque,transparent]
-					gradientLayer.locations = [0.0, shadeWidth/viewport.height, 1.0 - shadeWidth/viewport.height,1.0]
-				} else if shadeTop {
-					gradientLayer.colors = [transparent,opaque]
-					gradientLayer.locations = [0.0, shadeWidth/viewport.height]
-				} else if shadeBottom {
-					gradientLayer.colors = [opaque,transparent]
-					gradientLayer.locations = [1.0 - shadeWidth/viewport.height,1.0]
-				}
-
-				layer.mask = gradientLayer
-				maskLayer = gradientLayer
 			}
 		}
 	}
@@ -386,7 +326,7 @@ class DrawingTestsViewController : UIViewController {
 		drawingContainerView = ScalingDrawingContainerView(frame: CGRect.zeroRect)
 
 		drawingView = DrawingView(frame: CGRect.zeroRect)
-		drawingView.turn = (2,3)
+		drawingView.turn = (1,3)
 		drawingContainerView.drawingView = drawingView
 
 		let controller = DrawingInputController()
