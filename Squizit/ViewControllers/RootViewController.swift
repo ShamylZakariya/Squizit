@@ -20,6 +20,9 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	@IBOutlet weak var howToPlayButton: SquizitThemeButton!
 	@IBOutlet weak var twitterButton: SquizitThemeButton!
 	@IBOutlet weak var extraButtonsBottomConstraint: NSLayoutConstraint!
+	@IBOutlet weak var extraButtonsHeightConstraint: NSLayoutConstraint!
+	
+	@IBOutlet weak var contentViewCenterYConstraint: NSLayoutConstraint!
 
 	override func viewDidLoad() {
 
@@ -61,6 +64,14 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 			borderView.edgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 		}
 
+		if traitCollection.verticalSizeClass == .Compact {
+			extraButtonsHeightConstraint.constant = 22
+			contentViewCenterYConstraint.constant = 22
+		} else {
+			contentViewCenterYConstraint.constant = 0
+			extraButtonsHeightConstraint.constant = 44
+		}
+
 		extraButtonsBottomConstraint.constant = CGFloat(3 * borderView.borderSize)
 	}
 
@@ -98,6 +109,10 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 
 	override func preferredStatusBarStyle() -> UIStatusBarStyle {
 		return UIStatusBarStyle.LightContent
+	}
+
+	override func prefersStatusBarHidden() -> Bool {
+		return false
 	}
 
 	private var transitionManager = FullscreenModalTransitionManager()
