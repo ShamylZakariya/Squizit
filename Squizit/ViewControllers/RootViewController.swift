@@ -21,8 +21,13 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	@IBOutlet weak var twitterButton: SquizitThemeButton!
 	@IBOutlet weak var extraButtonsBottomConstraint: NSLayoutConstraint!
 	@IBOutlet weak var extraButtonsHeightConstraint: NSLayoutConstraint!
-	
+
 	@IBOutlet weak var contentViewCenterYConstraint: NSLayoutConstraint!
+
+	@IBOutlet weak var buttonHeightConstraint: NSLayoutConstraint!
+
+	@IBOutlet weak var titleViewWidthConstraint: NSLayoutConstraint!
+
 
 	override func viewDidLoad() {
 
@@ -62,14 +67,6 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 		} else {
 			borderView.borderSize = 32
 			borderView.edgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-		}
-
-		if traitCollection.verticalSizeClass == .Compact {
-			extraButtonsHeightConstraint.constant = 22
-			contentViewCenterYConstraint.constant = 22
-		} else {
-			contentViewCenterYConstraint.constant = 0
-			extraButtonsHeightConstraint.constant = 44
 		}
 
 		extraButtonsBottomConstraint.constant = CGFloat(3 * borderView.borderSize)
