@@ -103,9 +103,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	dynamic func longPress( gr:UILongPressGestureRecognizer ) {
 		switch gr.state {
 			case UIGestureRecognizerState.Began:
-				if let onLongPress = self.onLongPress {
-					onLongPress( cell:self )
-				}
+				self.onLongPress?(cell:self)
 
 			default: break;
 		}
@@ -117,7 +115,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		// flag that we're deleting - this halts the wiggle animation which would override our scale transform
 		_deleting = true
 		let layer = self.layer
-		let maybeHandler = self.onDeleteButtonTapped
+		let onDeleteButtonTapped = self.onDeleteButtonTapped
 
 		UIView.animateWithDuration(0.2,
 			animations: {
@@ -127,9 +125,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 				layer.opacity = 0
 			}) {
 				(complete:Bool) -> Void in
-				if let handler = maybeHandler {
-					handler( cell:self )
-				}
+				onDeleteButtonTapped?(cell:self)
 			}
 	}
 
@@ -253,10 +249,8 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 		collectionView.deselectItemAtIndexPath(indexPath, animated: true)
 
 		if !editMode {
-			if let handler = galleryDrawingTapped {
-				if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
-					handler( drawing: drawing, indexPath: indexPath )
-				}
+			if let handler = galleryDrawingTapped, drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
+				handler( drawing: drawing, indexPath: indexPath )
 			}
 		}
 	}
@@ -299,10 +293,8 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 				[weak self]
 				(cell:GalleryCollectionViewCell)->() in
 				if let sself = self {
-
 					store.managedObjectContext?.deleteObject(drawing)
 					store.save()
-
 				}
 			}
 
@@ -448,6 +440,21 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardDidDismiss:", name: UIKeyboardDidHideNotification, object: nil)
 	}
 
+	override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+		println("traitCollectionDidChange traitCollection:\(traitCollection)")
+
+		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+		let bigItemSize = CGSize(width: 256, height: 360)
+
+		if traitCollection.horizontalSizeClass == .Compact || traitCollection.verticalSizeClass == .Compact {
+			let minDimension = min(view.bounds.width,view.bounds.height);
+			let width = round(minDimension / 3)
+			flowLayout.itemSize = CGSize(width: width, height: round(width * bigItemSize.height/bigItemSize.width))
+		} else {
+			flowLayout.itemSize = bigItemSize
+		}
+	}
+
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 
@@ -511,20 +518,20 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 	}
 
 	func textFieldShouldReturn(textField: UITextField) -> Bool {
-		if textField == _searchField {
+		if textField === _searchField {
 			textField.resignFirstResponder()
 		}
 		return true
 	}
 
 	func textFieldDidEndEditing(textField: UITextField) {
-		if textField == _searchField {
+		if textField === _searchField {
 			textField.resignFirstResponder()
 		}
 	}
 
 	func textFieldShouldClear(textField: UITextField) -> Bool {
-		if textField == _searchField {
+		if textField === _searchField {
 			textField.resignFirstResponder()
 		}
 		return true

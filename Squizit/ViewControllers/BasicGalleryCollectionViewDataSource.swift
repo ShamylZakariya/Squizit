@@ -152,15 +152,11 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 	// UIScrollViewDelegate
 
 	func scrollViewDidScroll(scrollView: UIScrollView) {
-		if let sd = scrollDelegate {
-			sd.scrollViewDidScroll?(scrollView)
-		}
+		scrollDelegate?.scrollViewDidScroll?(scrollView)
 	}
 
 	func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-		if let sd = scrollDelegate {
-			sd.scrollViewDidEndDecelerating?(scrollView)
-		}
+		scrollDelegate?.scrollViewDidEndDecelerating?(scrollView)
 	}
 
 	// MARK: Methods for subclasses to override
