@@ -441,8 +441,6 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 	}
 
 	override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
-		println("traitCollectionDidChange traitCollection:\(traitCollection)")
-
 		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
 		let bigItemSize = CGSize(width: 256, height: 360)
 

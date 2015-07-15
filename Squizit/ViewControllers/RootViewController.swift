@@ -12,6 +12,7 @@ import UIKit
 class RootViewController : UIViewController, GalleryViewControllerDelegate {
 
 
+	@IBOutlet weak var subtitleLabel: UILabel!
 	@IBOutlet weak var twoPlayersButton: UIButton!
 	@IBOutlet weak var threePlayersButton: UIButton!
 	@IBOutlet weak var galleryButton: UIButton!
@@ -31,6 +32,7 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 
 	override func viewDidLoad() {
 
+		subtitleLabel.font = UIFont(name: "Baskerville-Italic", size: UIFont.labelFontSize())
 		twitterButton.bordered = false
 		howToPlayButton.bordered = false
 
