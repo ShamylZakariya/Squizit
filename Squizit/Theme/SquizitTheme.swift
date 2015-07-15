@@ -365,6 +365,28 @@ class SquizitThemeSearchField : UITextField {
 	}
 }
 
+class SquizitThemeLabelOr : UILabel {
+
+	override func drawRect(rect: CGRect) {
+		super.drawRect(rect)
+
+		let textRect = textRectForBounds(bounds, limitedToNumberOfLines: 0).rectByInsetting(dx: -20, dy: 0)
+		let y = round(textRect.midY + (font.ascender - font.capHeight)/2) + 0.5
+
+		var stroke = UIBezierPath()
+		stroke.moveToPoint(CGPoint(x:bounds.minX, y:y))
+		stroke.addLineToPoint(CGPoint(x:textRect.minX, y:y))
+
+		stroke.moveToPoint(CGPoint(x:textRect.maxX, y:y))
+		stroke.addLineToPoint(CGPoint(x:bounds.maxX, y:y))
+
+		textColor.colorWithAlphaComponent(0.2).set()
+		stroke.lineWidth = 1
+		stroke.stroke()
+	}
+
+}
+
 class SquizitThemeLabel : UIView {
 
 	private var _label:UILabel!
