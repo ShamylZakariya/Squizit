@@ -114,9 +114,9 @@ class HowToPlayViewController: UIViewController {
 	@IBOutlet weak var nextButton: SquizitThemeButton!
 	@IBOutlet weak var doneButton: SquizitThemeButton!
 
-	var instructionsText1: SquizitThemeLabel!
-	var instructionsText2: SquizitThemeLabel!
-	var instructionsText3: SquizitThemeLabel!
+	var instructionsText1: SquizitThemeInstructionsLabel!
+	var instructionsText2: SquizitThemeInstructionsLabel!
+	var instructionsText3: SquizitThemeInstructionsLabel!
 	var instructionsText4: UILabel!
 	var overlapHighlightView: UIView!
 
@@ -142,9 +142,9 @@ class HowToPlayViewController: UIViewController {
 		overlapHighlightView.hidden = true
 		view.addSubview(overlapHighlightView);
 
-		instructionsText1 = SquizitThemeLabel(frame: CGRect.zeroRect)
-		instructionsText2 = SquizitThemeLabel(frame: CGRect.zeroRect)
-		instructionsText3 = SquizitThemeLabel(frame: CGRect.zeroRect)
+		instructionsText1 = SquizitThemeInstructionsLabel(frame: CGRect.zeroRect)
+		instructionsText2 = SquizitThemeInstructionsLabel(frame: CGRect.zeroRect)
+		instructionsText3 = SquizitThemeInstructionsLabel(frame: CGRect.zeroRect)
 
 		// set up appearance of instructions text
 		let instructionFont = UIFont(name:"Avenir-Black", size: 18)
