@@ -9,21 +9,6 @@
 import Foundation
 import UIKit
 
-extension CGRect {
-
-	func rectByAddingTopMargin( m:CGFloat ) ->CGRect {
-		return CGRect(x: origin.x, y: origin.y + m, width: size.width, height: size.height - m )
-	}
-
-	func rectByAddingBottomMargin( m:CGFloat ) ->CGRect {
-		return CGRect(x: origin.x, y: origin.y, width: size.width, height: size.height - m )
-	}
-
-	func rectByAddingMargins( topMargin:CGFloat, bottomMargin:CGFloat ) ->CGRect {
-		return CGRect(x: origin.x, y: origin.y + topMargin, width: size.width, height: size.height - topMargin - bottomMargin )
-	}
-}
-
 class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	@IBOutlet var matchView: MatchView!
@@ -42,8 +27,9 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	/*
 		current game step
+		if step == 0 player 1 is active
 		if step < numPlayers the match is active ( see matchActive:Bool )
-		if step == numPlayers we're presenting the final drawing to the player
+		if step == numPlayers last player finished & we're presenting the final drawing to the player
 		if step == numPlayers+1 we're showing the save dialog and exiting
 	*/
 	var step:Int = 0 {

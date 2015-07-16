@@ -39,12 +39,12 @@ class DrawingInputController {
 
 	var fill:Fill = Fill.Pencil;
 
-	// MARK: Public API
+	// MARK: Public
 
 	init(){}
 
 	func undo() {
-		if let drawing = self.drawing {
+		if let drawing = drawing {
 			if let dirtyRect = drawing.popStroke() {
 				self.view?.setNeedsDisplayInRect( drawingToScreen(dirtyRect) )
 			} else {
@@ -54,14 +54,14 @@ class DrawingInputController {
 	}
 
 	func draw( context:CGContextRef ) {
-		if let drawing = self.drawing {
+		if let drawing = drawing {
 			let image = drawing.render( viewport ).image
 			image.drawAtPoint( viewport.origin, blendMode: kCGBlendModeMultiply, alpha: 1)
 		}
 	}
 
 	func touchBegan( locationInView:CGPoint ) {
-		if let drawing = self.drawing {
+		if let drawing = drawing {
 			let locationInDrawing = screenToDrawing( locationInView )
 
 			_pointsTop = 0
@@ -74,7 +74,7 @@ class DrawingInputController {
 	}
 
 	func touchMoved( locationInView:CGPoint ) {
-		if let drawing = self.drawing {
+		if let drawing = drawing {
 			let locationInDrawing = screenToDrawing( locationInView )
 
 			_points[++_pointsTop] = locationInDrawing;
@@ -100,7 +100,7 @@ class DrawingInputController {
 	}
 
 	func touchEnded() {
-		if let drawing = self.drawing {
+		if let drawing = drawing {
 			drawing.updateBoundingRect()
 		}
 
@@ -108,7 +108,7 @@ class DrawingInputController {
 		view?.setNeedsDisplay()
 	}
 
-	// MARK: Private API
+	// MARK: Private
 
 	private func screenToDrawing( location:CGPoint ) -> CGPoint {
 		return location.subtract( viewport.origin )
@@ -181,6 +181,11 @@ class DrawingInputController {
 	}
 }
 
+// MARK: -
+
+/**
+	Adapter to simplify forwarding UIView touch events to a DrawingInputController
+*/
 extension DrawingInputController {
 
 	func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {

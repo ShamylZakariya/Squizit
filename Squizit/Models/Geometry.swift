@@ -10,9 +10,11 @@ import Foundation
 import UIKit
 
 extension CGRect {
+
 	init( center: CGPoint, size: CGSize ){
 		self.init(x:center.x - size.width/2, y:center.y - size.height/2, width: size.width, height: size.height )
 	}
+
 	init( center: CGPoint, radius: CGFloat ){
 		self.init(x:center.x - radius, y:center.y - radius, width: 2*radius, height: 2*radius )
 	}
@@ -32,6 +34,21 @@ extension CGRect {
 		return CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY )
 	}
 
+}
+
+extension CGRect {
+
+	func rectByAddingTopMargin( m:CGFloat ) ->CGRect {
+		return CGRect(x: origin.x, y: origin.y + m, width: size.width, height: size.height - m )
+	}
+
+	func rectByAddingBottomMargin( m:CGFloat ) ->CGRect {
+		return CGRect(x: origin.x, y: origin.y, width: size.width, height: size.height - m )
+	}
+
+	func rectByAddingMargins( topMargin:CGFloat, bottomMargin:CGFloat ) ->CGRect {
+		return CGRect(x: origin.x, y: origin.y + topMargin, width: size.width, height: size.height - topMargin - bottomMargin )
+	}
 }
 
 extension CGPoint {
