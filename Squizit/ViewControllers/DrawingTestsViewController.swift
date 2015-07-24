@@ -40,16 +40,13 @@ class DrawingTestsViewController : UIViewController {
 
 		drawingContainerView = ScalingMatchViewContainerView(frame: CGRect.zeroRect)
 
-		matchView = NewMatchView(frame: CGRect.zeroRect)
-		matchView.turn = (1,3)
-		drawingContainerView.drawingView = matchView
 
-		let controller = DrawingInputController()
-		controller.drawing = Drawing()
-		controller.view = matchView
-		controller.viewport = CGRect(x: 0, y: 0, width: 1024, height: 512)
-		controller.fill = Fill.Brush
-		matchView.controller = controller
+		let match = Match(players: 3, stageSize: CGSize(width: 1024, height: 1024), overlap: 32)
+
+		matchView = NewMatchView(frame: CGRect.zeroRect)
+		matchView.match = match
+		matchView.turn = 0
+		drawingContainerView.drawingView = matchView
 
 
 		view.addSubview(drawingContainerView)
@@ -60,6 +57,8 @@ class DrawingTestsViewController : UIViewController {
 		view.addSubview(quitGameButton)
 
 
+		finishTurnButton.addTarget(self, action: "onFinishTurnTapped:", forControlEvents: .TouchUpInside)
+		quitGameButton.addTarget(self, action: "onQuitTapped:", forControlEvents: .TouchUpInside)
 
 
 		drawingToolSelector.selectedToolIndex = 0
@@ -136,7 +135,9 @@ class DrawingTestsViewController : UIViewController {
 			default: break;
 			}
 
-			matchView.controller!.fill = fill
+			for c in matchView.controllers {
+				c.fill = fill
+			}
 		}
 	}
 
@@ -145,13 +146,23 @@ class DrawingTestsViewController : UIViewController {
 	}
 
 	dynamic private func onClear( sender:AnyObject ) {
-		drawingView.drawing!.clear()
+		matchView.drawing!.clear()
 		matchView.setNeedsDisplay()
 	}
 
 	dynamic private func onToggleDebugRendering( sender:AnyObject ) {
-		drawingView.drawing!.debugRender = !drawingView.drawing!.debugRender
-		matchView.setNeedsDisplay()
+		matchView.showDirtyRectUpdates = !matchView.showDirtyRectUpdates
+		for drawing in matchView.match!.drawings {
+			drawing.debugRender = matchView.showDirtyRectUpdates
+		}
+	}
+
+	private dynamic func onFinishTurnTapped(sender:AnyObject) {
+		matchView.turn++
+	}
+
+	private dynamic func onQuitTapped(sender:AnyObject) {
+		presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
 	}
 
 }

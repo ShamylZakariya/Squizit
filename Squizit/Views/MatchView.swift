@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 let MatchViewDrawingDidChangeNotification = "MatchViewDrawingDidChangeNotification"
-let MatchViewDrawingDidChangePlayerUserInfoKey = "MatchViewDrawingDidChangePlayerUserInfoKey"
+let MatchViewDrawingDidChangeTurnUserInfoKey = "MatchViewDrawingDidChangeTurnUserInfoKey"
 
 class MatchView : UIView {
 
@@ -105,7 +105,7 @@ class MatchView : UIView {
 	private func notifyDrawingChanged() {
 		if let player = self.player {
 			NSNotificationCenter.defaultCenter().postNotificationName(MatchViewDrawingDidChangeNotification, object: self, userInfo: [
-				MatchViewDrawingDidChangePlayerUserInfoKey: player
+				MatchViewDrawingDidChangeTurnUserInfoKey: player
 			])
 		}
 	}

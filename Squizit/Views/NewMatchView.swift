@@ -172,16 +172,13 @@ class NewMatchView : UIView {
 
 	var match:Match? {
 		didSet {
+			buildControllers()
 			updateMaskLayer()
 			setNeedsDisplay()
 		}
 	}
 
-	var controllers:[DrawingInputController] = [] {
-		didSet {
-			updateMaskLayer()
-		}
-	}
+	private(set) var controllers:[DrawingInputController] = []
 
 	/**
 	Set the current turn in the match. Given a match with 3 players:
@@ -191,12 +188,13 @@ class NewMatchView : UIView {
 	*/
 	var turn:Int = 0 {
 		didSet {
+			turn = min(max(turn,0),match!.players-1)
 			updateMaskLayer()
 			setNeedsDisplay()
 		}
 	}
 
-	var showDirtyRectUpdates:Bool = false {
+	var showDirtyRectUpdates:Bool = true {
 		didSet {
 			setNeedsDisplay()
 		}
@@ -208,11 +206,11 @@ class NewMatchView : UIView {
 		}
 	}
 
-	private var drawing:Drawing? {
+	var drawing:Drawing? {
 		return match?.drawings[turn]
 	}
 
-	private var controller:DrawingInputController? {
+	var controller:DrawingInputController? {
 		return controllers[turn]
 	}
 
@@ -233,21 +231,30 @@ class NewMatchView : UIView {
 
 	override func drawRect(rect: CGRect) {
 
-		// clip to dirty rect and fill with drawing background color
-		let ctx = UIGraphicsGetCurrentContext()
-		CGContextClipToRect(ctx, rect)
+		if let match = match {
 
-		drawingSurfaceBackgroundColor.set()
-		UIRectFill(rect)
+			// clip to dirty rect and fill with drawing background color
+			let ctx = UIGraphicsGetCurrentContext()
+			CGContextClipToRect(ctx, rect)
 
-		// draw all drawings
-		for controller in controllers {
-			controller.draw(ctx)
-		}
+			drawingSurfaceBackgroundColor.set()
+			UIRectFill(rect)
 
-		if showDirtyRectUpdates {
-			UIColor.redColor().colorWithAlphaComponent(0.5).set()
-			UIRectFrameUsingBlendMode(rect, kCGBlendModeNormal)
+			CGContextSaveGState(ctx)
+			let offset = match.viewports[turn].origin.y + match.overlap
+			CGContextTranslateCTM(ctx, 0, -offset)
+
+			// draw all drawings
+			for controller in controllers {
+				controller.draw(ctx)
+			}
+
+			CGContextRestoreGState(ctx)
+
+			if showDirtyRectUpdates {
+				UIColor.redColor().colorWithAlphaComponent(0.5).set()
+				UIRectFrameUsingBlendMode(rect, kCGBlendModeNormal)
+			}
 		}
 	}
 
@@ -265,6 +272,33 @@ class NewMatchView : UIView {
 
 	override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent) {
 		controller?.touchesEnded(touches, withEvent: event)
+	}
+
+	// MARK: Private
+
+	private func notifyDrawingChanged() {
+		NSNotificationCenter.defaultCenter().postNotificationName(MatchViewDrawingDidChangeNotification, object: self, userInfo: [
+			MatchViewDrawingDidChangeTurnUserInfoKey: turn
+		])
+	}
+
+	private func buildControllers(){
+		var controllers:[DrawingInputController] = []
+
+		if let match = match {
+			for (i,drawing) in enumerate(match.drawings) {
+				let controller = DrawingInputController()
+				controller.drawing = drawing
+				controller.view = self
+				controller.viewport = match.viewports[i]
+
+				controllers.append(controller)
+
+				println("match:\(i) viewport:\(controller.viewport)")
+			}
+		}
+
+		self.controllers = controllers
 	}
 
 	private func updateMaskLayer() {
