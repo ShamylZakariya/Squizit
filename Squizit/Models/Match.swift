@@ -146,9 +146,13 @@ class Match {
 
 	private func viewportForPlayer( player:Int ) -> CGRect {
 		let rowHeight:CGFloat = CGFloat(round(_stageSize.height / CGFloat(_players)))
-		let size = CGSize(width: _stageSize.width, height: rowHeight + 2*_overlap )
 
-		return CGRect(x: 0, y: (rowHeight * CGFloat(player)) - _overlap, width: size.width, height: size.height )
+		switch player {
+		case _players - 1:
+			return CGRect(x:0, y:_stageSize.height-rowHeight, width: _stageSize.width, height: rowHeight)
+		default:
+			return CGRect(x: 0, y: (rowHeight * CGFloat(player)), width: _stageSize.width, height: rowHeight + _overlap )
+		}
 	}
 }
 

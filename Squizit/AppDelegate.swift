@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.tintColor = SquizitTheme.tintColor()
 
 		#if DEBUG
-			println("Documents: \(NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as! NSURL)")
+			NSLog("Documents: \(NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as! NSURL)")
 		#endif
 
 		// fire up game center

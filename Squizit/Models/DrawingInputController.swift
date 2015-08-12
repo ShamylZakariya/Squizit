@@ -11,7 +11,7 @@ import UIKit
 
 class DrawingInputController {
 
-	private var _points = [CGPoint](count: 5, repeatedValue: CGPoint())
+	private var _points = [CGPoint](count: 5, repeatedValue: CGPoint.zeroPoint)
 	private var _pointsTop = 0
 	private var _isFirstPoint = false
 	private var _lastSegment = LineSegment()
@@ -111,11 +111,11 @@ class DrawingInputController {
 	// MARK: Private
 
 	private func screenToDrawing( location:CGPoint ) -> CGPoint {
-		return location.subtract( viewport.origin )
+		return location
 	}
 
 	private func drawingToScreen( rect:CGRect ) -> CGRect {
-		return rect.rectByOffsetting(dx: self.viewport.origin.x, dy: self.viewport.origin.y)
+		return rect
 	}
 
 	private var _activeStroke:Stroke?
@@ -188,7 +188,7 @@ class DrawingInputController {
 */
 extension DrawingInputController {
 
-	func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+	func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent, offset:CGPoint = CGPoint.zeroPoint) {
 
 		if touches.count > 1 {
 			return
@@ -196,10 +196,10 @@ extension DrawingInputController {
 
 		let touch = touches.first as! UITouch
 		let location = touch.locationInView(view!)
-		touchBegan(location)
+		touchBegan(location.subtract(offset))
 	}
 
-	func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+	func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent, offset:CGPoint = CGPoint.zeroPoint) {
 
 		if touches.count > 1 {
 			return
@@ -207,7 +207,7 @@ extension DrawingInputController {
 
 		let touch = touches.first as! UITouch
 		let location = touch.locationInView(view!)
-		touchMoved(location)
+		touchMoved(location.subtract(offset))
 	}
 
 	func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {

@@ -240,8 +240,9 @@ class NewMatchView : UIView {
 			drawingSurfaceBackgroundColor.set()
 			UIRectFill(rect)
 
+			// set offset to position current match at 0,0
 			CGContextSaveGState(ctx)
-			let offset = match.viewports[turn].origin.y + match.overlap
+			let offset = match.viewports[turn].origin.y
 			CGContextTranslateCTM(ctx, 0, -offset)
 
 			// draw all drawings
@@ -259,10 +260,12 @@ class NewMatchView : UIView {
 	}
 
 	override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+		let offset = CGPoint(x:0, y:currentMatchOffset)
 		controller?.touchesBegan(touches, withEvent: event)
 	}
 
 	override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+		let offset = CGPoint(x:0, y:currentMatchOffset)
 		controller?.touchesMoved(touches, withEvent: event)
 	}
 
@@ -275,6 +278,14 @@ class NewMatchView : UIView {
 	}
 
 	// MARK: Private
+
+	private var currentMatchOffset:CGFloat {
+		if let match = match {
+			return match.viewports[turn].origin.y
+		} else {
+			return 0
+		}
+	}
 
 	private func notifyDrawingChanged() {
 		NSNotificationCenter.defaultCenter().postNotificationName(MatchViewDrawingDidChangeNotification, object: self, userInfo: [
@@ -291,10 +302,7 @@ class NewMatchView : UIView {
 				controller.drawing = drawing
 				controller.view = self
 				controller.viewport = match.viewports[i]
-
 				controllers.append(controller)
-
-				println("match:\(i) viewport:\(controller.viewport)")
 			}
 		}
 

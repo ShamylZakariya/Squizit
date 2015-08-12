@@ -643,7 +643,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 
 				let matchDataResult = match.serialize()
 				if let error = matchDataResult.error {
-					println("unable to save match to data, \(error.message)")
+					NSLog("unable to save match to data, \(error.message)")
 					abort()
 				}
 
@@ -665,7 +665,7 @@ class MatchViewController : UIViewController, SaveToGalleryDelegate {
 	    let folderURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as! NSURL
 		let targetURL = folderURL.URLByAppendingPathComponent(path, isDirectory: false)
 
-		println("saving image to \(targetURL)")
+		NSLog("saving image to \(targetURL)")
 		UIImagePNGRepresentation(image).writeToURL(targetURL, atomically: true)
 	}
 	

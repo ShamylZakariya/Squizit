@@ -293,7 +293,7 @@ class HowToPlayViewController: UIViewController {
 	let zDistance:CGFloat = -500
 
 	func showEmptyPaper() {
-		//println("showEmptyPaper")
+		//NSLog("showEmptyPaper")
 
 		UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions(0), animations: { () -> Void in
 			self.instructionsDrawingsHolder.transform = CGAffineTransformIdentity
@@ -306,7 +306,7 @@ class HowToPlayViewController: UIViewController {
 	}
 
 	func showTopHalf() {
-		//println("showTopHalf")
+		//NSLog("showTopHalf")
 
 		// fold bottom half behind top half
 		instructionsDrawingViewTop.setAnchorPoint(CGPoint( x:0.5, y: 1 ))
@@ -325,7 +325,7 @@ class HowToPlayViewController: UIViewController {
 	}
 
 	func showTopHalfWithDrawing() {
-		//println("showTopHalfWithDrawing")
+		//NSLog("showTopHalfWithDrawing")
 		instructionsDrawingViewTop.image = UIImage(named:"instructions-drawing-top")
 
 		UIView.animateWithDuration(duration, animations: { [unowned self] in
@@ -335,7 +335,7 @@ class HowToPlayViewController: UIViewController {
 	}
 
 	func showBottomHalfWithOverlap() {
-		//println("showBottomHalfWithOverlap")
+		//NSLog("showBottomHalfWithOverlap")
 
 		// unfold bottom half, and when complete, fold top half behind bottom half
 		self.instructionsDrawingViewBottom.image = UIImage(named:"instructions-drawing-bottom-guide")
@@ -394,7 +394,7 @@ class HowToPlayViewController: UIViewController {
 	}
 
 	func showBottomHalfWithDrawing() {
-		//println("showBottomHalfWithDrawing")
+		//NSLog("showBottomHalfWithDrawing")
 
 		// unfold bottom half, and when complete, fold top half behind bottom half
 		self.instructionsDrawingViewBottom.image = UIImage(named:"instructions-drawing-bottom")
@@ -406,7 +406,7 @@ class HowToPlayViewController: UIViewController {
 	}
 
 	func showFinalDrawing() {
-		//println("showFinalDrawing")
+		//NSLog("showFinalDrawing")
 
 		nextButton.setTitle(NSLocalizedString("DONE", comment:"InstructionsDoneButtonTitle"), forState: .Normal)
 
@@ -439,7 +439,7 @@ class HowToPlayViewController: UIViewController {
 	}
 
 	func finished() {
-		//println("finished")
+		//NSLog("finished")
 		dismissViewControllerAnimated(true, completion: nil)
 	}
 
