@@ -11,6 +11,9 @@ import UIKit
 
 class RootViewController : UIViewController, GalleryViewControllerDelegate {
 
+	private let ShowIntroBounce = true
+	private let UseCustomTransitions = true
+
 
 	@IBOutlet weak var subtitleLabel: UILabel!
 	@IBOutlet weak var orLabel: UILabel!
@@ -55,7 +58,7 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 
 		UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: UIStatusBarAnimation.Fade)
 
-		if !playedIntroAnimation {
+		if ShowIntroBounce && !playedIntroAnimation {
 			contentView.alpha = 0
 			contentView.transform = CGAffineTransformMakeScale(0.9, 0.9)
 			borderView.alpha = 0
@@ -81,7 +84,7 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
 
-		if !playedIntroAnimation {
+		if ShowIntroBounce && !playedIntroAnimation {
 			UIView.animateWithDuration(1.5,
 				delay: 0.0,
 				usingSpringWithDamping: CGFloat(0.4),
@@ -109,7 +112,7 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 				completion: nil)
 		}
 
-		showTestDrawingView(self)
+		//showTestDrawingView(self)
 	}
 
 	override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -125,7 +128,11 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 
 		let destinationVC = segue.destinationViewController as! UIViewController
-		destinationVC.transitioningDelegate = transitionManager
+
+		if UseCustomTransitions {
+			destinationVC.modalPresentationStyle = UIModalPresentationStyle.FullScreen
+			destinationVC.transitioningDelegate = transitionManager
+		}
 
 		if let identifier = segue.identifier {
 			switch ( identifier ) {
