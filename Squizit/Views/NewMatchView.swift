@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class ScalingMatchViewContainerView : UIView {
+class UniversalMatchViewPresenterView : UIView {
 
 	private var currentPanTranslation = CGPoint.zeroPoint
 	private var initialPanTranslation = CGPoint.zeroPoint
@@ -55,7 +55,7 @@ class ScalingMatchViewContainerView : UIView {
 		return (size:CGSize.zeroSize,scale:0)
 	}
 
-	var drawingView:NewMatchView? {
+	var drawingView:UniversalMatchView? {
 		didSet {
 			if let drawingView = drawingView {
 				drawingView.layer.anchorPoint = CGPoint(x: 0, y: 0)
@@ -162,13 +162,13 @@ class ScalingMatchViewContainerView : UIView {
 
 /**
 	Displays a Match object and forwards user input to the current drawing object to draw lines, etc.
-	Given that a match has a number of players, and a currently active player, the NewMatchView
+	Given that a match has a number of players, and a currently active player, the UniversalMatchView
 	renders a zig-zag pattern at the top, bottom or both top and bottom of the drawing to indicate
 	the current player's index.
 
-	NewMatchView is meant to be contained in ScalingMatchViewContainerView, which handles scaling and panning.
+	UniversalMatchView is meant to be contained in UniversalMatchViewPresenterView, which handles scaling and panning.
 */
-class NewMatchView : UIView {
+class UniversalMatchView : UIView {
 
 	struct Notifications {
 		static let DrawingDidChange = "DrawingDidChange"

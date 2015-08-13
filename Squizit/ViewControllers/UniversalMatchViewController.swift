@@ -1,5 +1,5 @@
 //
-//  DrawingTestsViewController.swift
+//  UniversalMatchViewController.swift
 //  Squizit
 //
 //  Created by Shamyl Zakariya on 9/8/14.
@@ -9,15 +9,15 @@
 import Foundation
 import UIKit
 
-class DrawingTestsViewController : UIViewController {
+class UniversalMatchViewController : UIViewController {
 
 	var quitGameButton:GameControlButton!
 	var finishTurnButton:GameControlButton!
 	var drawingToolSelector:DrawingToolSelector!
 	var undoButton:SquizitGameTextButton!
 	var clearButton:SquizitGameTextButton!
-	var drawingContainerView:ScalingMatchViewContainerView!
-	var matchView:NewMatchView!
+	var drawingContainerView:UniversalMatchViewPresenterView!
+	var matchView:UniversalMatchView!
 
 	override func viewDidLoad() {
 		title = "Drawing Tests..."
@@ -38,12 +38,12 @@ class DrawingTestsViewController : UIViewController {
 		clearButton = SquizitGameTextButton.create("Clear")
 		clearButton.addTarget(self, action: "onClear:", forControlEvents: .TouchUpInside)
 
-		drawingContainerView = ScalingMatchViewContainerView(frame: CGRect.zeroRect)
+		drawingContainerView = UniversalMatchViewPresenterView(frame: CGRect.zeroRect)
 
 
 		let match = Match(players: 3, stageSize: CGSize(width: 1024, height: 1024), overlap: 32)
 
-		matchView = NewMatchView(frame: CGRect.zeroRect)
+		matchView = UniversalMatchView(frame: CGRect.zeroRect)
 		matchView.match = match
 		matchView.turn = 0
 		drawingContainerView.drawingView = matchView
@@ -64,8 +64,8 @@ class DrawingTestsViewController : UIViewController {
 
 		// subscribe to notifications
 		let ns = NSNotificationCenter.defaultCenter()
-		ns.addObserver(self, selector: "onDrawingDidChange", name: NewMatchView.Notifications.DrawingDidChange, object: matchView)
-		ns.addObserver(self, selector: "onTurnDidChange", name: NewMatchView.Notifications.TurnDidChange, object: matchView)
+		ns.addObserver(self, selector: "onDrawingDidChange", name: UniversalMatchView.Notifications.DrawingDidChange, object: matchView)
+		ns.addObserver(self, selector: "onTurnDidChange", name: UniversalMatchView.Notifications.TurnDidChange, object: matchView)
 
 		// go default
 		onDrawingDidChange()

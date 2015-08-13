@@ -256,10 +256,10 @@
             </objects>
             <point key="canvasLocation" x="1018" y="1041"/>
         </scene>
-        <!--Drawing Tests View Controller-->
+        <!--Universal Match View Controller-->
         <scene sceneID="Qaw-gd-LD0">
             <objects>
-                <viewController id="jpW-xH-26M" customClass="DrawingTestsViewController" customModule="Squizit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="jpW-xH-26M" customClass="UniversalMatchViewController" customModule="Squizit" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="PsY-Ox-OdT"/>
                         <viewControllerLayoutGuide type="bottom" id="OVs-RB-Uz2"/>
