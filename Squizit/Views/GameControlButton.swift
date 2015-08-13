@@ -38,7 +38,9 @@ class GameControlButton : UIButton {
 
 	override var enabled:Bool {
 		didSet {
-			update()
+			UIView.animateWithDuration(0.3, animations: { [unowned self] in
+				self.layer.opacity = self.enabled ? 1 : 0.5
+			})
 		}
 	}
 
@@ -48,7 +50,7 @@ class GameControlButton : UIButton {
 	}
 
 	private func update() {
-		layer.cornerRadius = 22.5
+		layer.cornerRadius = min(bounds.width,bounds.height)/2
 		layer.backgroundColor = SquizitTheme.matchButtonBackgroundColor().CGColor
 	}
 

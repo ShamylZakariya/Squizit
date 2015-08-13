@@ -211,7 +211,7 @@ class SquizitGameTextButton : UIButton {
 		didSet {
 			UIView.animateWithDuration(0.3, animations: { [unowned self] in
 				self.layer.opacity = self.enabled ? 1 : 0.3
-				})
+			})
 		}
 	}
 
@@ -224,6 +224,9 @@ class SquizitGameTextButton : UIButton {
 		titleLabel!.font = UIFont(name: "Avenir-Light", size: UIFont.buttonFontSize())
 		layer.cornerRadius = 0
 		backgroundColor = SquizitTheme.matchButtonBackgroundColor()
+
+		setTitleColor(tintColor, forState: .Normal)
+		setTitleColor(tintColor!.colorWithAlphaComponent(0.5), forState: .Highlighted)
 	}
 
 	override func intrinsicContentSize() -> CGSize {

@@ -170,6 +170,16 @@ class ScalingMatchViewContainerView : UIView {
 */
 class NewMatchView : UIView {
 
+	struct Notifications {
+		static let DrawingDidChange = "DrawingDidChange"
+		static let TurnDidChange = "TurnDidChange"
+	}
+
+	struct NotificationUserInfoKeys {
+		static let DrawingDidChangeTurnUserInfoKey = "DrawingDidChangeTurnUserInfoKey"
+		static let TurnDidChangeTurnUserInfoKey = "DrawingDidChangeTurnUserInfoKey"
+	}
+
 	var match:Match? {
 		didSet {
 			buildControllers()
@@ -191,6 +201,9 @@ class NewMatchView : UIView {
 			turn = min(max(turn,0),match!.players-1)
 			updateMaskLayer()
 			setNeedsDisplay()
+			NSNotificationCenter.defaultCenter().postNotificationName(Notifications.TurnDidChange, object: self, userInfo: [
+				NotificationUserInfoKeys.TurnDidChangeTurnUserInfoKey: turn
+			])
 		}
 	}
 
@@ -262,22 +275,32 @@ class NewMatchView : UIView {
 	override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
 		let offset = CGPoint(x:0, y:currentMatchOffset)
 		controller?.touchesBegan(touches, withEvent: event)
+		notifyDrawingDidChange()
 	}
 
 	override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
 		let offset = CGPoint(x:0, y:currentMatchOffset)
 		controller?.touchesMoved(touches, withEvent: event)
+		notifyDrawingDidChange()
 	}
 
 	override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
 		controller?.touchesEnded(touches, withEvent: event)
+		notifyDrawingDidChange()
 	}
 
 	override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent) {
 		controller?.touchesEnded(touches, withEvent: event)
+		notifyDrawingDidChange()
 	}
 
 	// MARK: Private
+
+	private func notifyDrawingDidChange() {
+		NSNotificationCenter.defaultCenter().postNotificationName(Notifications.DrawingDidChange, object: self, userInfo: [
+			NotificationUserInfoKeys.DrawingDidChangeTurnUserInfoKey: turn
+		])
+	}
 
 	private var currentMatchOffset:CGFloat {
 		if let match = match {
@@ -285,12 +308,6 @@ class NewMatchView : UIView {
 		} else {
 			return 0
 		}
-	}
-
-	private func notifyDrawingChanged() {
-		NSNotificationCenter.defaultCenter().postNotificationName(MatchViewDrawingDidChangeNotification, object: self, userInfo: [
-			MatchViewDrawingDidChangeTurnUserInfoKey: turn
-		])
 	}
 
 	private func buildControllers(){

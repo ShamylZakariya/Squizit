@@ -60,8 +60,15 @@ class DrawingTestsViewController : UIViewController {
 		finishTurnButton.addTarget(self, action: "onFinishTurnTapped:", forControlEvents: .TouchUpInside)
 		quitGameButton.addTarget(self, action: "onQuitTapped:", forControlEvents: .TouchUpInside)
 
-
 		drawingToolSelector.selectedToolIndex = 0
+
+		// subscribe to notifications
+		let ns = NSNotificationCenter.defaultCenter()
+		ns.addObserver(self, selector: "onDrawingDidChange", name: NewMatchView.Notifications.DrawingDidChange, object: matchView)
+		ns.addObserver(self, selector: "onTurnDidChange", name: NewMatchView.Notifications.TurnDidChange, object: matchView)
+
+		// go default
+		onDrawingDidChange()
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -123,6 +130,65 @@ class DrawingTestsViewController : UIViewController {
 		}
 	}
 
+	// MARK: - Private
+
+	/*
+		returns true iff the current player is allowed to end his turn.
+		Player 0 must have a drawing that overlaps the bottom of drawing area
+		Last player must have a drawing that overlaps the top of drawing area
+		Middle player must have drawing that overlaps top and bottom
+	*/
+	var playerCanEndTurn:Bool {
+		if let match = matchView.match, drawing = matchView.drawing, viewport = matchView.controller?.viewport {
+
+			let numPlayers = match.players
+			let drawingBounds = drawing.boundingRect
+
+			if drawing.strokes.isEmpty || drawingBounds.isNull {
+				return false
+			}
+
+			let extendsToBottom = drawingBounds.maxY >= viewport.height - match.overlap/2
+			let extendsToTop = drawingBounds.minY <= match.overlap/2
+
+			switch matchView.turn {
+				case 0:	return extendsToBottom
+				case numPlayers-1: return extendsToTop
+				default: return extendsToBottom && extendsToTop
+			}
+		}
+
+		// no match!
+		return false
+	}
+
+	var playerCanUndo:Bool {
+		if let drawing = matchView.drawing {
+			return !drawing.strokes.isEmpty
+		}
+
+		// no player or no match, so player can't undo
+		return false
+	}
+
+	private func updateUi() {
+		finishTurnButton.enabled = self.playerCanEndTurn
+
+		let canUndo = playerCanUndo
+		undoButton.enabled = canUndo
+		clearButton.enabled = canUndo
+	}
+
+	// MARK: - Notifications
+
+	dynamic private func onDrawingDidChange() {
+		updateUi()
+	}
+
+	dynamic private func onTurnDidChange() {
+		updateUi()
+	}
+
 	// MARK: - Actions
 
 	dynamic private func onDrawingToolSelected( sender:DrawingToolSelector ) {
@@ -143,10 +209,12 @@ class DrawingTestsViewController : UIViewController {
 
 	dynamic private func onUndo( sender:AnyObject ) {
 		matchView.controller!.undo()
+		onDrawingDidChange()
 	}
 
 	dynamic private func onClear( sender:AnyObject ) {
 		matchView.drawing!.clear()
+		onDrawingDidChange()
 		matchView.setNeedsDisplay()
 	}
 
