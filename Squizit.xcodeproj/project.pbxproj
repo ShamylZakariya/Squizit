@@ -266,13 +266,13 @@
 			isa = PBXGroup;
 			children = (
 				635DFA8419BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift */,
-				63533B1219BE033A00ED8B7A /* UniversalMatchViewController.swift */,
 				635DFA8219BA025600102B6A /* GalleryDetailViewController.swift */,
 				63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */,
 				63BC820319E441290047D414 /* HowToPlayViewController.swift */,
 				6350C5E919A1727B008CE4F5 /* MatchViewController.swift */,
 				63FAAC3D1B42E2D200B9C5CC /* RootViewController.swift */,
 				63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */,
+				63533B1219BE033A00ED8B7A /* UniversalMatchViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";

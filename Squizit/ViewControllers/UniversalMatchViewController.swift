@@ -9,15 +9,64 @@
 import Foundation
 import UIKit
 
-class UniversalMatchViewController : UIViewController {
+class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 
-	var quitGameButton:GameControlButton!
-	var finishTurnButton:GameControlButton!
-	var drawingToolSelector:DrawingToolSelector!
-	var undoButton:SquizitGameTextButton!
-	var clearButton:SquizitGameTextButton!
-	var drawingContainerView:UniversalMatchViewPresenterView!
-	var matchView:UniversalMatchView!
+	private var quitGameButton:GameControlButton!
+	private var finishTurnButton:GameControlButton!
+	private var drawingToolSelector:DrawingToolSelector!
+	private var undoButton:SquizitGameTextButton!
+	private var clearButton:SquizitGameTextButton!
+	private var drawingContainerView:UniversalMatchViewPresenterView!
+	private var matchView:UniversalMatchView!
+
+	private var endOfMatchGestureRecognizer:UITapGestureRecognizer!
+	private var exportQueue = dispatch_queue_create("com.zakariya.squizit.ExportQueue", nil)
+
+	/**
+		The number of players in this match. The value must be 2 or 3
+	*/
+	var players:Int = 0
+
+	/**
+		current game step
+		if step ..< players that player is active player, and is drawing
+		if step < players the match is active ( see matchActive:Bool )
+		if step == numPlayers last player finished & we're presenting the final drawing to the player
+		if step == numPlayers+1 we're showing the save dialog and exiting
+	*/
+	var step:Int = 0 {
+		didSet {
+			if step < players {
+				matchView.turn = step
+			} else if step == players {
+				endOfMatchGestureRecognizer.enabled = true
+			} else {
+				querySaveToGallery()
+			}
+		}
+	}
+
+	dynamic func stepForward() {
+		step++
+	}
+
+	/**
+		Get the current player if match is active, else nil
+	*/
+	var player:Int? {
+		return matchActive ? step : nil
+	}
+
+	/**
+		Return true if a player is currently drawing
+	*/
+	var matchActive:Bool {
+		return step < players
+	}
+
+	var match:Match? {
+		return matchView.match
+	}
 
 	override func viewDidLoad() {
 		title = "Drawing Tests..."
@@ -41,7 +90,8 @@ class UniversalMatchViewController : UIViewController {
 		drawingContainerView = UniversalMatchViewPresenterView(frame: CGRect.zeroRect)
 
 
-		let match = Match(players: 3, stageSize: CGSize(width: 1024, height: 1024), overlap: 32)
+		assert(players == 2 || players == 3, "Number of players MUST be 2, or 3")
+		let match = Match(players: players, stageSize: CGSize(width: 1024, height: 1024), overlap: 32)
 
 		matchView = UniversalMatchView(frame: CGRect.zeroRect)
 		matchView.match = match
@@ -67,8 +117,19 @@ class UniversalMatchViewController : UIViewController {
 		ns.addObserver(self, selector: "onDrawingDidChange", name: UniversalMatchView.Notifications.DrawingDidChange, object: matchView)
 		ns.addObserver(self, selector: "onTurnDidChange", name: UniversalMatchView.Notifications.TurnDidChange, object: matchView)
 
+		// this will be enabled only when the match is complete
+		endOfMatchGestureRecognizer = UITapGestureRecognizer(target: self, action: "stepForward")
+		endOfMatchGestureRecognizer.numberOfTapsRequired = 1
+		endOfMatchGestureRecognizer.enabled = false
+		view.addGestureRecognizer(endOfMatchGestureRecognizer)
+
 		// go default
 		onDrawingDidChange()
+
+		delay(1) {
+			NSLog("UniversalMatchViewController::viewDidLoad - showing save to gallery for testing!!!")
+			self.querySaveToGallery()
+		}
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -129,6 +190,21 @@ class UniversalMatchViewController : UIViewController {
 				y: margin, width: textButtonWidth, height: buttonSize)
 		}
 	}
+
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+
+		if let identifier = segue.identifier {
+			switch identifier {
+			case "showSaveToGallery":
+				let saveToGalleryVC = segue.destinationViewController as! SaveToGalleryViewController
+				saveToGalleryVC.nameCount = players
+				saveToGalleryVC.delegate = self
+
+			default: break;
+			}
+		}
+	}
+
 
 	// MARK: - Private
 
@@ -226,11 +302,148 @@ class UniversalMatchViewController : UIViewController {
 	}
 
 	private dynamic func onFinishTurnTapped(sender:AnyObject) {
-		matchView.turn++
+		stepForward()
 	}
 
 	private dynamic func onQuitTapped(sender:AnyObject) {
-		presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+		queryQuitMatch()
+	}
+
+	// MARK: - Dialogs
+
+	private dynamic func querySaveToGallery() {
+		performSegueWithIdentifier("showSaveToGallery", sender: self)
+	}
+
+	private dynamic func queryQuitMatch() {
+		var alert = UIAlertController(
+			title: NSLocalizedString("Quit?", comment:"QuitMatchAlertTitle"),
+			message: NSLocalizedString("Are you certain you'd like to quit this match?", comment:"QuitMatchAlertMessage"),
+			preferredStyle: UIAlertControllerStyle.Alert)
+
+		alert.view.tintColor = SquizitTheme.alertTintColor()
+
+		alert.addAction(UIAlertAction(
+			title: NSLocalizedString("Continue", comment:"QuitMatchAlertButtonCancelTitle"),
+			style: UIAlertActionStyle.Cancel,
+			handler: nil))
+
+		alert.addAction(UIAlertAction(
+			title: NSLocalizedString("Quit", comment:"QuitMatchAlertButtonQuitTitle"),
+			style: UIAlertActionStyle.Destructive,
+			handler: { [weak self] action in
+				self?.dismissViewControllerAnimated(true, completion: nil)
+			}))
+
+		presentViewController(alert, animated: true, completion: nil)
+	}
+
+	// MARK: SaveToGalleryDelegate
+
+	func didDismissSaveToGallery() {
+		dismissViewControllerAnimated(true) {
+			if let presenter = self.presentingViewController {
+				presenter.dismissViewControllerAnimated(true, completion: nil)
+			}
+			return
+		}
+	}
+
+	func didSaveToGalleryWithNames(names: [String]? ) {
+		if let match = self.match {
+
+			let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+			let galleryStore = appDelegate.galleryStore
+			if let moc = galleryStore.managedObjectContext {
+
+				export( match ) { (matchData, thumbnailSize, thumbnailData) in
+
+					// create the gallery drawing entity
+					let drawingEntity = GalleryDrawing.newInstanceInManagedObjectContext(moc)
+					drawingEntity.match = matchData!
+					drawingEntity.thumbnail = thumbnailData!
+					drawingEntity.thumbnailWidth = Int32(thumbnailSize.width)
+					drawingEntity.thumbnailHeight = Int32(thumbnailSize.height)
+					drawingEntity.numPlayers = Int16(match.drawings.count)
+					drawingEntity.date = NSDate().timeIntervalSinceReferenceDate
+
+					// lookup the artists referenced ( if any ) creating them if they're new
+					var artists:[GalleryArtist] = []
+					if let names = names {
+						for name in names {
+							if let artist = galleryStore.loadArtist(name, create: true) {
+								artists.append( artist )
+							}
+						}
+					}
+
+					// link up artists and the drawing
+					for artistEntity in artists {
+						artistEntity.addDrawingsObject(drawingEntity)
+						drawingEntity.addArtistsObject(artistEntity)
+					}
+
+					// finish up
+					galleryStore.save()
+				}
+			}
+		}
+
+		//
+		// we can dismiss this VC immediately since it's no longer needed
+		//
+
+		dismissViewControllerAnimated(true) {
+			if let presenter = self.presentingViewController {
+				presenter.dismissViewControllerAnimated(true, completion: nil)
+			}
+			return
+		}
+	}
+
+	/**
+		serializes match to NSData and saves a thumbnail PNG rep to NSData as well, in a background queue,
+		calling done() on main queue when complete
+	*/
+
+	private func export( match:Match, done:((matchData:NSData?, thumbnailSize:CGSize, thumbnailData:NSData?) -> Void)) {
+
+		dispatch_async(exportQueue) {
+
+			let matchDataResult = match.serialize()
+			if let error = matchDataResult.error {
+				NSLog("UniversalMatchViewController::export - unable to save match to data, error: \(error.message)")
+				abort()
+			}
+
+			// render match with transparent background
+			var rendering = match.render( backgroundColor: nil, scale: UIScreen.mainScreen().scale )
+
+			#if DEBUG
+				self.DEBUG_saveImage(rendering, name: "drawing.png")
+			#endif
+
+			let thumbnailSize = CGSize( width: rendering.size.width/2, height: rendering.size.height/2 )
+			rendering = rendering.imageByScalingToSize(thumbnailSize)
+
+			#if DEBUG
+				self.DEBUG_saveImage(rendering, name: "drawing-thumbnail.png")
+			#endif
+
+			var thumbnailData:NSData? = UIImagePNGRepresentation(rendering)
+
+			dispatch_main {
+				done( matchData: matchDataResult.value, thumbnailSize:thumbnailSize, thumbnailData: thumbnailData )
+			}
+		}
+	}
+
+	private func DEBUG_saveImage( image:UIImage, name:String ) {
+		let folderURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as! NSURL
+		let targetURL = folderURL.URLByAppendingPathComponent(name, isDirectory: false)
+
+		NSLog("UniversalMatchViewController::DEBUG_saveImage - saving: \(targetURL)")
+		UIImagePNGRepresentation(image).writeToURL(targetURL, atomically: true)
 	}
 
 }

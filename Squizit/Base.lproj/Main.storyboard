@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7U9-N8-2K1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7U9-N8-2K1">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -270,6 +270,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="zLW-Uj-nGK"/>
+                    <connections>
+                        <segue destination="5a9-GW-y81" kind="presentation" identifier="showSaveToGallery" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="oVj-BO-bu3"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YTQ-ec-S3u" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -365,7 +368,7 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="matchView" destination="ycd-Fs-v1p" id="McZ-dI-VIQ"/>
-                        <segue destination="5a9-GW-y81" kind="presentation" identifier="showSaveToGallery" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="2B5-MN-07Z"/>
+                        <segue destination="5a9-GW-y81" kind="presentation" identifier="showSaveToGallery" modalPresentationStyle="overCurrentContext" id="2B5-MN-07Z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TFS-CD-32v" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -746,5 +749,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="fbA-qo-xxm"/>
+        <segue reference="oVj-BO-bu3"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -157,7 +157,12 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 					let screenBounds = UIScreen.mainScreen().bounds
 					matchVC.match = Match(players: players, stageSize: CGSize(width: screenBounds.width, height: screenBounds.height), overlap: 4)
 
-				case "showTestDrawingView", "showHowToPlay":
+				case "showTestDrawingView":
+					let matchVC = destinationVC as! UniversalMatchViewController
+					matchVC.players = 2
+
+
+				case "showHowToPlay":
 					// no setup needed for these two
 					break;
 

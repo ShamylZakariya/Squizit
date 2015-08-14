@@ -1,12 +1,8 @@
 #VERSION 2.0
 	
-	- square matches
-		- right now match size is determined in RootViewController.prepareForSegue and is set to screen size (!)
-		- how does UI change if user is acting on a slice of a square?
+	Make the save dialog smarter
+		- use autolayout smarter. add height constraint on player 3 name field, set it to 0 if only two players, same with trailing padding.
 
-	- let user pan/zoom(?) match screen with two-finger swipes (can simply be a panning of match view!)
-
-	- add turn-based gamecenter play
 
 #TODO
 
