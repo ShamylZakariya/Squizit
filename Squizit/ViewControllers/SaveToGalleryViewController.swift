@@ -29,15 +29,8 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	@IBOutlet weak var addToGalleryButton: SquizitThemeButton!
 	@IBOutlet weak var discardButton: SquizitThemeButton!
 
-	// layout constraints for dynamic sizing
-
-	@IBOutlet weak var topMarginConstraint: NSLayoutConstraint!
-	@IBOutlet weak var titleHeightConstraint: NSLayoutConstraint!
-	@IBOutlet weak var sideMarginConstraint: NSLayoutConstraint!
-	@IBOutlet weak var buttonHeightConstraint: NSLayoutConstraint!
-	@IBOutlet weak var buttonSpacingConstraint: NSLayoutConstraint!
-	@IBOutlet weak var bottomMarginConstraint: NSLayoutConstraint!
-	@IBOutlet weak var dialogHeightConstraint: NSLayoutConstraint!
+	@IBOutlet weak var playerThreeNameInputFieldTopConstraint: NSLayoutConstraint!
+	@IBOutlet weak var playerThreeNameInputFieldHeightConstraints: NSLayoutConstraint!
 	@IBOutlet weak var dialogWidthConstraint: NSLayoutConstraint!
 	@IBOutlet weak var dialogVerticalCenteringConstraint: NSLayoutConstraint!
 
@@ -49,7 +42,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	var nameCount:Int = 3 {
 		didSet {
 			if nameCount < 2 || nameCount > 3 {
-				assertionFailure("SaveTogalleryViewController only supports 2 or 3 player names")
+				assertionFailure("SaveToGalleryViewController.nameCount only supports 2 or 3 player names")
 			}
 		}
 	}
@@ -94,6 +87,8 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 				playerOneNameInputField.nextField = playerTwoNameInputField
 				playerTwoNameInputField.nextField = playerOneNameInputField
 				playerThreeNameInputField.hidden = true
+				playerThreeNameInputFieldHeightConstraints.constant = 0
+				playerThreeNameInputFieldTopConstraint.constant = 0
 
 			case 3:
 				playerOneNameInputField.nextField = playerTwoNameInputField
@@ -103,19 +98,6 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 			default:
 				break;
-		}
-
-		switch( traitCollection.userInterfaceIdiom ) {
-			case .Phone:
-				topMarginConstraint.constant = 16
-				titleHeightConstraint.constant = 32
-				buttonHeightConstraint.constant = 33
-				sideMarginConstraint.constant = 8
-				buttonSpacingConstraint.constant = 8
-				bottomMarginConstraint.constant = 8
-
-			default:
-				buttonHeightConstraint.constant = 65
 		}
 
 		view.setNeedsUpdateConstraints()
@@ -128,7 +110,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		dialogView.alpha = 0
 		dialogView.transform = CGAffineTransformMakeScale(1.1, 1.1)
 
-		UIView.animateWithDuration(0.4, delay: 0.25, options: .AllowUserInteraction, animations: { [unowned self] in
+		UIView.animateWithDuration(0.3, delay: 0.25, options: .AllowUserInteraction, animations: {
 			self.dialogView.alpha = 1
 		}, completion: nil)
 
@@ -154,11 +136,6 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 			_didAddMotionEffect = true
 			addParallaxEffect()
 		}
-	}
-
-	override func viewWillLayoutSubviews() {
-		super.viewWillLayoutSubviews()
-		layout()
 	}
 
 	// MARK: IBActions
@@ -197,21 +174,24 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	// MARK: Keyboard Handling
 
 	dynamic private func keyboardWillShow( note:NSNotification ) {
-		if let info:Dictionary = note.userInfo {
-			if let keyboardRect = info[UIKeyboardFrameEndUserInfoKey]?.CGRectValue() {
-				keyboardHeight = keyboardRect.height
+		if let info:Dictionary = note.userInfo,
+			keyboardRect = info[UIKeyboardFrameEndUserInfoKey]?.CGRectValue(),
+			duration = info[UIKeyboardAnimationDurationUserInfoKey] as? NSTimeInterval {
+				dialogVerticalCenteringConstraint.constant = keyboardRect.height/2
+				UIView.animateWithDuration(1) {
+					self.view.layoutIfNeeded()
+				}
 			}
-		}
 	}
 
 	dynamic private func keyboardWillHide( note:NSNotification ) {
-		keyboardHeight = 0
-	}
-
-	private var keyboardHeight:CGFloat = 0 {
-		didSet {
-			animateLayout()
-		}
+		if let info:Dictionary = note.userInfo,
+			duration = info[UIKeyboardAnimationDurationUserInfoKey] as? NSTimeInterval {
+				dialogVerticalCenteringConstraint.constant = 0
+				UIView.animateWithDuration(1) {
+					self.view.layoutIfNeeded()
+				}
+			}
 	}
 
 	// MARK: UITextFieldDelegate
@@ -236,52 +216,6 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 	private func sanitize( name:String ) -> String {
 		return name.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).capitalizedStringWithLocale(NSLocale.currentLocale())
-	}
-
-	private func animateLayout() {
-		if _visible {
-			UIView.animateWithDuration(0.7,
-				delay: 0,
-				usingSpringWithDamping: 0.7,
-				initialSpringVelocity: 0.0,
-				options: UIViewAnimationOptions(0),
-				animations: { () -> Void in
-					self.layout()
-				},
-				completion: nil)
-		} else {
-			layout()
-		}
-	}
-
-	private func layout() {
-		let dialogSize = self.dialogSize
-		dialogHeightConstraint.constant = dialogSize.height
-		dialogWidthConstraint.constant = dialogSize.width
-
-		if keyboardHeight > 0 {
-			let totalHeight = view.bounds.height
-			let offset = (totalHeight - keyboardHeight)/2 - dialogSize.height/2
-			dialogView.transform = CGAffineTransformMakeTranslation(0, -offset)
-		} else {
-			dialogView.transform = CGAffineTransformIdentity
-		}
-	}
-
-	private var dialogSize:CGSize {
-
-		view.layoutIfNeeded()
-		var topHeight:CGFloat = 0
-		switch nameCount {
-			case 2: topHeight = playerTwoNameInputField.frame.maxY
-			case 3: topHeight = playerThreeNameInputField.frame.maxY
-			default: return CGSizeZero
-		}
-
-		let bottomHeight = dialogView.bounds.height - addToGalleryButton.frame.minY
-		let padding:CGFloat = buttonSpacingConstraint.constant
-
-		return CGSize( width: 300, height: topHeight + padding + bottomHeight )
 	}
 
 	private func addParallaxEffect() {

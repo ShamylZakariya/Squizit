@@ -388,23 +388,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="frv-RY-s5h">
-                                <rect key="frame" x="140" y="90" width="320" height="420"/>
+                                <rect key="frame" x="165" y="177.5" width="270" height="245"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="save-to-gallery-dialog-title" translatesAutoresizingMaskIntoConstraints="NO" id="Y7z-qL-RJe">
-                                        <rect key="frame" x="86" y="39" width="149" height="61"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="Y7z-qL-RJe" secondAttribute="height" multiplier="149:61" id="cVZ-1H-5qY"/>
-                                            <constraint firstAttribute="height" constant="61" id="fxg-Uy-2dV"/>
-                                        </constraints>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Who played?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5gZ-ki-tmo">
-                                        <rect key="frame" x="16" y="115" width="288" height="20"/>
-                                        <fontDescription key="fontDescription" name="Avenir-MediumOblique" family="Avenir" pointSize="14"/>
-                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player one..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5By-5F-Zrp" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="155" width="288" height="30"/>
+                                        <rect key="frame" x="8" y="79" width="254" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="N08-CJ-SEY"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
                                         <connections>
@@ -412,17 +402,43 @@
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player three..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6mG-Y5-mXe" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="229" width="288" height="30"/>
+                                        <rect key="frame" x="8" y="155" width="254" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="Oz9-6e-vk5"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
                                         <connections>
                                             <outlet property="nextField" destination="5By-5F-Zrp" id="9sG-cs-YN9"/>
                                         </connections>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JQl-hx-BjM" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="351" width="288" height="53"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qsj-3i-ih8" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="139" y="193" width="123" height="44"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="53" id="sRa-KZ-O4s"/>
+                                            <constraint firstAttribute="height" constant="44" id="P2E-K6-34p"/>
+                                        </constraints>
+                                        <state key="normal" title="SAVE">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="addToGallery:" destination="5a9-GW-y81" eventType="touchUpInside" id="b7Z-P7-QAz"/>
+                                        </connections>
+                                    </button>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player two..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Glt-jM-liY" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="8" y="117" width="254" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="w2u-Ky-9g7"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <outlet property="nextField" destination="6mG-Y5-mXe" id="UJV-S5-7lv"/>
+                                        </connections>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JQl-hx-BjM" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
+                                        <rect key="frame" x="8" y="193" width="123" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="oyK-TV-hrb"/>
                                         </constraints>
                                         <state key="normal" title="DISCARD">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -431,75 +447,66 @@
                                             <action selector="discard:" destination="5a9-GW-y81" eventType="touchUpInside" id="jfv-fr-kxv"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qsj-3i-ih8" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="282" width="288" height="53"/>
-                                        <state key="normal" title="ADD TO GALLERY">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="addToGallery:" destination="5a9-GW-y81" eventType="touchUpInside" id="b7Z-P7-QAz"/>
-                                        </connections>
-                                    </button>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player two..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Glt-jM-liY" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="192" width="288" height="30"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
-                                        <connections>
-                                            <outlet property="nextField" destination="6mG-Y5-mXe" id="UJV-S5-7lv"/>
-                                        </connections>
-                                    </textField>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SAVE?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E1S-CH-Nbd">
+                                        <rect key="frame" x="8" y="8" width="254" height="27.5"/>
+                                        <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="20"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Who played?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5gZ-ki-tmo">
+                                        <rect key="frame" x="8" y="43.5" width="254" height="19.5"/>
+                                        <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="14"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="JQl-hx-BjM" firstAttribute="leading" secondItem="frv-RY-s5h" secondAttribute="leading" constant="16" id="30K-Sl-4d1"/>
-                                    <constraint firstAttribute="centerX" secondItem="JQl-hx-BjM" secondAttribute="centerX" id="5kZ-t4-ZiP"/>
-                                    <constraint firstItem="Qsj-3i-ih8" firstAttribute="width" secondItem="JQl-hx-BjM" secondAttribute="width" id="78e-rH-wh0"/>
-                                    <constraint firstItem="6mG-Y5-mXe" firstAttribute="width" secondItem="JQl-hx-BjM" secondAttribute="width" id="EK3-5M-BeQ"/>
-                                    <constraint firstItem="Glt-jM-liY" firstAttribute="width" secondItem="JQl-hx-BjM" secondAttribute="width" id="EMS-IR-jXr"/>
-                                    <constraint firstItem="6mG-Y5-mXe" firstAttribute="top" secondItem="Glt-jM-liY" secondAttribute="bottom" constant="7" id="JL4-9G-Voj"/>
-                                    <constraint firstItem="Y7z-qL-RJe" firstAttribute="top" secondItem="frv-RY-s5h" secondAttribute="top" constant="39" id="L8k-Lf-gWg"/>
-                                    <constraint firstItem="5By-5F-Zrp" firstAttribute="top" secondItem="5gZ-ki-tmo" secondAttribute="bottom" constant="20" id="NRz-n3-1BM"/>
-                                    <constraint firstAttribute="centerX" secondItem="Glt-jM-liY" secondAttribute="centerX" id="STf-J6-g4B"/>
-                                    <constraint firstItem="5gZ-ki-tmo" firstAttribute="top" secondItem="Y7z-qL-RJe" secondAttribute="bottom" constant="15" id="Stu-Be-84A"/>
-                                    <constraint firstAttribute="width" constant="320" id="Uvb-nY-ZY3"/>
-                                    <constraint firstAttribute="centerX" secondItem="5By-5F-Zrp" secondAttribute="centerX" id="V8J-4c-F9L"/>
-                                    <constraint firstAttribute="centerX" secondItem="5gZ-ki-tmo" secondAttribute="centerX" id="Wwt-29-Ci2"/>
-                                    <constraint firstAttribute="height" constant="420" id="crI-pw-M1q"/>
-                                    <constraint firstAttribute="centerX" secondItem="Y7z-qL-RJe" secondAttribute="centerX" id="gqV-h2-7FJ"/>
-                                    <constraint firstAttribute="bottom" secondItem="JQl-hx-BjM" secondAttribute="bottom" constant="16" id="hTk-Rw-NVK"/>
-                                    <constraint firstItem="Glt-jM-liY" firstAttribute="top" secondItem="5By-5F-Zrp" secondAttribute="bottom" constant="7" id="kDg-FG-LUn"/>
-                                    <constraint firstItem="Qsj-3i-ih8" firstAttribute="height" secondItem="JQl-hx-BjM" secondAttribute="height" id="kxX-My-7Ki"/>
-                                    <constraint firstItem="5gZ-ki-tmo" firstAttribute="width" secondItem="JQl-hx-BjM" secondAttribute="width" id="v9f-JP-K3a"/>
-                                    <constraint firstItem="JQl-hx-BjM" firstAttribute="top" secondItem="Qsj-3i-ih8" secondAttribute="bottom" constant="16" id="xRO-B8-3V6"/>
-                                    <constraint firstAttribute="centerX" secondItem="6mG-Y5-mXe" secondAttribute="centerX" id="xTy-S3-9yH"/>
-                                    <constraint firstAttribute="centerX" secondItem="Qsj-3i-ih8" secondAttribute="centerX" id="ynO-9W-qVC"/>
-                                    <constraint firstItem="JQl-hx-BjM" firstAttribute="width" secondItem="5By-5F-Zrp" secondAttribute="width" id="ywr-D9-dSH"/>
+                                    <constraint firstItem="JQl-hx-BjM" firstAttribute="leading" secondItem="frv-RY-s5h" secondAttribute="leadingMargin" id="18u-GU-NZ9"/>
+                                    <constraint firstItem="JQl-hx-BjM" firstAttribute="top" secondItem="6mG-Y5-mXe" secondAttribute="bottom" constant="8" id="5h0-i8-J9h"/>
+                                    <constraint firstItem="E1S-CH-Nbd" firstAttribute="trailing" secondItem="frv-RY-s5h" secondAttribute="trailingMargin" id="70o-ng-r9g"/>
+                                    <constraint firstItem="Qsj-3i-ih8" firstAttribute="top" secondItem="6mG-Y5-mXe" secondAttribute="bottom" constant="8" id="8Bz-36-szz"/>
+                                    <constraint firstItem="5By-5F-Zrp" firstAttribute="trailing" secondItem="frv-RY-s5h" secondAttribute="trailingMargin" id="8WF-Ok-dgi"/>
+                                    <constraint firstItem="Qsj-3i-ih8" firstAttribute="trailing" secondItem="frv-RY-s5h" secondAttribute="trailingMargin" id="941-xc-Kc4"/>
+                                    <constraint firstAttribute="width" constant="270" id="9NQ-tM-GzK"/>
+                                    <constraint firstItem="E1S-CH-Nbd" firstAttribute="top" secondItem="frv-RY-s5h" secondAttribute="topMargin" id="FdR-eQ-lyJ"/>
+                                    <constraint firstItem="6mG-Y5-mXe" firstAttribute="trailing" secondItem="frv-RY-s5h" secondAttribute="trailingMargin" id="GVc-Bf-6ga"/>
+                                    <constraint firstItem="Qsj-3i-ih8" firstAttribute="bottom" secondItem="frv-RY-s5h" secondAttribute="bottomMargin" id="H6h-i1-xig"/>
+                                    <constraint firstItem="5gZ-ki-tmo" firstAttribute="top" secondItem="E1S-CH-Nbd" secondAttribute="bottom" constant="8" id="HdW-0o-1oA"/>
+                                    <constraint firstItem="5By-5F-Zrp" firstAttribute="leading" secondItem="frv-RY-s5h" secondAttribute="leadingMargin" id="Toz-Tx-D5I"/>
+                                    <constraint firstItem="E1S-CH-Nbd" firstAttribute="leading" secondItem="frv-RY-s5h" secondAttribute="leadingMargin" id="WVg-Ki-XRW"/>
+                                    <constraint firstItem="5By-5F-Zrp" firstAttribute="top" secondItem="5gZ-ki-tmo" secondAttribute="bottom" constant="16" id="YVL-em-f64"/>
+                                    <constraint firstItem="Glt-jM-liY" firstAttribute="trailing" secondItem="frv-RY-s5h" secondAttribute="trailingMargin" id="f88-Te-nel"/>
+                                    <constraint firstItem="5gZ-ki-tmo" firstAttribute="trailing" secondItem="frv-RY-s5h" secondAttribute="trailingMargin" id="fzT-7S-IHP"/>
+                                    <constraint firstItem="Qsj-3i-ih8" firstAttribute="width" secondItem="JQl-hx-BjM" secondAttribute="width" id="gEW-eM-4WL"/>
+                                    <constraint firstItem="Glt-jM-liY" firstAttribute="leading" secondItem="frv-RY-s5h" secondAttribute="leadingMargin" id="h4R-pz-aTS"/>
+                                    <constraint firstItem="Glt-jM-liY" firstAttribute="top" secondItem="5By-5F-Zrp" secondAttribute="bottom" constant="8" id="iqi-4T-9Rh"/>
+                                    <constraint firstItem="5gZ-ki-tmo" firstAttribute="leading" secondItem="frv-RY-s5h" secondAttribute="leadingMargin" id="mbH-zZ-diU"/>
+                                    <constraint firstItem="Qsj-3i-ih8" firstAttribute="leading" secondItem="JQl-hx-BjM" secondAttribute="trailing" constant="8" id="q7j-LX-fFk"/>
+                                    <constraint firstItem="6mG-Y5-mXe" firstAttribute="top" secondItem="Glt-jM-liY" secondAttribute="bottom" constant="8" id="t1D-Zq-kzs"/>
+                                    <constraint firstItem="6mG-Y5-mXe" firstAttribute="leading" secondItem="frv-RY-s5h" secondAttribute="leadingMargin" id="t1f-Ow-ovm"/>
+                                    <constraint firstItem="JQl-hx-BjM" firstAttribute="bottom" secondItem="frv-RY-s5h" secondAttribute="bottomMargin" id="zxq-K5-Jyd"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerY" secondItem="frv-RY-s5h" secondAttribute="centerY" id="jPv-No-gGI"/>
-                            <constraint firstAttribute="centerX" secondItem="frv-RY-s5h" secondAttribute="centerX" id="n8S-lt-8vP"/>
+                            <constraint firstAttribute="centerY" secondItem="frv-RY-s5h" secondAttribute="centerY" id="ImF-Yn-Dmg"/>
+                            <constraint firstAttribute="centerX" secondItem="frv-RY-s5h" secondAttribute="centerX" id="ZOh-Yr-AGv"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="addToGalleryButton" destination="Qsj-3i-ih8" id="rZB-uy-S6w"/>
-                        <outlet property="bottomMarginConstraint" destination="hTk-Rw-NVK" id="bbG-SA-kVr"/>
-                        <outlet property="buttonHeightConstraint" destination="sRa-KZ-O4s" id="Jbl-eh-Hku"/>
-                        <outlet property="buttonSpacingConstraint" destination="xRO-B8-3V6" id="bGH-Gu-OeH"/>
-                        <outlet property="dialogHeightConstraint" destination="crI-pw-M1q" id="MHO-1m-KYh"/>
-                        <outlet property="dialogVerticalCenteringConstraint" destination="jPv-No-gGI" id="YCd-aU-vhp"/>
+                        <outlet property="dialogVerticalCenteringConstraint" destination="ImF-Yn-Dmg" id="Jsg-sW-8e8"/>
                         <outlet property="dialogView" destination="frv-RY-s5h" id="jqu-Gj-1pS"/>
-                        <outlet property="dialogWidthConstraint" destination="Uvb-nY-ZY3" id="Fvk-Kt-1G2"/>
+                        <outlet property="dialogWidthConstraint" destination="9NQ-tM-GzK" id="P3S-eo-Oz8"/>
                         <outlet property="discardButton" destination="JQl-hx-BjM" id="twi-gO-MlR"/>
                         <outlet property="playerOneNameInputField" destination="5By-5F-Zrp" id="cta-xR-nCF"/>
                         <outlet property="playerThreeNameInputField" destination="6mG-Y5-mXe" id="nLd-HT-cqS"/>
+                        <outlet property="playerThreeNameInputFieldHeightConstraints" destination="Oz9-6e-vk5" id="6U1-ef-gaj"/>
+                        <outlet property="playerThreeNameInputFieldTopConstraint" destination="t1D-Zq-kzs" id="XoB-wc-IML"/>
                         <outlet property="playerTwoNameInputField" destination="Glt-jM-liY" id="NsK-ZB-xGS"/>
                         <outlet property="questionLabel" destination="5gZ-ki-tmo" id="9wP-Xv-Uhj"/>
-                        <outlet property="sideMarginConstraint" destination="30K-Sl-4d1" id="6Fg-1k-zzc"/>
-                        <outlet property="titleHeightConstraint" destination="fxg-Uy-2dV" id="2Rd-jX-Xmi"/>
-                        <outlet property="topMarginConstraint" destination="L8k-Lf-gWg" id="Zen-tW-f6j"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yBM-61-Mdd" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -744,7 +751,6 @@
     <resources>
         <image name="gallery-item-delete-button" width="43" height="43"/>
         <image name="root-title" width="289" height="61"/>
-        <image name="save-to-gallery-dialog-title" width="149" height="61"/>
         <image name="universal-cube-pattern" width="1024" height="1024"/>
     </resources>
     <inferredMetricsTieBreakers>
