@@ -22,7 +22,6 @@ protocol SaveToGalleryDelegate : class {
 class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 	@IBOutlet weak var dialogView: UIView!
-	@IBOutlet weak var questionLabel: UILabel!
 	@IBOutlet weak var playerOneNameInputField: SquizitThemeNameInputField!
 	@IBOutlet weak var playerTwoNameInputField: SquizitThemeNameInputField!
 	@IBOutlet weak var playerThreeNameInputField: SquizitThemeNameInputField!
@@ -65,8 +64,9 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		dialogView.opaque = false
 		dialogView.backgroundColor = SquizitTheme.dialogBackgroundColor()
 
+		addToGalleryButton.bordered = false
+		discardButton.bordered = false
 		discardButton.destructive = true
-		questionLabel.font = UIFont(name: "Baskerville-Italic", size: UIFont.labelFontSize())
 
 		playerOneNameInputField.delegate = self
 		playerTwoNameInputField.delegate = self
