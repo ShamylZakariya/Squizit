@@ -21,7 +21,7 @@ class SquizitTheme {
 		UINavigationBar.appearance().barStyle = UIBarStyle.Black
 		UINavigationBar.appearance().translucent = true
 		UINavigationBar.appearance().titleTextAttributes = [
-			NSFontAttributeName: UIFont(name: "Baskerville-Bold", size: 21) as! AnyObject,
+			NSFontAttributeName: UIFont(name: "Avenir-Black", size: 21) as! AnyObject,
 			NSForegroundColorAttributeName: UIColor.whiteColor() as AnyObject
 		]
 
@@ -30,7 +30,7 @@ class SquizitTheme {
 		//
 
 		UIBarButtonItem.appearance().setTitleTextAttributes([
-			NSFontAttributeName: UIFont(name: "Baskerville", size: 18) as! AnyObject
+			NSFontAttributeName: UIFont(name: "Avenir", size: 18) as! AnyObject
 		], forState: UIControlState.Normal)
 
 		//
