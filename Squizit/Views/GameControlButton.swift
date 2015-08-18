@@ -36,6 +36,11 @@ class GameControlButton : UIButton {
 		update()
 	}
 
+	override func layoutSubviews() {
+		super.layoutSubviews()
+		update()
+	}
+
 	override var enabled:Bool {
 		didSet {
 			UIView.animateWithDuration(0.3, animations: { [unowned self] in
