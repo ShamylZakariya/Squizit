@@ -9,6 +9,79 @@
 import Foundation
 import UIKit
 
+class UniversalMatchViewFinishedMatchView : UIView {
+	private var imageView: UIImageView?
+	private var renderQueue = dispatch_queue_create("com.zakariya.squizit.FinishedDrawingRenderQueue", nil)
+	private var angle:CGFloat = 0
+
+	override init(frame: CGRect) {
+		super.init( frame: frame )
+		commonInit()
+	}
+
+	required init(coder aDecoder: NSCoder) {
+		super.init( coder: aDecoder )
+		commonInit()
+	}
+
+	override func layoutSubviews() {
+		super.layoutSubviews()
+		if let imageView = imageView, image = imageView.image {
+			imageView.transform = CGAffineTransformIdentity
+			imageView.frame = CGRect(center: bounds.center, size: image.size)
+
+			let padding:CGFloat = 40
+			let minViewDim = min(bounds.width,bounds.height) - 2*padding
+			let maxImageDim = max(image.size.width,image.size.height)
+			let scale = minViewDim / maxImageDim
+
+			imageView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(scale, scale), CGAffineTransformMakeRotation(angle))
+		}
+	}
+
+	var match:Match? {
+		didSet {
+			render()
+		}
+	}
+
+	private func commonInit() {
+		backgroundColor = UIColor.clearColor()
+		opaque = false
+
+		let angleRange = drand48() * 2.0 - 1.0
+		angle = CGFloat(3.0 * M_PI/180.0 * angleRange)
+	}
+
+	private func render() {
+		if let match = match {
+			dispatch_async(renderQueue) {
+
+				let image = match.render(backgroundColor: SquizitTheme.paperBackgroundColor(scale: 0), scale: 0, watermark: false)
+				dispatch_main {
+					let imageView = UIImageView(frame: CGRect.zeroRect)
+					imageView.layer.shadowColor = UIColor.blackColor().CGColor
+					imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
+					imageView.layer.shadowOpacity = 1
+					imageView.layer.shadowRadius = 5
+					imageView.layer.shouldRasterize = true
+					imageView.alpha = 0
+					self.addSubview(imageView)
+
+					imageView.image = image
+					UIView.animateWithDuration(0.3) {
+						imageView.alpha = 1
+					}
+
+					self.imageView = imageView
+					self.setNeedsLayout()
+				}
+			}
+		}
+	}
+}
+
+
 class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	private var quitGameButton:GameControlButton!
@@ -18,6 +91,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	private var clearButton:SquizitGameTextButton!
 	private var drawingContainerView:UniversalMatchViewPresenterView!
 	private var matchView:UniversalMatchView!
+	private var finishedMatchView:UniversalMatchViewFinishedMatchView?
 
 	private var endOfMatchGestureRecognizer:UITapGestureRecognizer!
 	private var exportQueue = dispatch_queue_create("com.zakariya.squizit.ExportQueue", nil)
@@ -40,8 +114,9 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 				matchView.turn = step
 			} else if step == players {
 				endOfMatchGestureRecognizer.enabled = true
+				showCompletedDrawing()
 			} else {
-				querySaveToGallery()
+				showSaveToGalleryDialog()
 			}
 		}
 	}
@@ -125,11 +200,6 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 
 		// go default
 		onDrawingDidChange()
-
-		delay(1) {
-			NSLog("UniversalMatchViewController::viewDidLoad - showing save to gallery for testing!!!")
-			self.querySaveToGallery()
-		}
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -188,6 +258,10 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 
 			clearButton.frame = CGRect(x: round((drawingToolSelector.frame.maxX + finishTurnButton.frame.minX)/2 - textButtonWidth/2),
 				y: margin, width: textButtonWidth, height: buttonSize)
+		}
+
+		if let finishedDrawingView = finishedMatchView {
+			finishedDrawingView.frame = layoutRect
 		}
 	}
 
@@ -255,6 +329,30 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		clearButton.enabled = canUndo
 	}
 
+	private func showCompletedDrawing() {
+		UIView.animateWithDuration(0.3,
+			animations: {
+				self.drawingContainerView.alpha = 0
+				self.quitGameButton.alpha = 0
+				self.clearButton.alpha = 0
+				self.undoButton.alpha = 0
+				self.finishTurnButton.alpha = 0
+				self.drawingToolSelector.alpha = 0
+			},
+			completion: { completed in
+				self.drawingContainerView.hidden = true
+				self.quitGameButton.hidden = true
+				self.clearButton.hidden = true
+				self.undoButton.hidden = true
+				self.finishTurnButton.hidden = true
+				self.drawingToolSelector.hidden = true
+			})
+
+		finishedMatchView = UniversalMatchViewFinishedMatchView(frame: CGRect.zeroRect)
+		finishedMatchView!.match = match
+		view.addSubview(finishedMatchView!)
+	}
+
 	// MARK: - Notifications
 
 	dynamic private func onDrawingDidChange() {
@@ -306,16 +404,16 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	}
 
 	private dynamic func onQuitTapped(sender:AnyObject) {
-		queryQuitMatch()
+		showQuitMatchDialog()
 	}
 
 	// MARK: - Dialogs
 
-	private dynamic func querySaveToGallery() {
+	private dynamic func showSaveToGalleryDialog() {
 		performSegueWithIdentifier("showSaveToGallery", sender: self)
 	}
 
-	private dynamic func queryQuitMatch() {
+	private dynamic func showQuitMatchDialog() {
 		var alert = UIAlertController(
 			title: NSLocalizedString("Quit?", comment:"QuitMatchAlertTitle"),
 			message: NSLocalizedString("Are you certain you'd like to quit this match?", comment:"QuitMatchAlertMessage"),

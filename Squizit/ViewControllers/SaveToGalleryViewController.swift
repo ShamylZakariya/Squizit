@@ -138,6 +138,10 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		}
 	}
 
+	override func prefersStatusBarHidden() -> Bool {
+		return true
+	}
+
 	// MARK: IBActions
 
 	@IBAction func addToGallery(sender: AnyObject) {

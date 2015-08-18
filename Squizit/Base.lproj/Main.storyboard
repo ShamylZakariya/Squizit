@@ -388,7 +388,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="frv-RY-s5h">
-                                <rect key="frame" x="165" y="199" width="270" height="201.5"/>
+                                <rect key="frame" x="165" y="195" width="270" height="209.5"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player one..." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5By-5F-Zrp" customClass="SquizitThemeNameInputField" customModule="Squizit" customModuleProvider="target">
                                         <rect key="frame" x="8" y="43.5" width="254" height="30"/>
@@ -466,7 +466,7 @@
                                     <constraint firstItem="5By-5F-Zrp" firstAttribute="top" secondItem="E1S-CH-Nbd" secondAttribute="bottom" constant="8" id="A49-eG-yI8"/>
                                     <constraint firstItem="E1S-CH-Nbd" firstAttribute="top" secondItem="frv-RY-s5h" secondAttribute="topMargin" id="FdR-eQ-lyJ"/>
                                     <constraint firstItem="6mG-Y5-mXe" firstAttribute="trailing" secondItem="frv-RY-s5h" secondAttribute="trailingMargin" id="GVc-Bf-6ga"/>
-                                    <constraint firstItem="Qsj-3i-ih8" firstAttribute="bottom" secondItem="frv-RY-s5h" secondAttribute="bottom" id="H6h-i1-xig"/>
+                                    <constraint firstItem="Qsj-3i-ih8" firstAttribute="bottom" secondItem="frv-RY-s5h" secondAttribute="bottom" constant="-8" id="H6h-i1-xig"/>
                                     <constraint firstItem="5By-5F-Zrp" firstAttribute="leading" secondItem="frv-RY-s5h" secondAttribute="leadingMargin" id="Toz-Tx-D5I"/>
                                     <constraint firstItem="E1S-CH-Nbd" firstAttribute="leading" secondItem="frv-RY-s5h" secondAttribute="leadingMargin" id="WVg-Ki-XRW"/>
                                     <constraint firstItem="Glt-jM-liY" firstAttribute="trailing" secondItem="frv-RY-s5h" secondAttribute="trailingMargin" id="f88-Te-nel"/>
@@ -476,7 +476,7 @@
                                     <constraint firstItem="Qsj-3i-ih8" firstAttribute="leading" secondItem="JQl-hx-BjM" secondAttribute="trailing" id="q7j-LX-fFk"/>
                                     <constraint firstItem="6mG-Y5-mXe" firstAttribute="top" secondItem="Glt-jM-liY" secondAttribute="bottom" constant="8" id="t1D-Zq-kzs"/>
                                     <constraint firstItem="6mG-Y5-mXe" firstAttribute="leading" secondItem="frv-RY-s5h" secondAttribute="leadingMargin" id="t1f-Ow-ovm"/>
-                                    <constraint firstItem="JQl-hx-BjM" firstAttribute="bottom" secondItem="frv-RY-s5h" secondAttribute="bottom" id="zxq-K5-Jyd"/>
+                                    <constraint firstItem="JQl-hx-BjM" firstAttribute="bottom" secondItem="frv-RY-s5h" secondAttribute="bottom" constant="-8" id="zxq-K5-Jyd"/>
                                 </constraints>
                             </view>
                         </subviews>

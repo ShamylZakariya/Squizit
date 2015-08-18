@@ -19,6 +19,10 @@ extension CGRect {
 		self.init(x:center.x - radius, y:center.y - radius, width: 2*radius, height: 2*radius )
 	}
 
+	var center:CGPoint {
+		return CGPoint(x: midX, y: midY)
+	}
+
 	static func rectByFitting( points:CGPoint... ) -> CGRect {
 		var minX = CGFloat.max
 		var maxX = CGFloat.min

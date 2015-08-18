@@ -70,6 +70,14 @@ class DrawingToolSelector : UIControl {
 		commonInit()
 	}
 
+	override var enabled:Bool {
+		didSet {
+			UIView.animateWithDuration(0.3, animations: { [unowned self] in
+				self.layer.opacity = self.enabled ? 1 : 0.3
+				})
+		}
+	}
+
 	var toolSeparation:CGFloat = 20 {
 		didSet {
 			setNeedsLayout()
@@ -122,9 +130,11 @@ class DrawingToolSelector : UIControl {
 	}
 
 	override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
-		for tool in _tools {
-			if tool.frame.contains(point) {
-				return true
+		if enabled {
+			for tool in _tools {
+				if tool.frame.contains(point) {
+					return true
+				}
 			}
 		}
 
@@ -173,6 +183,10 @@ class DrawingToolSelector : UIControl {
 	}
 
 	func toolWasTapped( tgr:UITapGestureRecognizer ) {
+
+		if !enabled {
+			return
+		}
 
 		for (i,tool) in enumerate(_tools) {
 			if tool == tgr.view {
