@@ -58,8 +58,8 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
+		clipsToBounds = false
 
-		self.clipsToBounds = false
 		deleteButton.alpha = 0
 		deleteButton.hidden = true
 
@@ -152,13 +152,13 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 			})
 	}
 
-	let _cycleOffset:NSTimeInterval = drand48() / 2
-	var _phase:NSTimeInterval = 0
-	var _wiggleAnimationDisplayLink:CADisplayLink?
+	private let cycleOffset:NSTimeInterval = drand48() / 2
+	private var phase:NSTimeInterval = 0
+	private var wiggleAnimationDisplayLink:CADisplayLink?
 
 	func startWiggling() {
-		_wiggleAnimationDisplayLink = CADisplayLink(target: self, selector: "updateWiggleAnimation")
-		_wiggleAnimationDisplayLink!.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSRunLoopCommonModes)
+		wiggleAnimationDisplayLink = CADisplayLink(target: self, selector: "updateWiggleAnimation")
+		wiggleAnimationDisplayLink!.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSRunLoopCommonModes)
 	}
 
 	dynamic func updateWiggleAnimation() {
@@ -170,7 +170,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		let now = NSDate().timeIntervalSinceReferenceDate
 		let cycle = now / WigglePhaseDuration
 		let sign = (indexInCollection % 2 == 0) ? +1.0 : -1.0
-		let phase = sin(cycle * M_PI + _cycleOffset * M_PI ) * sign
+		let phase = sin(cycle * M_PI + cycleOffset * M_PI ) * sign
 		let angle = CGFloat(phase * WiggleAngleMax)
 		let layer = self.layer
 		UIView.performWithoutAnimation { () -> Void in
@@ -179,9 +179,9 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	}
 
 	func stopWiggling() {
-		if let displayLink = _wiggleAnimationDisplayLink {
+		if let displayLink = wiggleAnimationDisplayLink {
 			displayLink.invalidate()
-			_wiggleAnimationDisplayLink = nil
+			wiggleAnimationDisplayLink = nil
 		}
 
 		let layer = self.layer
@@ -196,9 +196,9 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
-	var _thumbnailCompositorQueue = dispatch_queue_create("com.zakariya.squizit.GalleryThumbnailCompositorQueue", nil)
-	var _thumbnailBackgroundColor = SquizitTheme.thumbnailBackgroundColor()
-	var _renderedIconCache = NSCache()
+	private var thumbnailCompositorQueue = dispatch_queue_create("com.zakariya.squizit.GalleryThumbnailCompositorQueue", nil)
+	private var thumbnailBackgroundColor = SquizitTheme.thumbnailBackgroundColor()
+	private var renderedIconCache = NSCache()
 
 	override init( store:GalleryStore, collectionView:UICollectionView ) {
 		super.init(store: store, collectionView:collectionView)
@@ -298,7 +298,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 				}
 			}
 
-			let cache = _renderedIconCache
+			let cache = renderedIconCache
 			if let renderedIcon = cache.objectForKey(drawing.uuid) as? UIImage {
 
 				galleryCell.imageView.animate = false
@@ -306,7 +306,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 			} else {
 
-				let queue = _thumbnailCompositorQueue
+				let queue = thumbnailCompositorQueue
 				galleryCell.thumbnailLoadAction = CancelableAction<UIImage>(action: { (done, canceled) in
 
 					dispatch_async( queue ) {
@@ -319,7 +319,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 						UIGraphicsBeginImageContextWithOptions(size, true, 0)
 
-						self._thumbnailBackgroundColor.set()
+						self.thumbnailBackgroundColor.set()
 						UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
 
 						if !canceled() {
@@ -347,17 +347,12 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 		}
 	}
 
-	var _dateFormatter:NSDateFormatter?
-	var dateFormatter:NSDateFormatter {
-		if _dateFormatter != nil {
-			return _dateFormatter!
-		}
-
-		_dateFormatter = NSDateFormatter()
-		_dateFormatter!.timeStyle = NSDateFormatterStyle.ShortStyle
-		_dateFormatter!.dateStyle = NSDateFormatterStyle.ShortStyle
-		return _dateFormatter!
-	}
+	lazy var dateFormatter:NSDateFormatter = {
+		let dateFormatter = NSDateFormatter()
+		dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
+		dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+		return dateFormatter
+	}()
 }
 
 // MARK: - GalleryViewController
@@ -368,11 +363,11 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 	var store:GalleryStore!
 	weak var delegate:GalleryViewControllerDelegate?
-	var _dataSource:GalleryCollectionViewDataSource!
 
-	var _searchField = SquizitThemeSearchField(frame: CGRect.zeroRect )
-	var _fixedHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
-	let _fixedHeaderHeight:CGFloat = 60
+	private var dataSource:GalleryCollectionViewDataSource!
+	private var searchField = SquizitThemeSearchField(frame: CGRect.zeroRect )
+	private var fixedHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
+	private let fixedHeaderHeight:CGFloat = 60
 
 	required init(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
@@ -389,9 +384,9 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		collectionView.backgroundColor = SquizitTheme.galleryBackgroundColor()
 
 
-		_dataSource = GalleryCollectionViewDataSource(store: store, collectionView: collectionView )
+		dataSource = GalleryCollectionViewDataSource(store: store, collectionView: collectionView )
 
-		_dataSource.editModeChanged = {
+		dataSource.editModeChanged = {
 			[weak self] ( inEditMode:Bool ) -> Void in
 			if let sself = self {
 				if inEditMode {
@@ -402,7 +397,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 			}
 		}
 
-		_dataSource.galleryDrawingTapped = {
+		dataSource.galleryDrawingTapped = {
 			[weak self] ( drawing:GalleryDrawing, indexPath:NSIndexPath ) in
 			if let sself = self {
 				sself.showDetail( drawing, indexPath:indexPath )
@@ -416,20 +411,20 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		//	Create the fixed header view
 		//
 
-		_searchField.delegate = self
-		_searchField.placeholder = "Who drew..."
-		_searchField.returnKeyType = UIReturnKeyType.Search
-		_searchField.addTarget(self, action: "searchTextChanged:", forControlEvents: UIControlEvents.EditingChanged)
+		searchField.delegate = self
+		searchField.placeholder = "Who drew..."
+		searchField.returnKeyType = UIReturnKeyType.Search
+		searchField.addTarget(self, action: "searchTextChanged:", forControlEvents: UIControlEvents.EditingChanged)
 
-		_fixedHeaderView.addSubview(_searchField)
-		view.addSubview(_fixedHeaderView)
+		fixedHeaderView.addSubview(searchField)
+		view.addSubview(fixedHeaderView)
 
 
 		//
 		//	Make room for fixed header
 		//
 
-		collectionView.contentInset = UIEdgeInsets(top: _fixedHeaderHeight + 20, left: 0, bottom: 0, right: 0)
+		collectionView.contentInset = UIEdgeInsets(top: fixedHeaderHeight + 20, left: 0, bottom: 0, right: 0)
 
 
 		//
@@ -443,11 +438,10 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 	override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
 		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
 		let bigItemSize = CGSize(width: 256, height: 360)
+		let smallItemSize = CGSize(width: 128, height: 180)
 
 		if traitCollection.horizontalSizeClass == .Compact || traitCollection.verticalSizeClass == .Compact {
-			let minDimension = min(view.bounds.width,view.bounds.height);
-			let width = round(minDimension / 3)
-			flowLayout.itemSize = CGSize(width: width, height: round(width * bigItemSize.height/bigItemSize.width))
+			flowLayout.itemSize = smallItemSize
 		} else {
 			flowLayout.itemSize = bigItemSize
 		}
@@ -457,19 +451,19 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		super.viewWillLayoutSubviews()
 
 		//	Layout the fixed-position header containing the search field
-		let headerFrame = CGRect(x:0, y: self.topLayoutGuide.length, width: self.view.bounds.width, height: _fixedHeaderHeight)
-		_fixedHeaderView.frame = headerFrame
+		let headerFrame = CGRect(x:0, y: self.topLayoutGuide.length, width: self.view.bounds.width, height: fixedHeaderHeight)
+		fixedHeaderView.frame = headerFrame
 
-		let bounds = _fixedHeaderView.bounds
+		let bounds = fixedHeaderView.bounds
 		let margin:CGFloat = 20
-		let searchFieldHeight:CGFloat = _searchField.intrinsicContentSize().height
+		let searchFieldHeight:CGFloat = searchField.intrinsicContentSize().height
 		let searchFieldFrame = CGRect(x: margin, y: bounds.midY - searchFieldHeight/2, width: bounds.width-2*margin, height: searchFieldHeight)
 
-		_searchField.frame = searchFieldFrame
+		searchField.frame = searchFieldFrame
 	}
 
 	override func didReceiveMemoryWarning() {
-		_dataSource.didReceiveMemoryWarning()
+		dataSource.didReceiveMemoryWarning()
 	}
 
 	override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -481,7 +475,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 			if let detailVC = segue.destinationViewController as? GalleryDetailViewController {
 				if let indexPath = sender as? NSIndexPath {
 					detailVC.store = store
-					detailVC.filterPredicate = _dataSource.filterPredicate
+					detailVC.filterPredicate = dataSource.filterPredicate
 					detailVC.initialIndexPath = indexPath
 				} else {
 					assertionFailure("Didn't pass indexPath")
@@ -499,37 +493,37 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 	}
 
 	dynamic func onDoneEditing( sender:AnyObject ) {
-		_dataSource.editMode = false
+		dataSource.editMode = false
 	}
 
 	// MARK: UITextFieldDelegate
 
 	dynamic func searchTextChanged( sender:UITextField ) {
-		if sender === _searchField {
-			artistFilter = _searchField.text
+		if sender === searchField {
+			artistFilter = searchField.text
 		}
 	}
 
 	func textFieldShouldEndEditing(textField: UITextField) -> Bool {
-		if textField === _searchField {}
+		if textField === searchField {}
 		return true
 	}
 
 	func textFieldShouldReturn(textField: UITextField) -> Bool {
-		if textField === _searchField {
+		if textField === searchField {
 			textField.resignFirstResponder()
 		}
 		return true
 	}
 
 	func textFieldDidEndEditing(textField: UITextField) {
-		if textField === _searchField {
+		if textField === searchField {
 			textField.resignFirstResponder()
 		}
 	}
 
 	func textFieldShouldClear(textField: UITextField) -> Bool {
-		if textField === _searchField {
+		if textField === searchField {
 			textField.resignFirstResponder()
 		}
 		return true
@@ -554,7 +548,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 				_debouncedArtistFilterApplicator = debounce(0.1) {
 					[weak self] () -> () in
 					if let sself = self {
-						sself._dataSource.artistNameFilter = sself.artistFilter
+						sself.dataSource.artistNameFilter = sself.artistFilter
 							.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
 							.capitalizedStringWithLocale(NSLocale.currentLocale())
 					}
