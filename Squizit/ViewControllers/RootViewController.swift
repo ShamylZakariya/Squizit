@@ -111,8 +111,6 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 				},
 				completion: nil)
 		}
-
-		//showTestDrawingView(self)
 	}
 
 	override func preferredStatusBarStyle() -> UIStatusBarStyle {

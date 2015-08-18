@@ -23,10 +23,8 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 		let toView = transitionContext.viewForKey(UITransitionContextToViewKey)!
 
 		let scale:CGFloat = 1.075
-		//let bigScale = CGAffineTransformMakeScale(scale, scale)
-		//let smallScale = CGAffineTransformMakeScale(1/scale,1/scale)
-		let bigScale = CATransform3DMakeScale(scale, scale, 1)
-		let smallScale = CATransform3DMakeScale(1/scale, 1/scale, 1)
+		let bigScale = CGAffineTransformMakeScale(scale, scale)
+		let smallScale = CGAffineTransformMakeScale(1/scale,1/scale)
 		let smallOpacity:CGFloat = 0.5
 		let presenting = self.presenting
 
@@ -36,11 +34,11 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 			container.addSubview(fromView)
 			container.addSubview(toView)
 
-			toView.layer.transform = bigScale
+			toView.transform = bigScale
 			toView.opaque = false
 			toView.alpha = 0
 
-			fromView.layer.transform = CATransform3DIdentity
+			fromView.transform = CGAffineTransformIdentity
 			fromView.opaque = false
 			fromView.alpha = 1
 		} else {
@@ -49,11 +47,11 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 			container.addSubview(toView)
 			container.addSubview(fromView)
 
-			toView.layer.transform = smallScale
+			toView.transform = smallScale
 			toView.opaque = false
 			toView.alpha = smallOpacity
 
-			fromView.layer.transform = CATransform3DIdentity
+			fromView.transform = CGAffineTransformIdentity
 			fromView.opaque = false
 			fromView.alpha = 1
 		}
@@ -69,15 +67,18 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 			animations: {
 
 				if presenting {
-					fromView.layer.transform = smallScale
+					fromView.transform = smallScale
 					fromView.alpha = smallOpacity
 				} else {
-					fromView.layer.transform = bigScale
+					fromView.transform = bigScale
 					fromView.alpha = 0
 				}
 
 			},
-			completion: nil )
+			completion: { completed in
+				// set transform of now hidden view to identity to prevent breakage during rotation
+				fromView.transform = CGAffineTransformIdentity
+			})
 
 		UIView.animateWithDuration(duration,
 			delay: duration/6,
@@ -85,7 +86,7 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 			initialSpringVelocity: 0.5,
 			options: nil,
 			animations: {
-				toView.layer.transform = CATransform3DIdentity
+				toView.transform = CGAffineTransformIdentity
 				toView.alpha = 1
 			},
 			completion: { finished in
