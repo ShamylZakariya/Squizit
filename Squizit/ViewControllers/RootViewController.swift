@@ -42,13 +42,6 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 
 		twitterButton.bordered = false
 		howToPlayButton.bordered = false
-
-		#if DEBUG
-			var tgr = UITapGestureRecognizer(target: self, action: "showTestDrawingView:")
-			tgr.numberOfTapsRequired = 2
-			tgr.numberOfTouchesRequired = 2
-			self.view.addGestureRecognizer(tgr)
-		#endif
 	}
 
 	private var playedIntroAnimation:Bool = false
@@ -143,22 +136,13 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 						assertionFailure("Unable to extract GalleryViewController from segue")
 					}
 
-				case "beginTwoPlayerMatch", "beginThreePlayerMatch":
-					var players = 0
-					if segue.identifier == "beginTwoPlayerMatch" {
-						players = 2
-					} else {
-						players = 3
-					}
-
-					let matchVC = destinationVC as! MatchViewController
-					let screenBounds = UIScreen.mainScreen().bounds
-					matchVC.match = Match(players: players, stageSize: CGSize(width: screenBounds.width, height: screenBounds.height), overlap: 4)
-
-				case "showTestDrawingView":
+				case "beginTwoPlayerMatch":
 					let matchVC = destinationVC as! UniversalMatchViewController
 					matchVC.players = 2
 
+				case "beginThreePlayerMatch":
+					let matchVC = destinationVC as! UniversalMatchViewController
+					matchVC.players = 3
 
 				case "showHowToPlay":
 					// no setup needed for these two
@@ -177,10 +161,6 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 		if let twitterURL = NSURL(string: "https://twitter.com/squizitapp") {
 			UIApplication.sharedApplication().openURL(twitterURL)
 		}
-	}
-
-	dynamic func showTestDrawingView( sender:AnyObject ) {
-		performSegueWithIdentifier("showTestDrawingView", sender: sender)
 	}
 
 	// MARK: GalleryViewControllerDelegate

@@ -39,7 +39,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="2Yj-yc-FrP" kind="presentation" identifier="beginTwoPlayerMatch" id="7sc-b3-6yH"/>
+                                            <segue destination="jpW-xH-26M" kind="presentation" identifier="beginTwoPlayerMatch" modalPresentationStyle="fullScreen" id="DMh-Vi-uqQ"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rGO-wl-LMv" customClass="SquizitThemeButton" customModule="Squizit" customModuleProvider="target">
@@ -48,7 +48,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="2Yj-yc-FrP" kind="presentation" identifier="beginThreePlayerMatch" id="fbA-qo-xxm"/>
+                                            <segue destination="jpW-xH-26M" kind="presentation" identifier="beginThreePlayerMatch" modalPresentationStyle="fullScreen" id="PsZ-v7-2Md"/>
                                         </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="root-title" translatesAutoresizingMaskIntoConstraints="NO" id="eyv-id-0vb">
@@ -249,7 +249,6 @@
                         <outlet property="titleViewWidthConstraint" destination="7UM-UB-Dfa" id="a92-He-Gi3"/>
                         <outlet property="twitterButton" destination="3Bt-N9-Av2" id="FLQ-Ll-R39"/>
                         <outlet property="twoPlayersButton" destination="91w-da-Nqx" id="wXJ-Y5-FmO"/>
-                        <segue destination="jpW-xH-26M" kind="presentation" identifier="showTestDrawingView" modalPresentationStyle="fullScreen" id="R4E-6a-Qyd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hj4-9L-CMp" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -276,7 +275,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YTQ-ec-S3u" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1830" y="2377"/>
+            <point key="canvasLocation" x="1819" y="698"/>
         </scene>
         <!--How To Play View Controller-->
         <scene sceneID="EUQ-tN-4Nt">
@@ -340,41 +339,6 @@
             </objects>
             <point key="canvasLocation" x="1903" y="-576"/>
         </scene>
-        <!--Match View Controller-->
-        <scene sceneID="gec-U3-spX">
-            <objects>
-                <viewController id="2Yj-yc-FrP" customClass="MatchViewController" customModule="Squizit" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="GW9-cu-Gpp"/>
-                        <viewControllerLayoutGuide type="bottom" id="I3z-Bw-egU"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="gUE-bU-fCr">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ycd-Fs-v1p" customClass="MatchView" customModule="Squizit" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="ycd-Fs-v1p" firstAttribute="top" secondItem="GW9-cu-Gpp" secondAttribute="bottom" id="eUa-P9-DXy"/>
-                            <constraint firstAttribute="trailing" secondItem="ycd-Fs-v1p" secondAttribute="trailing" id="i2Q-J4-Cor"/>
-                            <constraint firstItem="ycd-Fs-v1p" firstAttribute="leading" secondItem="gUE-bU-fCr" secondAttribute="leading" id="lvw-6M-91t"/>
-                            <constraint firstItem="I3z-Bw-egU" firstAttribute="top" secondItem="ycd-Fs-v1p" secondAttribute="bottom" id="mG1-Qh-3sW"/>
-                        </constraints>
-                    </view>
-                    <nil key="simulatedStatusBarMetrics"/>
-                    <connections>
-                        <outlet property="matchView" destination="ycd-Fs-v1p" id="McZ-dI-VIQ"/>
-                        <segue destination="5a9-GW-y81" kind="presentation" identifier="showSaveToGallery" modalPresentationStyle="overCurrentContext" id="2B5-MN-07Z"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="TFS-CD-32v" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1819" y="698"/>
-        </scene>
         <!--Save To Gallery View Controller-->
         <scene sceneID="GAw-z2-x3Z">
             <objects>
@@ -396,7 +360,7 @@
                                             <constraint firstAttribute="height" constant="30" id="N08-CJ-SEY"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
                                         <connections>
                                             <outlet property="nextField" destination="Glt-jM-liY" id="pZ3-7U-jFF"/>
                                         </connections>
@@ -407,7 +371,7 @@
                                             <constraint firstAttribute="height" constant="30" id="Oz9-6e-vk5"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
                                         <connections>
                                             <outlet property="nextField" destination="5By-5F-Zrp" id="9sG-cs-YN9"/>
                                         </connections>
@@ -430,7 +394,7 @@
                                             <constraint firstAttribute="height" constant="30" id="w2u-Ky-9g7"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
                                         <connections>
                                             <outlet property="nextField" destination="6mG-Y5-mXe" id="UJV-S5-7lv"/>
                                         </connections>
@@ -744,7 +708,6 @@
         <image name="universal-cube-pattern" width="1024" height="1024"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="fbA-qo-xxm"/>
-        <segue reference="oVj-BO-bu3"/>
+        <segue reference="PsZ-v7-2Md"/>
     </inferredMetricsTieBreakers>
 </document>
