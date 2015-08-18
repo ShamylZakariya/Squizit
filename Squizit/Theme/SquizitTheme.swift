@@ -90,11 +90,6 @@ class SquizitTheme {
 		return matchBackgroundColor().colorWithAlphaComponent(0.3)
 	}
 
-	// background color for the shields displayed during matches
-	class func matchShieldBackgroundColor() -> UIColor {
-		return UIColor( patternImage: self.leatherBackgroundImage() )
-	}
-
 	// background color for the match view
 	class func howToPlayBackgroundColor() -> UIColor {
 		return UIColor( patternImage: self.leatherBackgroundImage() )
