@@ -277,7 +277,10 @@ class UniversalMatchView : UIView {
 
 			// draw all drawings
 			for controller in controllers {
-				controller.draw(ctx)
+				let viewport = controller.viewport.rectByOffsetting(dx: 0, dy: -offset)
+				if viewport.intersects(rect) || rect.isEmpty || rect.isNull {
+					controller.draw(ctx)
+				}
 			}
 
 			CGContextRestoreGState(ctx)
