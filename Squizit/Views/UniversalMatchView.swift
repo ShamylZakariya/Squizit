@@ -91,6 +91,23 @@ class UniversalMatchViewPresenterView : UIView {
 		updateLayout()
 	}
 
+	override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+		// forward input events to allow user to start a stroke offscreen
+		drawingView?.touchesBegan(touches, withEvent: event)
+	}
+
+	override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+		drawingView?.touchesMoved(touches, withEvent: event)
+	}
+
+	override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+		drawingView?.touchesEnded(touches, withEvent: event)
+	}
+
+	override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent) {
+		drawingView?.touchesCancelled(touches, withEvent: event)
+	}
+
 	private dynamic func onPan(pgr:UIPanGestureRecognizer) {
 		if let drawingView = drawingView where panning {
 			var translation = pgr.translationInView(self)
