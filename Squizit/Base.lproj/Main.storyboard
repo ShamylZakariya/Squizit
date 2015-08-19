@@ -542,6 +542,11 @@
                                             <constraint firstItem="vF6-pa-txg" firstAttribute="top" secondItem="IIQ-uS-qMR" secondAttribute="bottom" constant="8" id="ygX-sm-f9C"/>
                                             <constraint firstItem="vF6-pa-txg" firstAttribute="leading" secondItem="EtY-NK-QMW" secondAttribute="leadingMargin" id="zdo-jw-Kd5"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="ygX-sm-f9C"/>
+                                            </mask>
+                                        </variation>
                                         <connections>
                                             <outlet property="containerView" destination="IIQ-uS-qMR" id="6Al-ri-L2C"/>
                                             <outlet property="deleteButton" destination="BOP-eT-3qN" id="gF5-Pm-yPY"/>

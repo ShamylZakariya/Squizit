@@ -93,6 +93,20 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		imageView.image = nil
 	}
 
+	override func layoutSubviews() {
+		super.layoutSubviews()
+		layoutIfNeeded()
+
+		if let thumbnail = imageView.image {
+			// now, we know how big containerView is, and we can scale imageView to fit
+			let availableSize = min(containerView.bounds.size.width,containerView.bounds.size.height)
+			let thumbnailMaxDim = max(thumbnail.size.width, thumbnail.size.height)
+			let scale = availableSize / thumbnailMaxDim
+			imageViewWidthConstraint.constant = round(thumbnail.size.width * scale)
+			imageViewHeightConstraint.constant = round(thumbnail.size.height * scale)
+		}
+	}
+
 	dynamic func longPress( gr:UILongPressGestureRecognizer ) {
 		switch gr.state {
 			case UIGestureRecognizerState.Began:
@@ -248,18 +262,11 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 		}
 	}
 
-	private var nameAttributes:[String:AnyObject] {
-		return [
-			NSFontAttributeName: UIFont(name: "Baskerville", size: 12)!,
-			NSForegroundColorAttributeName: UIColor.whiteColor()
-		]
-	}
-
 	override func configureCell( cell:UICollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
 		let store = self.store
 		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
 		let itemSize = flowLayout.itemSize
-		let thumbnailHeight = round(min(itemSize.width,itemSize.height) * 0.75)
+		let thumbnailHeight = round(itemSize.height)
 
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
@@ -282,13 +289,6 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 			// set the index in collection to aid in wiggle cycle direction (odd/even wiggle in different directions)
 			galleryCell.indexInCollection = indexPath.item
-
-			// use the thumbnail's size to set the cell image size & aspect ratio
-			let thumbnailActualHeight = CGFloat(drawing.thumbnailHeight)
-			let thumbnailActualWidth = CGFloat(drawing.thumbnailWidth)
-			let thumbnailWidth = round(thumbnailActualWidth * (thumbnailHeight/thumbnailActualHeight))
-			galleryCell.imageViewHeightConstraint.constant = thumbnailHeight
-			galleryCell.imageViewWidthConstraint.constant = thumbnailWidth
 
 
 			galleryCell.onLongPress = {
@@ -315,6 +315,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 				galleryCell.imageView.animate = false
 				galleryCell.imageView.image = renderedIcon
+				galleryCell.setNeedsLayout()
 
 			} else {
 
@@ -323,10 +324,11 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 					dispatch_async( queue ) {
 
-						let size = CGSize( width: thumbnailWidth, height: thumbnailHeight )
-						let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+						// render a thumbnail that is the max possible size for our layout
 
 						var thumbnail = UIImage( data: drawing.thumbnail )!
+						let size = CGSize( width: round(thumbnail.size.width * thumbnailHeight / thumbnail.size.height), height: thumbnailHeight )
+						let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
 						thumbnail = thumbnail.imageByScalingToSize(size, contentMode: .ScaleAspectFit, scale: 0)
 
 						UIGraphicsBeginImageContextWithOptions(size, true, 0)
@@ -350,6 +352,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 					dispatch_main {
 						galleryCell.imageView.animate = true
 						galleryCell.imageView.image = result
+						galleryCell.setNeedsLayout()
 					}
 				})
 			}
@@ -447,20 +450,20 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardDidDismiss:", name: UIKeyboardDidHideNotification, object: nil)
 	}
 
-	private var suggestedItemWidth:CGFloat {
+	private var suggestedItemSize:CGSize {
 		if traitCollection.horizontalSizeClass == .Compact || traitCollection.verticalSizeClass == .Compact {
-			return 100
+			return CGSize(width:100,height:180)
 		} else {
-			return 256
+			return CGSize(width:256,height:320)
 		}
 	}
 
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 
-		var itemWidth = floor(view.bounds.width / round(view.bounds.width / suggestedItemWidth))
-		let aspect = CGFloat(1.125)
-		let itemHeight = itemWidth * aspect
+		var suggestedItemSize = self.suggestedItemSize
+		var itemWidth = floor(view.bounds.width / round(view.bounds.width / suggestedItemSize.width))
+		let itemHeight = suggestedItemSize.height
 		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
 		flowLayout.itemSize = CGSize(width:itemWidth, height:itemHeight)
 		collectionView.reloadData()
