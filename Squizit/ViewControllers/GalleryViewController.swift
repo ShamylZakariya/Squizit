@@ -29,10 +29,8 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	@IBOutlet weak var containerView: UIView!
 	@IBOutlet weak var deleteButton: UIImageView!
 	@IBOutlet weak var imageView: ImagePresenterView!
-	@IBOutlet weak var namesLabel: UILabel!
-	@IBOutlet weak var dateLabel: UILabel!
+	@IBOutlet weak var label: UILabel!
 
-	@IBOutlet weak var topPaddingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
 	@IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
 
@@ -59,13 +57,10 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		clipsToBounds = false
+		backgroundColor = UIColor(hue: CGFloat(drand48()), saturation: CGFloat(0.5 + drand48()*0.5), brightness: 0.5, alpha: 0.5)
 
 		deleteButton.alpha = 0
 		deleteButton.hidden = true
-
-		// for some reason I can't set Baskerville in IB
-		namesLabel.font = UIFont(name: "Baskerville", size: namesLabel.font.pointSize)
-		dateLabel.font = UIFont(name:"Baskerville-Italic", size: dateLabel.font.pointSize)
 
 		// set background color of imageview to the thumbnail background to minimize flashing as images are lazily loaded
 		imageView.backgroundColor = SquizitTheme.thumbnailBackgroundColor()
@@ -89,10 +84,8 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 	override func prepareForReuse() {
 
-		if let action = thumbnailLoadAction {
-			action.cancel()
-			thumbnailLoadAction = nil
-		}
+		thumbnailLoadAction?.cancel()
+		thumbnailLoadAction = nil
 
 		// reset layer transform and nil the image
 		layer.transform = CATransform3DIdentity
@@ -255,17 +248,36 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 		}
 	}
 
+	private var nameAttributes:[String:AnyObject] {
+		return [
+			NSFontAttributeName: UIFont(name: "Baskerville", size: 12)!,
+			NSForegroundColorAttributeName: UIColor.whiteColor()
+		]
+	}
+
 	override func configureCell( cell:UICollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
 		let store = self.store
 		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
 		let itemSize = flowLayout.itemSize
-		let thumbnailHeight = round(itemSize.height * 0.8)
+		let thumbnailHeight = round(min(itemSize.width,itemSize.height) * 0.75)
 
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
 			var galleryCell = cell as! GalleryCollectionViewCell
-			galleryCell.namesLabel.text = drawing.artistDisplayNames
-			galleryCell.dateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
+
+			let nameAttrs = [
+				NSFontAttributeName: UIFont(name: "Baskerville", size: 12)!,
+				NSForegroundColorAttributeName: UIColor.whiteColor()
+			]
+			let dateAttrs = [
+				NSFontAttributeName: UIFont(name: "Baskerville-Italic", size: 12)!,
+				NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.7)
+			]
+
+			var attributedText = NSMutableAttributedString(string: drawing.artistDisplayNames, attributes: nameAttrs)
+			attributedText.appendAttributedString(NSAttributedString(string: "\n" + dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date)),attributes: dateAttrs))
+
+			galleryCell.label.attributedText = attributedText
 			galleryCell.deleteButtonVisible = self.editMode
 
 			// set the index in collection to aid in wiggle cycle direction (odd/even wiggle in different directions)
@@ -424,7 +436,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		//	Make room for fixed header
 		//
 
-		collectionView.contentInset = UIEdgeInsets(top: fixedHeaderHeight + 20, left: 0, bottom: 0, right: 0)
+		collectionView.contentInset = UIEdgeInsets(top: fixedHeaderHeight, left: 0, bottom: 0, right: 0)
 
 
 		//
@@ -435,20 +447,24 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardDidDismiss:", name: UIKeyboardDidHideNotification, object: nil)
 	}
 
-	override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
-		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-		let bigItemSize = CGSize(width: 256, height: 360)
-		let smallItemSize = CGSize(width: 128, height: 180)
-
+	private var suggestedItemWidth:CGFloat {
 		if traitCollection.horizontalSizeClass == .Compact || traitCollection.verticalSizeClass == .Compact {
-			flowLayout.itemSize = smallItemSize
+			return 100
 		} else {
-			flowLayout.itemSize = bigItemSize
+			return 256
 		}
 	}
 
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
+
+		var itemWidth = floor(view.bounds.width / round(view.bounds.width / suggestedItemWidth))
+		let aspect = CGFloat(1.125)
+		let itemHeight = itemWidth * aspect
+		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+		flowLayout.itemSize = CGSize(width:itemWidth, height:itemHeight)
+		collectionView.reloadData()
+
 
 		//	Layout the fixed-position header containing the search field
 		let headerFrame = CGRect(x:0, y: self.topLayoutGuide.length, width: self.view.bounds.width, height: fixedHeaderHeight)
@@ -460,10 +476,6 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		let searchFieldFrame = CGRect(x: margin, y: bounds.midY - searchFieldHeight/2, width: bounds.width-2*margin, height: searchFieldHeight)
 
 		searchField.frame = searchFieldFrame
-	}
-
-	override func didReceiveMemoryWarning() {
-		dataSource.didReceiveMemoryWarning()
 	}
 
 	override func preferredStatusBarStyle() -> UIStatusBarStyle {
