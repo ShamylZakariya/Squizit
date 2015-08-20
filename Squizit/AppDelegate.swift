@@ -16,6 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	lazy var galleryStore:GalleryStore = GalleryStore()
 
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+
+		NSLog("Starting \(AppDelegate.appVersionName)")
+
 		// fire up the theme
 		theme = SquizitTheme()
 		window?.tintColor = SquizitTheme.tintColor()
@@ -52,6 +55,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 	}
 
+	// MARK: - Statics
+
+	class var appVersionName:String {
+		let infoDict = NSBundle.mainBundle().infoDictionary as! Dictionary<String,AnyObject>
+		let displayName = infoDict["CFBundleName"] as! String
+		let majorVersion = infoDict["CFBundleShortVersionString"] as! String
+		let minorVersion = infoDict["CFBundleVersion"] as! String
+
+		return "\(displayName) \(majorVersion) (build \(minorVersion))"
+	}
+
+	class var appMajorVersion:String {
+		let infoDict = NSBundle.mainBundle().infoDictionary as! Dictionary<String,AnyObject>
+		return infoDict["CFBundleShortVersionString"] as! String
+	}
+
+	class var appMinorVersion:String {
+		let infoDict = NSBundle.mainBundle().infoDictionary as! Dictionary<String,AnyObject>
+		return infoDict["CFBundleVersion"] as! String
+	}
 
 }
 
