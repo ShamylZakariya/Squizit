@@ -504,16 +504,16 @@
                                                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IIQ-uS-qMR">
                                                     <rect key="frame" x="8" y="8" width="284" height="357"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qbo-L7-0JH" customClass="ImagePresenterView" customModule="Squizit" customModuleProvider="target">
-                                                            <rect key="frame" x="78" y="114.5" width="128" height="128"/>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qbo-L7-0JH" customClass="UIImageView">
+                                                            <rect key="frame" x="78" y="20" width="128" height="128"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="128" id="Yjx-vI-1tS"/>
                                                                 <constraint firstAttribute="height" constant="128" id="xR8-gx-aF6"/>
                                                             </constraints>
                                                         </view>
-                                                        <imageView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gallery-item-delete-button" translatesAutoresizingMaskIntoConstraints="NO" id="BOP-eT-3qN">
-                                                            <rect key="frame" x="56" y="92.5" width="43" height="43"/>
+                                                        <imageView opaque="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gallery-item-delete-button" translatesAutoresizingMaskIntoConstraints="NO" id="BOP-eT-3qN">
+                                                            <rect key="frame" x="56" y="-2" width="43" height="43"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="43" id="0iX-Hj-3xH"/>
                                                                 <constraint firstAttribute="height" constant="43" id="xuw-SP-tHl"/>
@@ -523,8 +523,8 @@
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstItem="qbo-L7-0JH" firstAttribute="leading" secondItem="BOP-eT-3qN" secondAttribute="trailing" constant="-21" id="4Vc-5j-gGs"/>
+                                                        <constraint firstItem="qbo-L7-0JH" firstAttribute="top" secondItem="IIQ-uS-qMR" secondAttribute="top" constant="20" id="5g5-Eg-r4F"/>
                                                         <constraint firstItem="qbo-L7-0JH" firstAttribute="top" secondItem="BOP-eT-3qN" secondAttribute="top" constant="22" id="PdM-7w-1dR"/>
-                                                        <constraint firstAttribute="centerY" secondItem="qbo-L7-0JH" secondAttribute="centerY" id="ZXV-yH-hEk"/>
                                                         <constraint firstAttribute="centerX" secondItem="qbo-L7-0JH" secondAttribute="centerX" id="nQ0-qB-KTe"/>
                                                     </constraints>
                                                 </view>
@@ -684,7 +684,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="gallery-item-delete-button" width="43" height="43"/>
+        <image name="gallery-item-delete-button" width="44" height="44"/>
         <image name="root-title" width="289" height="61"/>
         <image name="universal-cube-pattern" width="1024" height="1024"/>
     </resources>

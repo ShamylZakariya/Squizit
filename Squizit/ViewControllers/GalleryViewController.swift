@@ -28,11 +28,16 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 	@IBOutlet weak var containerView: UIView!
 	@IBOutlet weak var deleteButton: UIImageView!
-	@IBOutlet weak var imageView: ImagePresenterView!
+	@IBOutlet weak var imageView: UIImageView!
 	@IBOutlet weak var label: UILabel!
 
 	@IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
 	@IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
+
+	private var deleting:Bool = false
+	private let cycleOffset:NSTimeInterval = drand48() / 2
+	private var phase:NSTimeInterval = 0
+	private var wiggleAnimationDisplayLink:CADisplayLink?
 
 	var indexInCollection:Int = 0
 	var thumbnailLoadAction:CancelableAction<UIImage>?
@@ -54,17 +59,17 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		}
 	}
 
+	var thumbnail:UIImage? { return imageView.image }
+
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		clipsToBounds = false
-		backgroundColor = UIColor(hue: CGFloat(drand48()), saturation: CGFloat(0.5 + drand48()*0.5), brightness: 0.5, alpha: 0.5)
 
 		deleteButton.alpha = 0
 		deleteButton.hidden = true
 
-		// set background color of imageview to the thumbnail background to minimize flashing as images are lazily loaded
-		imageView.backgroundColor = SquizitTheme.thumbnailBackgroundColor()
-		imageView.contentMode = .Center
+		imageView.clipsToBounds = true
+		imageView.contentMode = UIViewContentMode.ScaleAspectFit
 
 		// add shadows because we're a little skeumorphic here
 		imageView.layer.shouldRasterize = true
@@ -90,21 +95,42 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		// reset layer transform and nil the image
 		layer.transform = CATransform3DIdentity
 		layer.opacity = 1
-		imageView.image = nil
+
+		setThumbnail(nil, animate: false)
 	}
 
 	override func layoutSubviews() {
 		super.layoutSubviews()
 		layoutIfNeeded()
 
-		if let thumbnail = imageView.image {
+		if let thumbnail = thumbnail {
 			// now, we know how big containerView is, and we can scale imageView to fit
 			let availableSize = min(containerView.bounds.size.width,containerView.bounds.size.height)
 			let thumbnailMaxDim = max(thumbnail.size.width, thumbnail.size.height)
 			let scale = availableSize / thumbnailMaxDim
 			imageViewWidthConstraint.constant = round(thumbnail.size.width * scale)
 			imageViewHeightConstraint.constant = round(thumbnail.size.height * scale)
+		} else {
+			imageViewWidthConstraint.constant = 0
+			imageViewHeightConstraint.constant = 0
 		}
+	}
+
+	func setThumbnail(thumbnail:UIImage?,animate:Bool) {
+		imageView.image = thumbnail
+		if let thumbnail = thumbnail {
+			if animate {
+				UIView.animateWithDuration(0.3) {
+					self.imageView.alpha = 1
+				}
+			} else {
+				imageView.alpha = 1
+			}
+		} else {
+			imageView.alpha = 0
+		}
+
+		setNeedsLayout()
 	}
 
 	dynamic func longPress( gr:UILongPressGestureRecognizer ) {
@@ -116,11 +142,10 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		}
 	}
 
-	private var _deleting:Bool = false
 	dynamic func deleteButtonTapped( tr:UITapGestureRecognizer ) {
 
 		// flag that we're deleting - this halts the wiggle animation which would override our scale transform
-		_deleting = true
+		deleting = true
 		let layer = self.layer
 		let onDeleteButtonTapped = self.onDeleteButtonTapped
 
@@ -159,9 +184,6 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 			})
 	}
 
-	private let cycleOffset:NSTimeInterval = drand48() / 2
-	private var phase:NSTimeInterval = 0
-	private var wiggleAnimationDisplayLink:CADisplayLink?
 
 	func startWiggling() {
 		wiggleAnimationDisplayLink = CADisplayLink(target: self, selector: "updateWiggleAnimation")
@@ -170,7 +192,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 	dynamic func updateWiggleAnimation() {
 
-		if _deleting {
+		if deleting {
 			return
 		}
 
@@ -311,11 +333,10 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 			}
 
 			let cache = renderedIconCache
-			if let renderedIcon = cache.objectForKey(drawing.uuid) as? UIImage {
+			if let thumbnail = cache.objectForKey(drawing.uuid) as? UIImage {
 
-				galleryCell.imageView.animate = false
-				galleryCell.imageView.image = renderedIcon
-				galleryCell.setNeedsLayout()
+				// no need to animate, since the thumbnail is already available
+				galleryCell.setThumbnail(thumbnail, animate: false)
 
 			} else {
 
@@ -348,11 +369,10 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 							UIGraphicsEndImageContext()
 						}
 					}
-				}, done: { ( result:UIImage ) -> () in
+				}, done: { ( thumbnail:UIImage ) -> () in
 					dispatch_main {
-						galleryCell.imageView.animate = true
-						galleryCell.imageView.image = result
-						galleryCell.setNeedsLayout()
+						// animate, because we had to wait for rendering to complete
+						galleryCell.setThumbnail(thumbnail, animate: true)
 					}
 				})
 			}
