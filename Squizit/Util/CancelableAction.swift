@@ -23,10 +23,10 @@ class CancelableAction<T> {
 		action(
 			done: { [weak self] result in
 				if let sself = self {
-					if !sself._canceled {
-						sself._result = result
-						if let done = sself.done {
-							done( result:result )
+					synchronized(sself) {
+						if !sself._canceled {
+							sself._result = result
+							done?( result:result )
 						}
 					}
 				}
@@ -76,7 +76,11 @@ class CancelableAction<T> {
 		This means the done block will never be invoked, and result will never be assigned.
 	*/
 	func cancel(){
-		_canceled = true
+		synchronized(self) {
+			self._canceled = true
+		}
 	}
+
+	var canceled:Bool { return _canceled }
 
 }

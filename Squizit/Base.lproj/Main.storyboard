@@ -502,7 +502,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IIQ-uS-qMR">
-                                                    <rect key="frame" x="8" y="8" width="284" height="357"/>
+                                                    <rect key="frame" x="8" y="8" width="284" height="349"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qbo-L7-0JH" customClass="UIImageView">
                                                             <rect key="frame" x="78" y="20" width="128" height="128"/>
@@ -533,7 +533,7 @@
                                         </view>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstItem="vF6-pa-txg" firstAttribute="top" secondItem="IIQ-uS-qMR" secondAttribute="bottom" constant="8" id="2gk-r1-Hbo"/>
+                                            <constraint firstItem="vF6-pa-txg" firstAttribute="top" secondItem="IIQ-uS-qMR" secondAttribute="bottom" constant="16" id="2gk-r1-Hbo"/>
                                             <constraint firstItem="IIQ-uS-qMR" firstAttribute="top" secondItem="EtY-NK-QMW" secondAttribute="topMargin" id="Nn2-aK-oCc"/>
                                             <constraint firstItem="vF6-pa-txg" firstAttribute="bottom" secondItem="EtY-NK-QMW" secondAttribute="bottomMargin" id="cqy-Xy-AJh"/>
                                             <constraint firstItem="IIQ-uS-qMR" firstAttribute="trailing" secondItem="EtY-NK-QMW" secondAttribute="trailingMargin" id="dJx-uc-5hT"/>

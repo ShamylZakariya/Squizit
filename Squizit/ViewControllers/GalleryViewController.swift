@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+let LOG_THUMBNAIL_RENDERING_LIFECYCLE = true
+
 // MARK: - GalleryViewControllerDelegate
 
 protocol GalleryViewControllerDelegate : class {
@@ -39,6 +41,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	private var phase:NSTimeInterval = 0
 	private var wiggleAnimationDisplayLink:CADisplayLink?
 
+	var drawing:GalleryDrawing?
 	var indexInCollection:Int = 0
 	var thumbnailLoadAction:CancelableAction<UIImage>?
 
@@ -89,7 +92,14 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 	override func prepareForReuse() {
 
-		thumbnailLoadAction?.cancel()
+		if let drawing = drawing where LOG_THUMBNAIL_RENDERING_LIFECYCLE {
+			NSLog("prepareForReuse - cancelling thumbnail action for: \(drawing.uuid) action:\(thumbnailLoadAction)")
+		}
+
+		if let thumbnailLoadAction = thumbnailLoadAction {
+			thumbnailLoadAction.cancel()
+		}
+
 		thumbnailLoadAction = nil
 
 		// reset layer transform and nil the image
@@ -285,14 +295,12 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 	}
 
 	override func configureCell( cell:UICollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
-		let store = self.store
-		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-		let itemSize = flowLayout.itemSize
-		let thumbnailHeight = round(itemSize.height)
 
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
 			var galleryCell = cell as! GalleryCollectionViewCell
+
+			galleryCell.drawing = drawing
 
 			let nameAttrs = [
 				NSFontAttributeName: UIFont(name: "Baskerville", size: 12)!,
@@ -327,8 +335,8 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 				[weak self]
 				(cell:GalleryCollectionViewCell)->() in
 				if let sself = self {
-					store.managedObjectContext?.deleteObject(drawing)
-					store.save()
+					sself.store.managedObjectContext?.deleteObject(drawing)
+					sself.store.save()
 				}
 			}
 
@@ -340,7 +348,11 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 			} else {
 
+				let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+				let itemSize = flowLayout.itemSize
+				let thumbnailHeight = itemSize.height
 				let queue = thumbnailCompositorQueue
+
 				galleryCell.thumbnailLoadAction = CancelableAction<UIImage>(action: { (done, canceled) in
 
 					dispatch_async( queue ) {
@@ -357,22 +369,36 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 						self.thumbnailBackgroundColor.set()
 						UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
 
+						thumbnail.drawAtPoint(CGPoint.zeroPoint, blendMode: kCGBlendModeMultiply, alpha: 1)
+						thumbnail = UIGraphicsGetImageFromCurrentImageContext()
+						UIGraphicsEndImageContext()
+
 						if !canceled() {
-							thumbnail.drawAtPoint(CGPoint.zeroPoint, blendMode: kCGBlendModeMultiply, alpha: 1)
-							thumbnail = UIGraphicsGetImageFromCurrentImageContext()
-							UIGraphicsEndImageContext()
+							if LOG_THUMBNAIL_RENDERING_LIFECYCLE {
+								NSLog("finishing drawing \(drawing.uuid)")
+							}
 
 							// we're done - add to icon cache and finish
 							cache.setObject(thumbnail, forKey: drawing.uuid)
 							done( result:thumbnail )
-						} else {
-							UIGraphicsEndImageContext()
+						} else if LOG_THUMBNAIL_RENDERING_LIFECYCLE {
+							NSLog("canceled for drawing \(drawing.uuid)")
 						}
 					}
 				}, done: { ( thumbnail:UIImage ) -> () in
 					dispatch_main {
-						// animate, because we had to wait for rendering to complete
-						galleryCell.setThumbnail(thumbnail, animate: true)
+
+						if drawing === galleryCell.drawing {
+							if LOG_THUMBNAIL_RENDERING_LIFECYCLE {
+								NSLog("DONE assigning thumb for drawing: \(drawing.uuid)")
+							}
+
+							// animate, because we had to wait for rendering to complete
+							galleryCell.setThumbnail(thumbnail, animate: true)
+						} else if LOG_THUMBNAIL_RENDERING_LIFECYCLE {
+							NSLog("DONE MISMATCH galleryCell.drawing.uuid:\(galleryCell.drawing!.uuid) drawing.uuid:\(drawing.uuid) canceled? \(galleryCell.thumbnailLoadAction?.canceled)")
+						}
+
 					}
 				})
 			}
@@ -384,7 +410,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 	lazy var dateFormatter:NSDateFormatter = {
 		let dateFormatter = NSDateFormatter()
-		dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
+		dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
 		dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
 		return dateFormatter
 	}()
@@ -483,7 +509,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 		var suggestedItemSize = self.suggestedItemSize
 		var itemWidth = floor(view.bounds.width / round(view.bounds.width / suggestedItemSize.width))
-		let itemHeight = suggestedItemSize.height
+		let itemHeight = round(suggestedItemSize.height)
 		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
 		flowLayout.itemSize = CGSize(width:itemWidth, height:itemHeight)
 		collectionView.reloadData()
