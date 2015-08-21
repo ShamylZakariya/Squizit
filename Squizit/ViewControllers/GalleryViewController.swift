@@ -262,7 +262,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 			if artistNameFilter != oldValue {
 				if let filter = artistNameFilter {
 					if !filter.isEmpty {
-						predicate = NSPredicate(format: "SUBQUERY(artists, $artist, $artist.name BEGINSWITH[cd] \"\(filter)\").@count > 0")
+						predicate = NSPredicate(format: "SUBQUERY(artists, $artist, $artist.name CONTAINS[cd] \"\(filter)\").@count > 0")
 					}
 				}
 			}
