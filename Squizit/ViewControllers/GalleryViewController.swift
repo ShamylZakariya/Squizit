@@ -43,7 +43,6 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 	var drawing:GalleryDrawing?
 	var indexInCollection:Int = 0
-	var thumbnailLoadAction:CancelableAction<UIImage>?
 
 	var onLongPress:((( cell:GalleryCollectionViewCell )->())?)
 	var onDeleteButtonTapped:((( cell:GalleryCollectionViewCell )->())?)
@@ -92,15 +91,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 	override func prepareForReuse() {
 
-		if let drawing = drawing where LOG_THUMBNAIL_RENDERING_LIFECYCLE {
-			NSLog("prepareForReuse - cancelling thumbnail action for: \(drawing.uuid) action:\(thumbnailLoadAction)")
-		}
-
-		if let thumbnailLoadAction = thumbnailLoadAction {
-			thumbnailLoadAction.cancel()
-		}
-
-		thumbnailLoadAction = nil
+		drawing = nil
 
 		// reset layer transform and nil the image
 		layer.transform = CATransform3DIdentity
@@ -353,54 +344,35 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 				let thumbnailHeight = itemSize.height
 				let queue = thumbnailCompositorQueue
 
-				galleryCell.thumbnailLoadAction = CancelableAction<UIImage>(action: { (done, canceled) in
+				dispatch_async( queue ) {
 
-					dispatch_async( queue ) {
+					// render a thumbnail that is the max possible size for our layout
 
-						// render a thumbnail that is the max possible size for our layout
+					var thumbnail = UIImage( data: drawing.thumbnail )!
+					let size = CGSize( width: round(thumbnail.size.width * thumbnailHeight / thumbnail.size.height), height: thumbnailHeight )
+					let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+					thumbnail = thumbnail.imageByScalingToSize(size, contentMode: .ScaleAspectFit, scale: 0)
 
-						var thumbnail = UIImage( data: drawing.thumbnail )!
-						let size = CGSize( width: round(thumbnail.size.width * thumbnailHeight / thumbnail.size.height), height: thumbnailHeight )
-						let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-						thumbnail = thumbnail.imageByScalingToSize(size, contentMode: .ScaleAspectFit, scale: 0)
+					UIGraphicsBeginImageContextWithOptions(size, true, 0)
 
-						UIGraphicsBeginImageContextWithOptions(size, true, 0)
+					self.thumbnailBackgroundColor.set()
+					UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
 
-						self.thumbnailBackgroundColor.set()
-						UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
+					thumbnail.drawAtPoint(CGPoint.zeroPoint, blendMode: kCGBlendModeMultiply, alpha: 1)
+					thumbnail = UIGraphicsGetImageFromCurrentImageContext()
+					UIGraphicsEndImageContext()
 
-						thumbnail.drawAtPoint(CGPoint.zeroPoint, blendMode: kCGBlendModeMultiply, alpha: 1)
-						thumbnail = UIGraphicsGetImageFromCurrentImageContext()
-						UIGraphicsEndImageContext()
+					// we're done - add to icon cache and finish
+					cache.setObject(thumbnail, forKey: drawing.uuid)
 
-						if !canceled() {
-							if LOG_THUMBNAIL_RENDERING_LIFECYCLE {
-								NSLog("finishing drawing \(drawing.uuid)")
-							}
-
-							// we're done - add to icon cache and finish
-							cache.setObject(thumbnail, forKey: drawing.uuid)
-							done( result:thumbnail )
-						} else if LOG_THUMBNAIL_RENDERING_LIFECYCLE {
-							NSLog("canceled for drawing \(drawing.uuid)")
-						}
-					}
-				}, done: { ( thumbnail:UIImage ) -> () in
 					dispatch_main {
-
-						if drawing === galleryCell.drawing {
-							if LOG_THUMBNAIL_RENDERING_LIFECYCLE {
-								NSLog("DONE assigning thumb for drawing: \(drawing.uuid)")
-							}
-
+						// only assign if the cell wasn't recycled while we rendered
+						if galleryCell.drawing === drawing {
 							// animate, because we had to wait for rendering to complete
 							galleryCell.setThumbnail(thumbnail, animate: true)
-						} else if LOG_THUMBNAIL_RENDERING_LIFECYCLE {
-							NSLog("DONE MISMATCH galleryCell.drawing.uuid:\(galleryCell.drawing!.uuid) drawing.uuid:\(drawing.uuid) canceled? \(galleryCell.thumbnailLoadAction?.canceled)")
 						}
-
 					}
-				})
+				}
 			}
 
 		} else {
