@@ -28,16 +28,14 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 	class func identifier() -> String { return "GalleryCollectionViewCell" }
 
-	@IBOutlet weak var containerView: UIView!
 	@IBOutlet weak var deleteButton: UIImageView!
 	@IBOutlet weak var imageView: UIImageView!
 	@IBOutlet weak var label: UILabel!
-
 	@IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
 	@IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
 
 	private var deleting:Bool = false
-	private let cycleOffset:NSTimeInterval = drand48() / 2
+	private let cycleOffset:NSTimeInterval = drand48() * M_PI_2
 	private var phase:NSTimeInterval = 0
 	private var wiggleAnimationDisplayLink:CADisplayLink?
 
@@ -67,10 +65,13 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		super.awakeFromNib()
 		clipsToBounds = false
 
+		// uncomment to help debug layout
+		//backgroundColor = UIColor(hue: CGFloat(drand48()), saturation: 1, brightness: 0.5, alpha: 0.5)
+
 		deleteButton.alpha = 0
 		deleteButton.hidden = true
 
-		imageView.clipsToBounds = true
+		//imageView.clipsToBounds = true
 		imageView.contentMode = UIViewContentMode.ScaleAspectFit
 
 		// add shadows because we're a little skeumorphic here
@@ -78,7 +79,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		imageView.layer.shadowColor = UIColor.blackColor().CGColor
 		imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
 		imageView.layer.shadowOpacity = 1
-		imageView.layer.shadowRadius = 5
+		imageView.layer.shadowRadius = 4
 
 		addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPress:"))
 
@@ -100,26 +101,35 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		setThumbnail(nil, animate: false)
 	}
 
-	override func layoutSubviews() {
-		super.layoutSubviews()
-		layoutIfNeeded()
-
-		if let thumbnail = thumbnail {
-			// now, we know how big containerView is, and we can scale imageView to fit
-			let availableSize = min(containerView.bounds.size.width,containerView.bounds.size.height)
-			let thumbnailMaxDim = max(thumbnail.size.width, thumbnail.size.height)
-			let scale = availableSize / thumbnailMaxDim
-			imageViewWidthConstraint.constant = round(thumbnail.size.width * scale)
-			imageViewHeightConstraint.constant = round(thumbnail.size.height * scale)
-		} else {
-			imageViewWidthConstraint.constant = 0
-			imageViewHeightConstraint.constant = 0
-		}
-	}
-
 	func setThumbnail(thumbnail:UIImage?,animate:Bool) {
 		imageView.image = thumbnail
 		if let thumbnail = thumbnail {
+
+			setNeedsLayout()
+			layoutIfNeeded()
+
+			let padding:CGFloat = 10
+			let aspect = thumbnail.size.width / thumbnail.size.height
+			let maxImageViewWidth = frame.width - 2*padding
+			let maxImageViewHeight = frame.height - imageView.frame.minY - 72
+
+			var imageHeight = label.frame.minY - padding - imageView.frame.minY
+			var imageWidth = imageHeight * aspect
+
+			if imageWidth > maxImageViewWidth {
+				imageWidth = maxImageViewWidth
+				imageHeight = imageWidth / aspect
+			}
+
+			if imageHeight > maxImageViewHeight {
+				let scale = maxImageViewHeight / imageHeight
+				imageHeight *= scale
+				imageWidth *= scale
+			}
+
+			imageViewHeightConstraint.constant = imageHeight
+			imageViewWidthConstraint.constant = imageWidth
+
 			if animate {
 				UIView.animateWithDuration(0.3) {
 					self.imageView.alpha = 1
@@ -466,18 +476,20 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardDidDismiss:", name: UIKeyboardDidHideNotification, object: nil)
 	}
 
-	private var suggestedItemSize:CGSize {
+	private var suggestedItemWidth:CGFloat {
 		if traitCollection.horizontalSizeClass == .Compact || traitCollection.verticalSizeClass == .Compact {
-			return CGSize(width:100,height:180)
+			return 160
 		} else {
-			return CGSize(width:256,height:320)
+			return 256
 		}
 	}
 
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 
-		var suggestedItemSize = self.suggestedItemSize
+		let aspect:CGFloat = 360.0 / 300.0
+		var suggestedItemWidth = self.suggestedItemWidth
+		var suggestedItemSize = CGSize(width:suggestedItemWidth, height: suggestedItemWidth*aspect)
 		var itemWidth = floor(view.bounds.width / round(view.bounds.width / suggestedItemSize.width))
 		let itemHeight = round(suggestedItemSize.height)
 		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
