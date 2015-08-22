@@ -117,9 +117,12 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 		let indexPath = NSIndexPath(forItem: index, inSection: 0)
 		let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as! GalleryDrawing
 
+		// why doesn't topLayoutGuide work here??
+		let app = UIApplication.sharedApplication()
+		var topLayoutGuideLength = app.statusBarFrame.size.height + navigationController!.navigationBar.frame.height
 
 		var page = GalleryDetailPageView.create()
-		page.topPaddingConstraint.constant = 77 // why doesn't topLayoutGuide work here??
+		page.topPaddingConstraint.constant = topLayoutGuideLength + 20
 
 		page.playerNamesLabel.text = drawing.artistDisplayNames
 		page.matchDateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
