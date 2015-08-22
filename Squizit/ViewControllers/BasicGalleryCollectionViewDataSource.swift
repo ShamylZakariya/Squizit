@@ -42,7 +42,7 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 		return info.numberOfObjects
 	}
 
-	// MARK: UICollectionViewDataSource
+	// MARK: - UICollectionViewDataSource
 
 	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return self.count
@@ -58,7 +58,7 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 		return 1
 	}
 
-	// MARK: FetchedResultsController
+	// MARK: - FetchedResultsController
 
 	private var _fetchedResultsController:NSFetchedResultsController?
 	var fetchedResultsController:NSFetchedResultsController {
@@ -117,6 +117,8 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 		}
 	}
 
+	// MARK: - NSFetchedResultsControllerDelegate
+
 	func controllerWillChangeContent(controller: NSFetchedResultsController) {}
 
 	func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
@@ -149,7 +151,7 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 
 	func controllerDidChangeContent(controller: NSFetchedResultsController) {}
 
-	// UIScrollViewDelegate
+	// MARK: - UIScrollViewDelegate
 
 	func scrollViewDidScroll(scrollView: UIScrollView) {
 		scrollDelegate?.scrollViewDidScroll?(scrollView)
@@ -159,7 +161,7 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 		scrollDelegate?.scrollViewDidEndDecelerating?(scrollView)
 	}
 
-	// MARK: Methods for subclasses to override
+	// MARK: - Methods for subclasses to override
 
 	func configureCell( cell:UICollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
 		assertionFailure("Subclasses must implement configureCell")

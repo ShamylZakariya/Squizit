@@ -514,7 +514,19 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 	}
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		if segue.identifier == "showDetail" {
+		if segue.identifier == "showPageDetail" {
+			if let detailVC = segue.destinationViewController as? GalleryDetailPageViewController {
+				if let indexPath = sender as? NSIndexPath {
+					detailVC.store = store
+					detailVC.filterPredicate = dataSource.filterPredicate
+					detailVC.initialIndex = indexPath.item
+				} else {
+					assertionFailure("Didn't pass indexPath")
+				}
+			} else {
+				assertionFailure("coun't grab the detail vc from segue")
+			}
+		} else if segue.identifier == "showDetail" {
 			if let detailVC = segue.destinationViewController as? GalleryDetailViewController {
 				if let indexPath = sender as? NSIndexPath {
 					detailVC.store = store
@@ -581,7 +593,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 	// MARK: Private
 
 	func showDetail( drawing:GalleryDrawing, indexPath:NSIndexPath ) {
-		self.performSegueWithIdentifier("showDetail", sender: indexPath)
+		self.performSegueWithIdentifier("showPageDetail", sender: indexPath)
 	}
 
 	var artistFilter:String = "" {

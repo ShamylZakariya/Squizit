@@ -552,6 +552,7 @@
                     <connections>
                         <outlet property="collectionView" destination="grp-i7-Kyl" id="99L-WS-27h"/>
                         <segue destination="HZd-vC-M4c" kind="show" identifier="showDetail" id="CPF-t5-mjf"/>
+                        <segue destination="h4b-tg-k4D" kind="show" identifier="showPageDetail" id="cO2-YU-Cy8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3AS-mU-xbE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -566,7 +567,7 @@
                         <rect key="frame" x="0.0" y="64" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="ryo-20-vlB">
-                            <size key="itemSize" width="600" height="600"/>
+                            <size key="itemSize" width="300" height="400"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -576,27 +577,27 @@
                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="400"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player Names" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8TL-r4-RiL">
-                                            <rect key="frame" x="8" y="460" width="584" height="19"/>
+                                            <rect key="frame" x="8" y="327.5" width="284" height="19"/>
                                             <fontDescription key="fontDescription" name="Didot" family="Didot" pointSize="15"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Match Date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3P1-PS-qc6">
-                                            <rect key="frame" x="8" y="484" width="584" height="18"/>
+                                            <rect key="frame" x="8" y="354.5" width="284" height="17.5"/>
                                             <fontDescription key="fontDescription" name="Didot-Italic" family="Didot" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jh6-MK-WMA" customClass="ImagePresenterView" customModule="Squizit" customModuleProvider="target">
-                                            <rect key="frame" x="188" y="150" width="225" height="300"/>
+                                        <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="jh6-MK-WMA" customClass="UIImageView">
+                                            <rect key="frame" x="37.5" y="20" width="225" height="300"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="225" id="M7t-Oc-cag"/>
-                                                <constraint firstAttribute="height" constant="300" id="rDy-SO-WeO"/>
+                                                <constraint firstAttribute="width" constant="225" id="J8e-24-S7v"/>
+                                                <constraint firstAttribute="height" constant="300" id="xCf-V9-1Az"/>
                                             </constraints>
                                         </view>
                                     </subviews>
@@ -604,32 +605,20 @@
                                 </view>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="8TL-r4-RiL" firstAttribute="trailing" secondItem="1h0-2g-UOC" secondAttribute="trailingMargin" id="5Yv-rt-csP"/>
-                                    <constraint firstItem="8TL-r4-RiL" firstAttribute="leading" secondItem="1h0-2g-UOC" secondAttribute="leadingMargin" id="B3B-tR-eDc"/>
-                                    <constraint firstItem="jh6-MK-WMA" firstAttribute="width" secondItem="8TL-r4-RiL" secondAttribute="width" id="Cyk-fx-GTy"/>
-                                    <constraint firstItem="3P1-PS-qc6" firstAttribute="trailing" secondItem="1h0-2g-UOC" secondAttribute="trailingMargin" id="LV4-dF-xYf"/>
-                                    <constraint firstItem="3P1-PS-qc6" firstAttribute="leading" secondItem="1h0-2g-UOC" secondAttribute="leadingMargin" id="RLt-kf-CHz"/>
-                                    <constraint firstAttribute="centerX" secondItem="jh6-MK-WMA" secondAttribute="centerX" id="T6h-2n-un0"/>
-                                    <constraint firstItem="8TL-r4-RiL" firstAttribute="top" secondItem="jh6-MK-WMA" secondAttribute="bottom" constant="10" id="V09-UP-kaY"/>
-                                    <constraint firstAttribute="centerX" secondItem="8TL-r4-RiL" secondAttribute="centerX" id="YID-rH-BIn"/>
-                                    <constraint firstItem="3P1-PS-qc6" firstAttribute="top" secondItem="8TL-r4-RiL" secondAttribute="bottom" constant="5" id="csF-Qi-Q2U"/>
-                                    <constraint firstItem="3P1-PS-qc6" firstAttribute="width" secondItem="8TL-r4-RiL" secondAttribute="width" id="kYD-Fp-m4d"/>
-                                    <constraint firstAttribute="centerX" secondItem="3P1-PS-qc6" secondAttribute="centerX" id="okS-1t-GBz"/>
-                                    <constraint firstAttribute="centerY" secondItem="jh6-MK-WMA" secondAttribute="centerY" id="rTG-Wp-REe"/>
+                                    <constraint firstItem="jh6-MK-WMA" firstAttribute="top" secondItem="1h0-2g-UOC" secondAttribute="topMargin" constant="12" id="1Yw-Zm-852"/>
+                                    <constraint firstItem="3P1-PS-qc6" firstAttribute="top" secondItem="8TL-r4-RiL" secondAttribute="bottom" constant="8" id="5Sl-un-Lou"/>
+                                    <constraint firstItem="3P1-PS-qc6" firstAttribute="leading" secondItem="1h0-2g-UOC" secondAttribute="leadingMargin" id="7pZ-Wb-PJK"/>
+                                    <constraint firstItem="8TL-r4-RiL" firstAttribute="leading" secondItem="1h0-2g-UOC" secondAttribute="leadingMargin" id="Nyb-Pi-REs"/>
+                                    <constraint firstAttribute="centerX" secondItem="jh6-MK-WMA" secondAttribute="centerX" id="WAq-Qy-K0M"/>
+                                    <constraint firstAttribute="bottomMargin" secondItem="3P1-PS-qc6" secondAttribute="bottom" constant="20" id="aRI-F9-aoH"/>
+                                    <constraint firstItem="3P1-PS-qc6" firstAttribute="trailing" secondItem="1h0-2g-UOC" secondAttribute="trailingMargin" id="j3p-s5-4XV"/>
+                                    <constraint firstItem="8TL-r4-RiL" firstAttribute="trailing" secondItem="1h0-2g-UOC" secondAttribute="trailingMargin" id="oH7-Vy-3j2"/>
                                 </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="Cyk-fx-GTy"/>
-                                        <exclude reference="YID-rH-BIn"/>
-                                        <exclude reference="kYD-Fp-m4d"/>
-                                        <exclude reference="okS-1t-GBz"/>
-                                    </mask>
-                                </variation>
                                 <connections>
                                     <outlet property="imageView" destination="jh6-MK-WMA" id="jkT-mv-T2q"/>
-                                    <outlet property="imageViewCenterYAlignmentConstraint" destination="rTG-Wp-REe" id="J2K-aR-pW9"/>
-                                    <outlet property="imageViewHeightConstraint" destination="rDy-SO-WeO" id="Woa-v1-RHa"/>
-                                    <outlet property="imageViewWidthConstraint" destination="M7t-Oc-cag" id="q1h-bF-3El"/>
+                                    <outlet property="imageViewHeightConstraint" destination="xCf-V9-1Az" id="OpO-pi-t4E"/>
+                                    <outlet property="imageViewTopConstraint" destination="1Yw-Zm-852" id="H48-Nx-mQE"/>
+                                    <outlet property="imageViewWidthConstraint" destination="J8e-24-S7v" id="j5c-Ns-QV3"/>
                                     <outlet property="matchDateLabel" destination="3P1-PS-qc6" id="V74-rH-2cC"/>
                                     <outlet property="playerNamesLabel" destination="8TL-r4-RiL" id="yFt-JS-kNt"/>
                                 </connections>
@@ -644,6 +633,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a3d-3y-N3T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3472" y="1435"/>
+        </scene>
+        <!--Gallery Detail Page View Controller-->
+        <scene sceneID="34W-ty-HlU">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="h4b-tg-k4D" customClass="GalleryDetailPageViewController" customModule="Squizit" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rx1-wu-HHg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3472" y="2174"/>
         </scene>
         <!--Gallery Navigation Controller-->
         <scene sceneID="dAx-11-0sC">
