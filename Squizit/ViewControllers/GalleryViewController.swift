@@ -240,9 +240,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 				(cell as! GalleryCollectionViewCell).deleteButtonVisible = editMode
 			}
 
-			if let emc = editModeChanged {
-				emc( inEditMode: editMode )
-			}
+			editModeChanged?( inEditMode: editMode )
 		}
 	}
 
