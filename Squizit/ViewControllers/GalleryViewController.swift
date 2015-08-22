@@ -526,18 +526,6 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 			} else {
 				assertionFailure("coun't grab the detail vc from segue")
 			}
-		} else if segue.identifier == "showDetail" {
-			if let detailVC = segue.destinationViewController as? GalleryDetailViewController {
-				if let indexPath = sender as? NSIndexPath {
-					detailVC.store = store
-					detailVC.filterPredicate = dataSource.filterPredicate
-					detailVC.initialIndexPath = indexPath
-				} else {
-					assertionFailure("Didn't pass indexPath")
-				}
-			} else {
-				assertionFailure("coun't grab the detail vc from segue")
-			}
 		}
 	}
 

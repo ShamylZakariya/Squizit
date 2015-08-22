@@ -13,7 +13,6 @@
 		63533B1019BCCD6C00ED8B7A /* GameControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63533B0F19BCCD6C00ED8B7A /* GameControlButton.swift */; };
 		63533B1319BE033A00ED8B7A /* UniversalMatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63533B1219BE033A00ED8B7A /* UniversalMatchViewController.swift */; };
 		635DFA8119B76B6900102B6A /* Appearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 635DFA8019B76B6900102B6A /* Appearance.m */; };
-		635DFA8319BA025600102B6A /* GalleryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635DFA8219BA025600102B6A /* GalleryDetailViewController.swift */; };
 		635DFA8519BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635DFA8419BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift */; };
 		635F86DE1A66CBA800A67981 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 635F86DD1A66CBA800A67981 /* GameKit.framework */; };
 		635F86E11A66CC1300A67981 /* TurnBasedMatchHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635F86E01A66CC1300A67981 /* TurnBasedMatchHelper.swift */; };
@@ -78,7 +77,6 @@
 		63533B1219BE033A00ED8B7A /* UniversalMatchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniversalMatchViewController.swift; sourceTree = "<group>"; };
 		635DFA7F19B76B5900102B6A /* Appearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Appearance.h; sourceTree = "<group>"; };
 		635DFA8019B76B6900102B6A /* Appearance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Appearance.m; sourceTree = "<group>"; };
-		635DFA8219BA025600102B6A /* GalleryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryDetailViewController.swift; sourceTree = "<group>"; };
 		635DFA8419BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicGalleryCollectionViewDataSource.swift; sourceTree = "<group>"; };
 		635F86DD1A66CBA800A67981 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		635F86E01A66CC1300A67981 /* TurnBasedMatchHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TurnBasedMatchHelper.swift; sourceTree = "<group>"; };
@@ -271,7 +269,6 @@
 			isa = PBXGroup;
 			children = (
 				635DFA8419BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift */,
-				635DFA8219BA025600102B6A /* GalleryDetailViewController.swift */,
 				63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */,
 				63BC820319E441290047D414 /* HowToPlayViewController.swift */,
 				63FAAC3D1B42E2D200B9C5CC /* RootViewController.swift */,
@@ -466,7 +463,6 @@
 				63EBB87D19AEC49C003C3EC2 /* GalleryStoreEntities.m in Sources */,
 				6394BA8E1B8903C700E9434F /* GalleryDetailPageView.swift in Sources */,
 				63EBB87619AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld in Sources */,
-				635DFA8319BA025600102B6A /* GalleryDetailViewController.swift in Sources */,
 				635DFA8519BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift in Sources */,
 				63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */,
 				63BC820419E441290047D414 /* HowToPlayViewController.swift in Sources */,
