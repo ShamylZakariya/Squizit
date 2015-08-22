@@ -26,7 +26,7 @@ class CancelableAction<T> {
 					synchronized(sself) {
 						if !sself._canceled {
 							sself._result = result
-							done?( result:result )
+							sself.done?( result:result )
 						}
 					}
 				}
