@@ -49,7 +49,6 @@
 		63BBECA719967A2300F6E2B3 /* SquizitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECA619967A2300F6E2B3 /* SquizitTests.swift */; };
 		63BBECB619967ACC00F6E2B3 /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB519967ACC00F6E2B3 /* Drawing.swift */; };
 		63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBB19967B0C00F6E2B3 /* Stroke.swift */; };
-		63BC820419E441290047D414 /* HowToPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC820319E441290047D414 /* HowToPlayViewController.swift */; };
 		63DA0E6A1B57FCA800C66347 /* UniversalMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA0E691B57FCA800C66347 /* UniversalMatchView.swift */; };
 		63EBB83819A65C45003C3EC2 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EF19A65B4500581DE8 /* Geometry.swift */; };
 		63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */; };
@@ -117,7 +116,6 @@
 		63BBECA619967A2300F6E2B3 /* SquizitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquizitTests.swift; sourceTree = "<group>"; };
 		63BBECB519967ACC00F6E2B3 /* Drawing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drawing.swift; sourceTree = "<group>"; };
 		63BBECBB19967B0C00F6E2B3 /* Stroke.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stroke.swift; sourceTree = "<group>"; };
-		63BC820319E441290047D414 /* HowToPlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HowToPlayViewController.swift; sourceTree = "<group>"; };
 		63DA0E691B57FCA800C66347 /* UniversalMatchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniversalMatchView.swift; sourceTree = "<group>"; };
 		63EBB83E19AB821D003C3EC2 /* Notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Notes.md; sourceTree = "<group>"; };
 		63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToGalleryViewController.swift; sourceTree = "<group>"; };
@@ -282,7 +280,6 @@
 				635DFA8419BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift */,
 				6394BA8B1B8902A400E9434F /* GalleryDetailPageViewController.swift */,
 				63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */,
-				63BC820319E441290047D414 /* HowToPlayViewController.swift */,
 				63FAAC3D1B42E2D200B9C5CC /* RootViewController.swift */,
 				63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */,
 				63533B1219BE033A00ED8B7A /* UniversalMatchViewController.swift */,
@@ -485,7 +482,6 @@
 				63EBB87619AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld in Sources */,
 				635DFA8519BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift in Sources */,
 				63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */,
-				63BC820419E441290047D414 /* HowToPlayViewController.swift in Sources */,
 				63FAAC3C1B3F48B100B9C5CC /* UIImage_Alpha.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

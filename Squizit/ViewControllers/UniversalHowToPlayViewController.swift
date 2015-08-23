@@ -15,7 +15,24 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 	var skipBarButtonItem:UIBarButtonItem!
 	var nextBarButtonItem:UIBarButtonItem!
 	var doneBarButtonItem:UIBarButtonItem!
-	
+
+	lazy var messages:[String] = {
+		return [
+			NSLocalizedString("A piece of paper is folded over itself into halves or thirds",comment:"instructions-message-0"),
+			NSLocalizedString("The first player draws all the way to the bottom fold - leaving marks to guide the next player",comment:"instructions-message-1"),
+			NSLocalizedString("The next player completes the drawing, guided by the marks left at the top by the previous player",comment:"instructions-message-2"),
+			NSLocalizedString("And we have an Exquisite Corpse",comment:"instructions-message-3")
+		]
+	}()
+
+	lazy var images:[UIImage] = {
+		return [
+			UIImage(named:"instructions-1")!,
+			UIImage(named:"instructions-2")!,
+			UIImage(named:"instructions-3")!,
+			UIImage(named:"instructions-4")!
+		]
+	}()
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -37,7 +54,7 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 		delegate = self
 
 		skipBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: "onDoneTapped:")
-		nextBarButtonItem = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.Plain, target: self, action: "onNextTapped:")
+		nextBarButtonItem = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.Done, target: self, action: "onNextTapped:")
 		doneBarButtonItem = UIBarButtonItem(title: "Got it", style: UIBarButtonItemStyle.Done, target: self, action: "onDoneTapped:")
 
 		navigationItem.leftBarButtonItem = skipBarButtonItem
@@ -94,19 +111,25 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 
 	private func vend(index:Int)->ManagedIndexedViewViewController {
 
-		var page = InstructionView.create()
-		page.label.attributedText = NSAttributedString(string: "PAGE: \(index)", attributes: [
-			NSForegroundColorAttributeName: UIColor.whiteColor()
-			])
+		if index < 0 || index > count - 1 {
+			assertionFailure("UniversalHowToPlayViewController index:\(index) is out of range:[0,\(count-1)]")
+		}
 
+		var page = InstructionView.create()
+
+		page.label.attributedText = NSAttributedString(string: messages[index], attributes: [
+			NSForegroundColorAttributeName: UIColor.whiteColor(),
+			NSFontAttributeName:UIFont(name: "Avenir-Black", size: 16)!
+		])
 
 		page.centeredImageView.backgroundColor = UIColor.clearColor()
+		page.centeredImageView.image = images[index]
 
 		return ManagedIndexedViewViewController(view: page, index: index, respectsTopLayoutGuide:true)
 	}
 
 	private var count:Int {
-		return 3
+		return messages.count
 	}
 
 	private var currentIndex:Int = 0 {
