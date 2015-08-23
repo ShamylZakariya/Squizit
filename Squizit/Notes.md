@@ -1,33 +1,25 @@
 #VERSION 2.0
 	
-	Make the save dialog smarter
-		- use autolayout smarter. add height constraint on player 3 name field, set it to 0 if only two players, same with trailing padding.
+- Home screen simply doesn't fit on iPhone 4.
+- Improve layout for instruction screens
 
-
-#TODO
-
-	- add tweet + share buttons to the save-to-gallery vc's dialog, perhaps /outside/ the dialog, over the grey blanker
 	
 #FIXME
 
-	- Terrible performance on iPad3
-
-	GalleryDetailViewController::updateItemSize
-		The viewController's topLayoutGuide.length is zero, so I'm manually setting a fudge factor of 44 to accommodate the navbar height so UICollectionViewFlowLayout doesn't complain about inadequate room to layout cells. 
-
-	SaveToGalleryTransitionManager doesn't actually work - not certain if it's my bug or iOS8. It's disabled, and I'm doing a hacky workaround.
+- Terrible performance on iPad3
+- SaveToGalleryTransitionManager doesn't actually work - not certain if it's my bug or iOS8. It's disabled, and I'm doing a hacky workaround.
 
 #PROBLEMS
 
 #WRITEUP
 
-	Squizit is a modern take on an old parlour game, "Exquisite Corpse", which was played by surrealists in the 1920's. In it, the first player draws something on the top half or third of a sheet of paper, and then folds it such that the next player can only see the bottom edge. The next player then draws what he or she sees fit based on the the visible bottom portion of the previous player's turn. When complete, the paper is unfolded revealing a strange and often wonderfully absurd drawing.
-	
-	Squizit is an "Exquisite Corpse" game for the iPad, I hope you like it.
-	
-	Features:
-		- Two or Three-person matches
-		- And a gallery for perusing previous matches
+Squizit is a modern take on an old parlour game, "Exquisite Corpse", which was played by surrealists in the 1920's. In it, the first player draws something on the top half or third of a sheet of paper, and then folds it such that the next player can only see the bottom edge. The next player then draws what he or she sees fit based on the the visible bottom portion of the previous player's turn. When complete, the paper is unfolded revealing a strange and often wonderfully absurd drawing.
+
+Squizit is an "Exquisite Corpse" game for the iPad, I hope you like it.
+
+Features:
+	- Two or Three-person matches
+	- And a gallery for perusing previous matches
 
 	
 #SNIPPETS
