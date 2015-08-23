@@ -55,7 +55,18 @@ class PagedViewViewController : UIViewController {
 
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-		managedView.frame = self.view.bounds
+
+		// I would use topLayoutGuide.length, but it reports erroneous values
+		let app = UIApplication.sharedApplication()
+		let statusBarHeight = app.statusBarHidden ? CGFloat(0) : app.statusBarFrame.size.height
+		let navbarHeight = navigationController!.navigationBar.frame.height
+		let topLayoutGuideLength = statusBarHeight + navbarHeight
+
+		var frame = view.frame
+		frame.origin.y += topLayoutGuideLength
+		frame.size.height -= topLayoutGuideLength
+
+		managedView.frame = frame
 	}
 
 }
@@ -117,13 +128,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 		let indexPath = NSIndexPath(forItem: index, inSection: 0)
 		let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as! GalleryDrawing
 
-		// why doesn't topLayoutGuide work here??
-		let app = UIApplication.sharedApplication()
-		var topLayoutGuideLength = app.statusBarFrame.size.height + navigationController!.navigationBar.frame.height
-
 		var page = GalleryDetailPageView.create()
-		page.topPaddingConstraint.constant = topLayoutGuideLength + 20
-
 		page.playerNamesLabel.text = drawing.artistDisplayNames
 		page.matchDateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
 
@@ -150,7 +155,6 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 				}
 			}
 		}
-
 
 		return PagedViewViewController(view: page, index: index)
 	}

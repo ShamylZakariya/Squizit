@@ -45,7 +45,6 @@
                 <outlet property="centeredImageView" destination="117-XZ-HNR" id="BeB-3a-yUQ"/>
                 <outlet property="matchDateLabel" destination="Ub4-Mk-tb4" id="idb-cy-Asn"/>
                 <outlet property="playerNamesLabel" destination="dRk-AE-U5F" id="uFW-s2-n2k"/>
-                <outlet property="topPaddingConstraint" destination="1Ah-EE-FrA" id="ZvJ-5Y-NVR"/>
             </connections>
         </view>
     </objects>

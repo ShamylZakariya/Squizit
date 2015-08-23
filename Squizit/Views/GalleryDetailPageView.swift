@@ -12,7 +12,6 @@ class GalleryDetailPageView : UIView {
 	@IBOutlet weak var centeredImageView: CenteredImageView!
 	@IBOutlet weak var playerNamesLabel: UILabel!
 	@IBOutlet weak var matchDateLabel: UILabel!
-	@IBOutlet weak var topPaddingConstraint: NSLayoutConstraint!
 
 
 	class func create()->GalleryDetailPageView {
