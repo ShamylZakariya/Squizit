@@ -37,39 +37,6 @@ class TextActivityItemProvider : UIActivityItemProvider {
 	}
 }
 
-class PagedViewViewController : UIViewController {
-
-	private (set) var index:Int = 0
-	private (set) var managedView:UIView!
-
-	init(view:UIView, index:Int) {
-		super.init(nibName: nil, bundle: nil)
-		self.index = index
-		self.managedView = view
-		self.view.addSubview(self.managedView)
-	}
-
-	required init(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
-	override func viewWillLayoutSubviews() {
-		super.viewWillLayoutSubviews()
-
-		// I would use topLayoutGuide.length, but it reports erroneous values during scrolling
-		let app = UIApplication.sharedApplication()
-		let statusBarHeight = app.statusBarHidden ? CGFloat(0) : app.statusBarFrame.size.height
-		let navbarHeight = navigationController!.navigationBar.frame.height
-		let topLayoutGuideLength = statusBarHeight + navbarHeight
-
-		var frame = view.frame
-		frame.origin.y += topLayoutGuideLength
-		frame.size.height -= topLayoutGuideLength
-
-		managedView.frame = frame
-	}
-
-}
 
 class GalleryDetailPageViewController : UIPageViewController, UIPageViewControllerDataSource,UIPageViewControllerDelegate {
 
@@ -119,11 +86,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 		}
 	}
 
-	override func viewWillAppear(animated: Bool) {
-		super.viewWillAppear(animated)
-	}
-
-	private func vend(index:Int)->PagedViewViewController {
+	private func vend(index:Int)->ManagedIndexedViewViewController {
 
 		let indexPath = NSIndexPath(forItem: index, inSection: 0)
 		let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as! GalleryDrawing
@@ -157,7 +120,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 			}
 		}
 
-		return PagedViewViewController(view: page, index: index)
+		return ManagedIndexedViewViewController(view: page, index: index, respectsTopLayoutGuide:true)
 	}
 
 	private lazy var dateFormatter:NSDateFormatter = {
@@ -171,7 +134,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 	// MARK: - UIPageViewControllerDataSource
 
 	func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
-		let pageVc = viewController as! PagedViewViewController
+		let pageVc = viewController as! ManagedIndexedViewViewController
 		if pageVc.index > 0 {
 			return vend(pageVc.index-1)
 		}
@@ -180,7 +143,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 	}
 
 	func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
-		let pageVc = viewController as! PagedViewViewController
+		let pageVc = viewController as! ManagedIndexedViewViewController
 		if pageVc.index < count-1 {
 			return vend(pageVc.index+1)
 		}
@@ -199,7 +162,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 	// MARK: - UIPageViewControllerDelegate
 
 	func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [AnyObject], transitionCompleted completed: Bool) {
-		let pageVc = pageViewController.viewControllers.first as! PagedViewViewController
+		let pageVc = pageViewController.viewControllers.first as! ManagedIndexedViewViewController
 		currentIndex = pageVc.index
 	}
 

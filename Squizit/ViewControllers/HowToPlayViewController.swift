@@ -8,29 +8,6 @@
 
 import UIKit
 
-extension UIView {
-
-	// from http://stackoverflow.com/questions/1968017/changing-my-calayers-anchorpoint-moves-the-view
-	func setAnchorPoint( newAnchorPoint:CGPoint ) {
-		var newPoint:CGPoint = CGPoint(x: bounds.size.width * newAnchorPoint.x, y: bounds.size.height * newAnchorPoint.y)
-		var oldPoint:CGPoint = CGPoint(x: bounds.size.width * layer.anchorPoint.x, y:bounds.size.height * layer.anchorPoint.y)
-
-		newPoint = CGPointApplyAffineTransform(newPoint, transform)
-		oldPoint = CGPointApplyAffineTransform(oldPoint, transform)
-
-		var position = layer.position
-
-		position.x -= oldPoint.x
-		position.x += newPoint.x
-
-		position.y -= oldPoint.y
-		position.y += newPoint.y
-
-		layer.position = position
-		layer.anchorPoint = newAnchorPoint
-	}
-
-}
 
 class InstructionDrawingView : UIView {
 
@@ -40,27 +17,27 @@ class InstructionDrawingView : UIView {
 		}
 	}
 
-	private var _currentImageView:UIImageView?
-	private var _incomingImageView:UIImageView?
+	private var currentImageView:UIImageView?
+	private var incomingImageView:UIImageView?
 
 	override func layoutSubviews() {
 		super.layoutSubviews()
-		if let civ = _currentImageView {
+		if let civ = currentImageView {
 			civ.frame = bounds
 		}
 
-		if let iiv = _incomingImageView {
+		if let iiv = incomingImageView {
 			iiv.frame = bounds
 		}
 	}
 
 	override var contentMode:UIViewContentMode {
 		didSet {
-			if let civ = _currentImageView {
+			if let civ = currentImageView {
 				civ.contentMode = contentMode
 			}
 
-			if let iiv = _incomingImageView {
+			if let iiv = incomingImageView {
 				iiv.contentMode = contentMode
 			}
 		}
@@ -68,37 +45,37 @@ class InstructionDrawingView : UIView {
 
 	private func transition() {
 		if let image = self.image {
-			if let civ = _currentImageView {
+			if let civ = currentImageView {
 				// we need to fade in _incomingImageView
-				_incomingImageView = UIImageView(image: image)
-				_incomingImageView!.contentMode = contentMode
-				_incomingImageView!.alpha = 0
-				addSubview(_incomingImageView!)
+				incomingImageView = UIImageView(image: image)
+				incomingImageView!.contentMode = contentMode
+				incomingImageView!.alpha = 0
+				addSubview(incomingImageView!)
 				UIView.animateWithDuration(0.3, animations: { [unowned self] in
-					self._incomingImageView!.alpha = 1
+					self.incomingImageView!.alpha = 1
 					civ.alpha = 0
 				}, completion: { [unowned self] completed in
 					civ.removeFromSuperview()
-					self._currentImageView = self._incomingImageView
-					self._incomingImageView = nil
+					self.currentImageView = self.incomingImageView
+					self.incomingImageView = nil
 				})
 			} else {
 				// first-time showing
-				_currentImageView = UIImageView(image: image)
-				_currentImageView!.contentMode = contentMode
-				_currentImageView!.alpha = 0
-				addSubview(_currentImageView!)
+				currentImageView = UIImageView(image: image)
+				currentImageView!.contentMode = contentMode
+				currentImageView!.alpha = 0
+				addSubview(currentImageView!)
 				UIView.animateWithDuration(0.3, animations: { [unowned self] in
-					self._currentImageView!.alpha = 1
+					self.currentImageView!.alpha = 1
 				})
 			}
 		} else {
-			if let civ = _currentImageView {
+			if let civ = currentImageView {
 				UIView.animateWithDuration(0.3, animations: { [unowned self] in
 					civ.alpha = 0
 				}, completion: { [unowned self] completed in
 					civ.removeFromSuperview()
-					self._currentImageView = nil
+					self.currentImageView = nil
 				})
 			}
 		}
@@ -244,7 +221,7 @@ class HowToPlayViewController: UIViewController {
 	// MARK: IBActions
 
 	@IBAction func onNextButtonTap(sender: AnyObject) {
-		forward()
+		nextStep()
 	}
 
 	@IBAction func onDoneButtonTap(sender: AnyObject) {
@@ -275,7 +252,7 @@ class HowToPlayViewController: UIViewController {
 		}
 	}
 
-	func forward() {
+	func nextStep() {
 		switch step {
 			case .EmptyPaper: step = .ShowTopHalf
 			case .ShowTopHalf: step = .ShowTopDrawing
@@ -287,7 +264,7 @@ class HowToPlayViewController: UIViewController {
 	}
 
 	dynamic func tapped(tgr:UITapGestureRecognizer) {
-		forward()
+		nextStep()
 	}
 
 	let zDistance:CGFloat = -500
@@ -300,7 +277,7 @@ class HowToPlayViewController: UIViewController {
 			self.instructionsDrawingsHolder.alpha = 1
 		}) { [unowned self] completed in
 			delay(0.5) {
-				self.forward()
+				self.nextStep()
 			}
 		}
 	}
@@ -389,7 +366,7 @@ class HowToPlayViewController: UIViewController {
 			}, completion: nil)
 
 		delay(2){
-			self.forward()
+			self.nextStep()
 		}
 	}
 

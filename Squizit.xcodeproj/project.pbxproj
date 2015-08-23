@@ -29,6 +29,11 @@
 		6394BA8E1B8903C700E9434F /* GalleryDetailPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA8D1B8903C700E9434F /* GalleryDetailPageView.swift */; };
 		6394BA901B8903E100E9434F /* GalleryDetailPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6394BA8F1B8903E100E9434F /* GalleryDetailPageView.xib */; };
 		6394BA921B89352000E9434F /* UIPageViewController+PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA911B89352000E9434F /* UIPageViewController+PageControl.swift */; };
+		6394BA941B8A471100E9434F /* UIView+AnchorPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA931B8A471100E9434F /* UIView+AnchorPoint.swift */; };
+		6394BA961B8A4C5100E9434F /* UniversalHowToPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA951B8A4C5100E9434F /* UniversalHowToPlayViewController.swift */; };
+		6394BA981B8A4D8800E9434F /* ManagedIndexedViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA971B8A4D8800E9434F /* ManagedIndexedViewViewController.swift */; };
+		6394BA9A1B8A4E7300E9434F /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA991B8A4E7300E9434F /* InstructionView.swift */; };
+		6394BA9C1B8A4EA100E9434F /* InstructionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6394BA9B1B8A4EA100E9434F /* InstructionView.xib */; };
 		63A4B7ED19D46C9700975048 /* Images.xcassets in Sources */ = {isa = PBXBuildFile; fileRef = 63BBEC9A19967A2300F6E2B3 /* Images.xcassets */; };
 		63A4B7F319D5C03400975048 /* SaveToGalleryTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A4B7F219D5C03400975048 /* SaveToGalleryTransitionManager.swift */; };
 		63B44AF519990DA100AE7B62 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBB19967B0C00F6E2B3 /* Stroke.swift */; };
@@ -92,6 +97,11 @@
 		6394BA8D1B8903C700E9434F /* GalleryDetailPageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryDetailPageView.swift; sourceTree = "<group>"; };
 		6394BA8F1B8903E100E9434F /* GalleryDetailPageView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GalleryDetailPageView.xib; sourceTree = "<group>"; };
 		6394BA911B89352000E9434F /* UIPageViewController+PageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIPageViewController+PageControl.swift"; sourceTree = "<group>"; };
+		6394BA931B8A471100E9434F /* UIView+AnchorPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+AnchorPoint.swift"; sourceTree = "<group>"; };
+		6394BA951B8A4C5100E9434F /* UniversalHowToPlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniversalHowToPlayViewController.swift; sourceTree = "<group>"; };
+		6394BA971B8A4D8800E9434F /* ManagedIndexedViewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedIndexedViewViewController.swift; sourceTree = "<group>"; };
+		6394BA991B8A4E7300E9434F /* InstructionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
+		6394BA9B1B8A4EA100E9434F /* InstructionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InstructionView.xib; sourceTree = "<group>"; };
 		63A4B7F219D5C03400975048 /* SaveToGalleryTransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToGalleryTransitionManager.swift; sourceTree = "<group>"; };
 		63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor_Serialization.swift; sourceTree = "<group>"; };
 		63B5252219D73F0E00BB550F /* ShareToTwitter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShareToTwitter.h; sourceTree = "<group>"; };
@@ -178,6 +188,7 @@
 				63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */,
 				636BFA9619B3DDD100A90A75 /* GCD.swift */,
 				63FAAC3B1B3F48B100B9C5CC /* UIImage_Alpha.swift */,
+				6394BA931B8A471100E9434F /* UIView+AnchorPoint.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -269,12 +280,14 @@
 			isa = PBXGroup;
 			children = (
 				635DFA8419BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift */,
+				6394BA8B1B8902A400E9434F /* GalleryDetailPageViewController.swift */,
 				63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */,
 				63BC820319E441290047D414 /* HowToPlayViewController.swift */,
 				63FAAC3D1B42E2D200B9C5CC /* RootViewController.swift */,
 				63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */,
 				63533B1219BE033A00ED8B7A /* UniversalMatchViewController.swift */,
-				6394BA8B1B8902A400E9434F /* GalleryDetailPageViewController.swift */,
+				6394BA951B8A4C5100E9434F /* UniversalHowToPlayViewController.swift */,
+				6394BA971B8A4D8800E9434F /* ManagedIndexedViewViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -290,6 +303,8 @@
 				6394BA891B89019000E9434F /* CenteredImageView.swift */,
 				6394BA8D1B8903C700E9434F /* GalleryDetailPageView.swift */,
 				6394BA8F1B8903E100E9434F /* GalleryDetailPageView.xib */,
+				6394BA991B8A4E7300E9434F /* InstructionView.swift */,
+				6394BA9B1B8A4EA100E9434F /* InstructionView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -396,6 +411,7 @@
 				6394BA901B8903E100E9434F /* GalleryDetailPageView.xib in Resources */,
 				63BBEC9B19967A2300F6E2B3 /* Images.xcassets in Resources */,
 				6329ED311B305D000000B19A /* Launch Screen.xib in Resources */,
+				6394BA9C1B8A4EA100E9434F /* InstructionView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,7 +445,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6394BA961B8A4C5100E9434F /* UniversalHowToPlayViewController.swift in Sources */,
 				63A4B7ED19D46C9700975048 /* Images.xcassets in Sources */,
+				6394BA941B8A471100E9434F /* UIView+AnchorPoint.swift in Sources */,
 				63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */,
 				63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */,
 				636CEA24199E586400BEBF53 /* DrawingInputController.swift in Sources */,
@@ -438,6 +456,7 @@
 				636CEA29199F251200BEBF53 /* Match.swift in Sources */,
 				63267AD319CC7CE800B22242 /* FullscreenModalTransitionManager.swift in Sources */,
 				63FAAC3E1B42E2D200B9C5CC /* RootViewController.swift in Sources */,
+				6394BA9A1B8A4E7300E9434F /* InstructionView.swift in Sources */,
 				63DA0E6A1B57FCA800C66347 /* UniversalMatchView.swift in Sources */,
 				638576F019A65B4500581DE8 /* Geometry.swift in Sources */,
 				63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */,
@@ -452,6 +471,7 @@
 				63FDE7321998249A0006B7E4 /* Result.swift in Sources */,
 				63EBB88319B0CBE6003C3EC2 /* GalleryViewController.swift in Sources */,
 				63533B1319BE033A00ED8B7A /* UniversalMatchViewController.swift in Sources */,
+				6394BA981B8A4D8800E9434F /* ManagedIndexedViewViewController.swift in Sources */,
 				63B7B70D19A4EB1A00F280AB /* DrawingToolSelector.swift in Sources */,
 				638576EC19A6481500581DE8 /* SquizitTheme.swift in Sources */,
 				6394BA921B89352000E9434F /* UIPageViewController+PageControl.swift in Sources */,
