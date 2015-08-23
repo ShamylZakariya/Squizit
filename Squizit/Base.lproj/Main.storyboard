@@ -588,13 +588,7 @@
         <scene sceneID="lqR-rf-ia6">
             <objects>
                 <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="8vv-2k-1Qa" customClass="UniversalHowToPlayViewController" customModule="Squizit" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="ubm-HZ-WzB">
-                        <barButtonItem key="leftBarButtonItem" title="Got it" id="FrG-6D-ZMM">
-                            <connections>
-                                <action selector="onDoneTapped:" destination="8vv-2k-1Qa" id="d1X-h1-6Wl"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="ubm-HZ-WzB"/>
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GI0-el-YF8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

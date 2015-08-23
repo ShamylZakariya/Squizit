@@ -12,6 +12,11 @@ import UIKit
 
 class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControllerDataSource,UIPageViewControllerDelegate {
 
+	var skipBarButtonItem:UIBarButtonItem!
+	var nextBarButtonItem:UIBarButtonItem!
+	var doneBarButtonItem:UIBarButtonItem!
+	
+
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		title = "How to Play"
@@ -26,30 +31,18 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 
 		view.backgroundColor = SquizitTheme.matchBackgroundColor()
 
-		let initialPageVc = vend(0)
-		setViewControllers([initialPageVc], direction: UIPageViewControllerNavigationDirection.Forward, animated: false, completion: nil)
+		setViewControllers([vend(0)], direction: UIPageViewControllerNavigationDirection.Forward, animated: false, completion: nil)
 
 		dataSource = self
 		delegate = self
+
+		skipBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: "onDoneTapped:")
+		nextBarButtonItem = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.Plain, target: self, action: "onNextTapped:")
+		doneBarButtonItem = UIBarButtonItem(title: "Got it", style: UIBarButtonItemStyle.Done, target: self, action: "onDoneTapped:")
+
+		navigationItem.leftBarButtonItem = skipBarButtonItem
+		navigationItem.rightBarButtonItem = nextBarButtonItem
 	}
-
-	private func vend(index:Int)->ManagedIndexedViewViewController {
-
-		var page = InstructionView.create()
-		page.label.attributedText = NSAttributedString(string: "PAGE: \(index)", attributes: [
-			NSForegroundColorAttributeName: UIColor.whiteColor()
-		])
-
-		page.centeredImageView.backgroundColor = UIColor.redColor()
-
-		return ManagedIndexedViewViewController(view: page, index: index, respectsTopLayoutGuide:true)
-	}
-
-	private var count:Int {
-		return 6
-	}
-
-	private var currentIndex:Int = 0
 
 	// MARK: - UIPageViewControllerDataSource
 
@@ -76,7 +69,7 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 	}
 
 	func presentationIndexForPageViewController(pageViewController: UIPageViewController) -> Int {
-		return 0
+		return currentIndex
 	}
 
 	// MARK: - UIPageViewControllerDelegate
@@ -89,9 +82,50 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 	// MARK: - Actions
 
 
-	@IBAction func onDoneTapped(sender: AnyObject) {
+	dynamic func onDoneTapped(sender: AnyObject) {
 		presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
 	}
 
+	dynamic func onNextTapped(sender: AnyObject) {
+		stepForward()
+	}
+
+	// MARK: - Private
+
+	private func vend(index:Int)->ManagedIndexedViewViewController {
+
+		var page = InstructionView.create()
+		page.label.attributedText = NSAttributedString(string: "PAGE: \(index)", attributes: [
+			NSForegroundColorAttributeName: UIColor.whiteColor()
+			])
+
+
+		page.centeredImageView.backgroundColor = UIColor.clearColor()
+
+		return ManagedIndexedViewViewController(view: page, index: index, respectsTopLayoutGuide:true)
+	}
+
+	private var count:Int {
+		return 3
+	}
+
+	private var currentIndex:Int = 0 {
+		didSet {
+			if currentIndex == count - 1 {
+				navigationItem.leftBarButtonItem = nil
+				navigationItem.rightBarButtonItem = doneBarButtonItem
+			} else {
+				navigationItem.leftBarButtonItem = skipBarButtonItem
+				navigationItem.rightBarButtonItem = nextBarButtonItem
+			}
+		}
+	}
+
+	private func stepForward() {
+		if currentIndex < count - 1 {
+			currentIndex++
+			setViewControllers([vend(currentIndex)], direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
+		}
+	}
 
 }

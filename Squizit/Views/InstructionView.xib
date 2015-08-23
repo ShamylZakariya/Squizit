@@ -11,11 +11,11 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cqr-sp-XQo" customClass="CenteredImageView" customModule="Squizit" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="564"/>
+                    <rect key="frame" x="0.0" y="36" width="600" height="564"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n61-N8-1MI">
-                    <rect key="frame" x="8" y="572" width="584" height="20"/>
+                    <rect key="frame" x="8" y="8" width="584" height="20"/>
                     <attributedString key="attributedText">
                         <fragment content="Label">
                             <attributes>
@@ -30,13 +30,13 @@
             </subviews>
             <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="n61-N8-1MI" secondAttribute="trailing" constant="8" id="BCv-z0-mKp"/>
-                <constraint firstItem="n61-N8-1MI" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="Okg-EW-w84"/>
-                <constraint firstAttribute="bottom" secondItem="n61-N8-1MI" secondAttribute="bottom" constant="8" id="R24-4S-lKK"/>
-                <constraint firstAttribute="trailing" secondItem="cqr-sp-XQo" secondAttribute="trailing" id="TUN-xT-Lhs"/>
-                <constraint firstItem="cqr-sp-XQo" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="pJv-QH-vh7"/>
-                <constraint firstItem="n61-N8-1MI" firstAttribute="top" secondItem="cqr-sp-XQo" secondAttribute="bottom" constant="8" id="pmg-QS-CRI"/>
-                <constraint firstItem="cqr-sp-XQo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="xLH-fA-Uez"/>
+                <constraint firstAttribute="trailing" secondItem="n61-N8-1MI" secondAttribute="trailing" constant="8" id="7BA-hs-fhc"/>
+                <constraint firstItem="n61-N8-1MI" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="IUl-wf-2aS"/>
+                <constraint firstItem="cqr-sp-XQo" firstAttribute="top" secondItem="n61-N8-1MI" secondAttribute="bottom" constant="8" id="Rg5-TH-P1h"/>
+                <constraint firstAttribute="trailing" secondItem="cqr-sp-XQo" secondAttribute="trailing" id="UEW-bD-0Yl"/>
+                <constraint firstItem="cqr-sp-XQo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="W3J-lB-epx"/>
+                <constraint firstItem="n61-N8-1MI" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="f7s-X8-u3B"/>
+                <constraint firstAttribute="bottom" secondItem="cqr-sp-XQo" secondAttribute="bottom" id="kXS-PD-OI7"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <connections>
