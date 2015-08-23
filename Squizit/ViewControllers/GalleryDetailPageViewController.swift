@@ -56,7 +56,7 @@ class PagedViewViewController : UIViewController {
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 
-		// I would use topLayoutGuide.length, but it reports erroneous values
+		// I would use topLayoutGuide.length, but it reports erroneous values during scrolling
 		let app = UIApplication.sharedApplication()
 		let statusBarHeight = app.statusBarHidden ? CGFloat(0) : app.statusBarFrame.size.height
 		let navbarHeight = navigationController!.navigationBar.frame.height
@@ -139,6 +139,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 		page.centeredImageView.imageView.layer.shadowRadius = 5
 
 
+		// render the match
 		dispatch_async( renderQueue ) {
 			let loadResult = Match.load(drawing.match)
 			if let error = loadResult.error {
@@ -297,7 +298,6 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 				activityController.popoverPresentationController?.barButtonItem = sender as! UIBarButtonItem
 				activityController.view.tintColor = SquizitTheme.alertTintColor()
 				sself.presentViewController(activityController, animated: true, completion: nil)
-
 			}
 		}
 	}

@@ -38,17 +38,6 @@ class CenteredImageView : UIView {
 		}
 	}
 
-	override func drawRect(rect: CGRect) {
-		UIColor.whiteColor().set()
-		let path = UIBezierPath()
-		path.moveToPoint(CGPoint.zeroPoint)
-		path.addLineToPoint(CGPoint(x: bounds.width, y: bounds.height))
-		path.moveToPoint(CGPoint(x:bounds.width, y:0))
-		path.addLineToPoint(CGPoint(x: 0, y: bounds.height))
-		path.stroke()
-		UIBezierPath(rect: bounds).stroke()
-	}
-
 	override func layoutSubviews() {
 		super.layoutSubviews()
 		if let image = image {
