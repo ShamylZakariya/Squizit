@@ -224,7 +224,7 @@ class UniversalMatchView : UIView {
 		}
 	}
 
-	var showDirtyRectUpdates:Bool = true {
+	var showDirtyRectUpdates:Bool = false {
 		didSet {
 			setNeedsDisplay()
 		}

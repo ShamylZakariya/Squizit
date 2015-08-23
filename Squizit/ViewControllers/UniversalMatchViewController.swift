@@ -94,7 +94,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	private var finishedMatchView:UniversalMatchViewFinishedMatchView?
 
 	private var endOfMatchGestureRecognizer:UITapGestureRecognizer!
-	private var exportQueue = dispatch_queue_create("com.zakariya.squizit.ExportQueue", nil)
+	private var exportQueue = dispatch_queue_create("com.zakariya.squizit.UniversalMatchViewController.ExportQueue", nil)
 
 	/**
 		The number of players in this match. The value must be 2 or 3
@@ -144,7 +144,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	}
 
 	override func viewDidLoad() {
-		title = "Drawing Tests..."
+		title = "Match"
 		view.backgroundColor = SquizitTheme.matchBackgroundColor()
 
 		quitGameButton = GameControlButton.quitGameButton()
