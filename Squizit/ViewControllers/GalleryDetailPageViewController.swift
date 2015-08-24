@@ -46,6 +46,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 	private var exportQueue = dispatch_queue_create("com.zakariya.squizit.GalleryDetailPageViewControllerExportQueue", nil)
 	private var drawingBackgroundColor = SquizitTheme.paperBackgroundColor()
 	private var baseTitle = "Showcase"
+	private var pageIndicatorLabel:UILabel?
 
 	var store:GalleryStore!
 	var initialIndex:Int = 0 {
@@ -92,6 +93,16 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
 		updatePageControlVisibility()
+	}
+
+	override func viewWillLayoutSubviews() {
+		super.viewWillLayoutSubviews()
+		if let pageIndicatorLabel = pageIndicatorLabel {
+			let padding = CGFloat(20)
+			let labelWidth = view.bounds.width - 2*padding
+			let labelHeight = pageIndicatorLabel.sizeThatFits(CGSize(width: labelWidth, height: 999)).height
+			pageIndicatorLabel.frame = CGRect(x: 20, y: view.bounds.height - padding/2 - labelHeight, width: labelWidth, height: labelHeight)
+		}
 	}
 
 	private func vend(index:Int)->ManagedIndexedViewViewController {
@@ -172,7 +183,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 	func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [AnyObject], transitionCompleted completed: Bool) {
 		let pageVc = pageViewController.viewControllers.first as! ManagedIndexedViewViewController
 		currentIndex = pageVc.index
-		updateTitle()
+		updatePageIndicatorLabel()
 	}
 
 	// MARK: - CoreData
@@ -316,18 +327,34 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 				}
 			}
 		}
-		updateTitle()
+		updatePageIndicatorLabel()
 	}
 
 	private var shouldShowPageControl:Bool {
 		return count <= MaxPageCountToSeePageControl
 	}
 
-	private func updateTitle() {
+	private func updatePageIndicatorLabel() {
 		if shouldShowPageControl {
-			title = baseTitle
+			if let pageIndicatorLabel = pageIndicatorLabel {
+				pageIndicatorLabel.removeFromSuperview()
+				self.pageIndicatorLabel = nil
+			}
 		} else {
-			title = baseTitle + " \(currentIndex+1) of \(count)"
+			if pageIndicatorLabel == nil {
+				pageIndicatorLabel = UILabel(frame: CGRect.zeroRect)
+				pageIndicatorLabel!.font = UIFont(name: "Baskerville-Italic", size: 12)!
+				pageIndicatorLabel!.textColor = UIColor.whiteColor()
+				pageIndicatorLabel!.textAlignment = NSTextAlignment.Center
+				pageIndicatorLabel!.alpha = 0
+				view.addSubview(pageIndicatorLabel!)
+
+				UIView.animateWithDuration(0.2) {
+					self.pageIndicatorLabel!.alpha = 1
+				}
+			}
+
+			pageIndicatorLabel!.text = "\(currentIndex+1) of \(count)"
 		}
 	}
 
