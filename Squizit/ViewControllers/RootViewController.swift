@@ -30,9 +30,8 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 
 	@IBOutlet weak var contentViewCenterYConstraint: NSLayoutConstraint!
 
+	@IBOutlet weak var itemWidthConstraint: NSLayoutConstraint!
 	@IBOutlet weak var buttonHeightConstraint: NSLayoutConstraint!
-
-	@IBOutlet weak var titleViewWidthConstraint: NSLayoutConstraint!
 
 
 	override func viewDidLoad() {

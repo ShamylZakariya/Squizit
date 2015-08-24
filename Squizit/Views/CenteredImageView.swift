@@ -41,10 +41,10 @@ class CenteredImageView : UIView {
 	override func layoutSubviews() {
 		super.layoutSubviews()
 		if let image = image {
-			let aspect = image.size.width / image.size.height
-			let minDim = min(frame.width,frame.height)
-			let maxImageDim = max(image.size.width,image.size.height)
-			let scale = minDim / maxImageDim
+			var scale = frame.height / image.size.height
+			if image.size.width * scale > frame.width {
+				scale *= frame.width / (image.size.width * scale)
+			}
 
 			if scale < 1 {
 				imageView.frame = CGRect(center: bounds.center, size: CGSize(width: image.size.width * scale, height: image.size.height * scale)).integerRect

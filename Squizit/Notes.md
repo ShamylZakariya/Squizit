@@ -2,6 +2,7 @@
 	
 - Home screen simply doesn't fit on iPhone 4.
 - Improve layout for instruction screens
+- In gallery detail,if there's more than, say, 10 pages, don't show dots. Show a page #/#'
 
 	
 #FIXME

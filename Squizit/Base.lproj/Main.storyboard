@@ -4,6 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--Root View Controller-->
@@ -32,7 +33,8 @@
                                         <rect key="frame" x="0.0" y="122" width="270" height="66"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="66" id="zp2-vk-Ur5">
-                                                <variation key="heightClass=compact" constant="44"/>
+                                                <variation key="heightClass=compact" constant="33"/>
+                                                <variation key="heightClass=regular-widthClass=compact" constant="33"/>
                                             </constraint>
                                         </constraints>
                                         <state key="normal" title="FOR TWO">
@@ -55,7 +57,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="270" height="57"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="270" id="7UM-UB-Dfa">
-                                                <variation key="heightClass=compact" constant="220"/>
+                                                <variation key="heightClass=compact" constant="200"/>
                                             </constraint>
                                             <constraint firstAttribute="width" secondItem="eyv-id-0vb" secondAttribute="height" multiplier="289:61" id="i0r-Lh-rXa"/>
                                         </constraints>
@@ -110,7 +112,7 @@
                                     <constraint firstItem="eyv-id-0vb" firstAttribute="top" secondItem="iAQ-zh-NXo" secondAttribute="top" id="cEx-57-pPd"/>
                                     <constraint firstItem="f2b-Xy-wKL" firstAttribute="centerX" secondItem="rGO-wl-LMv" secondAttribute="centerX" id="dCo-Sb-2Di"/>
                                     <constraint firstAttribute="trailing" secondItem="91w-da-Nqx" secondAttribute="trailing" constant="8" id="dsf-vg-9xx"/>
-                                    <constraint firstItem="rGO-wl-LMv" firstAttribute="leading" secondItem="eyv-id-0vb" secondAttribute="trailing" constant="40" id="hkN-Zc-VfS"/>
+                                    <constraint firstItem="rGO-wl-LMv" firstAttribute="leading" secondItem="eyv-id-0vb" secondAttribute="trailing" constant="30" id="hkN-Zc-VfS"/>
                                     <constraint firstItem="f2b-Xy-wKL" firstAttribute="width" secondItem="rGO-wl-LMv" secondAttribute="width" id="iS5-Wj-x2s"/>
                                     <constraint firstItem="NFM-Zv-8Ul" firstAttribute="width" secondItem="f2b-Xy-wKL" secondAttribute="width" id="jZ8-jD-qfh"/>
                                     <constraint firstItem="rGO-wl-LMv" firstAttribute="top" secondItem="91w-da-Nqx" secondAttribute="bottom" constant="20" id="jug-JT-f9A">
@@ -191,7 +193,9 @@
                                     <constraint firstItem="vxf-4d-4kp" firstAttribute="top" secondItem="17j-Gt-Dw9" secondAttribute="top" id="Jd6-CX-33H"/>
                                     <constraint firstAttribute="bottom" secondItem="vxf-4d-4kp" secondAttribute="bottom" id="LO6-tf-v2h"/>
                                     <constraint firstItem="vxf-4d-4kp" firstAttribute="leading" secondItem="17j-Gt-Dw9" secondAttribute="leading" id="OnN-6u-6c4"/>
-                                    <constraint firstItem="3Bt-N9-Av2" firstAttribute="leading" secondItem="vxf-4d-4kp" secondAttribute="trailing" id="Oxa-6c-5r4"/>
+                                    <constraint firstItem="3Bt-N9-Av2" firstAttribute="leading" secondItem="vxf-4d-4kp" secondAttribute="trailing" id="Oxa-6c-5r4">
+                                        <variation key="heightClass=compact" constant="16"/>
+                                    </constraint>
                                     <constraint firstAttribute="height" constant="44" id="YL1-l1-b63">
                                         <variation key="heightClass=compact" constant="22"/>
                                     </constraint>
@@ -213,7 +217,7 @@
                             <constraint firstAttribute="centerY" secondItem="iAQ-zh-NXo" secondAttribute="centerY" id="g8n-IP-Mp0">
                                 <variation key="heightClass=compact" constant="22"/>
                             </constraint>
-                            <constraint firstItem="eyv-id-0vb" firstAttribute="width" secondItem="17j-Gt-Dw9" secondAttribute="width" id="i3J-Rh-h2E"/>
+                            <constraint firstItem="eyv-id-0vb" firstAttribute="width" secondItem="17j-Gt-Dw9" secondAttribute="width" multiplier="0.7" id="i3J-Rh-h2E"/>
                             <constraint firstItem="eyv-id-0vb" firstAttribute="width" secondItem="17j-Gt-Dw9" secondAttribute="width" id="ioa-jn-qcr"/>
                             <constraint firstItem="fap-G3-QBA" firstAttribute="leading" secondItem="dYp-Yh-uXK" secondAttribute="leading" id="ovV-r7-ntt"/>
                             <constraint firstAttribute="centerX" secondItem="iAQ-zh-NXo" secondAttribute="centerX" id="p5n-Nh-afz"/>
@@ -228,6 +232,7 @@
                         <variation key="heightClass=compact">
                             <mask key="constraints">
                                 <include reference="i3J-Rh-h2E"/>
+                                <exclude reference="ioa-jn-qcr"/>
                             </mask>
                         </variation>
                     </view>
@@ -243,10 +248,10 @@
                         <outlet property="extraButtonsHeightConstraint" destination="YL1-l1-b63" id="VYP-yu-JJ7"/>
                         <outlet property="galleryButton" destination="NFM-Zv-8Ul" id="2dV-KS-jND"/>
                         <outlet property="howToPlayButton" destination="vxf-4d-4kp" id="cdv-d8-AUq"/>
+                        <outlet property="itemWidthConstraint" destination="7UM-UB-Dfa" id="ZI3-H2-xoX"/>
                         <outlet property="orLabel" destination="f2b-Xy-wKL" id="iCw-il-O7O"/>
                         <outlet property="subtitleLabel" destination="0bw-SN-ieJ" id="MaI-SC-8nU"/>
                         <outlet property="threePlayersButton" destination="rGO-wl-LMv" id="uwr-7G-ObW"/>
-                        <outlet property="titleViewWidthConstraint" destination="7UM-UB-Dfa" id="a92-He-Gi3"/>
                         <outlet property="twitterButton" destination="3Bt-N9-Av2" id="FLQ-Ll-R39"/>
                         <outlet property="twoPlayersButton" destination="91w-da-Nqx" id="wXJ-Y5-FmO"/>
                     </connections>
