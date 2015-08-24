@@ -40,9 +40,12 @@ class TextActivityItemProvider : UIActivityItemProvider {
 
 class GalleryDetailPageViewController : UIPageViewController, UIPageViewControllerDataSource,UIPageViewControllerDelegate {
 
+	private let MaxPageCountToSeePageControl = 10
+
 	private var renderQueue = dispatch_queue_create("com.zakariya.squizit.GalleryDetailPageViewControllerRenderQueue", nil)
 	private var exportQueue = dispatch_queue_create("com.zakariya.squizit.GalleryDetailPageViewControllerExportQueue", nil)
 	private var drawingBackgroundColor = SquizitTheme.paperBackgroundColor()
+	private var baseTitle = "Showcase"
 
 	var store:GalleryStore!
 	var initialIndex:Int = 0 {
@@ -55,7 +58,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
-		title = "Showcase"
+		title = baseTitle
 	}
 
 	override func viewDidLoad() {
@@ -84,6 +87,11 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 		} else {
 			self.navigationItem.rightBarButtonItem = shareAction
 		}
+	}
+
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
+		updatePageControlVisibility()
 	}
 
 	private func vend(index:Int)->ManagedIndexedViewViewController {
@@ -164,6 +172,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 	func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [AnyObject], transitionCompleted completed: Bool) {
 		let pageVc = pageViewController.viewControllers.first as! ManagedIndexedViewViewController
 		currentIndex = pageVc.index
+		updateTitle()
 	}
 
 	// MARK: - CoreData
@@ -284,6 +293,41 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 			dispatch_main {
 				done( drawing:drawing, rendering:rendering )
 			}
+		}
+	}
+
+	// MARK: - Private
+
+	private func updatePageControlVisibility() {
+		if let pageControl = self.pageControl {
+			if !shouldShowPageControl{
+				if !pageControl.hidden {
+					UIView.animateWithDuration(0.2, animations: {
+						pageControl.alpha = 0
+						}, completion: { completed in
+							pageControl.hidden = true
+					})
+				}
+			} else if pageControl.hidden {
+				pageControl.alpha = 0
+				pageControl.hidden = false
+				UIView.animateWithDuration(0.2) {
+					pageControl.alpha = 1
+				}
+			}
+		}
+		updateTitle()
+	}
+
+	private var shouldShowPageControl:Bool {
+		return count <= MaxPageCountToSeePageControl
+	}
+
+	private func updateTitle() {
+		if shouldShowPageControl {
+			title = baseTitle
+		} else {
+			title = baseTitle + " \(currentIndex+1) of \(count)"
 		}
 	}
 
