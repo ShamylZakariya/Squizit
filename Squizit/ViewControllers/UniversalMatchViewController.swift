@@ -279,17 +279,17 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		// NOTE: On small screens (iPhone4,iPhone5) scale tool buttons to 60% size
 
 		let layoutRect = CGRect(x: 0, y: topLayoutGuide.length, width: view.bounds.width, height: view.bounds.height - (topLayoutGuide.length+bottomLayoutGuide.length))
-		let naturalDrawingSize = drawingContainerView.drawingSize
 		let (scaledDrawingSize,scaledDrawingScale) = drawingContainerView.fittedDrawingSize(layoutRect.size)
 		let toolScale:CGFloat = isSmallScreen ? 0.6 : 1.0
 		let drawingToolSize = drawingToolSelector.intrinsicContentSize().scale(toolScale)
 		let buttonSize = quitGameButton.intrinsicContentSize().height * toolScale
 		let margin = CGFloat(traitCollection.horizontalSizeClass == .Compact ? 8 : 36)
 		let textButtonWidth = max(undoButton.intrinsicContentSize().width,clearButton.intrinsicContentSize().width)
+		let drawingContainerViewInset:CGFloat = margin
 
 		if (scaledDrawingSize.height + 2*drawingToolSize.height) < layoutRect.height {
 			// we can perform normal layout
-			drawingContainerView.frame = view.bounds
+			drawingContainerView.frame = view.bounds.rectByInsetting(dx: drawingContainerViewInset, dy: drawingContainerViewInset)
 			quitGameButton.frame = CGRect(x: margin, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
 			finishTurnButton.frame = CGRect(x: layoutRect.maxX - margin - buttonSize, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
 
@@ -315,7 +315,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 			let toolsHeight = max(drawingToolSize.height,buttonSize)
 			let toolBarRect = CGRect(x: margin, y: layoutRect.minY + margin, width: layoutRect.width-(2*margin), height: toolsHeight)
 
-			drawingContainerView.frame = CGRect(x: layoutRect.minX, y: toolBarRect.maxY + margin, width: layoutRect.width, height: (layoutRect.maxY - toolBarRect.maxY) - 2*margin)
+			drawingContainerView.frame = CGRect(x: layoutRect.minX, y: toolBarRect.maxY + margin, width: layoutRect.width, height: (layoutRect.maxY - toolBarRect.maxY) - 2*margin).rectByInsetting(dx: drawingContainerViewInset, dy: 0)
 			quitGameButton.frame = CGRect(x: margin, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
 			finishTurnButton.frame = CGRect(x: layoutRect.maxX - margin - buttonSize, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
 			drawingToolSelector.frame = CGRect(x: round(layoutRect.midX - drawingToolSize.width/2), y: margin, width: drawingToolSize.width, height: drawingToolSize.height)

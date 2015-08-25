@@ -194,10 +194,10 @@
 		63BBEC8119967A2300F6E2B3 = {
 			isa = PBXGroup;
 			children = (
-				635F86DD1A66CBA800A67981 /* GameKit.framework */,
 				63BBEC8C19967A2300F6E2B3 /* Squizit */,
 				63BBECA319967A2300F6E2B3 /* SquizitTests */,
 				63BBEC8B19967A2300F6E2B3 /* Products */,
+				635F86DD1A66CBA800A67981 /* GameKit.framework */,
 			);
 			sourceTree = "<group>";
 		};
