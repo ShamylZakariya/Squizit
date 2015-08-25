@@ -9,6 +9,45 @@
 import Foundation
 import UIKit
 
+let ShowToolbarBackgroundViews = false
+
+class UniversalMatchViewToolbarBackgroundView : UIView {
+
+	required override init(frame: CGRect) {
+		super.init(frame:frame)
+		userInteractionEnabled = false
+		opaque = false
+	}
+
+	required init(coder aDecoder: NSCoder) {
+	    fatalError("init(coder:) has not been implemented")
+	}
+
+	var top:Bool = true {
+		didSet {
+			setNeedsDisplay()
+		}
+	}
+
+	override func drawRect(rect: CGRect) {
+
+		var context = UIGraphicsGetCurrentContext()
+
+		// set up rect clipping path
+		CGContextAddRect(context, bounds)
+		CGContextClip(context)
+
+		let colorSpace = CGColorSpaceCreateDeviceRGB()
+		let gradient = CGGradientCreateWithColors(colorSpace, [UIColor.blackColor().colorWithAlphaComponent(0.7).CGColor,UIColor.blackColor().colorWithAlphaComponent(0).CGColor], [0.5,1.0])
+
+		if top {
+			CGContextDrawLinearGradient(context, gradient, CGPoint(x: 0, y: 0), CGPoint(x: 0, y: bounds.height), CGGradientDrawingOptions(0))
+		} else {
+			CGContextDrawLinearGradient(context, gradient, CGPoint(x: 0, y: bounds.height), CGPoint(x: 0, y: 0), CGGradientDrawingOptions(0))
+		}
+	}
+}
+
 class UniversalMatchViewFinishedMatchView : UIView {
 	private var imageView: UIImageView?
 	private var renderQueue = dispatch_queue_create("com.zakariya.squizit.FinishedDrawingRenderQueue", nil)
@@ -92,6 +131,8 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	private var drawingContainerView:UniversalMatchViewPresenterView!
 	private var matchView:UniversalMatchView!
 	private var finishedMatchView:UniversalMatchViewFinishedMatchView?
+	private var toolBackdropViewTop:UniversalMatchViewToolbarBackgroundView?
+	private var toolBackdropViewBottom:UniversalMatchViewToolbarBackgroundView?
 
 	private var endOfMatchGestureRecognizer:UITapGestureRecognizer!
 	private var exportQueue = dispatch_queue_create("com.zakariya.squizit.UniversalMatchViewController.ExportQueue", nil)
@@ -156,10 +197,10 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		drawingToolSelector.addTool("Eraser", icon: UIImage(named: "tool-eraser")!)
 		drawingToolSelector.addTarget(self, action: "onDrawingToolSelected:", forControlEvents: .ValueChanged)
 
-		undoButton = SquizitGameTextButton.create("Undo")
+		undoButton = SquizitGameTextButton.create("Undo", compact: isSmallScreen)
 		undoButton.addTarget(self, action: "onUndo:", forControlEvents: .TouchUpInside)
 
-		clearButton = SquizitGameTextButton.create("Clear")
+		clearButton = SquizitGameTextButton.create("Clear", compact: isSmallScreen)
 		clearButton.addTarget(self, action: "onClear:", forControlEvents: .TouchUpInside)
 
 		drawingContainerView = UniversalMatchViewPresenterView(frame: CGRect.zeroRect)
@@ -175,6 +216,18 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 
 
 		view.addSubview(drawingContainerView)
+
+		// this is a failed experiment, but could work so I'm leaving it optional not killing it
+
+		if ShowToolbarBackgroundViews {
+			toolBackdropViewTop = UniversalMatchViewToolbarBackgroundView(frame:CGRect.zeroRect)
+			toolBackdropViewTop!.top = true
+			toolBackdropViewBottom = UniversalMatchViewToolbarBackgroundView(frame:CGRect.zeroRect)
+			toolBackdropViewBottom!.top = false
+			view.addSubview(toolBackdropViewTop!)
+			view.addSubview(toolBackdropViewBottom!)
+		}
+
 		view.addSubview(clearButton)
 		view.addSubview(undoButton)
 		view.addSubview(drawingToolSelector)
@@ -222,12 +275,14 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		// and the tool picker in center bottom.
 		// but in tight scenarios, like a phone in landscape, the drawingContainer will
 		// leave room at top for all controls, which will be positioned across the top
+		// NOTE: On small screens (iPhone4,iPhone5) scale tool buttons to 60% size
 
 		let layoutRect = CGRect(x: 0, y: topLayoutGuide.length, width: view.bounds.width, height: view.bounds.height - (topLayoutGuide.length+bottomLayoutGuide.length))
 		let naturalDrawingSize = drawingContainerView.drawingSize
 		let (scaledDrawingSize,scaledDrawingScale) = drawingContainerView.fittedDrawingSize(layoutRect.size)
-		let drawingToolSize = drawingToolSelector.intrinsicContentSize()
-		let buttonSize = quitGameButton.intrinsicContentSize().height
+		let toolScale:CGFloat = isSmallScreen ? 0.6 : 1.0
+		let drawingToolSize = drawingToolSelector.intrinsicContentSize().scale(toolScale)
+		let buttonSize = quitGameButton.intrinsicContentSize().height * toolScale
 		let margin = CGFloat(traitCollection.horizontalSizeClass == .Compact ? 8 : 36)
 		let textButtonWidth = max(undoButton.intrinsicContentSize().width,clearButton.intrinsicContentSize().width)
 
@@ -242,6 +297,18 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 			clearButton.frame = CGRect(x: layoutRect.midX + margin/2, y: layoutRect.minY + margin, width: textButtonWidth, height: buttonSize)
 
 			drawingToolSelector.frame = CGRect(x: round(layoutRect.midX - drawingToolSize.width/2), y: round(layoutRect.maxY - drawingToolSize.height - margin), width: drawingToolSize.width, height: drawingToolSize.height)
+
+
+			if let toolBackdropViewTop = toolBackdropViewTop {
+				let toolBackdropViewTopHeight = max(quitGameButton.frame.maxY,finishTurnButton.frame.maxY,undoButton.frame.maxY,clearButton.frame.maxY) + margin
+				toolBackdropViewTop.frame = CGRect(x: 0, y: layoutRect.minY, width: layoutRect.width, height: toolBackdropViewTopHeight)
+			}
+
+			if let toolBackdropViewBottom = toolBackdropViewBottom {
+				let toolBackdropViewBottomHeight = layoutRect.maxY - drawingToolSelector.frame.minY + margin
+				toolBackdropViewBottom.frame = CGRect(x: 0, y: layoutRect.maxY - toolBackdropViewBottomHeight, width: layoutRect.width, height: toolBackdropViewBottomHeight + margin)
+			}
+
 		} else {
 			// compact layout needed
 			let toolsHeight = max(drawingToolSize.height,buttonSize)
@@ -258,7 +325,17 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 
 			clearButton.frame = CGRect(x: round((drawingToolSelector.frame.maxX + finishTurnButton.frame.minX)/2 - textButtonWidth/2),
 				y: margin, width: textButtonWidth, height: buttonSize)
+
+			if let toolBackdropViewTop = toolBackdropViewTop {
+				toolBackdropViewTop.frame = CGRect(x: 0, y: 0, width: layoutRect.width, height: drawingToolSelector.frame.maxY + margin)
+			}
+
+			if let toolBackdropViewBottom = toolBackdropViewBottom {
+				toolBackdropViewBottom.frame = CGRect.zeroRect
+				toolBackdropViewBottom.hidden = true
+			}
 		}
+
 
 		if let finishedDrawingView = finishedMatchView {
 			finishedDrawingView.frame = layoutRect
@@ -281,6 +358,10 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 
 
 	// MARK: - Private
+
+	var isSmallScreen:Bool {
+		return min(view.frame.width,view.frame.height) <= 320
+	}
 
 	/*
 		returns true iff the current player is allowed to end his turn.
@@ -332,6 +413,8 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	private func showCompletedDrawing() {
 		UIView.animateWithDuration(0.3,
 			animations: {
+				self.toolBackdropViewTop?.alpha = 0
+				self.toolBackdropViewBottom?.alpha = 0
 				self.drawingContainerView.alpha = 0
 				self.quitGameButton.alpha = 0
 				self.clearButton.alpha = 0
@@ -340,6 +423,8 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 				self.drawingToolSelector.alpha = 0
 			},
 			completion: { completed in
+				self.toolBackdropViewTop?.hidden = true
+				self.toolBackdropViewBottom?.hidden = true
 				self.drawingContainerView.hidden = true
 				self.quitGameButton.hidden = true
 				self.clearButton.hidden = true
@@ -360,6 +445,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	}
 
 	dynamic private func onTurnDidChange() {
+		drawingContainerView.panning = false
 		updateUi()
 	}
 

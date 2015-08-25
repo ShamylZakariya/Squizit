@@ -23,7 +23,7 @@ class ToolIconView : UIView {
 		super.init(frame: frame)
 		self.opaque = false
 		imageView = UIImageView(image: icon.imageWithRenderingMode(.AlwaysTemplate))
-		imageView.contentMode = .Center
+		imageView.contentMode = UIViewContentMode.ScaleAspectFit
 		addSubview(imageView)
 	}
 

@@ -83,11 +83,10 @@ class SquizitTheme {
 	// background color for the match view
 	class func matchBackgroundColor() -> UIColor {
 		return UIColor( patternImage: self.leatherBackgroundImage() )
-		//return UIColor( white: 0.2, alpha: 1)
 	}
 
 	class func matchButtonBackgroundColor() -> UIColor {
-		return matchBackgroundColor().colorWithAlphaComponent(0.3)
+		return matchBackgroundColor().colorWithAlphaComponent(0.5)
 	}
 
 	// background color for the match view
@@ -182,9 +181,16 @@ class SquizitThemeButton : UIButton {
 
 class SquizitGameTextButton : UIButton {
 
-	class func create(title:String) ->SquizitGameTextButton {
+	var compact:Bool = false {
+		didSet {
+			update()
+		}
+	}
+
+	class func create(title:String, compact:Bool) ->SquizitGameTextButton {
 		var button = SquizitGameTextButton.buttonWithType(.Custom) as! SquizitGameTextButton
 		button.setTitle(title, forState: .Normal)
+		button.compact = compact
 		return button
 	}
 
@@ -216,7 +222,7 @@ class SquizitGameTextButton : UIButton {
 	}
 
 	private func update() {
-		titleLabel!.font = UIFont(name: "Avenir-Light", size: UIFont.buttonFontSize())
+		titleLabel!.font = UIFont(name: "Avenir-Light", size: UIFont.buttonFontSize() * CGFloat(compact ? 0.75 : 1.0))
 		layer.cornerRadius = 0
 		backgroundColor = SquizitTheme.matchButtonBackgroundColor()
 

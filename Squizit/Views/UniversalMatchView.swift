@@ -14,7 +14,7 @@ class UniversalMatchViewPresenterView : UIView {
 	private var currentPanTranslation = CGPoint.zeroPoint
 	private var initialPanTranslation = CGPoint.zeroPoint
 
-	private var panning:Bool = false {
+	var panning:Bool = false {
 		didSet {
 			// reset position to be centered in view
 			currentPanTranslation = CGPoint(x: bounds.width/2 - drawingSize.width/2, y: bounds.height/2 - drawingSize.height/2)

@@ -86,6 +86,14 @@ extension CGPoint {
 	}
 }
 
+extension CGSize {
+
+	func scale( a:CGFloat ) -> CGSize {
+		return CGSize(width: self.width * a, height: self.height * a)
+	}
+
+}
+
 struct LineSegment {
 	let firstPoint:CGPoint
 	let secondPoint:CGPoint
