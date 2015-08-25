@@ -22,6 +22,16 @@ class UniversalMatchViewPresenterView : UIView {
 		}
 	}
 
+	func setPanning(panning:Bool, animated:Bool) {
+		if animated {
+			UIView.animateWithDuration(0.2) {
+				self.panning = panning
+			}
+		} else {
+			self.panning = panning
+		}
+	}
+
 	var drawingSize:CGSize {
 		if let drawingView = drawingView {
 			return drawingView.controller!.viewport.size
@@ -169,11 +179,7 @@ class UniversalMatchViewPresenterView : UIView {
 	}
 
 	private dynamic func onTogglePanning(tgr:UITapGestureRecognizer) {
-
-		// no animation happens because self.panning performs layout by calling setNeedsLayout
-		UIView.animateWithDuration(0.2) {
-			self.panning = !self.panning
-		}
+		setPanning(!panning, animated: true)
 	}
 }
 

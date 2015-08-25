@@ -446,7 +446,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	}
 
 	dynamic private func onTurnDidChange() {
-		drawingContainerView.panning = false
+		drawingContainerView.setPanning(false, animated: true)
 		updateUi()
 	}
 
