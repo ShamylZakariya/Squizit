@@ -196,6 +196,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		drawingToolSelector.addTool("Brush", icon: UIImage(named: "tool-brush")!)
 		drawingToolSelector.addTool("Eraser", icon: UIImage(named: "tool-eraser")!)
 		drawingToolSelector.addTarget(self, action: "onDrawingToolSelected:", forControlEvents: .ValueChanged)
+		drawingToolSelector.toolSeparation = isSmallScreen ? 8 : 20
 
 		undoButton = SquizitGameTextButton.create("Undo", compact: isSmallScreen)
 		undoButton.addTarget(self, action: "onUndo:", forControlEvents: .TouchUpInside)
@@ -359,9 +360,9 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	// MARK: - Private
 
-	var isSmallScreen:Bool {
-		return min(view.frame.width,view.frame.height) <= 320
-	}
+	lazy var isSmallScreen:Bool = {
+		return min(self.view.frame.width,self.view.frame.height) <= 320
+	}()
 
 	/*
 		returns true iff the current player is allowed to end his turn.
