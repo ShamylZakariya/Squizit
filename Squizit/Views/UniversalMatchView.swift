@@ -43,7 +43,7 @@ class UniversalMatchViewPresenterView : UIView {
 				scaledSize.height = naturalSize.height * scale
 			}
 
-			if naturalSize.height > availableSize.height {
+			if scaledSize.height > availableSize.height {
 				scale *= availableSize.height / scaledSize.height
 				scaledSize.width = naturalSize.width * scale
 				scaledSize.height = naturalSize.height * scale
