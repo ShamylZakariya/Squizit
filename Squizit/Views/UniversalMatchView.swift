@@ -14,6 +14,16 @@ class UniversalMatchViewPresenterView : UIView {
 	private var currentPanTranslation = CGPoint.zeroPoint
 	private var initialPanTranslation = CGPoint.zeroPoint
 
+	/**
+		When panning, upscale the drawing to this factor times the fittedDrawingSize.
+		The idea being, that when the user wants to pan around the drawing, it should be big, for detail work.
+	*/
+	var panningScale:CGFloat = 2 {
+		didSet {
+			updateLayout()
+		}
+	}
+
 	var panning:Bool = false {
 		didSet {
 			// reset position to be centered in view
@@ -98,11 +108,18 @@ class UniversalMatchViewPresenterView : UIView {
 
 	override func layoutSubviews() {
 		super.layoutSubviews()
+
+		if let drawingView = drawingView {
+			let size = drawingSize
+			drawingView.layer.transform = CATransform3DIdentity
+			drawingView.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+		}
+
 		updateLayout()
 	}
 
 	override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-		// forward input events to allow user to start a stroke offscreen
+		// forward input events to allow user to start a stroke off-canvas
 		drawingView?.touchesBegan(touches, withEvent: event)
 	}
 
@@ -151,30 +168,28 @@ class UniversalMatchViewPresenterView : UIView {
 
 	private func updateLayout() {
 		if let drawingView = drawingView {
-			if !panning {
 
-				let naturalSize = drawingSize
+			if panning {
 
-				// compute max scale to fit drawingView in view
+				updatePan()
+
+			} else {
+
+				// compute max scale to fit drawingView in view, and centering offset
 				let scaling = fittedDrawingSize(bounds.size)
-
-				// centering offset
 				let offset = CGPoint(x: (bounds.width-scaling.size.width)/2, y: (bounds.height-scaling.size.height)/2).integerPoint()
 
-				// set
-				drawingView.frame = CGRect(x: 0, y: 0, width: naturalSize.width, height: naturalSize.height)
 				drawingView.layer.transform = CATransform3DConcat(CATransform3DMakeScale(scaling.scale, scaling.scale, 1), CATransform3DMakeTranslation(offset.x, offset.y, 1))
-			} else {
-				updatePan()
 			}
 		}
 	}
 
 	private func updatePan() {
 		if let drawingView = drawingView {
-			let size = drawingView.controller!.viewport.size
-			drawingView.frame = CGRect(x: currentPanTranslation.x, y: currentPanTranslation.y, width: size.width, height: size.height)
-			drawingView.layer.transform = CATransform3DIdentity
+			let scale = fittedDrawingSize(bounds.size).scale
+			let translation = CATransform3DMakeTranslation(currentPanTranslation.x, currentPanTranslation.y, 0)
+			let scaling = CATransform3DMakeScale(panningScale * scale, panningScale * scale, CGFloat(1))
+			drawingView.layer.transform = CATransform3DConcat(scaling,translation)
 		}
 	}
 
