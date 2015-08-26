@@ -112,6 +112,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	private var finishedMatchView:UniversalMatchViewFinishedMatchView?
 	private var toolBackdropViewTop:UniversalMatchViewToolbarBackgroundView!
 	private var toolBackdropViewBottom:UniversalMatchViewToolbarBackgroundView!
+	private var finishTurnButtonOverlay:UIView!
 
 	private var endOfMatchGestureRecognizer:UITapGestureRecognizer!
 	private var exportQueue = dispatch_queue_create("com.zakariya.squizit.UniversalMatchViewController.ExportQueue", nil)
@@ -170,6 +171,10 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		quitGameButton = GameControlButton.quitGameButton()
 		finishTurnButton = GameControlButton.finishTurnButton()
 
+		finishTurnButtonOverlay = UIView(frame: CGRect.zeroRect)
+		finishTurnButtonOverlay.userInteractionEnabled = false
+		finishTurnButtonOverlay.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "onFinishTurnOverlayTapped:"))
+
 		drawingToolSelector = DrawingToolSelector(frame: CGRect.zeroRect)
 		drawingToolSelector.addTool("Pencil", icon: UIImage(named: "tool-pencil")!)
 		drawingToolSelector.addTool("Brush", icon: UIImage(named: "tool-brush")!)
@@ -211,6 +216,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		view.addSubview(undoButton)
 		view.addSubview(drawingToolSelector)
 		view.addSubview(finishTurnButton)
+		view.addSubview(finishTurnButtonOverlay)
 		view.addSubview(quitGameButton)
 
 
@@ -233,8 +239,8 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		// go default
 		onDrawingDidChange()
 
-
-		matchView.showDirtyRectUpdates = true
+		// for testing, enable dirty rect tracking
+		matchView.showDirtyRectUpdates = false
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -313,6 +319,9 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		if let finishedDrawingView = finishedMatchView {
 			finishedDrawingView.frame = layoutRect
 		}
+
+		// the finish turn overlay tracks the position of the finish turn button - but it's only enabled when finish turn button is disabled
+		finishTurnButtonOverlay.frame = finishTurnButton.frame
 	}
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -377,6 +386,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	private func updateUi() {
 		finishTurnButton.enabled = self.playerCanEndTurn
+		finishTurnButtonOverlay.userInteractionEnabled = !finishTurnButton.enabled
 
 		let canUndo = playerCanUndo
 		undoButton.enabled = canUndo
@@ -487,6 +497,29 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		stepForward()
 	}
 
+	private dynamic func onFinishTurnOverlayTapped(tgr:UITapGestureRecognizer) {
+		let acStyle = traitCollection.horizontalSizeClass == .Regular && traitCollection.verticalSizeClass == .Regular
+			? UIAlertControllerStyle.ActionSheet
+			: UIAlertControllerStyle.Alert
+
+		let ac = UIAlertController(
+			title: "Finish turn?",
+			message: "Your drawing doesn't overlap the fold",
+			preferredStyle: acStyle)
+
+		ac.view.tintColor = SquizitTheme.alertTintColor()
+
+		ac.popoverPresentationController?.sourceView = finishTurnButtonOverlay
+		ac.popoverPresentationController?.sourceRect = finishTurnButtonOverlay.bounds
+
+		ac.addAction(UIAlertAction(title: "Nevermind", style: UIAlertActionStyle.Cancel, handler: nil))
+		ac.addAction(UIAlertAction(title: "Finish", style: UIAlertActionStyle.Default, handler: { action in
+			self.stepForward()
+		}))
+
+		presentViewController(ac, animated: true, completion: nil)
+	}
+
 	private dynamic func onQuitTapped(sender:AnyObject) {
 		showQuitMatchDialog()
 	}
@@ -498,26 +531,26 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	}
 
 	private dynamic func showQuitMatchDialog() {
-		var alert = UIAlertController(
+		var ac = UIAlertController(
 			title: NSLocalizedString("Quit?", comment:"QuitMatchAlertTitle"),
 			message: NSLocalizedString("Are you certain you'd like to quit this match?", comment:"QuitMatchAlertMessage"),
 			preferredStyle: UIAlertControllerStyle.Alert)
 
-		alert.view.tintColor = SquizitTheme.alertTintColor()
+		ac.view.tintColor = SquizitTheme.alertTintColor()
 
-		alert.addAction(UIAlertAction(
+		ac.addAction(UIAlertAction(
 			title: NSLocalizedString("Continue", comment:"QuitMatchAlertButtonCancelTitle"),
 			style: UIAlertActionStyle.Cancel,
 			handler: nil))
 
-		alert.addAction(UIAlertAction(
+		ac.addAction(UIAlertAction(
 			title: NSLocalizedString("Quit", comment:"QuitMatchAlertButtonQuitTitle"),
 			style: UIAlertActionStyle.Destructive,
 			handler: { [weak self] action in
 				self?.dismissViewControllerAnimated(true, completion: nil)
 			}))
 
-		presentViewController(alert, animated: true, completion: nil)
+		presentViewController(ac, animated: true, completion: nil)
 	}
 
 	// MARK: SaveToGalleryDelegate

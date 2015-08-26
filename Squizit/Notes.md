@@ -1,9 +1,9 @@
 #VERSION 2.0
 	
-- Home screen simply doesn't fit on iPhone 4.
-- Improve layout for instruction screens
-- In gallery detail,if there's more than, say, 10 pages, don't show dots. Show a page #/#'
-
+- add a final instruction screen that shows how to use drawing tools, nav buttons, etc
+- add a fake button ON TOP of the finish turn button which is only clickable when finishTurn is disabled. when tapped, it asks something like:
+"You haven't drawn anything over the fold, are you certain you want to finish this turn?"
+- move all string literals into a Strings class
 	
 #FIXME
 
