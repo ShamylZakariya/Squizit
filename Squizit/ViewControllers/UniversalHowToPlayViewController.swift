@@ -16,12 +16,13 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 	var nextBarButtonItem:UIBarButtonItem!
 	var doneBarButtonItem:UIBarButtonItem!
 
-	lazy var messages:[String] = {
+	lazy var messages:[String?] = {
 		return [
 			NSLocalizedString("A piece of paper is folded over itself into halves or thirds",comment:"instructions-message-0"),
 			NSLocalizedString("The first player draws all the way to the bottom fold - leaving marks to guide the next player",comment:"instructions-message-1"),
 			NSLocalizedString("The next player completes the drawing, guided by the marks left at the top by the previous player",comment:"instructions-message-2"),
-			NSLocalizedString("The paper is unfolded - we have an Exquisite Corpse",comment:"instructions-message-3")
+			NSLocalizedString("The paper is unfolded - we have an Exquisite Corpse",comment:"instructions-message-3"),
+			nil // no copy for final screen
 		]
 	}()
 
@@ -30,7 +31,8 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 			UIImage(named:"instructions-1")!,
 			UIImage(named:"instructions-2")!,
 			UIImage(named:"instructions-3")!,
-			UIImage(named:"instructions-4")!
+			UIImage(named:"instructions-4")!,
+			UIImage(named:"instructions-5")!
 		]
 	}()
 
@@ -117,10 +119,15 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 
 		var page = InstructionView.create()
 
-		page.label.attributedText = NSAttributedString(string: messages[index], attributes: [
-			NSForegroundColorAttributeName: UIColor.whiteColor(),
-			NSFontAttributeName:UIFont(name: "Avenir-Black", size: 16)!
-		])
+		if let message = messages[index] {
+			page.label.hidden = false
+			page.label.attributedText = NSAttributedString(string: message, attributes: [
+				NSForegroundColorAttributeName: UIColor.whiteColor(),
+				NSFontAttributeName:UIFont(name: "Avenir-Black", size: 16)!
+			])
+		} else {
+			page.discardLabel()
+		}
 
 		page.centeredImageView.image = images[index]
 		page.centeredImageView.imageView.layer.shadowColor = UIColor.blackColor().CGColor

@@ -165,7 +165,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	}
 
 	override func viewDidLoad() {
-		title = "Match"
+		title = NSLocalizedString("Match",comment:"MatchTitle")
 		view.backgroundColor = SquizitTheme.matchBackgroundColor()
 
 		quitGameButton = GameControlButton.quitGameButton()
@@ -182,10 +182,10 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		drawingToolSelector.addTarget(self, action: "onDrawingToolSelected:", forControlEvents: .ValueChanged)
 		drawingToolSelector.toolSeparation = isSmallScreen ? 8 : 20
 
-		undoButton = SquizitGameTextButton.create("Undo", compact: isSmallScreen)
+		undoButton = SquizitGameTextButton.create(NSLocalizedString("Undo", comment:"UndoButtonTitle"), compact: isSmallScreen)
 		undoButton.addTarget(self, action: "onUndo:", forControlEvents: .TouchUpInside)
 
-		clearButton = SquizitGameTextButton.create("Clear", compact: isSmallScreen)
+		clearButton = SquizitGameTextButton.create(NSLocalizedString("Clear", comment:"ClearButtonTitle"), compact: isSmallScreen)
 		clearButton.addTarget(self, action: "onClear:", forControlEvents: .TouchUpInside)
 
 		matchPresenterView = UniversalMatchViewPresenterView(frame: CGRect.zeroRect)
@@ -503,8 +503,8 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 			: UIAlertControllerStyle.Alert
 
 		let ac = UIAlertController(
-			title: "Finish turn?",
-			message: "Your drawing doesn't overlap the fold",
+			title: NSLocalizedString("Finish Turn?", comment:"FinishMatchTurnAlertTitle"),
+			message: NSLocalizedString("Your drawing doesn't overlap the fold", comment:"FinishMatchTurnAlertMessage"),
 			preferredStyle: acStyle)
 
 		ac.view.tintColor = SquizitTheme.alertTintColor()

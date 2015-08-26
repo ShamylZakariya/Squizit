@@ -31,4 +31,17 @@ class InstructionView : UIView {
 	private func commonInit() {
 		backgroundColor = UIColor.clearColor()
 	}
+
+	func discardLabel() {
+		removeConstraints(constraints())
+		label.removeFromSuperview()
+		label = nil
+	}
+
+	override func layoutSubviews() {
+		super.layoutSubviews()
+		if label == nil {
+			centeredImageView.frame = self.bounds
+		}
+	}
 }
