@@ -42,9 +42,6 @@ class ToolIconView : UIView {
 	override func drawRect(rect: CGRect) {
 		if !active {
 			let backdrop = UIBezierPath(ovalInRect: self.bounds.rectByInsetting(dx: 1, dy: 1).rectByOffsetting(dx: 0.5, dy: 0.5))
-			SquizitTheme.matchButtonBackgroundColor().set()
-			backdrop.fill()
-
 			tintColor.colorWithAlphaComponent(0.5).set()
 			backdrop.lineWidth = 1
 			backdrop.stroke()

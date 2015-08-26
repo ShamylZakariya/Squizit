@@ -14,6 +14,8 @@ class UniversalMatchViewPresenterView : UIView {
 	private var currentPanTranslation = CGPoint.zeroPoint
 	private var initialPanTranslation = CGPoint.zeroPoint
 
+	var onPanningChanged:((panning:Bool)->())?
+
 	/**
 		When panning, upscale the drawing to this factor times the fittedDrawingSize.
 		The idea being, that when the user wants to pan around the drawing, it should be big, for detail work.
@@ -29,6 +31,7 @@ class UniversalMatchViewPresenterView : UIView {
 			// reset position to be centered in view
 			currentPanTranslation = CGPoint(x: bounds.width/2 - drawingSize.width/2, y: bounds.height/2 - drawingSize.height/2)
 			updateLayout()
+			onPanningChanged?(panning:self.panning)
 		}
 	}
 
