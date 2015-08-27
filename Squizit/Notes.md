@@ -1,5 +1,6 @@
 #VERSION 2.0
 
+- It's likely my whole rendering pipeline can be simplified by using CGContextSetBlendMode(ctx,kCGBlendModeClear) - no need for blend bitmap compositing, just draw
 - Make end-turn validation leniently ignore top overlap?
 - When toggle zoom/pan mode in UniversalMatchViewPresenterView, there's still a jump
 
