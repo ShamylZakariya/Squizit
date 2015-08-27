@@ -12,7 +12,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n61-N8-1MI">
-                    <rect key="frame" x="81" y="556" width="438" height="20"/>
+                    <rect key="frame" x="110" y="556" width="380" height="20"/>
                     <attributedString key="attributedText">
                         <fragment content="Label">
                             <attributes>
@@ -35,7 +35,7 @@
                 <constraint firstAttribute="bottom" secondItem="n61-N8-1MI" secondAttribute="bottom" constant="24" id="Nxg-7a-jb0"/>
                 <constraint firstAttribute="centerX" secondItem="n61-N8-1MI" secondAttribute="centerX" id="SdM-2X-Ij6"/>
                 <constraint firstAttribute="trailing" secondItem="cqr-sp-XQo" secondAttribute="trailing" constant="8" id="aIy-30-Uti"/>
-                <constraint firstItem="n61-N8-1MI" firstAttribute="width" secondItem="cqr-sp-XQo" secondAttribute="width" multiplier="0.75" id="fnq-mb-7Oa"/>
+                <constraint firstItem="n61-N8-1MI" firstAttribute="width" secondItem="cqr-sp-XQo" secondAttribute="width" multiplier="0.65" id="fnq-mb-7Oa"/>
                 <constraint firstItem="n61-N8-1MI" firstAttribute="top" secondItem="cqr-sp-XQo" secondAttribute="bottom" constant="24" id="ny9-xF-O9f"/>
                 <constraint firstItem="cqr-sp-XQo" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="qCJ-K7-qmv"/>
             </constraints>

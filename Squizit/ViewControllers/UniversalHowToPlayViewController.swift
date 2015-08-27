@@ -117,25 +117,29 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 			assertionFailure("UniversalHowToPlayViewController index:\(index) is out of range:[0,\(count-1)]")
 		}
 
-		var page = InstructionView.create()
 
 		if let message = messages[index] {
-			page.label.hidden = false
+			var page = InstructionView.create()
+
 			page.label.attributedText = NSAttributedString(string: message, attributes: [
 				NSForegroundColorAttributeName: UIColor.whiteColor(),
-				NSFontAttributeName:UIFont(name: "Avenir-Black", size: 16)!
+				NSFontAttributeName:UIFont(name: "Avenir-Black", size: UIFont.preferredFontForTextStyle(UIFontTextStyleBody).pointSize)!
 			])
+
+			page.centeredImageView.image = images[index]
+			page.centeredImageView.imageView.layer.shadowColor = UIColor.blackColor().CGColor
+			page.centeredImageView.imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
+			page.centeredImageView.imageView.layer.shadowOpacity = 1
+			page.centeredImageView.imageView.layer.shadowRadius = 5
+
+			return ManagedIndexedViewViewController(view: page, index: index, respectsTopLayoutGuide:true)
 		} else {
-			page.discardLabel()
+
+			let iv = CenteredImageView(frame: CGRect.zeroRect)
+			iv.image = images[index]
+
+			return ManagedIndexedViewViewController(view: iv, index: index, respectsTopLayoutGuide:true)
 		}
-
-		page.centeredImageView.image = images[index]
-		page.centeredImageView.imageView.layer.shadowColor = UIColor.blackColor().CGColor
-		page.centeredImageView.imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
-		page.centeredImageView.imageView.layer.shadowOpacity = 1
-		page.centeredImageView.imageView.layer.shadowRadius = 5
-
-		return ManagedIndexedViewViewController(view: page, index: index, respectsTopLayoutGuide:true)
 	}
 
 	private var count:Int {

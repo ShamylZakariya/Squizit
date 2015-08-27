@@ -1,10 +1,8 @@
 #VERSION 2.0
 	
-- add a final instruction screen that shows how to use drawing tools, nav buttons, etc
-- add a fake button ON TOP of the finish turn button which is only clickable when finishTurn is disabled. when tapped, it asks something like:
-"You haven't drawn anything over the fold, are you certain you want to finish this turn?"
-- move all string literals into a Strings class
-	
+- When zooming drawing, the center or something is moving around weirdly. make transition SLOW, to figure out what's happening
+- Add non-breaking space to my instructions screens to prevent widows
+
 #FIXME
 
 - Terrible performance on iPad3
