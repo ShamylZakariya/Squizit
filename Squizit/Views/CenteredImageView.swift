@@ -50,7 +50,7 @@ class CenteredImageView : UIView {
 				imageView.frame = CGRect(center: bounds.center, size: CGSize(width: image.size.width * scale, height: image.size.height * scale)).integerRect
 			} else {
 				// just center image
-				imageView.frame = CGRect(center: bounds.center, size: image.size)
+				imageView.frame = CGRect(center: bounds.center, size: image.size).integerRect
 			}
 		}
 	}
