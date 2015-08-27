@@ -18,10 +18,10 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 
 	lazy var messages:[String?] = {
 		return [
-			NSLocalizedString("A piece of paper is folded over itself into halves or thirds",comment:"instructions-message-0"),
-			NSLocalizedString("The first player draws all the way to the bottom fold - leaving marks to guide the next player",comment:"instructions-message-1"),
-			NSLocalizedString("The next player completes the drawing, guided by the marks left at the top by the previous player",comment:"instructions-message-2"),
-			NSLocalizedString("The paper is unfolded - we have an Exquisite Corpse",comment:"instructions-message-3"),
+			NSLocalizedString("A piece of paper is folded over itself into halves or\u{00a0}thirds",comment:"instructions-message-0"),
+			NSLocalizedString("The first player draws all the way to the bottom fold - leaving marks to guide the next\u{00a0}player",comment:"instructions-message-1"),
+			NSLocalizedString("The next player completes the drawing, guided by the marks left at the top by the previous\u{00a0}player",comment:"instructions-message-2"),
+			NSLocalizedString("The paper is unfolded - we have an Exquisite\u{00a0}Corpse",comment:"instructions-message-3"),
 			nil // no copy for final screen
 		]
 	}()

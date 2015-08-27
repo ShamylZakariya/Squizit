@@ -1,7 +1,6 @@
 #VERSION 2.0
 	
 - When zooming drawing, the center or something is moving around weirdly. make transition SLOW, to figure out what's happening
-- Add non-breaking space to my instructions screens to prevent widows
 
 #FIXME
 
