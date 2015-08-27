@@ -1,6 +1,7 @@
 #VERSION 2.0
-	
-- When zooming drawing, the center or something is moving around weirdly. make transition SLOW, to figure out what's happening
+
+- Make end-turn validation leniently ignore top overlap?
+- When toggle zoom/pan mode in UniversalMatchViewPresenterView, there's still a jump
 
 #FIXME
 

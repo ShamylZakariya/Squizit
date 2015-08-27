@@ -252,10 +252,6 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		return true
 	}
 
-	override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
-		super.traitCollectionDidChange(previousTraitCollection)
-	}
-
 	override func viewWillLayoutSubviews() {
 
 		// generally, the drawingContainerView will fill the available space, rendering the drawing inside, scaled or translated.
