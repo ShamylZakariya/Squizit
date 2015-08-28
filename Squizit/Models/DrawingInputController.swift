@@ -53,7 +53,13 @@ class DrawingInputController {
 		}
 	}
 
-	func draw( context:CGContextRef ) {
+	func drawUsingImmediatePipeline( dirtyRect:CGRect, context:CGContextRef) {
+		if let drawing = drawing {
+			drawing.draw(dirtyRect, context: context)
+		}
+	}
+
+	func drawUsingBitmapPipeline( context:CGContextRef ) {
 		if let drawing = drawing {
 			let image = drawing.render( viewport ).image
 			image.drawAtPoint( viewport.origin, blendMode: kCGBlendModeMultiply, alpha: 1)

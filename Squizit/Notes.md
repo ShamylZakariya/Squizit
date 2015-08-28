@@ -1,8 +1,11 @@
-#VERSION 2.0
+#CURRENT
 
-- It's likely my whole rendering pipeline can be simplified by using CGContextSetBlendMode(ctx,kCGBlendModeClear) - no need for blend bitmap compositing, just draw
-- Make end-turn validation leniently ignore top overlap?
 - When toggle zoom/pan mode in UniversalMatchViewPresenterView, there's still a jump
+
+- Immediate vector drawing pipeline has following issues:
+	- doesn't clip drawing to viewport
+	- player N where N > 0 can't see drawing (maybe a matter of context transforms)
+	- zoomed mode still pixellated. Probably something to do with layer rasterization scale...
 
 #FIXME
 

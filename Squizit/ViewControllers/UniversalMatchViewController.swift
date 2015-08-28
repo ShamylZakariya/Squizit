@@ -197,7 +197,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		matchView = UniversalMatchView(frame: CGRect.zeroRect)
 		matchView.match = match
 		matchView.turn = 0
-		matchPresenterView.drawingView = matchView
+		matchPresenterView.matchView = matchView
 		matchPresenterView.onPanningChanged = self.onMatchPresenterViewPanningStateChanged
 		view.addSubview(matchPresenterView)
 
@@ -241,6 +241,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 
 		// for testing, enable dirty rect tracking
 		matchView.showDirtyRectUpdates = false
+		matchView.useExperimentalResolutionIndependantRenderPipeline = false
 	}
 
 	override func viewWillAppear(animated: Bool) {

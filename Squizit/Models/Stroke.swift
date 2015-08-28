@@ -15,15 +15,7 @@ enum Fill {
 	case Brush
 	case Eraser
 
-	func set() {
-		switch self {
-			case .Pencil, .Brush:
-				UIColor.blackColor().set()
-
-			case .Eraser:
-				UIColor.whiteColor().colorWithAlphaComponent(0.8).set()
-		}
-	}
+	var isEraser:Bool { return self == .Eraser }
 
 	var size:(CGFloat,CGFloat) {
 		get {

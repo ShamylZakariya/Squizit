@@ -37,6 +37,7 @@ class UniversalMatchViewPresenterView : UIView {
 			// reset position to be centered in view
 			currentPanTranslation = CGPoint(x: bounds.width/2 - drawingSize.width/2, y: bounds.height/2 - drawingSize.height/2)
 			updateLayout()
+			updateDrawingViewLayer()
 			onPanningChanged?(panning:self.panning)
 		}
 	}
@@ -57,7 +58,7 @@ class UniversalMatchViewPresenterView : UIView {
 	}
 
 	var drawingSize:CGSize {
-		if let drawingView = drawingView {
+		if let drawingView = matchView {
 			return drawingView.controller!.viewport.size
 		} else {
 			return CGSize.zeroSize
@@ -65,7 +66,7 @@ class UniversalMatchViewPresenterView : UIView {
 	}
 
 	func fittedDrawingSize(availableSize:CGSize) -> (size:CGSize,scale:CGFloat) {
-		if let drawingView = drawingView, controller = drawingView.controller {
+		if let drawingView = matchView, controller = drawingView.controller {
 
 			let naturalSize = controller.viewport.size
 			var scaledSize = naturalSize
@@ -89,12 +90,18 @@ class UniversalMatchViewPresenterView : UIView {
 		return (size:CGSize.zeroSize,scale:0)
 	}
 
-	var drawingView:UniversalMatchView? {
+	var matchView:UniversalMatchView? {
 		didSet {
-			if let drawingView = drawingView {
+			if let drawingView = matchView {
 				drawingView.layer.anchorPoint = CGPoint(x: 0, y: 0)
+				drawingView.layer.shouldRasterize = true
+				drawingView.layer.rasterizationScale = 1
 				addSubview(drawingView)
 				setNeedsLayout()
+
+				drawingView.onRenderPipelineChanged = { [weak self] in
+					self?.updateDrawingViewLayer()
+				}
 			}
 		}
 	}
@@ -127,23 +134,23 @@ class UniversalMatchViewPresenterView : UIView {
 
 	override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
 		// forward input events to allow user to start a stroke off-canvas
-		drawingView?.touchesBegan(touches, withEvent: event)
+		matchView?.touchesBegan(touches, withEvent: event)
 	}
 
 	override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
-		drawingView?.touchesMoved(touches, withEvent: event)
+		matchView?.touchesMoved(touches, withEvent: event)
 	}
 
 	override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
-		drawingView?.touchesEnded(touches, withEvent: event)
+		matchView?.touchesEnded(touches, withEvent: event)
 	}
 
 	override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent) {
-		drawingView?.touchesCancelled(touches, withEvent: event)
+		matchView?.touchesCancelled(touches, withEvent: event)
 	}
 
 	private dynamic func onPan(pgr:UIPanGestureRecognizer) {
-		if let drawingView = drawingView where panning {
+		if let drawingView = matchView where panning {
 			var translation = pgr.translationInView(self)
 			translation.x = round(translation.x)
 			translation.y = round(translation.y)
@@ -174,7 +181,7 @@ class UniversalMatchViewPresenterView : UIView {
 	}
 
 	private func updateLayout() {
-		if let drawingView = drawingView {
+		if let drawingView = matchView {
 
 			let nativeDrawingSize = drawingSize
 			drawingView.layer.transform = CATransform3DIdentity
@@ -195,7 +202,7 @@ class UniversalMatchViewPresenterView : UIView {
 	}
 
 	private func updatePan() {
-		if let drawingView = drawingView {
+		if let drawingView = matchView {
 
 			let scaledDrawingSize = drawingSize.scale(panningScale)
 			let offset = CGPoint(x: (bounds.width-scaledDrawingSize.width)/2, y: (bounds.height-scaledDrawingSize.height)/2).integerPoint()
@@ -204,6 +211,13 @@ class UniversalMatchViewPresenterView : UIView {
 				CATransform3DMakeScale(panningScale, panningScale, CGFloat(1)),
 				CATransform3DMakeTranslation(offset.x + currentPanTranslation.x, offset.y + currentPanTranslation.y, 0)
 			)
+		}
+	}
+
+	private func updateDrawingViewLayer() {
+		if let drawingView = matchView {
+			drawingView.layer.shouldRasterize = self.panning
+			drawingView.layer.rasterizationScale = self.panning ? panningScale : 1
 		}
 	}
 
@@ -265,6 +279,15 @@ class UniversalMatchView : UIView {
 		}
 	}
 
+	var onRenderPipelineChanged:(()->())?
+
+	var useExperimentalResolutionIndependantRenderPipeline:Bool = false {
+		didSet {
+			onRenderPipelineChanged?()
+			setNeedsDisplay()
+		}
+	}
+
 	var drawingSurfaceBackgroundColor:UIColor = UIColor.whiteColor() {
 		didSet {
 			setNeedsDisplay()
@@ -314,7 +337,11 @@ class UniversalMatchView : UIView {
 			for controller in controllers {
 				let viewport = controller.viewport.rectByOffsetting(dx: 0, dy: -offset)
 				if viewport.intersects(rect) || rect.isEmpty || rect.isNull {
-					controller.draw(ctx)
+					if useExperimentalResolutionIndependantRenderPipeline {
+						controller.drawUsingImmediatePipeline(rect, context: ctx)
+					} else {
+						controller.drawUsingBitmapPipeline(ctx)
+					}
 				}
 			}
 
