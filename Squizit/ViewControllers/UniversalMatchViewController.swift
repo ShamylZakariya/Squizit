@@ -267,12 +267,16 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		let toolScale:CGFloat = isSmallScreen ? 0.6 : 1.0
 		let drawingToolSize = drawingToolSelector.intrinsicContentSize().scale(toolScale)
 		let buttonSize = quitGameButton.intrinsicContentSize().height * toolScale
-		let margin = CGFloat(traitCollection.horizontalSizeClass == .Compact ? 8 : 36)
+		let margin = CGFloat(traitCollection.horizontalSizeClass == .Compact ? 20 : 36)
 		let textButtonWidth = max(undoButton.intrinsicContentSize().width,clearButton.intrinsicContentSize().width)
 		let drawingContainerViewInset:CGFloat = margin
 
 		if (scaledDrawingSize.height + 2*drawingToolSize.height) < layoutRect.height {
-			// we can perform normal layout
+
+			//
+			// plenty of room for spacious layout
+			//
+
 			matchPresenterView.frame = view.bounds.rectByInsetting(dx: drawingContainerViewInset, dy: drawingContainerViewInset)
 			quitGameButton.frame = CGRect(x: margin, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
 			finishTurnButton.frame = CGRect(x: layoutRect.maxX - margin - buttonSize, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
@@ -292,7 +296,11 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 			toolBackdropViewBottom.hidden = false
 
 		} else {
+
+			//
 			// compact layout needed
+			//
+
 			let toolsHeight = max(drawingToolSize.height,buttonSize)
 			let toolBarRect = CGRect(x: margin, y: layoutRect.minY + margin, width: layoutRect.width-(2*margin), height: toolsHeight)
 
