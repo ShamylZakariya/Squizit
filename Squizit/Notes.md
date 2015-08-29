@@ -1,3 +1,9 @@
+# APPSTORE SUBMISSION TODO
+
+Screenshots for phones
+The buttons at the top of the phone layout are not receiving input events because of edge tracking. Need to move then down.
+Need to add more space between button row on phone and canvas
+
 #CURRENT
 
 - When toggle zoom/pan mode in UniversalMatchViewPresenterView, there's still a jump
