@@ -10,6 +10,7 @@ import UIKit
 
 class CenteredImageView : UIView {
 
+	private var _image:UIImage?
 	private (set) var imageView:UIImageView!
 
 	required override init(frame: CGRect) {
@@ -30,10 +31,10 @@ class CenteredImageView : UIView {
 
 	var image:UIImage? {
 		get {
-			return imageView.image
+			return _image
 		}
 		set {
-			imageView.image = newValue
+			_image = newValue
 			setNeedsLayout()
 		}
 	}
@@ -52,6 +53,8 @@ class CenteredImageView : UIView {
 				// just center image
 				imageView.frame = CGRect(center: bounds.center, size: image.size).integerRect
 			}
+
+			imageView.image = image.imageByScalingToSize(imageView.frame.size, scale: 0)
 		}
 	}
 
