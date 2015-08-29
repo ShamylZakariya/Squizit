@@ -446,7 +446,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	}
 
 	dynamic private func onTurnDidChange() {
-		matchPresenterView.setPanning(false, animated: true)
+		matchPresenterView.setPanning(false, animated: false)
 		updateUi()
 	}
 
