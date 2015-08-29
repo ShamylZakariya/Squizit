@@ -46,3 +46,9 @@ func debounce( delay:NSTimeInterval, action: (()->()) ) -> ()->() {
 func dispatch_main( closure:()->()) {
 	dispatch_async(dispatch_get_main_queue(), closure )
 }
+
+func synchronized(lock: AnyObject, closure:()->()) {
+	objc_sync_enter(lock)
+	closure()
+	objc_sync_exit(lock);
+}

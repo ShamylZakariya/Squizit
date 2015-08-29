@@ -22,22 +22,14 @@ protocol SaveToGalleryDelegate : class {
 class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 	@IBOutlet weak var dialogView: UIView!
-	@IBOutlet weak var questionLabel: UILabel!
 	@IBOutlet weak var playerOneNameInputField: SquizitThemeNameInputField!
 	@IBOutlet weak var playerTwoNameInputField: SquizitThemeNameInputField!
 	@IBOutlet weak var playerThreeNameInputField: SquizitThemeNameInputField!
 	@IBOutlet weak var addToGalleryButton: SquizitThemeButton!
 	@IBOutlet weak var discardButton: SquizitThemeButton!
 
-	// layout constraints for dynamic sizing
-
-	@IBOutlet weak var topMarginConstraint: NSLayoutConstraint!
-	@IBOutlet weak var titleHeightConstraint: NSLayoutConstraint!
-	@IBOutlet weak var sideMarginConstraint: NSLayoutConstraint!
-	@IBOutlet weak var buttonHeightConstraint: NSLayoutConstraint!
-	@IBOutlet weak var buttonSpacingConstraint: NSLayoutConstraint!
-	@IBOutlet weak var bottomMarginConstraint: NSLayoutConstraint!
-	@IBOutlet weak var dialogHeightConstraint: NSLayoutConstraint!
+	@IBOutlet weak var playerThreeNameInputFieldTopConstraint: NSLayoutConstraint!
+	@IBOutlet weak var playerThreeNameInputFieldHeightConstraints: NSLayoutConstraint!
 	@IBOutlet weak var dialogWidthConstraint: NSLayoutConstraint!
 	@IBOutlet weak var dialogVerticalCenteringConstraint: NSLayoutConstraint!
 
@@ -49,7 +41,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	var nameCount:Int = 3 {
 		didSet {
 			if nameCount < 2 || nameCount > 3 {
-				assertionFailure("SaveTogalleryViewController only supports 2 or 3 player names")
+				assertionFailure("SaveToGalleryViewController.nameCount only supports 2 or 3 player names")
 			}
 		}
 	}
@@ -72,8 +64,9 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		dialogView.opaque = false
 		dialogView.backgroundColor = SquizitTheme.dialogBackgroundColor()
 
+		addToGalleryButton.bordered = false
+		discardButton.bordered = false
 		discardButton.destructive = true
-		questionLabel.font = UIFont(name: "Baskerville-Italic", size: UIFont.labelFontSize())
 
 		playerOneNameInputField.delegate = self
 		playerTwoNameInputField.delegate = self
@@ -94,6 +87,8 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 				playerOneNameInputField.nextField = playerTwoNameInputField
 				playerTwoNameInputField.nextField = playerOneNameInputField
 				playerThreeNameInputField.hidden = true
+				playerThreeNameInputFieldHeightConstraints.constant = 0
+				playerThreeNameInputFieldTopConstraint.constant = 0
 
 			case 3:
 				playerOneNameInputField.nextField = playerTwoNameInputField
@@ -103,19 +98,6 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 			default:
 				break;
-		}
-
-		switch( traitCollection.userInterfaceIdiom ) {
-			case .Phone:
-				topMarginConstraint.constant = 16
-				titleHeightConstraint.constant = 32
-				buttonHeightConstraint.constant = 33
-				sideMarginConstraint.constant = 8
-				buttonSpacingConstraint.constant = 8
-				bottomMarginConstraint.constant = 8
-
-			default:
-				buttonHeightConstraint.constant = 65
 		}
 
 		view.setNeedsUpdateConstraints()
@@ -128,7 +110,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		dialogView.alpha = 0
 		dialogView.transform = CGAffineTransformMakeScale(1.1, 1.1)
 
-		UIView.animateWithDuration(0.4, delay: 0.25, options: .AllowUserInteraction, animations: { [unowned self] in
+		UIView.animateWithDuration(0.3, delay: 0.25, options: .AllowUserInteraction, animations: {
 			self.dialogView.alpha = 1
 		}, completion: nil)
 
@@ -156,9 +138,8 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		}
 	}
 
-	override func viewWillLayoutSubviews() {
-		super.viewWillLayoutSubviews()
-		layout()
+	override func prefersStatusBarHidden() -> Bool {
+		return true
 	}
 
 	// MARK: IBActions
@@ -178,7 +159,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 		for nameField in fields {
 			var name = sanitize(nameField.text)
-			if countElements(name) == 0 {
+			if name.isEmpty {
 				name = NSLocalizedString("Anonymous", comment: "AnonymousPlayerIdentifier")
 			} else {
 				namesEnteredByUser++
@@ -197,31 +178,34 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 	// MARK: Keyboard Handling
 
 	dynamic private func keyboardWillShow( note:NSNotification ) {
-		if let info:Dictionary = note.userInfo {
-			if let keyboardRect = info[UIKeyboardFrameEndUserInfoKey]?.CGRectValue() {
-				keyboardHeight = keyboardRect.height
+		if let info:Dictionary = note.userInfo,
+			keyboardRect = info[UIKeyboardFrameEndUserInfoKey]?.CGRectValue(),
+			duration = info[UIKeyboardAnimationDurationUserInfoKey] as? NSTimeInterval {
+				dialogVerticalCenteringConstraint.constant = keyboardRect.height/2
+				UIView.animateWithDuration(1) {
+					self.view.layoutIfNeeded()
+				}
 			}
-		}
 	}
 
 	dynamic private func keyboardWillHide( note:NSNotification ) {
-		keyboardHeight = 0
-	}
-
-	private var keyboardHeight:CGFloat = 0 {
-		didSet {
-			animateLayout()
-		}
+		if let info:Dictionary = note.userInfo,
+			duration = info[UIKeyboardAnimationDurationUserInfoKey] as? NSTimeInterval {
+				dialogVerticalCenteringConstraint.constant = 0
+				UIView.animateWithDuration(1) {
+					self.view.layoutIfNeeded()
+				}
+			}
 	}
 
 	// MARK: UITextFieldDelegate
 
-	func textFieldShouldEndEditing(textField: UITextField!) -> Bool {
+	func textFieldShouldEndEditing(textField: UITextField) -> Bool {
 		textField.text = sanitize(textField.text)
 		return true
 	}
 
-	func textFieldShouldReturn(textField: UITextField!) -> Bool {
+	func textFieldShouldReturn(textField: UITextField) -> Bool {
 
 		if let tf = textField as? SquizitThemeNameInputField {
 			tf.nextField?.becomeFirstResponder()
@@ -236,52 +220,6 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 	private func sanitize( name:String ) -> String {
 		return name.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).capitalizedStringWithLocale(NSLocale.currentLocale())
-	}
-
-	private func animateLayout() {
-		if _visible {
-			UIView.animateWithDuration(0.7,
-				delay: 0,
-				usingSpringWithDamping: 0.7,
-				initialSpringVelocity: 0.0,
-				options: UIViewAnimationOptions(0),
-				animations: { () -> Void in
-					self.layout()
-				},
-				completion: nil)
-		} else {
-			layout()
-		}
-	}
-
-	private func layout() {
-		let dialogSize = self.dialogSize
-		dialogHeightConstraint.constant = dialogSize.height
-		dialogWidthConstraint.constant = dialogSize.width
-
-		if keyboardHeight > 0 {
-			let totalHeight = view.bounds.height
-			let offset = (totalHeight - keyboardHeight)/2 - dialogSize.height/2
-			dialogView.transform = CGAffineTransformMakeTranslation(0, -offset)
-		} else {
-			dialogView.transform = CGAffineTransformIdentity
-		}
-	}
-
-	private var dialogSize:CGSize {
-
-		view.layoutIfNeeded()
-		var topHeight:CGFloat = 0
-		switch nameCount {
-			case 2: topHeight = playerTwoNameInputField.frame.maxY
-			case 3: topHeight = playerThreeNameInputField.frame.maxY
-			default: return CGSizeZero
-		}
-
-		let bottomHeight = dialogView.bounds.height - addToGalleryButton.frame.minY
-		let padding:CGFloat = buttonSpacingConstraint.constant
-
-		return CGSize( width: 300, height: topHeight + padding + bottomHeight )
 	}
 
 	private func addParallaxEffect() {

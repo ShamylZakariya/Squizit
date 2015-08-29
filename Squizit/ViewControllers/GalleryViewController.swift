@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+let LOG_THUMBNAIL_RENDERING_LIFECYCLE = true
+
 // MARK: - GalleryViewControllerDelegate
 
 protocol GalleryViewControllerDelegate : class {
@@ -26,18 +28,19 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 	class func identifier() -> String { return "GalleryCollectionViewCell" }
 
-	@IBOutlet weak var containerView: UIView!
 	@IBOutlet weak var deleteButton: UIImageView!
-	@IBOutlet weak var imageView: ImagePresenterView!
-	@IBOutlet weak var namesLabel: UILabel!
-	@IBOutlet weak var dateLabel: UILabel!
-
-	@IBOutlet weak var topPaddingConstraint: NSLayoutConstraint!
+	@IBOutlet weak var imageView: UIImageView!
+	@IBOutlet weak var label: UILabel!
 	@IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
 	@IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
 
+	private var deleting:Bool = false
+	private let cycleOffset:NSTimeInterval = drand48() * M_PI_2
+	private var phase:NSTimeInterval = 0
+	private var wiggleAnimationDisplayLink:CADisplayLink?
+
+	var drawing:GalleryDrawing?
 	var indexInCollection:Int = 0
-	var thumbnailLoadAction:CancelableAction<UIImage>?
 
 	var onLongPress:((( cell:GalleryCollectionViewCell )->())?)
 	var onDeleteButtonTapped:((( cell:GalleryCollectionViewCell )->())?)
@@ -56,27 +59,27 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		}
 	}
 
+	var thumbnail:UIImage? { return imageView.image }
+
 	override func awakeFromNib() {
 		super.awakeFromNib()
+		clipsToBounds = false
 
-		self.clipsToBounds = false
+		// uncomment to help debug layout
+		//backgroundColor = UIColor(hue: CGFloat(drand48()), saturation: 1, brightness: 0.5, alpha: 0.5)
+
 		deleteButton.alpha = 0
 		deleteButton.hidden = true
 
-		// for some reason I can't set Baskerville in IB
-		namesLabel.font = UIFont(name: "Baskerville", size: namesLabel.font.pointSize)
-		dateLabel.font = UIFont(name:"Baskerville-Italic", size: dateLabel.font.pointSize)
-
-		// set background color of imageview to the thumbnail background to minimize flashing as images are lazily loaded
-		imageView.backgroundColor = SquizitTheme.thumbnailBackgroundColor()
-		imageView.contentMode = .Center
+		//imageView.clipsToBounds = true
+		imageView.contentMode = UIViewContentMode.ScaleAspectFit
 
 		// add shadows because we're a little skeumorphic here
 		imageView.layer.shouldRasterize = true
 		imageView.layer.shadowColor = UIColor.blackColor().CGColor
 		imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
 		imageView.layer.shadowOpacity = 1
-		imageView.layer.shadowRadius = 5
+		imageView.layer.shadowRadius = 4
 
 		addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPress:"))
 
@@ -89,35 +92,73 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 	override func prepareForReuse() {
 
-		if let action = thumbnailLoadAction {
-			action.cancel()
-			thumbnailLoadAction = nil
-		}
+		drawing = nil
 
 		// reset layer transform and nil the image
 		layer.transform = CATransform3DIdentity
 		layer.opacity = 1
-		imageView.image = nil
+
+		setThumbnail(nil, animate: false)
+	}
+
+	func setThumbnail(thumbnail:UIImage?,animate:Bool) {
+		imageView.image = thumbnail
+		if let thumbnail = thumbnail {
+
+			setNeedsLayout()
+			layoutIfNeeded()
+
+			let padding:CGFloat = 10
+			let aspect = thumbnail.size.width / thumbnail.size.height
+			let maxImageViewWidth = frame.width - 2*padding
+			let maxImageViewHeight = frame.height - imageView.frame.minY - 72
+
+			var imageHeight = label.frame.minY - padding - imageView.frame.minY
+			var imageWidth = imageHeight * aspect
+
+			if imageWidth > maxImageViewWidth {
+				imageWidth = maxImageViewWidth
+				imageHeight = imageWidth / aspect
+			}
+
+			if imageHeight > maxImageViewHeight {
+				let scale = maxImageViewHeight / imageHeight
+				imageHeight *= scale
+				imageWidth *= scale
+			}
+
+			imageViewHeightConstraint.constant = imageHeight
+			imageViewWidthConstraint.constant = imageWidth
+
+			if animate {
+				UIView.animateWithDuration(0.3) {
+					self.imageView.alpha = 1
+				}
+			} else {
+				imageView.alpha = 1
+			}
+		} else {
+			imageView.alpha = 0
+		}
+
+		setNeedsLayout()
 	}
 
 	dynamic func longPress( gr:UILongPressGestureRecognizer ) {
 		switch gr.state {
 			case UIGestureRecognizerState.Began:
-				if let onLongPress = self.onLongPress {
-					onLongPress( cell:self )
-				}
+				self.onLongPress?(cell:self)
 
 			default: break;
 		}
 	}
 
-	private var _deleting:Bool = false
 	dynamic func deleteButtonTapped( tr:UITapGestureRecognizer ) {
 
 		// flag that we're deleting - this halts the wiggle animation which would override our scale transform
-		_deleting = true
+		deleting = true
 		let layer = self.layer
-		let maybeHandler = self.onDeleteButtonTapped
+		let onDeleteButtonTapped = self.onDeleteButtonTapped
 
 		UIView.animateWithDuration(0.2,
 			animations: {
@@ -127,9 +168,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 				layer.opacity = 0
 			}) {
 				(complete:Bool) -> Void in
-				if let handler = maybeHandler {
-					handler( cell:self )
-				}
+				onDeleteButtonTapped?(cell:self)
 			}
 	}
 
@@ -156,25 +195,22 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 			})
 	}
 
-	let _cycleOffset:NSTimeInterval = drand48() / 2
-	var _phase:NSTimeInterval = 0
-	var _wiggleAnimationDisplayLink:CADisplayLink?
 
 	func startWiggling() {
-		_wiggleAnimationDisplayLink = CADisplayLink(target: self, selector: "updateWiggleAnimation")
-		_wiggleAnimationDisplayLink!.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSRunLoopCommonModes)
+		wiggleAnimationDisplayLink = CADisplayLink(target: self, selector: "updateWiggleAnimation")
+		wiggleAnimationDisplayLink!.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSRunLoopCommonModes)
 	}
 
 	dynamic func updateWiggleAnimation() {
 
-		if _deleting {
+		if deleting {
 			return
 		}
 
 		let now = NSDate().timeIntervalSinceReferenceDate
 		let cycle = now / WigglePhaseDuration
 		let sign = (indexInCollection % 2 == 0) ? +1.0 : -1.0
-		let phase = sin(cycle * M_PI + _cycleOffset * M_PI ) * sign
+		let phase = sin(cycle * M_PI + cycleOffset * M_PI ) * sign
 		let angle = CGFloat(phase * WiggleAngleMax)
 		let layer = self.layer
 		UIView.performWithoutAnimation { () -> Void in
@@ -183,9 +219,9 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 	}
 
 	func stopWiggling() {
-		if let displayLink = _wiggleAnimationDisplayLink {
+		if let displayLink = wiggleAnimationDisplayLink {
 			displayLink.invalidate()
-			_wiggleAnimationDisplayLink = nil
+			wiggleAnimationDisplayLink = nil
 		}
 
 		let layer = self.layer
@@ -200,9 +236,9 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
-	var _thumbnailCompositorQueue = dispatch_queue_create("com.zakariya.squizit.GalleryThumbnailCompositorQueue", nil)
-	var _thumbnailBackgroundColor = SquizitTheme.thumbnailBackgroundColor()
-	var _renderedIconCache = NSCache()
+	private var thumbnailCompositorQueue = dispatch_queue_create("com.zakariya.squizit.GalleryThumbnailCompositorQueue", nil)
+	private var thumbnailBackgroundColor = SquizitTheme.thumbnailBackgroundColor()
+	private var renderedIconCache = NSCache()
 
 	override init( store:GalleryStore, collectionView:UICollectionView ) {
 		super.init(store: store, collectionView:collectionView)
@@ -211,12 +247,10 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 	var editMode:Bool = false {
 		didSet {
 			for cell in collectionView.visibleCells() {
-				(cell as GalleryCollectionViewCell).deleteButtonVisible = editMode
+				(cell as! GalleryCollectionViewCell).deleteButtonVisible = editMode
 			}
 
-			if let emc = editModeChanged {
-				emc( inEditMode: editMode )
-			}
+			editModeChanged?( inEditMode: editMode )
 		}
 	}
 
@@ -235,8 +269,8 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 			var predicate:NSPredicate? = nil
 			if artistNameFilter != oldValue {
 				if let filter = artistNameFilter {
-					if countElements(filter) > 0 {
-						predicate = NSPredicate(format: "SUBQUERY(artists, $artist, $artist.name BEGINSWITH[cd] \"\(filter)\").@count > 0")
+					if !filter.isEmpty {
+						predicate = NSPredicate(format: "SUBQUERY(artists, $artist, $artist.name CONTAINS[cd] \"\(filter)\").@count > 0")
 					}
 				}
 			}
@@ -253,36 +287,37 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 		collectionView.deselectItemAtIndexPath(indexPath, animated: true)
 
 		if !editMode {
-			if let handler = galleryDrawingTapped {
-				if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
-					handler( drawing: drawing, indexPath: indexPath )
-				}
+			if let handler = galleryDrawingTapped, drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
+				handler( drawing: drawing, indexPath: indexPath )
 			}
 		}
 	}
 
 	override func configureCell( cell:UICollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
-		let store = self.store
-		let flowLayout = self.collectionView.collectionViewLayout as UICollectionViewFlowLayout
-		let itemSize = flowLayout.itemSize
-		let thumbnailHeight = round(itemSize.height * 0.8)
 
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
-			var galleryCell = cell as GalleryCollectionViewCell
-			galleryCell.namesLabel.text = drawing.artistDisplayNames
-			galleryCell.dateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
+			var galleryCell = cell as! GalleryCollectionViewCell
+
+			galleryCell.drawing = drawing
+
+			let nameAttrs = [
+				NSFontAttributeName: UIFont(name: "Baskerville", size: 12)!,
+				NSForegroundColorAttributeName: UIColor.whiteColor()
+			]
+			let dateAttrs = [
+				NSFontAttributeName: UIFont(name: "Baskerville-Italic", size: 12)!,
+				NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.7)
+			]
+
+			var attributedText = NSMutableAttributedString(string: drawing.artistDisplayNames, attributes: nameAttrs)
+			attributedText.appendAttributedString(NSAttributedString(string: "\n" + dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date)),attributes: dateAttrs))
+
+			galleryCell.label.attributedText = attributedText
 			galleryCell.deleteButtonVisible = self.editMode
 
 			// set the index in collection to aid in wiggle cycle direction (odd/even wiggle in different directions)
 			galleryCell.indexInCollection = indexPath.item
-
-			// use the thumbnail's size to set the cell image size & aspect ratio
-			let thumbnailActualHeight = CGFloat(drawing.thumbnailHeight)
-			let thumbnailActualWidth = CGFloat(drawing.thumbnailWidth)
-			let thumbnailWidth = round(thumbnailActualWidth * (thumbnailHeight/thumbnailActualHeight))
-			galleryCell.imageViewHeightConstraint.constant = thumbnailHeight
-			galleryCell.imageViewWidthConstraint.constant = thumbnailWidth
 
 
 			galleryCell.onLongPress = {
@@ -299,55 +334,53 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 				[weak self]
 				(cell:GalleryCollectionViewCell)->() in
 				if let sself = self {
-
-					store.managedObjectContext?.deleteObject(drawing)
-					store.save()
-
+					sself.store.managedObjectContext?.deleteObject(drawing)
+					sself.store.save()
 				}
 			}
 
-			let cache = _renderedIconCache
-			if let renderedIcon = cache.objectForKey(drawing.uuid) as? UIImage {
+			let cache = renderedIconCache
+			if let thumbnail = cache.objectForKey(drawing.uuid) as? UIImage {
 
-				galleryCell.imageView.animate = false
-				galleryCell.imageView.image = renderedIcon
+				// no need to animate, since the thumbnail is already available
+				galleryCell.setThumbnail(thumbnail, animate: false)
 
 			} else {
 
-				let queue = _thumbnailCompositorQueue
-				galleryCell.thumbnailLoadAction = CancelableAction<UIImage>(action: { done, canceled in
+				let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+				let itemSize = flowLayout.itemSize
+				let thumbnailHeight = itemSize.height
+				let queue = thumbnailCompositorQueue
 
-					dispatch_async( queue ) {
+				dispatch_async( queue ) {
 
-						let size = CGSize( width: thumbnailWidth, height: thumbnailHeight )
-						let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+					// render a thumbnail that is the max possible size for our layout
 
-						var thumbnail = UIImage( data: drawing.thumbnail )!
-						thumbnail = thumbnail.imageByScalingToSize(size, contentMode: .ScaleAspectFit, scale: 0)
+					var thumbnail = UIImage( data: drawing.thumbnail )!
+					let size = CGSize( width: round(thumbnail.size.width * thumbnailHeight / thumbnail.size.height), height: thumbnailHeight )
+					let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+					thumbnail = thumbnail.imageByScalingToSize(size, contentMode: .ScaleAspectFit, scale: 0)
 
-						UIGraphicsBeginImageContextWithOptions(size, true, 0)
+					UIGraphicsBeginImageContextWithOptions(size, true, 0)
 
-						self._thumbnailBackgroundColor.set()
-						UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
+					self.thumbnailBackgroundColor.set()
+					UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
 
-						if !canceled() {
-							thumbnail.drawAtPoint(CGPoint.zeroPoint, blendMode: kCGBlendModeMultiply, alpha: 1)
-							thumbnail = UIGraphicsGetImageFromCurrentImageContext()
-							UIGraphicsEndImageContext()
+					thumbnail.drawAtPoint(CGPoint.zeroPoint, blendMode: kCGBlendModeMultiply, alpha: 1)
+					thumbnail = UIGraphicsGetImageFromCurrentImageContext()
+					UIGraphicsEndImageContext()
 
-							// we're done - add to icon cache and finish
-							cache.setObject(thumbnail, forKey: drawing.uuid)
-							done( result:thumbnail )
-						} else {
-							UIGraphicsEndImageContext()
+					// we're done - add to icon cache and finish
+					cache.setObject(thumbnail, forKey: drawing.uuid)
+
+					dispatch_main {
+						// only assign if the cell wasn't recycled while we rendered
+						if galleryCell.drawing === drawing {
+							// animate, because we had to wait for rendering to complete
+							galleryCell.setThumbnail(thumbnail, animate: true)
 						}
 					}
-				}, done: { ( result:UIImage ) -> () in
-					dispatch_main {
-						galleryCell.imageView.animate = true
-						galleryCell.imageView.image = result
-					}
-				})
+				}
 			}
 
 		} else {
@@ -355,17 +388,12 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 		}
 	}
 
-	var _dateFormatter:NSDateFormatter?
-	var dateFormatter:NSDateFormatter {
-		if _dateFormatter != nil {
-			return _dateFormatter!
-		}
-
-		_dateFormatter = NSDateFormatter()
-		_dateFormatter!.timeStyle = NSDateFormatterStyle.ShortStyle
-		_dateFormatter!.dateStyle = NSDateFormatterStyle.ShortStyle
-		return _dateFormatter!
-	}
+	lazy var dateFormatter:NSDateFormatter = {
+		let dateFormatter = NSDateFormatter()
+		dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
+		dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+		return dateFormatter
+	}()
 }
 
 // MARK: - GalleryViewController
@@ -376,11 +404,11 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 	var store:GalleryStore!
 	weak var delegate:GalleryViewControllerDelegate?
-	var _dataSource:GalleryCollectionViewDataSource!
 
-	var _searchField = SquizitThemeSearchField(frame: CGRect.zeroRect )
-	var _fixedHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
-	let _fixedHeaderHeight:CGFloat = 60
+	private var dataSource:GalleryCollectionViewDataSource!
+	private var searchField = SquizitThemeSearchField(frame: CGRect.zeroRect )
+	private var fixedHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
+	private let fixedHeaderHeight:CGFloat = 60
 
 	required init(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
@@ -397,9 +425,9 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		collectionView.backgroundColor = SquizitTheme.galleryBackgroundColor()
 
 
-		_dataSource = GalleryCollectionViewDataSource(store: store, collectionView: collectionView )
+		dataSource = GalleryCollectionViewDataSource(store: store, collectionView: collectionView )
 
-		_dataSource.editModeChanged = {
+		dataSource.editModeChanged = {
 			[weak self] ( inEditMode:Bool ) -> Void in
 			if let sself = self {
 				if inEditMode {
@@ -410,7 +438,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 			}
 		}
 
-		_dataSource.galleryDrawingTapped = {
+		dataSource.galleryDrawingTapped = {
 			[weak self] ( drawing:GalleryDrawing, indexPath:NSIndexPath ) in
 			if let sself = self {
 				sself.showDetail( drawing, indexPath:indexPath )
@@ -424,20 +452,20 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		//	Create the fixed header view
 		//
 
-		_searchField.delegate = self
-		_searchField.placeholder = "Who drew..."
-		_searchField.returnKeyType = UIReturnKeyType.Search
-		_searchField.addTarget(self, action: "searchTextChanged:", forControlEvents: UIControlEvents.EditingChanged)
+		searchField.delegate = self
+		searchField.placeholder = "Who drew..."
+		searchField.returnKeyType = UIReturnKeyType.Search
+		searchField.addTarget(self, action: "searchTextChanged:", forControlEvents: UIControlEvents.EditingChanged)
 
-		_fixedHeaderView.addSubview(_searchField)
-		view.addSubview(_fixedHeaderView)
+		fixedHeaderView.addSubview(searchField)
+		view.addSubview(fixedHeaderView)
 
 
 		//
 		//	Make room for fixed header
 		//
 
-		collectionView.contentInset = UIEdgeInsets(top: _fixedHeaderHeight + 20, left: 0, bottom: 0, right: 0)
+		collectionView.contentInset = UIEdgeInsets(top: fixedHeaderHeight, left: 0, bottom: 0, right: 0)
 
 
 		//
@@ -448,23 +476,37 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardDidDismiss:", name: UIKeyboardDidHideNotification, object: nil)
 	}
 
+	private var suggestedItemWidth:CGFloat {
+		if traitCollection.horizontalSizeClass == .Compact || traitCollection.verticalSizeClass == .Compact {
+			return 160
+		} else {
+			return 256
+		}
+	}
+
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 
-		//	Layout the fixed-position header containing the search field
-		let headerFrame = CGRect(x:0, y: self.topLayoutGuide.length, width: self.view.bounds.width, height: _fixedHeaderHeight)
-		_fixedHeaderView.frame = headerFrame
+		let aspect:CGFloat = 360.0 / 300.0
+		var suggestedItemWidth = self.suggestedItemWidth
+		var suggestedItemSize = CGSize(width:suggestedItemWidth, height: suggestedItemWidth*aspect)
+		var itemWidth = floor(view.bounds.width / round(view.bounds.width / suggestedItemSize.width))
+		let itemHeight = round(suggestedItemSize.height)
+		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+		flowLayout.itemSize = CGSize(width:itemWidth, height:itemHeight)
+		collectionView.reloadData()
 
-		let bounds = _fixedHeaderView.bounds
+
+		//	Layout the fixed-position header containing the search field
+		let headerFrame = CGRect(x:0, y: self.topLayoutGuide.length, width: self.view.bounds.width, height: fixedHeaderHeight)
+		fixedHeaderView.frame = headerFrame
+
+		let bounds = fixedHeaderView.bounds
 		let margin:CGFloat = 20
-		let searchFieldHeight:CGFloat = _searchField.intrinsicContentSize().height
+		let searchFieldHeight:CGFloat = searchField.intrinsicContentSize().height
 		let searchFieldFrame = CGRect(x: margin, y: bounds.midY - searchFieldHeight/2, width: bounds.width-2*margin, height: searchFieldHeight)
 
-		_searchField.frame = searchFieldFrame
-	}
-
-	override func didReceiveMemoryWarning() {
-		_dataSource.didReceiveMemoryWarning()
+		searchField.frame = searchFieldFrame
 	}
 
 	override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -472,12 +514,12 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 	}
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		if segue.identifier == "showDetail" {
-			if let detailVC = segue.destinationViewController as? GalleryDetailViewController {
+		if segue.identifier == "showPageDetail" {
+			if let detailVC = segue.destinationViewController as? GalleryDetailPageViewController {
 				if let indexPath = sender as? NSIndexPath {
 					detailVC.store = store
-					detailVC.filterPredicate = _dataSource.filterPredicate
-					detailVC.initialIndexPath = indexPath
+					detailVC.filterPredicate = dataSource.filterPredicate
+					detailVC.initialIndex = indexPath.item
 				} else {
 					assertionFailure("Didn't pass indexPath")
 				}
@@ -494,37 +536,37 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 	}
 
 	dynamic func onDoneEditing( sender:AnyObject ) {
-		_dataSource.editMode = false
+		dataSource.editMode = false
 	}
 
 	// MARK: UITextFieldDelegate
 
 	dynamic func searchTextChanged( sender:UITextField ) {
-		if sender === _searchField {
-			artistFilter = _searchField.text
+		if sender === searchField {
+			artistFilter = searchField.text
 		}
 	}
 
 	func textFieldShouldEndEditing(textField: UITextField) -> Bool {
-		if textField === _searchField {}
+		if textField === searchField {}
 		return true
 	}
 
 	func textFieldShouldReturn(textField: UITextField) -> Bool {
-		if textField == _searchField {
+		if textField === searchField {
 			textField.resignFirstResponder()
 		}
 		return true
 	}
 
 	func textFieldDidEndEditing(textField: UITextField) {
-		if textField == _searchField {
+		if textField === searchField {
 			textField.resignFirstResponder()
 		}
 	}
 
 	func textFieldShouldClear(textField: UITextField) -> Bool {
-		if textField == _searchField {
+		if textField === searchField {
 			textField.resignFirstResponder()
 		}
 		return true
@@ -539,7 +581,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 	// MARK: Private
 
 	func showDetail( drawing:GalleryDrawing, indexPath:NSIndexPath ) {
-		self.performSegueWithIdentifier("showDetail", sender: indexPath)
+		self.performSegueWithIdentifier("showPageDetail", sender: indexPath)
 	}
 
 	var artistFilter:String = "" {
@@ -549,7 +591,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 				_debouncedArtistFilterApplicator = debounce(0.1) {
 					[weak self] () -> () in
 					if let sself = self {
-						sself._dataSource.artistNameFilter = sself.artistFilter
+						sself.dataSource.artistNameFilter = sself.artistFilter
 							.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
 							.capitalizedStringWithLocale(NSLocale.currentLocale())
 					}

@@ -1,28 +1,28 @@
-#TODO
+#CURRENT
 
-	- add tweet + share buttons to the save-to-gallery vc's dialog, perhaps /outside/ the dialog, over the grey blanker
-	- on Debug podcast was discussion that Apple made public touch APIs to determine touch intensity - could use this to modulate line width -- see UITouch -majorRadius
-	
+- When toggle zoom/pan mode in UniversalMatchViewPresenterView, there's still a jump
+
+- Immediate vector drawing pipeline has following issues:
+	- doesn't clip drawing to viewport
+	- player N where N > 0 can't see drawing (maybe a matter of context transforms)
+	- zoomed mode still pixellated. Probably something to do with layer rasterization scale...
+
 #FIXME
 
-	- Terrible performance on iPad3
-
-	GalleryDetailViewController::updateItemSize
-		The viewController's topLayoutGuide.length is zero, so I'm manually setting a fudge factor of 44 to accommodate the navbar height so UICollectionViewFlowLayout doesn't complain about inadequate room to layout cells. 
-
-	SaveToGalleryTransitionManager doesn't actually work - not certain if it's my bug or iOS8. It's disabled, and I'm doing a hacky workaround.
+- Terrible performance on iPad3
+- SaveToGalleryTransitionManager doesn't actually work - not certain if it's my bug or iOS8. It's disabled, and I'm doing a hacky workaround.
 
 #PROBLEMS
 
 #WRITEUP
 
-	Squizit is a modern take on an old parlour game, "Exquisite Corpse", which was played by surrealists in the 1920's. In it, the first player draws something on the top half or third of a sheet of paper, and then folds it such that the next player can only see the bottom edge. The next player then draws what he or she sees fit based on the the visible bottom portion of the previous player's turn. When complete, the paper is unfolded revealing a strange and often wonderfully absurd drawing.
-	
-	Squizit is an "Exquisite Corpse" game for the iPad, I hope you like it.
-	
-	Features:
-		- Two or Three-person matches
-		- And a gallery for perusing previous matches
+Squizit is a modern take on an old parlour game, "Exquisite Corpse", which was played by surrealists in the 1920's. In it, the first player draws something on the top half or third of a sheet of paper, and then folds it such that the next player can only see the bottom edge. The next player then draws what he or she sees fit based on the the visible bottom portion of the previous player's turn. When complete, the paper is unfolded revealing a strange and often wonderfully absurd drawing.
+
+Squizit is an "Exquisite Corpse" game for the iPad, I hope you like it.
+
+Features:
+	- Two or Three-person matches
+	- And a gallery for perusing previous matches
 
 	
 #SNIPPETS

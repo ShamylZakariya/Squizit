@@ -8,6 +8,14 @@
 
 import Foundation
 
+public final class Box<T> {
+	let value: T
+
+	init(_ value: T) {
+		self.value = value
+	}
+}
+
 public struct Error {
 
 	public let message: String
@@ -18,7 +26,7 @@ public struct Error {
 }
 
 public enum Result<T> {
-	case Success(@autoclosure () -> T)
+	case Success(Box<T>)
 	case Failure(Error)
 	
 	public var error: Error? {
@@ -33,7 +41,7 @@ public enum Result<T> {
 	public var value: T! {
 		switch self {
 		case .Success(let value):
-			return value()
+			return value.value
 		case .Failure:
 			return nil
 		}

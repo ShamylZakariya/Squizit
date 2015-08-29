@@ -55,7 +55,7 @@ class Match {
 		var readResult = reader.getMatch()
 		switch readResult {
 			case .Success( let value ):
-				return .Success(value())
+				return .Success(value)
 
 			case .Failure:
 				// native failed, this is an older file, in BigEndian
@@ -70,7 +70,7 @@ class Match {
 
 		let writer = MutableBinaryCoder(order:nativeOrder())
 		writer.putMatch(self)
-		return .Success(writer.data)
+		return .Success(Box(writer.data))
 	}
 
 	func save( fileUrl:NSURL ) -> Result<Int> {
@@ -81,7 +81,7 @@ class Match {
 		}
 
 		serializationResult.value.writeToURL(fileUrl, atomically: true)
-		return .Success(serializationResult.value.length)
+		return .Success(Box(serializationResult.value.length))
 	}
 
 	func render( backgroundColor:UIColor? = nil, scale:CGFloat = 0, watermark:Bool = false ) -> UIImage {
@@ -146,9 +146,13 @@ class Match {
 
 	private func viewportForPlayer( player:Int ) -> CGRect {
 		let rowHeight:CGFloat = CGFloat(round(_stageSize.height / CGFloat(_players)))
-		let size = CGSize(width: _stageSize.width, height: rowHeight + 2*_overlap )
 
-		return CGRect(x: 0, y: (rowHeight * CGFloat(player)) - _overlap, width: size.width, height: size.height )
+		switch player {
+		case _players - 1:
+			return CGRect(x:0, y:_stageSize.height-rowHeight, width: _stageSize.width, height: rowHeight)
+		default:
+			return CGRect(x: 0, y: (rowHeight * CGFloat(player)), width: _stageSize.width, height: rowHeight + _overlap )
+		}
 	}
 }
 
@@ -209,7 +213,7 @@ extension BinaryCoder {
 		//	Success
 		//
 
-		return .Success(match)
+		return .Success(Box(match))
 	}
 }
 

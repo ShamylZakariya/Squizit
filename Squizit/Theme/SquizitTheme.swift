@@ -18,37 +18,26 @@ class SquizitTheme {
 		//	UINavbar
 		//
 
-		let navAppearance = UINavigationBar.appearance()
-		navAppearance.barStyle = UIBarStyle.Black
-		navAppearance.translucent = true
-
-		// apparently, titleTextAttributes won't accept a swift dictionary?!
-		var tta = NSMutableDictionary()
-		tta[NSFontAttributeName] = UIFont(name: "Baskerville-Bold", size: 21)
-		tta[NSForegroundColorAttributeName] = UIColor.whiteColor()
-		navAppearance.titleTextAttributes = tta
+		UINavigationBar.appearance().barStyle = UIBarStyle.Black
+		UINavigationBar.appearance().translucent = true
+		UINavigationBar.appearance().titleTextAttributes = [
+			NSFontAttributeName: UIFont(name: "Avenir-Black", size: 21) as! AnyObject,
+			NSForegroundColorAttributeName: UIColor.whiteColor() as AnyObject
+		]
 
 		//
 		//	UIBarButtonItem
-		//	As above, titleTextAttributes won't accept a swift dictionary?!
 		//
 
-		tta = NSMutableDictionary()
-		tta[NSFontAttributeName] = UIFont(name: "Baskerville", size: 18)
-
-		let bbiAppearance = UIBarButtonItem.appearance()
-		bbiAppearance.setTitleTextAttributes(tta, forState: .Normal)
+		UIBarButtonItem.appearance().setTitleTextAttributes([
+			NSFontAttributeName: UIFont(name: "Avenir", size: 18) as! AnyObject
+		], forState: UIControlState.Normal)
 
 		//
 		//	Swift doesn't support appearanceWhenContainedIn... so we need to bridge to ObjC
 		//
 
 		SquizitTheme_ConfigureAppearanceProxies()
-
-	}
-
-	class func cubeBackgroundImage() -> UIImage {
-		return UIImage(named: "cube-pattern")!
 	}
 
 	class func leatherBackgroundImage() -> UIImage {
@@ -69,8 +58,8 @@ class SquizitTheme {
 		return UIImage(named: "thumbnail-paper-pattern")!
 	}
 
-	class func rootScreenBackgroundColor() -> UIColor {
-		return UIColor( patternImage: self.cubeBackgroundImage() )
+	class func rootScreenBackgroundImage() -> UIImage {
+		return UIImage(named: "universal-cube-pattern")!
 	}
 
 	// background color of paper surface (e.g., background of drawing canvas)
@@ -87,13 +76,12 @@ class SquizitTheme {
 		return UIImage(named:"export-watermark")!
 	}
 
-	// background color for the match view
-	class func matchBackgroundColor() -> UIColor {
+	class func leatherBackgroundColor() -> UIColor {
 		return UIColor( patternImage: self.leatherBackgroundImage() )
 	}
 
-	// background color for the shields displayed during matches
-	class func matchShieldBackgroundColor() -> UIColor {
+	// background color for the match view
+	class func matchBackgroundColor() -> UIColor {
 		return UIColor( patternImage: self.leatherBackgroundImage() )
 	}
 
@@ -183,9 +171,64 @@ class SquizitThemeButton : UIButton {
 	}
 
 	override func intrinsicContentSize() -> CGSize {
-		return CGSize(width: super.intrinsicContentSize().width, height: 44)
+		return CGSize(width: super.intrinsicContentSize().width + 44, height: 44)
+	}
+}
+
+class SquizitGameTextButton : UIButton {
+
+	var compact:Bool = false {
+		didSet {
+			update()
+		}
 	}
 
+	class func create(title:String, compact:Bool) ->SquizitGameTextButton {
+		var button = SquizitGameTextButton.buttonWithType(.Custom) as! SquizitGameTextButton
+		button.setTitle(title, forState: .Normal)
+		button.compact = compact
+		return button
+	}
+
+	override func setTitle(title: String!, forState state: UIControlState) {
+		super.setTitle(title.uppercaseString, forState: state)
+	}
+
+	override func didMoveToSuperview() {
+		super.didMoveToSuperview()
+		update()
+	}
+
+	override func didMoveToWindow() {
+		super.didMoveToWindow()
+		update()
+	}
+
+	override var enabled:Bool {
+		didSet {
+			UIView.animateWithDuration(0.3, animations: { [unowned self] in
+				self.layer.opacity = self.enabled ? 1 : 0.3
+			})
+		}
+	}
+
+	override func tintColorDidChange() {
+		super.tintColorDidChange()
+		update()
+	}
+
+	private func update() {
+		titleLabel!.font = UIFont(name: "Avenir-Light", size: UIFont.buttonFontSize() * CGFloat(compact ? 0.75 : 1.0))
+		layer.cornerRadius = 0
+		backgroundColor = UIColor.clearColor()
+
+		setTitleColor(tintColor, forState: .Normal)
+		setTitleColor(tintColor!.colorWithAlphaComponent(0.5), forState: .Highlighted)
+	}
+
+	override func intrinsicContentSize() -> CGSize {
+		return CGSize(width: super.intrinsicContentSize().width + 22, height: 44)
+	}
 }
 
 class SquizitThemeNameInputField : UITextField {
@@ -249,7 +292,7 @@ class SquizitThemeSearchField : UITextField {
 
 	private func commonInit() {
 
-		var clearButton:UIButton = UIButton.buttonWithType(UIButtonType.Custom) as UIButton
+		var clearButton:UIButton = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
 		var closeImage = UIImage(named: "gallery-clear-search-button")!.imageWithRenderingMode(.AlwaysTemplate)
 		clearButton.setImage(closeImage, forState: .Normal)
 		clearButton.frame = CGRect(x: 0, y: 0, width: closeImage.size.width, height: closeImage.size.height)
@@ -322,7 +365,38 @@ class SquizitThemeSearchField : UITextField {
 	}
 }
 
-class SquizitThemeLabel : UIView {
+/**
+	This is a very specific themed label - it draws the "or" label on the root view controller
+*/
+class SquizitThemeRootViewControllerOrLabel : UILabel {
+
+	var margin:CGFloat = 20 {
+		didSet {
+			setNeedsDisplay()
+		}
+	}
+
+	override func drawRect(rect: CGRect) {
+		super.drawRect(rect)
+
+		let textRect = textRectForBounds(bounds, limitedToNumberOfLines: 0).rectByInsetting(dx: -margin, dy: 0)
+		let y = round(textRect.midY + (font.ascender - font.capHeight)/2) + 0.5
+
+		var stroke = UIBezierPath()
+		stroke.moveToPoint(CGPoint(x:bounds.minX + margin, y:y))
+		stroke.addLineToPoint(CGPoint(x:textRect.minX, y:y))
+
+		stroke.moveToPoint(CGPoint(x:textRect.maxX, y:y))
+		stroke.addLineToPoint(CGPoint(x:bounds.maxX - margin, y:y))
+
+		textColor.colorWithAlphaComponent(0.5).set()
+		stroke.lineWidth = 1
+		stroke.stroke()
+	}
+
+}
+
+class SquizitThemeInstructionsLabel : UIView {
 
 	private var _label:UILabel!
 

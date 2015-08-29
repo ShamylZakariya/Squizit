@@ -14,6 +14,7 @@ class ToolIconView : UIView {
 	var imageView:UIImageView!
 	var active:Bool = false {
 		didSet {
+			imageView.alpha = active ? 1.0 : 0.5
 			setNeedsDisplay()
 		}
 	}
@@ -35,21 +36,17 @@ class ToolIconView : UIView {
 	}
 
 	override func layoutSubviews() {
-		let width = bounds.width
-		let inset = width * 0.2
-		imageView.frame = self.bounds.rectByInsetting(dx: inset, dy: inset)
+		imageView.frame = self.bounds
 	}
 
 	override func drawRect(rect: CGRect) {
 		if !active {
+			let backdrop = UIBezierPath(ovalInRect: self.bounds.rectByInsetting(dx: 1, dy: 1).rectByOffsetting(dx: 0.5, dy: 0.5))
 			tintColor.colorWithAlphaComponent(0.5).set()
-			let border = UIBezierPath(ovalInRect: self.bounds.rectByInsetting(dx: 1, dy: 1).rectByOffsetting(dx: 0.5, dy: 0.5))
-			border.lineWidth = 1
-			border.setLineDash([3,3], count: 2, phase: 0)
-			border.stroke()
+			backdrop.lineWidth = 1
+			backdrop.stroke()
 		}
 	}
-
 }
 
 /**
@@ -70,13 +67,21 @@ class DrawingToolSelector : UIControl {
 		commonInit()
 	}
 
-	var margin:CGFloat = 40 {
+	override var enabled:Bool {
+		didSet {
+			UIView.animateWithDuration(0.3, animations: { [unowned self] in
+				self.layer.opacity = self.enabled ? 1 : 0.3
+				})
+		}
+	}
+
+	var toolSeparation:CGFloat = 20 {
 		didSet {
 			setNeedsLayout()
 		}
 	}
 
-	var buttonSize:CGFloat = 88 {
+	var toolSize:CGFloat = 45 {
 		didSet {
 			setNeedsLayout()
 		}
@@ -122,30 +127,37 @@ class DrawingToolSelector : UIControl {
 	}
 
 	override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
-		for tool in _tools {
-			if tool.frame.contains(point) {
-				return true
+		if enabled {
+			for tool in _tools {
+				if tool.frame.contains(point) {
+					return true
+				}
 			}
 		}
 
 		return false
 	}
 
+	override func intrinsicContentSize() -> CGSize {
+		let toolsWidth = CGFloat(_tools.count) * toolSize
+		let toolsSeparation = CGFloat(_tools.count-1) * toolSeparation
+		return CGSize(width: toolsWidth + toolsSeparation, height: toolSize)
+	}
+
 	// MARK: Private
 
 	func layoutTools() {
 		let width = self.bounds.width
-		let maxButtonSize:CGFloat = (width - ((CGFloat(_tools.count)-1)*margin)) / CGFloat(_tools.count)
-		let size = min( min(bounds.height,buttonSize), maxButtonSize )
-		let inset = size * 0.25
-		let contentWidth = CGFloat(_tools.count) * size + (CGFloat(_tools.count) - 1.0) * margin;
+		let maxButtonSize:CGFloat = (width - ((CGFloat(_tools.count)-1)*toolSeparation)) / CGFloat(_tools.count)
+		let size = round(min( min(bounds.height,toolSize), maxButtonSize ))
+		let contentWidth = CGFloat(_tools.count) * size + (CGFloat(_tools.count) - 1.0) * toolSeparation;
 		var x = width/2 - contentWidth/2
 		var y = bounds.height/2 - size/2
 
 		for tool in _tools {
-			let frame = CGRect(x: x, y: y, width: size, height: size).integerRect
+			let frame = CGRect(x: round(x), y: round(y), width: size, height: size)
 			tool.frame = frame
-			x += margin + size
+			x += toolSeparation + size
 		}
 	}
 
@@ -168,6 +180,10 @@ class DrawingToolSelector : UIControl {
 	}
 
 	func toolWasTapped( tgr:UITapGestureRecognizer ) {
+
+		if !enabled {
+			return
+		}
 
 		for (i,tool) in enumerate(_tools) {
 			if tool == tgr.view {
@@ -219,6 +235,10 @@ class DrawingToolSelector : UIControl {
 		_highlighter = UIView(frame: CGRectZero)
 		_highlighter.opaque = false
 		_highlighter.alpha = 1
+		_highlighter.layer.shadowColor = UIColor.blackColor().CGColor
+		_highlighter.layer.shadowOffset = CGSize(width: 0, height: 1)
+		_highlighter.layer.shadowOpacity = 0.25
+		_highlighter.layer.shadowRadius = 2
 		addSubview(_highlighter)
 	}
 

@@ -11,6 +11,12 @@ import UIKit
 
 class RootViewController : UIViewController, GalleryViewControllerDelegate {
 
+	private let ShowIntroBounce = true
+	private let UseCustomTransitions = true
+
+
+	@IBOutlet weak var subtitleLabel: UILabel!
+	@IBOutlet weak var orLabel: UILabel!
 
 	@IBOutlet weak var twoPlayersButton: UIButton!
 	@IBOutlet weak var threePlayersButton: UIButton!
@@ -19,19 +25,22 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 	@IBOutlet weak var borderView: RootBorderView!	
 	@IBOutlet weak var howToPlayButton: SquizitThemeButton!
 	@IBOutlet weak var twitterButton: SquizitThemeButton!
-	@IBOutlet weak var twitterButtonBottomConstraint: NSLayoutConstraint!
+	@IBOutlet weak var extraButtonsBottomConstraint: NSLayoutConstraint!
+	@IBOutlet weak var extraButtonsHeightConstraint: NSLayoutConstraint!
+
+	@IBOutlet weak var contentViewCenterYConstraint: NSLayoutConstraint!
+
+	@IBOutlet weak var itemWidthConstraint: NSLayoutConstraint!
+	@IBOutlet weak var buttonHeightConstraint: NSLayoutConstraint!
+
 
 	override func viewDidLoad() {
 
+		subtitleLabel.font = UIFont(name: "Baskerville-Italic", size: UIFont.labelFontSize())
+		orLabel.font = UIFont(name: "Baskerville-Italic", size: UIFont.labelFontSize() * 1.5)
+
 		twitterButton.bordered = false
 		howToPlayButton.bordered = false
-
-		#if DEBUG
-			var tgr = UITapGestureRecognizer(target: self, action: "showTestDrawingView:")
-			tgr.numberOfTapsRequired = 2
-			tgr.numberOfTouchesRequired = 2
-			self.view.addGestureRecognizer(tgr)
-		#endif
 	}
 
 	private var playedIntroAnimation:Bool = false
@@ -41,7 +50,7 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 
 		UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: UIStatusBarAnimation.Fade)
 
-		if !playedIntroAnimation {
+		if ShowIntroBounce && !playedIntroAnimation {
 			contentView.alpha = 0
 			contentView.transform = CGAffineTransformMakeScale(0.9, 0.9)
 			borderView.alpha = 0
@@ -50,26 +59,24 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 			howToPlayButton.alpha = 0
 			twitterButton.alpha = 0
 		}
+	}
 
-		switch UIDevice.currentDevice().userInterfaceIdiom {
-			case UIUserInterfaceIdiom.Pad:
-				borderView.borderSize = 32
-
-			case UIUserInterfaceIdiom.Phone:
-				borderView.borderSize = 6
-
-			default:
-				break;
+	override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+		if traitCollection.horizontalSizeClass == .Compact || traitCollection.verticalSizeClass == .Compact {
+			borderView.borderSize = 6
+			borderView.edgeInsets = UIEdgeInsets(top: 16, left: 0, bottom: 0, right: 0)
+		} else {
+			borderView.borderSize = 32
+			borderView.edgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 		}
 
-		twitterButtonBottomConstraint.constant = CGFloat(3 * borderView.borderSize)
-
+		extraButtonsBottomConstraint.constant = CGFloat(3 * borderView.borderSize)
 	}
 
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
 
-		if !playedIntroAnimation {
+		if ShowIntroBounce && !playedIntroAnimation {
 			UIView.animateWithDuration(1.5,
 				delay: 0.0,
 				usingSpringWithDamping: CGFloat(0.4),
@@ -102,17 +109,25 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 		return UIStatusBarStyle.LightContent
 	}
 
+	override func prefersStatusBarHidden() -> Bool {
+		return false
+	}
+
 	private var transitionManager = FullscreenModalTransitionManager()
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 
-		let destinationVC = segue.destinationViewController as UIViewController
-		destinationVC.transitioningDelegate = transitionManager
+		let destinationVC = segue.destinationViewController as! UIViewController
+
+		if UseCustomTransitions {
+			destinationVC.modalPresentationStyle = UIModalPresentationStyle.FullScreen
+			destinationVC.transitioningDelegate = transitionManager
+		}
 
 		if let identifier = segue.identifier {
 			switch ( identifier ) {
 				case "showGallery":
-					let navVC = destinationVC as UINavigationController
+					let navVC = destinationVC as! UINavigationController
 					if let galleryVC = navVC.childViewControllers.first as? GalleryViewController {
 						galleryVC.store = (UIApplication.sharedApplication().delegate as? AppDelegate)!.galleryStore
 						galleryVC.delegate = self
@@ -120,19 +135,15 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 						assertionFailure("Unable to extract GalleryViewController from segue")
 					}
 
-				case "beginTwoPlayerMatch", "beginThreePlayerMatch":
-					var players = 0
-					if segue.identifier == "beginTwoPlayerMatch" {
-						players = 2
-					} else {
-						players = 3
-					}
+				case "beginTwoPlayerMatch":
+					let matchVC = destinationVC as! UniversalMatchViewController
+					matchVC.players = 2
 
-					let matchVC = destinationVC as MatchViewController
-					let screenBounds = UIScreen.mainScreen().bounds
-					matchVC.match = Match(players: players, stageSize: CGSize(width: screenBounds.width, height: screenBounds.height), overlap: 4)
+				case "beginThreePlayerMatch":
+					let matchVC = destinationVC as! UniversalMatchViewController
+					matchVC.players = 3
 
-				case "showTestDrawingView", "showHowToPlay":
+				case "showHowToPlay":
 					// no setup needed for these two
 					break;
 
@@ -149,10 +160,6 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 		if let twitterURL = NSURL(string: "https://twitter.com/squizitapp") {
 			UIApplication.sharedApplication().openURL(twitterURL)
 		}
-	}
-
-	dynamic func showTestDrawingView( sender:AnyObject ) {
-		performSegueWithIdentifier("showTestDrawingView", sender: sender)
 	}
 
 	// MARK: GalleryViewControllerDelegate

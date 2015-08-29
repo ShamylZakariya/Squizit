@@ -11,7 +11,7 @@ import UIKit
 
 class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate  {
 
-	var presenting:Bool = true
+	private var presenting:Bool = true
 
 	// MARK: UIViewControllerAnimatedTransitioning protocol methods
 
@@ -75,7 +75,10 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 				}
 
 			},
-			completion: nil )
+			completion: { completed in
+				// set transform of now hidden view to identity to prevent breakage during rotation
+				fromView.transform = CGAffineTransformIdentity
+			})
 
 		UIView.animateWithDuration(duration,
 			delay: duration/6,

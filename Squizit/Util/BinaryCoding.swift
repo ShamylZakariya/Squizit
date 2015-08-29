@@ -130,12 +130,12 @@ class BinaryCoder : NSCopying, NSMutableCopying {
 		_bits.dealloc(sizeof(UIntMax))
 	}
 
-	func copyWithZone(zone: NSZone) -> AnyObject {
-		return BinaryCoder(order: _order, data: data.copyWithZone(zone) as NSData)
+	@objc func copyWithZone(zone: NSZone) -> AnyObject {
+		return BinaryCoder(order: _order, data: data.copyWithZone(zone) as! NSData)
 	}
 
-	func mutableCopyWithZone(zone: NSZone) -> AnyObject? {
-		return MutableBinaryCoder(order: _order, mutableData: data.mutableCopyWithZone(zone) as NSMutableData)
+	@objc func mutableCopyWithZone(zone: NSZone) -> AnyObject? {
+		return MutableBinaryCoder(order: _order, mutableData: data.mutableCopyWithZone(zone) as! NSMutableData)
 	}
 
 	var data:NSData {

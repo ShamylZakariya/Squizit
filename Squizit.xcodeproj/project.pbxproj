@@ -9,22 +9,31 @@
 /* Begin PBXBuildFile section */
 		63267AD319CC7CE800B22242 /* FullscreenModalTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63267AD219CC7CE700B22242 /* FullscreenModalTransitionManager.swift */; };
 		6327299819C3403F003BCD76 /* ImagePresenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6327299719C3403F003BCD76 /* ImagePresenterView.swift */; };
-		6350C5EA19A1727B008CE4F5 /* MatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350C5E919A1727B008CE4F5 /* MatchViewController.swift */; };
-		6350C5EC19A24790008CE4F5 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350C5EB19A24790008CE4F5 /* RootViewController.swift */; };
-		63533B1019BCCD6C00ED8B7A /* QuitGameButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63533B0F19BCCD6C00ED8B7A /* QuitGameButton.swift */; };
-		63533B1319BE033A00ED8B7A /* DrawingTestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63533B1219BE033A00ED8B7A /* DrawingTestsViewController.swift */; };
+		6329ED311B305D000000B19A /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6329ED301B305D000000B19A /* Launch Screen.xib */; };
+		63533B1019BCCD6C00ED8B7A /* GameControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63533B0F19BCCD6C00ED8B7A /* GameControlButton.swift */; };
+		63533B1319BE033A00ED8B7A /* UniversalMatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63533B1219BE033A00ED8B7A /* UniversalMatchViewController.swift */; };
 		635DFA8119B76B6900102B6A /* Appearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 635DFA8019B76B6900102B6A /* Appearance.m */; };
-		635DFA8319BA025600102B6A /* GalleryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635DFA8219BA025600102B6A /* GalleryDetailViewController.swift */; };
 		635DFA8519BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635DFA8419BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift */; };
+		635F86DE1A66CBA800A67981 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 635F86DD1A66CBA800A67981 /* GameKit.framework */; };
+		635F86E11A66CC1300A67981 /* TurnBasedMatchHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635F86E01A66CC1300A67981 /* TurnBasedMatchHelper.swift */; };
 		636BFA9719B3DDD100A90A75 /* GCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636BFA9619B3DDD100A90A75 /* GCD.swift */; };
 		636CEA24199E586400BEBF53 /* DrawingInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA23199E586400BEBF53 /* DrawingInputController.swift */; };
 		636CEA29199F251200BEBF53 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA28199F251200BEBF53 /* Match.swift */; };
-		636CEA2B199F25F000BEBF53 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636CEA2A199F25F000BEBF53 /* MatchView.swift */; };
 		6376756119F00F9F00AAB604 /* BinaryCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6376756019F00F9F00AAB604 /* BinaryCoding.swift */; };
 		6376756219F00F9F00AAB604 /* BinaryCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6376756019F00F9F00AAB604 /* BinaryCoding.swift */; };
 		638576EC19A6481500581DE8 /* SquizitTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EB19A6481500581DE8 /* SquizitTheme.swift */; };
 		638576F019A65B4500581DE8 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EF19A65B4500581DE8 /* Geometry.swift */; };
 		638E459219C88EEC008D8CD9 /* RootBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638E459119C88EEC008D8CD9 /* RootBorderView.swift */; };
+		6394BA8A1B89019000E9434F /* CenteredImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA891B89019000E9434F /* CenteredImageView.swift */; };
+		6394BA8C1B8902A400E9434F /* GalleryDetailPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA8B1B8902A400E9434F /* GalleryDetailPageViewController.swift */; };
+		6394BA8E1B8903C700E9434F /* GalleryDetailPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA8D1B8903C700E9434F /* GalleryDetailPageView.swift */; };
+		6394BA901B8903E100E9434F /* GalleryDetailPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6394BA8F1B8903E100E9434F /* GalleryDetailPageView.xib */; };
+		6394BA921B89352000E9434F /* UIPageViewController+PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA911B89352000E9434F /* UIPageViewController+PageControl.swift */; };
+		6394BA941B8A471100E9434F /* UIView+AnchorPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA931B8A471100E9434F /* UIView+AnchorPoint.swift */; };
+		6394BA961B8A4C5100E9434F /* UniversalHowToPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA951B8A4C5100E9434F /* UniversalHowToPlayViewController.swift */; };
+		6394BA981B8A4D8800E9434F /* ManagedIndexedViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA971B8A4D8800E9434F /* ManagedIndexedViewViewController.swift */; };
+		6394BA9A1B8A4E7300E9434F /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394BA991B8A4E7300E9434F /* InstructionView.swift */; };
+		6394BA9C1B8A4EA100E9434F /* InstructionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6394BA9B1B8A4EA100E9434F /* InstructionView.xib */; };
 		63A4B7ED19D46C9700975048 /* Images.xcassets in Sources */ = {isa = PBXBuildFile; fileRef = 63BBEC9A19967A2300F6E2B3 /* Images.xcassets */; };
 		63A4B7F319D5C03400975048 /* SaveToGalleryTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A4B7F219D5C03400975048 /* SaveToGalleryTransitionManager.swift */; };
 		63B44AF519990DA100AE7B62 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBB19967B0C00F6E2B3 /* Stroke.swift */; };
@@ -40,10 +49,8 @@
 		63BBECA719967A2300F6E2B3 /* SquizitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECA619967A2300F6E2B3 /* SquizitTests.swift */; };
 		63BBECB619967ACC00F6E2B3 /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB519967ACC00F6E2B3 /* Drawing.swift */; };
 		63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBB19967B0C00F6E2B3 /* Stroke.swift */; };
-		63BC820419E441290047D414 /* HowToPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC820319E441290047D414 /* HowToPlayViewController.swift */; };
+		63DA0E6A1B57FCA800C66347 /* UniversalMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA0E691B57FCA800C66347 /* UniversalMatchView.swift */; };
 		63EBB83819A65C45003C3EC2 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638576EF19A65B4500581DE8 /* Geometry.swift */; };
-		63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB83A19A78BAA003C3EC2 /* MatchShieldView.swift */; };
-		63EBB83D19A97BFE003C3EC2 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB83C19A97BFD003C3EC2 /* RootView.swift */; };
 		63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */; };
 		63EBB87319AEC0DD003C3EC2 /* GalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87219AEC0DD003C3EC2 /* GalleryStore.swift */; };
 		63EBB87619AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87419AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld */; };
@@ -51,6 +58,8 @@
 		63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */; };
 		63EBB88319B0CBE6003C3EC2 /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */; };
 		63EFB1AD19D06C8100253560 /* CancelableAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EFB1AC19D06C8100253560 /* CancelableAction.swift */; };
+		63FAAC3C1B3F48B100B9C5CC /* UIImage_Alpha.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FAAC3B1B3F48B100B9C5CC /* UIImage_Alpha.swift */; };
+		63FAAC3E1B42E2D200B9C5CC /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FAAC3D1B42E2D200B9C5CC /* RootViewController.swift */; };
 		63FDE7321998249A0006B7E4 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
 /* End PBXBuildFile section */
 
@@ -67,22 +76,31 @@
 /* Begin PBXFileReference section */
 		63267AD219CC7CE700B22242 /* FullscreenModalTransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullscreenModalTransitionManager.swift; sourceTree = "<group>"; };
 		6327299719C3403F003BCD76 /* ImagePresenterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePresenterView.swift; sourceTree = "<group>"; };
-		6350C5E919A1727B008CE4F5 /* MatchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchViewController.swift; sourceTree = "<group>"; };
-		6350C5EB19A24790008CE4F5 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
-		63533B0F19BCCD6C00ED8B7A /* QuitGameButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuitGameButton.swift; sourceTree = "<group>"; };
-		63533B1219BE033A00ED8B7A /* DrawingTestsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingTestsViewController.swift; sourceTree = "<group>"; };
+		6329ED301B305D000000B19A /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
+		63533B0F19BCCD6C00ED8B7A /* GameControlButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameControlButton.swift; sourceTree = "<group>"; };
+		63533B1219BE033A00ED8B7A /* UniversalMatchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniversalMatchViewController.swift; sourceTree = "<group>"; };
 		635DFA7F19B76B5900102B6A /* Appearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Appearance.h; sourceTree = "<group>"; };
 		635DFA8019B76B6900102B6A /* Appearance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Appearance.m; sourceTree = "<group>"; };
-		635DFA8219BA025600102B6A /* GalleryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryDetailViewController.swift; sourceTree = "<group>"; };
 		635DFA8419BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicGalleryCollectionViewDataSource.swift; sourceTree = "<group>"; };
+		635F86DD1A66CBA800A67981 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		635F86E01A66CC1300A67981 /* TurnBasedMatchHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TurnBasedMatchHelper.swift; sourceTree = "<group>"; };
 		636BFA9619B3DDD100A90A75 /* GCD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCD.swift; sourceTree = "<group>"; };
 		636CEA23199E586400BEBF53 /* DrawingInputController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingInputController.swift; sourceTree = "<group>"; };
 		636CEA28199F251200BEBF53 /* Match.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
-		636CEA2A199F25F000BEBF53 /* MatchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchView.swift; sourceTree = "<group>"; };
 		6376756019F00F9F00AAB604 /* BinaryCoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinaryCoding.swift; sourceTree = "<group>"; };
 		638576EB19A6481500581DE8 /* SquizitTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SquizitTheme.swift; sourceTree = "<group>"; };
 		638576EF19A65B4500581DE8 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 		638E459119C88EEC008D8CD9 /* RootBorderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootBorderView.swift; sourceTree = "<group>"; };
+		6394BA891B89019000E9434F /* CenteredImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CenteredImageView.swift; sourceTree = "<group>"; };
+		6394BA8B1B8902A400E9434F /* GalleryDetailPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryDetailPageViewController.swift; sourceTree = "<group>"; };
+		6394BA8D1B8903C700E9434F /* GalleryDetailPageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryDetailPageView.swift; sourceTree = "<group>"; };
+		6394BA8F1B8903E100E9434F /* GalleryDetailPageView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GalleryDetailPageView.xib; sourceTree = "<group>"; };
+		6394BA911B89352000E9434F /* UIPageViewController+PageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIPageViewController+PageControl.swift"; sourceTree = "<group>"; };
+		6394BA931B8A471100E9434F /* UIView+AnchorPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+AnchorPoint.swift"; sourceTree = "<group>"; };
+		6394BA951B8A4C5100E9434F /* UniversalHowToPlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniversalHowToPlayViewController.swift; sourceTree = "<group>"; };
+		6394BA971B8A4D8800E9434F /* ManagedIndexedViewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedIndexedViewViewController.swift; sourceTree = "<group>"; };
+		6394BA991B8A4E7300E9434F /* InstructionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
+		6394BA9B1B8A4EA100E9434F /* InstructionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InstructionView.xib; sourceTree = "<group>"; };
 		63A4B7F219D5C03400975048 /* SaveToGalleryTransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToGalleryTransitionManager.swift; sourceTree = "<group>"; };
 		63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor_Serialization.swift; sourceTree = "<group>"; };
 		63B5252219D73F0E00BB550F /* ShareToTwitter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShareToTwitter.h; sourceTree = "<group>"; };
@@ -98,9 +116,7 @@
 		63BBECA619967A2300F6E2B3 /* SquizitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquizitTests.swift; sourceTree = "<group>"; };
 		63BBECB519967ACC00F6E2B3 /* Drawing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drawing.swift; sourceTree = "<group>"; };
 		63BBECBB19967B0C00F6E2B3 /* Stroke.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stroke.swift; sourceTree = "<group>"; };
-		63BC820319E441290047D414 /* HowToPlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HowToPlayViewController.swift; sourceTree = "<group>"; };
-		63EBB83A19A78BAA003C3EC2 /* MatchShieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchShieldView.swift; sourceTree = "<group>"; };
-		63EBB83C19A97BFD003C3EC2 /* RootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		63DA0E691B57FCA800C66347 /* UniversalMatchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniversalMatchView.swift; sourceTree = "<group>"; };
 		63EBB83E19AB821D003C3EC2 /* Notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Notes.md; sourceTree = "<group>"; };
 		63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToGalleryViewController.swift; sourceTree = "<group>"; };
 		63EBB87219AEC0DD003C3EC2 /* GalleryStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryStore.swift; sourceTree = "<group>"; };
@@ -111,6 +127,8 @@
 		63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage_sizing.swift; sourceTree = "<group>"; };
 		63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		63EFB1AC19D06C8100253560 /* CancelableAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CancelableAction.swift; sourceTree = "<group>"; };
+		63FAAC3B1B3F48B100B9C5CC /* UIImage_Alpha.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage_Alpha.swift; sourceTree = "<group>"; };
+		63FAAC3D1B42E2D200B9C5CC /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		63FDE7311998249A0006B7E4 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -119,6 +137,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				635F86DE1A66CBA800A67981 /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,6 +160,14 @@
 			path = Transitions;
 			sourceTree = "<group>";
 		};
+		635F86DF1A66CBDA00A67981 /* GameCenter */ = {
+			isa = PBXGroup;
+			children = (
+				635F86E01A66CC1300A67981 /* TurnBasedMatchHelper.swift */,
+			);
+			path = GameCenter;
+			sourceTree = "<group>";
+		};
 		638576E919A6480600581DE8 /* Theme */ = {
 			isa = PBXGroup;
 			children = (
@@ -154,9 +181,12 @@
 		63B44AF9199A5DEE00AE7B62 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				6394BA911B89352000E9434F /* UIPageViewController+PageControl.swift */,
 				63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */,
 				63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */,
 				636BFA9619B3DDD100A90A75 /* GCD.swift */,
+				63FAAC3B1B3F48B100B9C5CC /* UIImage_Alpha.swift */,
+				6394BA931B8A471100E9434F /* UIView+AnchorPoint.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -167,6 +197,7 @@
 				63BBEC8C19967A2300F6E2B3 /* Squizit */,
 				63BBECA319967A2300F6E2B3 /* SquizitTests */,
 				63BBEC8B19967A2300F6E2B3 /* Products */,
+				635F86DD1A66CBA800A67981 /* GameKit.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -183,6 +214,7 @@
 			isa = PBXGroup;
 			children = (
 				63B44AF9199A5DEE00AE7B62 /* Extensions */,
+				635F86DF1A66CBDA00A67981 /* GameCenter */,
 				63BBECB019967A9900F6E2B3 /* Models */,
 				638576E919A6480600581DE8 /* Theme */,
 				63267AD019CC7CCB00B22242 /* Transitions */,
@@ -195,6 +227,7 @@
 				63BBEC9A19967A2300F6E2B3 /* Images.xcassets */,
 				63BBEC8D19967A2300F6E2B3 /* Supporting Files */,
 				63EBB83E19AB821D003C3EC2 /* Notes.md */,
+				6329ED301B305D000000B19A /* Launch Screen.xib */,
 			);
 			path = Squizit;
 			sourceTree = "<group>";
@@ -244,14 +277,14 @@
 		63BBECB119967A9900F6E2B3 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				6350C5E919A1727B008CE4F5 /* MatchViewController.swift */,
-				6350C5EB19A24790008CE4F5 /* RootViewController.swift */,
-				63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */,
-				63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */,
-				635DFA8219BA025600102B6A /* GalleryDetailViewController.swift */,
 				635DFA8419BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift */,
-				63533B1219BE033A00ED8B7A /* DrawingTestsViewController.swift */,
-				63BC820319E441290047D414 /* HowToPlayViewController.swift */,
+				6394BA8B1B8902A400E9434F /* GalleryDetailPageViewController.swift */,
+				63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */,
+				63FAAC3D1B42E2D200B9C5CC /* RootViewController.swift */,
+				63EBB84019ACD26F003C3EC2 /* SaveToGalleryViewController.swift */,
+				63533B1219BE033A00ED8B7A /* UniversalMatchViewController.swift */,
+				6394BA951B8A4C5100E9434F /* UniversalHowToPlayViewController.swift */,
+				6394BA971B8A4D8800E9434F /* ManagedIndexedViewViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -261,11 +294,14 @@
 			children = (
 				63B7B70C19A4EB1A00F280AB /* DrawingToolSelector.swift */,
 				6327299719C3403F003BCD76 /* ImagePresenterView.swift */,
-				63EBB83A19A78BAA003C3EC2 /* MatchShieldView.swift */,
-				636CEA2A199F25F000BEBF53 /* MatchView.swift */,
-				63533B0F19BCCD6C00ED8B7A /* QuitGameButton.swift */,
+				63533B0F19BCCD6C00ED8B7A /* GameControlButton.swift */,
 				638E459119C88EEC008D8CD9 /* RootBorderView.swift */,
-				63EBB83C19A97BFD003C3EC2 /* RootView.swift */,
+				63DA0E691B57FCA800C66347 /* UniversalMatchView.swift */,
+				6394BA891B89019000E9434F /* CenteredImageView.swift */,
+				6394BA8D1B8903C700E9434F /* GalleryDetailPageView.swift */,
+				6394BA8F1B8903E100E9434F /* GalleryDetailPageView.xib */,
+				6394BA991B8A4E7300E9434F /* InstructionView.swift */,
+				6394BA9B1B8A4EA100E9434F /* InstructionView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -332,6 +368,11 @@
 					63BBEC8919967A2300F6E2B3 = {
 						CreatedOnToolsVersion = 6.0;
 						DevelopmentTeam = F7D98JTW78;
+						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 1;
+							};
+						};
 					};
 					63BBEC9F19967A2300F6E2B3 = {
 						CreatedOnToolsVersion = 6.0;
@@ -364,7 +405,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				63BBEC9919967A2300F6E2B3 /* Main.storyboard in Resources */,
+				6394BA901B8903E100E9434F /* GalleryDetailPageView.xib in Resources */,
 				63BBEC9B19967A2300F6E2B3 /* Images.xcassets in Resources */,
+				6329ED311B305D000000B19A /* Launch Screen.xib in Resources */,
+				6394BA9C1B8A4EA100E9434F /* InstructionView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,7 +433,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# http://blog.jaredsinclair.com/post/97193356620/the-best-of-all-possible-xcode-automated-build\n\n#\n# Set the build number to the current git commit count.\n# If we're using the Dev scheme, then we'll suffix the build\n# number with the current branch name, to make collisions\n# far less likely across feature branches.\n# Based on: http://w3facility.info/question/how-do-i-force-xcode-to-rebuild-the-info-plist-file-in-my-project-every-time-i-build-the-project/\n#\ngit=`sh /etc/profile; which git`\nappBuild=`$git rev-list --all |wc -l`\nif [ $CONFIGURATION = \"Debug\" ]; then\nbranchName=`git rev-parse --abbrev-ref HEAD`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild-$branchName\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\nelse\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\nfi\necho \"Updated ${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"";
+			shellScript = "# http://blog.jaredsinclair.com/post/97193356620/the-best-of-all-possible-xcode-automated-build\n\n#\n# Set the build number to the current git commit count.\n# If we're using the Dev scheme, then we'll suffix the build\n# number with the current branch name, to make collisions\n# far less likely across feature branches.\n# Based on: http://w3facility.info/question/how-do-i-force-xcode-to-rebuild-the-info-plist-file-in-my-project-every-time-i-build-the-project/\n#\ngit=`sh /etc/profile; which git`\nappBuild=`$git rev-list --all |wc -l`\nif [ $CONFIGURATION = \"Debug\" ]; then\nbranchName=`git rev-parse --abbrev-ref HEAD`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild-$branchName\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\nelse\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\nfi\necho \"Updated ${TARGET_BUILD_DIR}/${INFOPLIST_PATH} to $appBuild-$branchName\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -398,14 +442,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6394BA961B8A4C5100E9434F /* UniversalHowToPlayViewController.swift in Sources */,
 				63A4B7ED19D46C9700975048 /* Images.xcassets in Sources */,
+				6394BA941B8A471100E9434F /* UIView+AnchorPoint.swift in Sources */,
 				63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */,
 				63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */,
 				636CEA24199E586400BEBF53 /* DrawingInputController.swift in Sources */,
 				6376756119F00F9F00AAB604 /* BinaryCoding.swift in Sources */,
+				635F86E11A66CC1300A67981 /* TurnBasedMatchHelper.swift in Sources */,
 				636CEA29199F251200BEBF53 /* Match.swift in Sources */,
 				63267AD319CC7CE800B22242 /* FullscreenModalTransitionManager.swift in Sources */,
-				6350C5EC19A24790008CE4F5 /* RootViewController.swift in Sources */,
+				63FAAC3E1B42E2D200B9C5CC /* RootViewController.swift in Sources */,
+				6394BA9A1B8A4E7300E9434F /* InstructionView.swift in Sources */,
+				63DA0E6A1B57FCA800C66347 /* UniversalMatchView.swift in Sources */,
 				638576F019A65B4500581DE8 /* Geometry.swift in Sources */,
 				63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */,
 				63A4B7F319D5C03400975048 /* SaveToGalleryTransitionManager.swift in Sources */,
@@ -413,27 +462,27 @@
 				63EFB1AD19D06C8100253560 /* CancelableAction.swift in Sources */,
 				63B5252519D73F5D00BB550F /* ShareToTwitter.m in Sources */,
 				63BBECBC19967B0C00F6E2B3 /* Stroke.swift in Sources */,
-				63EBB83B19A78BAA003C3EC2 /* MatchShieldView.swift in Sources */,
 				638E459219C88EEC008D8CD9 /* RootBorderView.swift in Sources */,
 				63EBB87319AEC0DD003C3EC2 /* GalleryStore.swift in Sources */,
-				63533B1019BCCD6C00ED8B7A /* QuitGameButton.swift in Sources */,
+				63533B1019BCCD6C00ED8B7A /* GameControlButton.swift in Sources */,
 				63FDE7321998249A0006B7E4 /* Result.swift in Sources */,
 				63EBB88319B0CBE6003C3EC2 /* GalleryViewController.swift in Sources */,
-				63533B1319BE033A00ED8B7A /* DrawingTestsViewController.swift in Sources */,
+				63533B1319BE033A00ED8B7A /* UniversalMatchViewController.swift in Sources */,
+				6394BA981B8A4D8800E9434F /* ManagedIndexedViewViewController.swift in Sources */,
 				63B7B70D19A4EB1A00F280AB /* DrawingToolSelector.swift in Sources */,
 				638576EC19A6481500581DE8 /* SquizitTheme.swift in Sources */,
-				6350C5EA19A1727B008CE4F5 /* MatchViewController.swift in Sources */,
+				6394BA921B89352000E9434F /* UIPageViewController+PageControl.swift in Sources */,
+				6394BA8C1B8902A400E9434F /* GalleryDetailPageViewController.swift in Sources */,
 				6327299819C3403F003BCD76 /* ImagePresenterView.swift in Sources */,
+				6394BA8A1B89019000E9434F /* CenteredImageView.swift in Sources */,
 				636BFA9719B3DDD100A90A75 /* GCD.swift in Sources */,
 				63BBECB619967ACC00F6E2B3 /* Drawing.swift in Sources */,
 				63EBB87D19AEC49C003C3EC2 /* GalleryStoreEntities.m in Sources */,
+				6394BA8E1B8903C700E9434F /* GalleryDetailPageView.swift in Sources */,
 				63EBB87619AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld in Sources */,
-				636CEA2B199F25F000BEBF53 /* MatchView.swift in Sources */,
-				635DFA8319BA025600102B6A /* GalleryDetailViewController.swift in Sources */,
-				63EBB83D19A97BFE003C3EC2 /* RootView.swift in Sources */,
 				635DFA8519BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift in Sources */,
 				63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */,
-				63BC820419E441290047D414 /* HowToPlayViewController.swift in Sources */,
+				63FAAC3C1B3F48B100B9C5CC /* UIImage_Alpha.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,18 +605,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Shamyl Zakariya (7PAR67SV9V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Squizit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-DDEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "39323fde-25ef-4c85-aab8-475a095e46ad";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Squizit/Models/Squizit-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = 2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -575,17 +623,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Shamyl Zakariya (7PAR67SV9V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Squizit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "39323fde-25ef-4c85-aab8-475a095e46ad";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Squizit/Models/Squizit-Bridging-Header.h";
-				TARGETED_DEVICE_FAMILY = 2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

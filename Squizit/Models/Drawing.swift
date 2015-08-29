@@ -89,8 +89,17 @@ class Drawing {
 			seedRandomColorGenerator()
 		}
 
+		let eraserColor = UIColor.whiteColor().colorWithAlphaComponent(0.8)
+		let lineColor = UIColor.blackColor()
 		let ctx = UIGraphicsGetCurrentContext()
+		CGContextSetBlendMode(ctx, kCGBlendModeNormal)
+
 		for stroke in _strokes {
+			if stroke.fill.isEraser {
+				eraserColor.set()
+			} else {
+				lineColor.set()
+			}
 			renderStroke(ctx, stroke: stroke, chunkIndex: 0)
 		}
 	}
@@ -101,7 +110,30 @@ class Drawing {
 	private var _cachedImageViewport:CGRect?
 
 	/**
-		synchronously renders the drawing, returning a tuple containing the rendered result image, and a 
+		Immediate mode draw directly into context
+	*/
+	func draw(dirtyRect:CGRect, context:CGContextRef) {
+
+		let eraserColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
+		let lineColor = UIColor.blackColor()
+
+		for stroke in strokes {
+			if stroke.boundingRect.intersects(dirtyRect) {
+
+				if stroke.fill.isEraser {
+					eraserColor.set()
+				} else {
+					lineColor.set()
+				}
+
+				CGContextSetBlendMode(context, kCGBlendModeNormal)
+				renderStroke(context, stroke: stroke, chunkIndex: 0)
+			}
+		}
+	}
+
+	/**
+		Renders the entire drawing, returning a tuple containing the rendered result image, and a
 		dirtyRect describing the updated region of the image from the last time render was called.
 		
 		If the image is unchanged from the last time render() was called, dirtyRect will be CGRect.nullRect
@@ -110,8 +142,8 @@ class Drawing {
 
 		if let cachedImageViewport = _cachedImageViewport {
 			if let currentStroke = _strokes.last {
-				if _cachedImage != nil && _lastDrawnStrokeChunkIndex == currentStroke.chunks.count - 1 && cachedImageViewport == viewport {
-					return (image:_cachedImage!, dirtyRect:CGRect.nullRect)
+				if let cachedImage = _cachedImage where _lastDrawnStrokeChunkIndex == currentStroke.chunks.count - 1 && cachedImageViewport == viewport {
+					return (image:cachedImage, dirtyRect:CGRect.nullRect)
 				}
 			}
 
@@ -124,7 +156,6 @@ class Drawing {
 			invalidate()
 		}
 
-
 		if _debugRender {
 			seedRandomColorGenerator()
 		}
@@ -132,14 +163,26 @@ class Drawing {
 		UIGraphicsBeginImageContextWithOptions(CGSize(width: viewport.width, height: viewport.height), true, 0)
 		let ctx = UIGraphicsGetCurrentContext()
 
+		let eraserColor = UIColor.whiteColor().colorWithAlphaComponent(0.8)
+		let lineColor = UIColor.blackColor()
+
 		if _cachedImage == nil {
 			UIColor.whiteColor().set()
 			UIRectFillUsingBlendMode(CGRect(x: 0, y: 0, width: viewport.width, height: viewport.height), kCGBlendModeNormal)
+			CGContextSetBlendMode(ctx, kCGBlendModeNormal)
 
 			// render all strokes up to but not including the last stroke
 			if _strokes.count > 1 {
 				for i in 0 ..< _strokes.count - 1 {
-					renderStroke(ctx, stroke: _strokes[i], chunkIndex: 0)
+
+					let stroke = _strokes[i]
+					if stroke.fill.isEraser {
+						eraserColor.set()
+					} else {
+						lineColor.set()
+					}
+
+					renderStroke(ctx, stroke: stroke, chunkIndex: 0)
 				}
 			}
 		}
@@ -152,8 +195,15 @@ class Drawing {
 		// draw the undrawn chunks of the current stroke
 		var dirtyRect:CGRect = CGRect.nullRect
 
+		CGContextSetBlendMode(ctx, kCGBlendModeNormal)
 		if let stroke = _strokes.last {
-			stroke.fill.set()
+
+			if stroke.fill.isEraser {
+				eraserColor.set()
+			} else {
+				lineColor.set()
+			}
+
 			dirtyRect = renderStroke(ctx, stroke: stroke, chunkIndex: _lastDrawnStrokeChunkIndex + 1 )
 			_lastDrawnStrokeChunkIndex = stroke.chunks.count - 1
 		}
@@ -221,19 +271,15 @@ class Drawing {
 	}
 
 	/**
-		returns the rect containing all chunks in the rendered stroke
+	returns the rect containing all chunks in the rendered stroke
 	*/
 	private func renderStroke( context:CGContext, stroke:Stroke, chunkIndex:Int ) -> CGRect {
-
-
 		if stroke.chunks.isEmpty {
 			return CGRect.nullRect
 		}
 
-		if !_debugRender {
-			stroke.fill.set()
-		} else {
-			nextRandomColor(stroke.fill).set()
+		if _debugRender {
+			return renderStroke_Debug(context, stroke: stroke, chunkIndex: chunkIndex)
 		}
 
 		var dirtyRect = CGRect.nullRect
@@ -250,7 +296,30 @@ class Drawing {
 			chunkPath.fill()
 
 			// expand dirtyRect to contain chunk
-			dirtyRect = dirtyRect.rectByUnion(chunkPath.bounds)
+			dirtyRect.union(chunkPath.bounds)
+		}
+		
+		return dirtyRect
+	}
+
+	private func renderStroke_Debug(context:CGContext, stroke:Stroke, chunkIndex:Int ) -> CGRect {
+
+		nextRandomColor(stroke.fill).set()
+		var dirtyRect = CGRect.nullRect
+
+		for i in chunkIndex ..< stroke.chunks.count {
+			let chunk = stroke.chunks[i]
+
+			var chunkPath = UIBezierPath()
+			chunkPath.moveToPoint( chunk.start.a.position )
+			chunkPath.addCurveToPoint(chunk.end.a.position, controlPoint1: chunk.start.a.control, controlPoint2: chunk.end.a.control)
+			chunkPath.addLineToPoint(chunk.end.b.position)
+			chunkPath.addCurveToPoint(chunk.start.b.position, controlPoint1: chunk.end.b.control, controlPoint2: chunk.start.b.control)
+			chunkPath.closePath()
+			chunkPath.fill()
+
+			// expand dirtyRect to contain chunk
+			dirtyRect.union(chunkPath.bounds)
 
 			if _debugRender {
 				UIColor.blackColor().set()
@@ -272,14 +341,14 @@ class Drawing {
 				}
 
 				switch stroke.fill {
-					case .Pencil:
-						UIColor.blackColor().setStroke()
+				case .Pencil:
+					UIColor.blackColor().setStroke()
 
-					case .Brush:
-						UIColor.greenColor().setStroke()
+				case .Brush:
+					UIColor.greenColor().setStroke()
 
-					case .Eraser:
-						UIColor.redColor().setStroke()
+				case .Eraser:
+					UIColor.redColor().setStroke()
 				}
 
 				let dashes:[CGFloat] = [4.0,4.0]
@@ -292,7 +361,7 @@ class Drawing {
 				handles.stroke()
 			}
 		}
-
+		
 		return dirtyRect
 	}
 }
@@ -325,7 +394,7 @@ extension BinaryCoder {
 			return .Failure(Error(message: "version # mismatch, unrecognized version: \(version)"))
 		}
 
-		return .Success(drawing!)
+		return .Success(Box(drawing!))
 	}
 }
 

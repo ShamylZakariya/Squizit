@@ -10,11 +10,17 @@ import Foundation
 import UIKit
 
 extension CGRect {
+
 	init( center: CGPoint, size: CGSize ){
 		self.init(x:center.x - size.width/2, y:center.y - size.height/2, width: size.width, height: size.height )
 	}
+
 	init( center: CGPoint, radius: CGFloat ){
 		self.init(x:center.x - radius, y:center.y - radius, width: 2*radius, height: 2*radius )
+	}
+
+	var center:CGPoint {
+		return CGPoint(x: midX, y: midY)
 	}
 
 	static func rectByFitting( points:CGPoint... ) -> CGRect {
@@ -32,6 +38,21 @@ extension CGRect {
 		return CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY )
 	}
 
+}
+
+extension CGRect {
+
+	func rectByAddingTopMargin( m:CGFloat ) ->CGRect {
+		return CGRect(x: origin.x, y: origin.y + m, width: size.width, height: size.height - m )
+	}
+
+	func rectByAddingBottomMargin( m:CGFloat ) ->CGRect {
+		return CGRect(x: origin.x, y: origin.y, width: size.width, height: size.height - m )
+	}
+
+	func rectByAddingMargins( topMargin:CGFloat, bottomMargin:CGFloat ) ->CGRect {
+		return CGRect(x: origin.x, y: origin.y + topMargin, width: size.width, height: size.height - topMargin - bottomMargin )
+	}
 }
 
 extension CGPoint {
@@ -60,11 +81,32 @@ extension CGPoint {
 		return sqrt((Dx*Dx) + (Dy*Dy))
 	}
 
+	func integerPoint() -> CGPoint {
+		return CGPoint(x: round(x), y: round(y))
+	}
+}
+
+extension CGSize {
+
+	func scale( a:CGFloat ) -> CGSize {
+		return CGSize(width: self.width * a, height: self.height * a)
+	}
+
 }
 
 struct LineSegment {
-	let firstPoint = CGPoint()
-	let secondPoint = CGPoint()
+	let firstPoint:CGPoint
+	let secondPoint:CGPoint
+
+	init() {
+		self.firstPoint = CGPoint.zeroPoint
+		self.secondPoint = CGPoint.zeroPoint
+	}
+
+	init(firstPoint:CGPoint, secondPoint:CGPoint) {
+		self.firstPoint = firstPoint
+		self.secondPoint = secondPoint
+	}
 
 	func perpendicular( relativeLength fraction:CGFloat ) -> LineSegment {
 		let x0 = firstPoint.x

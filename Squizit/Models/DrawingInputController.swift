@@ -11,7 +11,7 @@ import UIKit
 
 class DrawingInputController {
 
-	private var _points = [CGPoint](count: 5, repeatedValue: CGPoint())
+	private var _points = [CGPoint](count: 5, repeatedValue: CGPoint.zeroPoint)
 	private var _pointsTop = 0
 	private var _isFirstPoint = false
 	private var _lastSegment = LineSegment()
@@ -39,12 +39,12 @@ class DrawingInputController {
 
 	var fill:Fill = Fill.Pencil;
 
-	// MARK: Public API
+	// MARK: Public
 
 	init(){}
 
 	func undo() {
-		if let drawing = self.drawing {
+		if let drawing = drawing {
 			if let dirtyRect = drawing.popStroke() {
 				self.view?.setNeedsDisplayInRect( drawingToScreen(dirtyRect) )
 			} else {
@@ -53,15 +53,21 @@ class DrawingInputController {
 		}
 	}
 
-	func draw( context:CGContextRef ) {
-		if let drawing = self.drawing {
+	func drawUsingImmediatePipeline( dirtyRect:CGRect, context:CGContextRef) {
+		if let drawing = drawing {
+			drawing.draw(dirtyRect, context: context)
+		}
+	}
+
+	func drawUsingBitmapPipeline( context:CGContextRef ) {
+		if let drawing = drawing {
 			let image = drawing.render( viewport ).image
 			image.drawAtPoint( viewport.origin, blendMode: kCGBlendModeMultiply, alpha: 1)
 		}
 	}
 
 	func touchBegan( locationInView:CGPoint ) {
-		if let drawing = self.drawing {
+		if let drawing = drawing {
 			let locationInDrawing = screenToDrawing( locationInView )
 
 			_pointsTop = 0
@@ -74,7 +80,7 @@ class DrawingInputController {
 	}
 
 	func touchMoved( locationInView:CGPoint ) {
-		if let drawing = self.drawing {
+		if let drawing = drawing {
 			let locationInDrawing = screenToDrawing( locationInView )
 
 			_points[++_pointsTop] = locationInDrawing;
@@ -100,7 +106,7 @@ class DrawingInputController {
 	}
 
 	func touchEnded() {
-		if let drawing = self.drawing {
+		if let drawing = drawing {
 			drawing.updateBoundingRect()
 		}
 
@@ -108,14 +114,14 @@ class DrawingInputController {
 		view?.setNeedsDisplay()
 	}
 
-	// MARK: Private API
+	// MARK: Private
 
 	private func screenToDrawing( location:CGPoint ) -> CGPoint {
-		return location.subtract( viewport.origin )
+		return location
 	}
 
 	private func drawingToScreen( rect:CGRect ) -> CGRect {
-		return rect.rectByOffsetting(dx: self.viewport.origin.x, dy: self.viewport.origin.y)
+		return rect
 	}
 
 	private var _activeStroke:Stroke?
@@ -178,5 +184,43 @@ class DrawingInputController {
 
 			_lastSegment = ls[3]
 		}
+	}
+}
+
+// MARK: -
+
+/**
+	Adapter to simplify forwarding UIView touch events to a DrawingInputController
+*/
+extension DrawingInputController {
+
+	func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent, offset:CGPoint = CGPoint.zeroPoint) {
+
+		if touches.count > 1 {
+			return
+		}
+
+		let touch = touches.first as! UITouch
+		let location = touch.locationInView(view!)
+		touchBegan(location.subtract(offset))
+	}
+
+	func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent, offset:CGPoint = CGPoint.zeroPoint) {
+
+		if touches.count > 1 {
+			return
+		}
+
+		let touch = touches.first as! UITouch
+		let location = touch.locationInView(view!)
+		touchMoved(location.subtract(offset))
+	}
+
+	func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+		touchEnded()
+	}
+
+	func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent) {
+		touchEnded()
 	}
 }

@@ -26,7 +26,7 @@ class ImagePresenterView : UIView {
 	var image:UIImage? {
 		didSet {
 			if image !== oldValue || image == nil {
-				_imageView.image = image
+				imageView.image = image
 				update()
 			}
 		}
@@ -34,43 +34,47 @@ class ImagePresenterView : UIView {
 
 	var placeholderImage:UIImage? {
 		didSet {
-			_placeholderImageView.image = placeholderImage
+			placeholderImageView.image = placeholderImage
 			update()
 		}
 	}
 
-	private var _placeholderImageView:UIImageView = UIImageView(frame: CGRect.zeroRect)
-	var placeholderView:UIImageView { return _placeholderImageView }
+	override var contentMode:UIViewContentMode {
+		didSet {
+			placeholderImageView.contentMode = contentMode
+			imageView.contentMode = contentMode
+		}
+	}
 
-	private var _imageView:UIImageView = UIImageView(frame: CGRect.zeroRect)
-	var imageView:UIImageView { return _imageView }
+	private (set) var placeholderImageView:UIImageView = UIImageView(frame: CGRect.zeroRect)
+	private (set) var imageView:UIImageView = UIImageView(frame: CGRect.zeroRect)
 
 	override func layoutSubviews() {
-		_placeholderImageView.frame = self.bounds
-		_imageView.frame = self.bounds
+		placeholderImageView.frame = self.bounds
+		imageView.frame = self.bounds
 	}
 
 	private func commonInit() {
-		addSubview(_placeholderImageView)
-		addSubview(_imageView)
-		_imageView.alpha = 0
-		_placeholderImageView.alpha = 0
+		addSubview(placeholderImageView)
+		addSubview(imageView)
+		imageView.alpha = 0
+		placeholderImageView.alpha = 0
 	}
 
 	private func update() {
 
-		let placeholderImageView = _placeholderImageView
-		let imageView = _imageView
+		let placeholderImageView = self.placeholderImageView
+		let imageView = self.imageView
 
 		if animate {
 			let duration:NSTimeInterval = 0.15
 
 			if let image = self.image {
 
-				UIView.animateWithDuration(duration, animations: { () -> Void in
+				UIView.animateWithDuration(duration) {
 					placeholderImageView.alpha = 0
 					imageView.alpha = 1
-				})
+				}
 
 			} else {
 

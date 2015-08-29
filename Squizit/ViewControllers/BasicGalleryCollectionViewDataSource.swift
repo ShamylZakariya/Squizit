@@ -38,18 +38,18 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 	}
 
 	var count:Int {
-		let info = self.fetchedResultsController.sections![0] as NSFetchedResultsSectionInfo
+		let info = self.fetchedResultsController.sections![0] as! NSFetchedResultsSectionInfo
 		return info.numberOfObjects
 	}
 
-	// MARK: UICollectionViewDataSource
+	// MARK: - UICollectionViewDataSource
 
 	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return self.count
 	}
 
 	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) as UICollectionViewCell
+		let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) as! UICollectionViewCell
 		configureCell( cell, atIndexPath: indexPath )
 		return cell
 	}
@@ -58,7 +58,7 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 		return 1
 	}
 
-	// MARK: FetchedResultsController
+	// MARK: - FetchedResultsController
 
 	private var _fetchedResultsController:NSFetchedResultsController?
 	var fetchedResultsController:NSFetchedResultsController {
@@ -102,7 +102,7 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 	var filterPredicate:NSPredicate? {
 		didSet {
 			if _fetchedResultsController != nil {
-				fetchedResultsController.fetchRequest.predicate = filterPredicate?
+				fetchedResultsController.fetchRequest.predicate = filterPredicate
 				performFetch()
 				_collectionView.reloadData()
 			}
@@ -117,6 +117,8 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 		}
 	}
 
+	// MARK: - NSFetchedResultsControllerDelegate
+
 	func controllerWillChangeContent(controller: NSFetchedResultsController) {}
 
 	func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
@@ -130,18 +132,18 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 		}
 	}
 
-	func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath) {
+	func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
 		switch type {
 			case .Insert:
-				_collectionView.insertItemsAtIndexPaths([newIndexPath])
+				_collectionView.insertItemsAtIndexPaths([newIndexPath!])
 			case .Delete:
-				_collectionView.deleteItemsAtIndexPaths([indexPath])
+				_collectionView.deleteItemsAtIndexPaths([indexPath!])
 			case .Update:
-				if let cell = _collectionView.cellForItemAtIndexPath(indexPath) {
-					configureCell(cell, atIndexPath: indexPath)
+				if let cell = _collectionView.cellForItemAtIndexPath(indexPath!) {
+					configureCell(cell, atIndexPath: indexPath!)
 				}
 			case .Move:
-				_collectionView.moveItemAtIndexPath(indexPath, toIndexPath: newIndexPath)
+				_collectionView.moveItemAtIndexPath(indexPath!, toIndexPath: newIndexPath!)
 			default:
 				return
 		}
@@ -149,21 +151,17 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 
 	func controllerDidChangeContent(controller: NSFetchedResultsController) {}
 
-	// UIScrollViewDelegate
+	// MARK: - UIScrollViewDelegate
 
 	func scrollViewDidScroll(scrollView: UIScrollView) {
-		if let sd = scrollDelegate {
-			sd.scrollViewDidScroll?(scrollView)
-		}
+		scrollDelegate?.scrollViewDidScroll?(scrollView)
 	}
 
 	func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-		if let sd = scrollDelegate {
-			sd.scrollViewDidEndDecelerating?(scrollView)
-		}
+		scrollDelegate?.scrollViewDidEndDecelerating?(scrollView)
 	}
 
-	// MARK: Methods for subclasses to override
+	// MARK: - Methods for subclasses to override
 
 	func configureCell( cell:UICollectionViewCell, atIndexPath indexPath:NSIndexPath ) {
 		assertionFailure("Subclasses must implement configureCell")
