@@ -2,8 +2,6 @@
 
 Screenshots for phones
 The buttons at the top of the phone layout are not receiving input events because of edge tracking. Need to move then down.
-Match.render is rendering NOT at retina scale,making renderings look like shit
-The universal match view controller layout algo is screwing up compact layout because of smaller button sizes
 
 #CURRENT
 

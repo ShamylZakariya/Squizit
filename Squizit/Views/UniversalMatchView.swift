@@ -14,6 +14,25 @@ class UniversalMatchViewPresenterView : UIView {
 	private var currentPanTranslation = CGPoint.zeroPoint
 	private var initialPanTranslation = CGPoint.zeroPoint
 
+	/**
+		Set the insets for the presented match view. 
+	The match view will be maximally scaled and centered in the implicit rect made from this view's layout adjusted by edge insets
+	*/
+	var insets:UIEdgeInsets = UIEdgeInsets(top:0,left:0,bottom:0,right:0) {
+		didSet {
+			setNeedsLayout()
+			setNeedsDisplay()
+		}
+	}
+
+	/**
+		Get this view's bounds after applying the insets
+	*/
+	var insetBounds:CGRect {
+		return CGRect(x: bounds.minX + insets.left, y: bounds.minY + insets.top, width: bounds.width - (insets.left+insets.right), height: bounds.height-(insets.top+insets.bottom))
+	}
+
+
 	var onPanningChanged:((panning:Bool)->())?
 
 	/**
@@ -65,13 +84,14 @@ class UniversalMatchViewPresenterView : UIView {
 		}
 	}
 
-	func fittedDrawingSize(availableSize:CGSize) -> (size:CGSize,scale:CGFloat) {
+	func fittedDrawingSize() -> (size:CGSize,scale:CGFloat) {
 		if let drawingView = matchView, controller = drawingView.controller {
 
 			let naturalSize = controller.viewport.size
 			var scaledSize = naturalSize
 			var scale = CGFloat(1)
 
+			let availableSize = insetBounds.size
 			if naturalSize.width > availableSize.width {
 				scale = availableSize.width / scaledSize.width
 				scaledSize.width = naturalSize.width * scale
@@ -131,6 +151,20 @@ class UniversalMatchViewPresenterView : UIView {
 		super.layoutSubviews()
 		updateLayout()
 	}
+
+	// uncomment to render inset rect
+	/*
+	override func drawRect(rect: CGRect) {
+		UIColor.redColor().colorWithAlphaComponent(0.25).set()
+		UIRectFill(bounds)
+
+		UIColor.greenColor().colorWithAlphaComponent(0.25).set()
+		UIRectFill(insetBounds)
+
+		UIColor.greenColor().set()
+		UIRectFrame(insetBounds)
+	}
+	*/
 
 	override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
 		// forward input events to allow user to start a stroke off-canvas
@@ -193,8 +227,9 @@ class UniversalMatchViewPresenterView : UIView {
 
 			} else {
 				// compute max scale to fit drawingView in view, and centering offset
-				let scaling = fittedDrawingSize(bounds.size)
-				let offset = CGPoint(x: (bounds.width-scaling.size.width)/2, y: (bounds.height-scaling.size.height)/2).integerPoint()
+				let scaling = fittedDrawingSize()
+				let insetBounds = self.insetBounds
+				let offset = CGPoint(x: insetBounds.midX - (scaling.size.width/2), y: insetBounds.midY - (scaling.size.height/2)).integerPoint()
 
 				drawingView.layer.transform = CATransform3DConcat(CATransform3DMakeScale(scaling.scale, scaling.scale, 1), CATransform3DMakeTranslation(offset.x, offset.y, 1))
 			}
@@ -205,7 +240,8 @@ class UniversalMatchViewPresenterView : UIView {
 		if let drawingView = matchView {
 
 			let scaledDrawingSize = drawingSize.scale(panningScale)
-			let offset = CGPoint(x: (bounds.width-scaledDrawingSize.width)/2, y: (bounds.height-scaledDrawingSize.height)/2).integerPoint()
+			let insetBounds = self.insetBounds
+			let offset = CGPoint(x: insetBounds.midX - (scaledDrawingSize.width/2), y: insetBounds.midY - (scaledDrawingSize.height/2)).integerPoint()
 
 			drawingView.layer.transform = CATransform3DConcat(
 				CATransform3DMakeScale(panningScale, panningScale, CGFloat(1)),

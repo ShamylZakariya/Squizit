@@ -259,29 +259,22 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 
 	override func viewWillLayoutSubviews() {
 
-		// generally, the drawingContainerView will fill the available space, rendering the drawing inside, scaled or translated.
-		// quit is on top left, finish-turn on top right, undo and clear in top-middle
-		// and the tool picker in center bottom.
-		// but in tight scenarios, like a phone in landscape, the drawingContainer will
-		// leave room at top for all controls, which will be positioned across the top
-		// NOTE: On small screens (iPhone4,iPhone5) scale tool buttons to 60% size
-
 		let layoutRect = CGRect(x: 0, y: topLayoutGuide.length, width: view.bounds.width, height: view.bounds.height - (topLayoutGuide.length+bottomLayoutGuide.length))
-		let (scaledDrawingSize,scaledDrawingScale) = matchPresenterView.fittedDrawingSize(layoutRect.size)
 		let toolScale:CGFloat = isSmallScreen ? 0.8 : 1.0
 		let drawingToolSize = drawingToolSelector.intrinsicContentSize().scale(toolScale)
 		let buttonSize = quitGameButton.intrinsicContentSize().height * toolScale
-		let margin = CGFloat(traitCollection.horizontalSizeClass == .Compact ? 20 : 36)
+		let margin = CGFloat(traitCollection.horizontalSizeClass == .Compact ? 16 : 36)
 		let textButtonWidth = max(undoButton.intrinsicContentSize().width,clearButton.intrinsicContentSize().width)
-		let drawingContainerViewInset:CGFloat = margin
 
-		if (scaledDrawingSize.height + 2*drawingToolSize.height) < layoutRect.height {
+		// match presenter always gets full bounds, but has edge insets set below
+		matchPresenterView.frame = view.bounds
+
+		if layoutRect.width < layoutRect.height {
 
 			//
-			// plenty of room for spacious layout
+			// portrait layout, put tools on bottom
 			//
 
-			matchPresenterView.frame = CGRect(x: layoutRect.minX, y: layoutRect.minY + buttonSize, width: layoutRect.width, height: layoutRect.height - buttonSize - drawingToolSize.height).rectByInsetting(dx: margin, dy: margin)
 			quitGameButton.frame = CGRect(x: margin, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
 			finishTurnButton.frame = CGRect(x: layoutRect.maxX - margin - buttonSize, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
 
@@ -291,24 +284,24 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 
 			drawingToolSelector.frame = CGRect(x: round(layoutRect.midX - drawingToolSize.width/2), y: round(layoutRect.maxY - drawingToolSize.height - margin), width: drawingToolSize.width, height: drawingToolSize.height)
 
+			matchPresenterView.insets = UIEdgeInsets(top: buttonSize + 2*margin, left: margin, bottom: drawingToolSize.height + 2*margin, right: margin)
+
 
 			let toolBackdropViewTopHeight = max(quitGameButton.frame.maxY,finishTurnButton.frame.maxY,undoButton.frame.maxY,clearButton.frame.maxY) + margin
 			toolBackdropViewTop.frame = CGRect(x: 0, y: layoutRect.minY, width: layoutRect.width, height: toolBackdropViewTopHeight)
 
 			let toolBackdropViewBottomHeight = layoutRect.maxY - drawingToolSelector.frame.minY + margin
 			toolBackdropViewBottom.frame = CGRect(x: 0, y: layoutRect.maxY - toolBackdropViewBottomHeight, width: layoutRect.width, height: toolBackdropViewBottomHeight + margin)
-			toolBackdropViewBottom.hidden = false
 
 		} else {
 
 			//
-			// compact layout needed
+			// landscape layout, put all tools across top
 			//
 
 			let toolsHeight = max(drawingToolSize.height,buttonSize)
 			let toolBarRect = CGRect(x: margin, y: layoutRect.minY + margin, width: layoutRect.width-(2*margin), height: toolsHeight)
 
-			matchPresenterView.frame = CGRect(x: layoutRect.minX, y: toolBarRect.maxY + margin, width: layoutRect.width, height: (layoutRect.maxY - toolBarRect.maxY) - 2*margin).rectByInsetting(dx: drawingContainerViewInset, dy: 0)
 			quitGameButton.frame = CGRect(x: margin, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
 			finishTurnButton.frame = CGRect(x: layoutRect.maxX - margin - buttonSize, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
 			drawingToolSelector.frame = CGRect(x: round(layoutRect.midX - drawingToolSize.width/2), y: margin, width: drawingToolSize.width, height: drawingToolSize.height)
@@ -320,9 +313,10 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 			clearButton.frame = CGRect(x: round((drawingToolSelector.frame.maxX + finishTurnButton.frame.minX)/2 - textButtonWidth/2),
 				y: margin, width: textButtonWidth, height: buttonSize)
 
-			toolBackdropViewTop.frame = CGRect(x: 0, y: 0, width: layoutRect.width, height: drawingToolSelector.frame.maxY + margin)
-			toolBackdropViewBottom.frame = CGRect.zeroRect
-			toolBackdropViewBottom.hidden = true
+			matchPresenterView.insets = UIEdgeInsets(top: drawingToolSize.height + 2*margin, left: margin, bottom: margin, right: margin)
+
+			toolBackdropViewTop.frame = CGRect(x: 0, y: 0, width: layoutRect.width, height: drawingToolSize.height + 2*margin)
+			toolBackdropViewBottom.frame = CGRect(x:0, y:layoutRect.maxY, width:layoutRect.width, height:0) // hide off bottom of screen
 		}
 
 		if let finishedDrawingView = finishedMatchView {
