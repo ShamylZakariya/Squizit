@@ -92,6 +92,10 @@ extension CGSize {
 		return CGSize(width: self.width * a, height: self.height * a)
 	}
 
+	var integerSize:CGSize {
+		return CGSize(width: round(width), height: round(height))
+	}
+
 }
 
 struct LineSegment {

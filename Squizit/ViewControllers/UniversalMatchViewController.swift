@@ -28,6 +28,7 @@ class UniversalMatchViewToolbarBackgroundView : UIView {
 }
 
 class UniversalMatchViewFinishedMatchView : UIView {
+	private var image:UIImage?
 	private var imageView: UIImageView?
 	private var renderQueue = dispatch_queue_create("com.zakariya.squizit.FinishedDrawingRenderQueue", nil)
 	private var angle:CGFloat = 0
@@ -44,16 +45,19 @@ class UniversalMatchViewFinishedMatchView : UIView {
 
 	override func layoutSubviews() {
 		super.layoutSubviews()
-		if let imageView = imageView, image = imageView.image {
+		if let imageView = imageView, image = image {
+
 			imageView.transform = CGAffineTransformIdentity
-			imageView.frame = CGRect(center: bounds.center, size: image.size)
 
 			let padding:CGFloat = 40
 			let minViewDim = min(bounds.width,bounds.height) - 2*padding
 			let maxImageDim = max(image.size.width,image.size.height)
 			let scale = minViewDim / maxImageDim
+			let imageSize = image.size.scale(scale).integerSize
 
-			imageView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(scale, scale), CGAffineTransformMakeRotation(angle))
+			imageView.image = image.imageByScalingToSize(imageSize, scale: 0)
+			imageView.frame = CGRect(center: bounds.center, size: imageSize)
+			imageView.transform = CGAffineTransformMakeRotation(angle)
 		}
 	}
 
@@ -75,7 +79,7 @@ class UniversalMatchViewFinishedMatchView : UIView {
 		if let match = match {
 			dispatch_async(renderQueue) {
 
-				let image = match.render(backgroundColor: SquizitTheme.paperBackgroundColor(scale: 0), scale: 0, watermark: false)
+				self.image = match.render(backgroundColor: SquizitTheme.paperBackgroundColor(scale: 0), scale: 0, watermark: false)
 				dispatch_main {
 					let imageView = UIImageView(frame: CGRect.zeroRect)
 					imageView.layer.shadowColor = UIColor.blackColor().CGColor
@@ -86,7 +90,7 @@ class UniversalMatchViewFinishedMatchView : UIView {
 					imageView.alpha = 0
 					self.addSubview(imageView)
 
-					imageView.image = image
+					imageView.image = self.image
 					UIView.animateWithDuration(0.3) {
 						imageView.alpha = 1
 					}
