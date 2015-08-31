@@ -216,7 +216,7 @@ class UniversalMatchViewPresenterView : UIView {
 
 	private func updateDrawingViewLayer() {
 		if let drawingView = matchView {
-			drawingView.layer.shouldRasterize = self.panning
+			drawingView.layer.shouldRasterize = true
 			drawingView.layer.rasterizationScale = self.panning ? panningScale : 1
 		}
 	}
