@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import GameKit
+//import GameKit
 
-
+/*
 class TurnBasedMatchHelper {
 
 	class var sharedInstance: TurnBasedMatchHelper {
@@ -48,5 +48,5 @@ class TurnBasedMatchHelper {
 	dynamic private func authenticationChanged( note:NSNotification ) {
 		userAuthenticated = GKLocalPlayer.localPlayer().authenticated;
 	}
-
 }
+*/

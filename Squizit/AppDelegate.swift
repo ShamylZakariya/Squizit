@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		#endif
 
 		// fire up game center
-		TurnBasedMatchHelper.sharedInstance.authenticateLocalPlayer()
+		//TurnBasedMatchHelper.sharedInstance.authenticateLocalPlayer()
 
 		return true
 	}
