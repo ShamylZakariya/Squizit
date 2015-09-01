@@ -263,7 +263,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		let toolScale:CGFloat = isSmallScreen ? 0.8 : 1.0
 		let drawingToolSize = drawingToolSelector.intrinsicContentSize().scale(toolScale)
 		let buttonSize = quitGameButton.intrinsicContentSize().height * toolScale
-		let margin = CGFloat(traitCollection.horizontalSizeClass == .Compact ? 16 : 36)
+		let margin = CGFloat(traitCollection.horizontalSizeClass == .Compact ? 16 : 20)
 		let textButtonWidth = max(undoButton.intrinsicContentSize().width,clearButton.intrinsicContentSize().width)
 
 		// match presenter always gets full bounds, but has edge insets set below
