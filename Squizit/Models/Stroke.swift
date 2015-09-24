@@ -34,7 +34,7 @@ enum Fill {
 }
 
 
-struct ControlPoint:Printable,Equatable {
+struct ControlPoint:CustomStringConvertible,Equatable {
 	let position:CGPoint
 	let control:CGPoint
 
@@ -82,8 +82,8 @@ class Stroke : Equatable {
 	}
 
 	var boundingRect:CGRect {
-		return chunks.reduce(CGRect.nullRect, combine: { (bounds:CGRect, chunk:Stroke.Chunk) -> CGRect in
-			return bounds.rectByUnion(chunk.boundingRect)
+		return chunks.reduce(CGRect.null, combine: { (bounds:CGRect, chunk:Stroke.Chunk) -> CGRect in
+			return bounds.union(chunk.boundingRect)
 		})
 	}
 }
@@ -113,7 +113,7 @@ func == (left:Stroke, right:Stroke) -> Bool {
 		return false
 	}
 
-	for (i,chunk) in enumerate(left.chunks) {
+	for (i,chunk) in left.chunks.enumerate() {
 		if chunk != right.chunks[i] {
 			return false
 		}
@@ -213,9 +213,9 @@ extension BinaryCoder {
 	func getStroke() -> Stroke? {
 		if let fill = getFill() {
 			if remaining > 0 {
-				var stroke = Stroke( fill: fill )
+				let stroke = Stroke( fill: fill )
 				let count = getInt32()
-				for i in 0 ..< count {
+				for _ in 0 ..< count {
 					if let chunk = getStrokeChunk() {
 						stroke.chunks.append( chunk )
 					} else {

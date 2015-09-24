@@ -93,8 +93,8 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 
 	// MARK: - UIPageViewControllerDelegate
 
-	func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [AnyObject], transitionCompleted completed: Bool) {
-		let pageVc = pageViewController.viewControllers.first as! ManagedIndexedViewViewController
+	func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+		let pageVc = pageViewController.viewControllers!.first as! ManagedIndexedViewViewController
 		currentIndex = pageVc.index
 	}
 
@@ -119,7 +119,7 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 
 
 		if let message = messages[index] {
-			var page = InstructionView.create()
+			let page = InstructionView.create()
 
 			page.label.attributedText = NSAttributedString(string: message, attributes: [
 				NSForegroundColorAttributeName: UIColor.whiteColor(),
@@ -135,7 +135,7 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 			return ManagedIndexedViewViewController(view: page, index: index, respectsTopLayoutGuide:true)
 		} else {
 
-			let iv = CenteredImageView(frame: CGRect.zeroRect)
+			let iv = CenteredImageView(frame: CGRect.zero)
 			iv.image = images[index]
 
 			return ManagedIndexedViewViewController(view: iv, index: index, respectsTopLayoutGuide:true)

@@ -64,7 +64,7 @@ class SquizitTheme {
 
 	// background color of paper surface (e.g., background of drawing canvas)
 	class func paperBackgroundColor( scale:CGFloat = 0 ) -> UIColor {
-		return UIColor( patternImage: self.paperBackgroundImage( scale: scale ) )
+		return UIColor( patternImage: self.paperBackgroundImage( scale ) )
 	}
 
 	// background color for when a match is exported
@@ -184,7 +184,7 @@ class SquizitGameTextButton : UIButton {
 	}
 
 	class func create(title:String, compact:Bool) ->SquizitGameTextButton {
-		var button = SquizitGameTextButton.buttonWithType(.Custom) as! SquizitGameTextButton
+		let button = SquizitGameTextButton(type: .Custom)
 		button.setTitle(title, forState: .Normal)
 		button.compact = compact
 		return button
@@ -280,7 +280,7 @@ class SquizitThemeNameInputField : UITextField {
 
 class SquizitThemeSearchField : UITextField {
 
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
 		commonInit()
 	}
@@ -292,8 +292,8 @@ class SquizitThemeSearchField : UITextField {
 
 	private func commonInit() {
 
-		var clearButton:UIButton = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
-		var closeImage = UIImage(named: "gallery-clear-search-button")!.imageWithRenderingMode(.AlwaysTemplate)
+		let clearButton:UIButton = UIButton(type: UIButtonType.Custom)
+		let closeImage = UIImage(named: "gallery-clear-search-button")!.imageWithRenderingMode(.AlwaysTemplate)
 		clearButton.setImage(closeImage, forState: .Normal)
 		clearButton.frame = CGRect(x: 0, y: 0, width: closeImage.size.width, height: closeImage.size.height)
 		clearButton.addTarget(self, action: "clearButtonTapped:", forControlEvents: .TouchUpInside)
@@ -347,7 +347,7 @@ class SquizitThemeSearchField : UITextField {
 		if let shouldClear = self.delegate?.textFieldShouldClear?(self) {
 			if shouldClear {
 				var didSet = false
-				if let shouldChange = self.delegate?.textField?(self, shouldChangeCharactersInRange: NSRangeFromString( self.text ), replacementString: "") {
+				if let shouldChange = self.delegate?.textField?(self, shouldChangeCharactersInRange: NSRangeFromString( self.text! ), replacementString: "") {
 					if shouldChange {
 						self.text = ""
 						didSet = true
@@ -379,10 +379,10 @@ class SquizitThemeRootViewControllerOrLabel : UILabel {
 	override func drawRect(rect: CGRect) {
 		super.drawRect(rect)
 
-		let textRect = textRectForBounds(bounds, limitedToNumberOfLines: 0).rectByInsetting(dx: -margin, dy: 0)
+		let textRect = textRectForBounds(bounds, limitedToNumberOfLines: 0).insetBy(dx: -margin, dy: 0)
 		let y = round(textRect.midY + (font.ascender - font.capHeight)/2) + 0.5
 
-		var stroke = UIBezierPath()
+		let stroke = UIBezierPath()
 		stroke.moveToPoint(CGPoint(x:bounds.minX + margin, y:y))
 		stroke.addLineToPoint(CGPoint(x:textRect.minX, y:y))
 
@@ -406,7 +406,7 @@ class SquizitThemeInstructionsLabel : UIView {
 
 	var margins:(CGFloat,CGFloat) = (60,10)
 
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
 		commonInit()
 	}
@@ -429,10 +429,8 @@ class SquizitThemeInstructionsLabel : UIView {
 
 	override func drawRect(rect: CGRect) {
 
-		let textRect = _label.frame
 		let midY = round(bounds.midY) + 0.5
-
-		var stroke = UIBezierPath()
+		let stroke = UIBezierPath()
 		stroke.moveToPoint(CGPoint(x:0, y:midY))
 		stroke.addLineToPoint(CGPoint(x:margins.0, y:midY))
 
@@ -454,7 +452,7 @@ class SquizitThemeInstructionsLabel : UIView {
 		opaque = false
 		backgroundColor = UIColor.clearColor()
 
-		_label = UILabel(frame: CGRect.zeroRect)
+		_label = UILabel(frame: CGRect.zero)
 		_label.numberOfLines = 0
 		_label.lineBreakMode = .ByWordWrapping
 		_label.textColor = UIColor.whiteColor()

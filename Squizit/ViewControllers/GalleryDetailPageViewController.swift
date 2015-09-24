@@ -11,7 +11,7 @@ import Social
 
 class TextActivityItemProvider : UIActivityItemProvider {
 
-	override func item() -> AnyObject! {
+	override func item() -> AnyObject {
 
 		if let playerNames = self.placeholderItem as? String {
 			if !playerNames.isEmpty {
@@ -33,7 +33,7 @@ class TextActivityItemProvider : UIActivityItemProvider {
 			}
 		}
 
-		return placeholderItem
+		return placeholderItem!
 	}
 }
 
@@ -110,7 +110,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 		let indexPath = NSIndexPath(forItem: index, inSection: 0)
 		let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as! GalleryDrawing
 
-		var page = GalleryDetailPageView.create()
+		let page = GalleryDetailPageView.create()
 		page.playerNamesLabel.text = drawing.artistDisplayNames
 		page.matchDateLabel.text = dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date))
 
@@ -128,8 +128,8 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 				assertionFailure("Unable to load match from data, error:\(error.message)" )
 			}
 
-			var match = loadResult.value
-			var rendering = match.render( backgroundColor: self.drawingBackgroundColor )
+			let match = loadResult.value
+			let rendering = match.render( self.drawingBackgroundColor )
 
 			dispatch_main {
 				page.centeredImageView.image = rendering
@@ -180,8 +180,8 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 
 	// MARK: - UIPageViewControllerDelegate
 
-	func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [AnyObject], transitionCompleted completed: Bool) {
-		let pageVc = pageViewController.viewControllers.first as! ManagedIndexedViewViewController
+	func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+		let pageVc = pageViewController.viewControllers!.first as! ManagedIndexedViewViewController
 		currentIndex = pageVc.index
 		updatePageIndicatorLabel()
 	}
@@ -189,7 +189,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 	// MARK: - CoreData
 
 	var count:Int {
-		let info = self.fetchedResultsController.sections![0] as! NSFetchedResultsSectionInfo
+		let info = self.fetchedResultsController.sections![0] 
 		return info.numberOfObjects
 	}
 
@@ -199,7 +199,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 			return _fetchedResultsController!
 		}
 
-		var fetchRequest = NSFetchRequest()
+		let fetchRequest = NSFetchRequest()
 		fetchRequest.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: store.managedObjectContext! )
 
 		fetchRequest.sortDescriptors = self.sortDescriptors
@@ -238,7 +238,10 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 
 	private func performFetch() {
 		var error:NSError? = nil
-		if !fetchedResultsController.performFetch(&error) {
+		do {
+			try fetchedResultsController.performFetch()
+		} catch let error1 as NSError {
+			error = error1
 			NSLog("Unable to execute fetch, error: %@", error!.localizedDescription )
 			abort()
 		}
@@ -255,7 +258,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 					message += " match between " + drawing.artistDisplayNames
 				}
 
-				var shareVC = SLComposeViewController_Twitter()
+				let shareVC = SLComposeViewController_Twitter()
 				shareVC.setInitialText(message)
 				shareVC.addImage(rendering)
 
@@ -278,7 +281,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 				let items = [rendering, textItem]
 
 				let activityController = UIActivityViewController( activityItems: items, applicationActivities: nil)
-				activityController.popoverPresentationController?.barButtonItem = sender as! UIBarButtonItem
+				activityController.popoverPresentationController?.barButtonItem = (sender as! UIBarButtonItem)
 				activityController.view.tintColor = SquizitTheme.alertTintColor()
 				sself.presentViewController(activityController, animated: true, completion: nil)
 			}
@@ -297,9 +300,9 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 				assertionFailure("Unable to load match from data, error:\(error.message)" )
 			}
 
-			var match = loadResult.value
-			var background = SquizitTheme.exportedMatchBackgroundColor()
-			var rendering = match.render( backgroundColor: background, scale:2, watermark: true )
+			let match = loadResult.value
+			let background = SquizitTheme.exportedMatchBackgroundColor()
+			let rendering = match.render( background, scale:2, watermark: true )
 
 			dispatch_main {
 				done( drawing:drawing, rendering:rendering )
@@ -342,7 +345,7 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 			}
 		} else {
 			if pageIndicatorLabel == nil {
-				pageIndicatorLabel = UILabel(frame: CGRect.zeroRect)
+				pageIndicatorLabel = UILabel(frame: CGRect.zero)
 				pageIndicatorLabel!.font = UIFont(name: "Baskerville-Italic", size: 12)!
 				pageIndicatorLabel!.textColor = UIColor.whiteColor()
 				pageIndicatorLabel!.textAlignment = NSTextAlignment.Center

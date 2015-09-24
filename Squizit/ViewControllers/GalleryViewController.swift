@@ -162,7 +162,6 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 		UIView.animateWithDuration(0.2,
 			animations: {
-				[unowned self] () -> Void in
 				let scale = CATransform3DMakeScale(0.1, 0.1, 1)
 				layer.transform = CATransform3DConcat(layer.transform, scale)
 				layer.opacity = 0
@@ -184,7 +183,6 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		let deleteButton = self.deleteButton
 		UIView.animateWithDuration(0.2,
 			animations: {
-				[weak self] () -> Void in
 				deleteButton.alpha = 0
 			},
 			completion:{
@@ -297,7 +295,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 
 		if let drawing = self.fetchedResultsController.objectAtIndexPath(indexPath) as? GalleryDrawing {
 
-			var galleryCell = cell as! GalleryCollectionViewCell
+			let galleryCell = cell as! GalleryCollectionViewCell
 
 			galleryCell.drawing = drawing
 
@@ -310,7 +308,7 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 				NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.7)
 			]
 
-			var attributedText = NSMutableAttributedString(string: drawing.artistDisplayNames, attributes: nameAttrs)
+			let attributedText = NSMutableAttributedString(string: drawing.artistDisplayNames, attributes: nameAttrs)
 			attributedText.appendAttributedString(NSAttributedString(string: "\n" + dateFormatter.stringFromDate(NSDate(timeIntervalSinceReferenceDate: drawing.date)),attributes: dateAttrs))
 
 			galleryCell.label.attributedText = attributedText
@@ -364,9 +362,9 @@ class GalleryCollectionViewDataSource : BasicGalleryCollectionViewDataSource {
 					UIGraphicsBeginImageContextWithOptions(size, true, 0)
 
 					self.thumbnailBackgroundColor.set()
-					UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
+					UIRectFillUsingBlendMode(rect, CGBlendMode.Normal)
 
-					thumbnail.drawAtPoint(CGPoint.zeroPoint, blendMode: kCGBlendModeMultiply, alpha: 1)
+					thumbnail.drawAtPoint(CGPoint.zero, blendMode: CGBlendMode.Multiply, alpha: 1)
 					thumbnail = UIGraphicsGetImageFromCurrentImageContext()
 					UIGraphicsEndImageContext()
 
@@ -406,11 +404,11 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 	weak var delegate:GalleryViewControllerDelegate?
 
 	private var dataSource:GalleryCollectionViewDataSource!
-	private var searchField = SquizitThemeSearchField(frame: CGRect.zeroRect )
+	private var searchField = SquizitThemeSearchField(frame: CGRect.zero )
 	private var fixedHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.Dark))
 	private let fixedHeaderHeight:CGFloat = 60
 
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
 		self.title = "Gallery"
 	}
@@ -488,9 +486,9 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		super.viewWillLayoutSubviews()
 
 		let aspect:CGFloat = 360.0 / 300.0
-		var suggestedItemWidth = self.suggestedItemWidth
-		var suggestedItemSize = CGSize(width:suggestedItemWidth, height: suggestedItemWidth*aspect)
-		var itemWidth = floor(view.bounds.width / round(view.bounds.width / suggestedItemSize.width))
+		let suggestedItemWidth = self.suggestedItemWidth
+		let suggestedItemSize = CGSize(width:suggestedItemWidth, height: suggestedItemWidth*aspect)
+		let itemWidth = floor(view.bounds.width / round(view.bounds.width / suggestedItemSize.width))
 		let itemHeight = round(suggestedItemSize.height)
 		let flowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
 		flowLayout.itemSize = CGSize(width:itemWidth, height:itemHeight)
@@ -543,7 +541,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 
 	dynamic func searchTextChanged( sender:UITextField ) {
 		if sender === searchField {
-			artistFilter = searchField.text
+			artistFilter = searchField.text ?? ""
 		}
 	}
 

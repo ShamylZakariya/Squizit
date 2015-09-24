@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.tintColor = SquizitTheme.tintColor()
 
 		#if DEBUG
-			NSLog("Documents: \(NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as! NSURL)")
+			NSLog("Documents: \(NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last)")
 		#endif
 
 		// fire up game center
@@ -58,7 +58,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	// MARK: - Statics
 
 	class var appVersionName:String {
-		let infoDict = NSBundle.mainBundle().infoDictionary as! Dictionary<String,AnyObject>
+		guard let infoDict = NSBundle.mainBundle().infoDictionary else {
+			fatalError()
+		}
 		let displayName = infoDict["CFBundleName"] as! String
 		let majorVersion = infoDict["CFBundleShortVersionString"] as! String
 		let minorVersion = infoDict["CFBundleVersion"] as! String
@@ -67,12 +69,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	class var appMajorVersion:String {
-		let infoDict = NSBundle.mainBundle().infoDictionary as! Dictionary<String,AnyObject>
+		guard let infoDict = NSBundle.mainBundle().infoDictionary else {
+			fatalError()
+		}
 		return infoDict["CFBundleShortVersionString"] as! String
 	}
 
 	class var appMinorVersion:String {
-		let infoDict = NSBundle.mainBundle().infoDictionary as! Dictionary<String,AnyObject>
+		guard let infoDict = NSBundle.mainBundle().infoDictionary else {
+			fatalError()
+		}
 		return infoDict["CFBundleVersion"] as! String
 	}
 

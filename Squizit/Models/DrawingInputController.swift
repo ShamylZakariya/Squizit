@@ -11,7 +11,7 @@ import UIKit
 
 class DrawingInputController {
 
-	private var _points = [CGPoint](count: 5, repeatedValue: CGPoint.zeroPoint)
+	private var _points = [CGPoint](count: 5, repeatedValue: CGPoint.zero)
 	private var _pointsTop = 0
 	private var _isFirstPoint = false
 	private var _lastSegment = LineSegment()
@@ -25,7 +25,7 @@ class DrawingInputController {
 	}
 
 	// the viewport into the drawing - this is what will be rendered on screen
-	var viewport:CGRect = CGRect.zeroRect {
+	var viewport:CGRect = CGRect.zero {
 		didSet {
 			view?.setNeedsDisplay()
 		}
@@ -62,7 +62,7 @@ class DrawingInputController {
 	func drawUsingBitmapPipeline( context:CGContextRef ) {
 		if let drawing = drawing {
 			let image = drawing.render( viewport ).image
-			image.drawAtPoint( viewport.origin, blendMode: kCGBlendModeMultiply, alpha: 1)
+			image.drawAtPoint( viewport.origin, blendMode: CGBlendMode.Multiply, alpha: 1)
 		}
 	}
 
@@ -161,9 +161,9 @@ class DrawingInputController {
 			//	and I'll no longer have the weird lumpy shapes which are resultant of the squaring curve
 			//
 
-			let frac1 = SCALE * (MIN + (clamp( distance(pointsBuffer[i+0], pointsBuffer[i+1]), 0.0, RANGE )/RANGE) * (MAX-MIN))
-			let frac2 = SCALE * (MIN + (clamp( distance(pointsBuffer[i+1], pointsBuffer[i+2]), 0.0, RANGE )/RANGE) * (MAX-MIN))
-			let frac3 = SCALE * (MIN + (clamp( distance(pointsBuffer[i+2], pointsBuffer[i+3]), 0.0, RANGE )/RANGE) * (MAX-MIN))
+			let frac1 = SCALE * (MIN + (clamp( distance(pointsBuffer[i+0], b: pointsBuffer[i+1]), lowerBound: 0.0, upperBound: RANGE )/RANGE) * (MAX-MIN))
+			let frac2 = SCALE * (MIN + (clamp( distance(pointsBuffer[i+1], b: pointsBuffer[i+2]), lowerBound: 0.0, upperBound: RANGE )/RANGE) * (MAX-MIN))
+			let frac3 = SCALE * (MIN + (clamp( distance(pointsBuffer[i+2], b: pointsBuffer[i+3]), lowerBound: 0.0, upperBound: RANGE )/RANGE) * (MAX-MIN))
 
 			ls[1] = LineSegment(firstPoint: pointsBuffer[i+0], secondPoint: pointsBuffer[i+1]).perpendicular(absoluteLength: frac1)
 			ls[2] = LineSegment(firstPoint: pointsBuffer[i+1], secondPoint: pointsBuffer[i+2]).perpendicular(absoluteLength: frac2)
@@ -194,7 +194,7 @@ class DrawingInputController {
 */
 extension DrawingInputController {
 
-	func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent, offset:CGPoint = CGPoint.zeroPoint) {
+	func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent, offset:CGPoint = CGPoint.zero) {
 
 		if touches.count > 1 {
 			return
@@ -205,7 +205,7 @@ extension DrawingInputController {
 		touchBegan(location.subtract(offset))
 	}
 
-	func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent, offset:CGPoint = CGPoint.zeroPoint) {
+	func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent, offset:CGPoint = CGPoint.zero) {
 
 		if touches.count > 1 {
 			return

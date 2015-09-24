@@ -48,7 +48,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 	// MARK: UIViewController Overrides
 
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		//self.transitioningDelegate = _saveToGalleryTransitionManager
 	}
@@ -179,10 +179,10 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 	dynamic private func keyboardWillShow( note:NSNotification ) {
 		if let info:Dictionary = note.userInfo,
-			keyboardRect = info[UIKeyboardFrameEndUserInfoKey]?.CGRectValue(),
+			keyboardRect = info[UIKeyboardFrameEndUserInfoKey]?.CGRectValue,
 			duration = info[UIKeyboardAnimationDurationUserInfoKey] as? NSTimeInterval {
 				dialogVerticalCenteringConstraint.constant = keyboardRect.height/2
-				UIView.animateWithDuration(1) {
+				UIView.animateWithDuration(duration) {
 					self.view.layoutIfNeeded()
 				}
 			}
@@ -192,7 +192,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		if let info:Dictionary = note.userInfo,
 			duration = info[UIKeyboardAnimationDurationUserInfoKey] as? NSTimeInterval {
 				dialogVerticalCenteringConstraint.constant = 0
-				UIView.animateWithDuration(1) {
+				UIView.animateWithDuration(duration) {
 					self.view.layoutIfNeeded()
 				}
 			}
@@ -218,20 +218,23 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 
 	// MARK: Private
 
-	private func sanitize( name:String ) -> String {
+	private func sanitize( name:String? ) -> String {
+		guard let name = name else {
+			return ""
+		}
 		return name.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).capitalizedStringWithLocale(NSLocale.currentLocale())
 	}
 
 	private func addParallaxEffect() {
-		var horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: UIInterpolatingMotionEffectType.TiltAlongHorizontalAxis)
+		let horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: UIInterpolatingMotionEffectType.TiltAlongHorizontalAxis)
 		horizontal.minimumRelativeValue = -15
 		horizontal.maximumRelativeValue = 15
 
-		var vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: UIInterpolatingMotionEffectType.TiltAlongVerticalAxis)
+		let vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: UIInterpolatingMotionEffectType.TiltAlongVerticalAxis)
 		vertical.minimumRelativeValue = -15
 		vertical.maximumRelativeValue = 15
 
-		var effect = UIMotionEffectGroup()
+		let effect = UIMotionEffectGroup()
 		effect.motionEffects = [horizontal, vertical]
 		dialogView.addMotionEffect(effect)
 	}

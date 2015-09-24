@@ -11,16 +11,16 @@ import UIKit
 class GameControlButton : UIButton {
 
 	class func quitGameButton() -> GameControlButton {
-		var btn = self.buttonWithType(UIButtonType.Custom) as! GameControlButton
-		var icon = UIImage( named:"quit-game-button")?.imageWithAlpha(0.5).imageWithRenderingMode(.AlwaysTemplate)
+		let btn = GameControlButton(type: .Custom)
+		let icon = UIImage( named:"quit-game-button")?.imageWithAlpha(0.5).imageWithRenderingMode(.AlwaysTemplate)
 		btn.setImage( icon, forState: UIControlState.Normal )
 
 		return btn
 	}
 
 	class func finishTurnButton() -> GameControlButton {
-		var btn = self.buttonWithType(UIButtonType.Custom) as! GameControlButton
-		var icon = UIImage( named:"finish-turn-button")?.imageWithAlpha(0.5).imageWithRenderingMode(.AlwaysTemplate)
+		let btn = GameControlButton(type: .Custom)
+		let icon = UIImage( named:"finish-turn-button")?.imageWithAlpha(0.5).imageWithRenderingMode(.AlwaysTemplate)
 		btn.setImage( icon, forState: UIControlState.Normal )
 
 		return btn

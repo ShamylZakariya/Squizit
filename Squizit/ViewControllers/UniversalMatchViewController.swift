@@ -17,7 +17,7 @@ class UniversalMatchViewToolbarBackgroundView : UIView {
 		opaque = false
 	}
 
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 	    fatalError("init(coder:) has not been implemented")
 	}
 
@@ -38,7 +38,7 @@ class UniversalMatchViewFinishedMatchView : UIView {
 		commonInit()
 	}
 
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
 		commonInit()
 	}
@@ -79,9 +79,9 @@ class UniversalMatchViewFinishedMatchView : UIView {
 		if let match = match {
 			dispatch_async(renderQueue) {
 
-				self.image = match.render(backgroundColor: SquizitTheme.paperBackgroundColor(scale: 0), scale: 0, watermark: false)
+				self.image = match.render(SquizitTheme.paperBackgroundColor(0), scale: 0, watermark: false)
 				dispatch_main {
-					let imageView = UIImageView(frame: CGRect.zeroRect)
+					let imageView = UIImageView(frame: CGRect.zero)
 					imageView.layer.shadowColor = UIColor.blackColor().CGColor
 					imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
 					imageView.layer.shadowOpacity = 1
@@ -175,11 +175,11 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		quitGameButton = GameControlButton.quitGameButton()
 		finishTurnButton = GameControlButton.finishTurnButton()
 
-		finishTurnButtonOverlay = UIView(frame: CGRect.zeroRect)
+		finishTurnButtonOverlay = UIView(frame: CGRect.zero)
 		finishTurnButtonOverlay.userInteractionEnabled = false
 		finishTurnButtonOverlay.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "onFinishTurnOverlayTapped:"))
 
-		drawingToolSelector = DrawingToolSelector(frame: CGRect.zeroRect)
+		drawingToolSelector = DrawingToolSelector(frame: CGRect.zero)
 		drawingToolSelector.addTool("Pencil", icon: UIImage(named: "tool-pencil")!)
 		drawingToolSelector.addTool("Brush", icon: UIImage(named: "tool-brush")!)
 		drawingToolSelector.addTool("Eraser", icon: UIImage(named: "tool-eraser")!)
@@ -192,13 +192,13 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		clearButton = SquizitGameTextButton.create(NSLocalizedString("Clear", comment:"ClearButtonTitle"), compact: isSmallScreen)
 		clearButton.addTarget(self, action: "onClear:", forControlEvents: .TouchUpInside)
 
-		matchPresenterView = UniversalMatchViewPresenterView(frame: CGRect.zeroRect)
+		matchPresenterView = UniversalMatchViewPresenterView(frame: CGRect.zero)
 
 
 		assert(players == 2 || players == 3, "Number of players MUST be 2, or 3")
 		let match = Match(players: players, stageSize: CGSize(width: 1024, height: 1024), overlap: 32)
 
-		matchView = UniversalMatchView(frame: CGRect.zeroRect)
+		matchView = UniversalMatchView(frame: CGRect.zero)
 		matchView.match = match
 		matchView.turn = 0
 		matchPresenterView.matchView = matchView
@@ -206,8 +206,8 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		view.addSubview(matchPresenterView)
 
 		// build and install tool backdrop views - they're only visible when matchPresenterView is in panning mode
-		toolBackdropViewTop = UniversalMatchViewToolbarBackgroundView(frame:CGRect.zeroRect)
-		toolBackdropViewBottom = UniversalMatchViewToolbarBackgroundView(frame:CGRect.zeroRect)
+		toolBackdropViewTop = UniversalMatchViewToolbarBackgroundView(frame:CGRect.zero)
+		toolBackdropViewBottom = UniversalMatchViewToolbarBackgroundView(frame:CGRect.zero)
 		view.addSubview(toolBackdropViewTop!)
 		view.addSubview(toolBackdropViewBottom!)
 
@@ -278,7 +278,6 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 			quitGameButton.frame = CGRect(x: margin, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
 			finishTurnButton.frame = CGRect(x: layoutRect.maxX - margin - buttonSize, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
 
-			var textButtonTotalWidth = 2*textButtonWidth + margin
 			undoButton.frame = CGRect(x: layoutRect.midX - textButtonWidth - margin/2, y: layoutRect.minY + margin, width: textButtonWidth, height: buttonSize)
 			clearButton.frame = CGRect(x: layoutRect.midX + margin/2, y: layoutRect.minY + margin, width: textButtonWidth, height: buttonSize)
 
@@ -298,9 +297,6 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 			//
 			// landscape layout, put all tools across top
 			//
-
-			let toolsHeight = max(drawingToolSize.height,buttonSize)
-			let toolBarRect = CGRect(x: margin, y: layoutRect.minY + margin, width: layoutRect.width-(2*margin), height: toolsHeight)
 
 			quitGameButton.frame = CGRect(x: margin, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
 			finishTurnButton.frame = CGRect(x: layoutRect.maxX - margin - buttonSize, y: layoutRect.minY + margin, width: buttonSize, height: buttonSize)
@@ -440,7 +436,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 				self.drawingToolSelector.hidden = true
 			})
 
-		finishedMatchView = UniversalMatchViewFinishedMatchView(frame: CGRect.zeroRect)
+		finishedMatchView = UniversalMatchViewFinishedMatchView(frame: CGRect.zero)
 		finishedMatchView!.match = match
 		view.addSubview(finishedMatchView!)
 	}
@@ -534,7 +530,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	}
 
 	private dynamic func showQuitMatchDialog() {
-		var ac = UIAlertController(
+		let ac = UIAlertController(
 			title: NSLocalizedString("Quit?", comment:"QuitMatchAlertTitle"),
 			message: NSLocalizedString("Are you certain you'd like to quit this match?", comment:"QuitMatchAlertMessage"),
 			preferredStyle: UIAlertControllerStyle.Alert)
@@ -635,7 +631,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 			}
 
 			// render match with transparent background
-			var rendering = match.render( backgroundColor: nil, scale: UIScreen.mainScreen().scale )
+			var rendering = match.render( nil, scale: UIScreen.mainScreen().scale )
 
 			#if DEBUG
 				self.DEBUG_saveImage(rendering, name: "drawing.png")
@@ -648,7 +644,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 				self.DEBUG_saveImage(rendering, name: "drawing-thumbnail.png")
 			#endif
 
-			var thumbnailData:NSData? = UIImagePNGRepresentation(rendering)
+			let thumbnailData:NSData? = UIImagePNGRepresentation(rendering)
 
 			dispatch_main {
 				done( matchData: matchDataResult.value, thumbnailSize:thumbnailSize, thumbnailData: thumbnailData )
@@ -657,11 +653,18 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	}
 
 	private func DEBUG_saveImage( image:UIImage, name:String ) {
-		let folderURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last as! NSURL
-		let targetURL = folderURL.URLByAppendingPathComponent(name, isDirectory: false)
+		guard let folderURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).last else {
+			fatalError("UniversalMatchViewController::DEBUG_saveImage - unable to get documents folder URL");
+		}
 
+		let targetURL = folderURL.URLByAppendingPathComponent(name, isDirectory: false)
 		NSLog("UniversalMatchViewController::DEBUG_saveImage - saving: \(targetURL)")
-		UIImagePNGRepresentation(image).writeToURL(targetURL, atomically: true)
+
+		guard let pngRep = UIImagePNGRepresentation(image) else {
+			fatalError("UniversalMatchViewController::DEBUG_saveImage - unable to encode image as PNG");
+		}
+
+		pngRep.writeToURL(targetURL, atomically: true)
 	}
 
 }

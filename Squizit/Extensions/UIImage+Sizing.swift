@@ -21,7 +21,7 @@ extension UIImage {
 
 		let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
 		CGContextClearRect(UIGraphicsGetCurrentContext(), rect)
-		self.drawInRect(rect, blendMode: kCGBlendModeNormal, alpha: 1)
+		self.drawInRect(rect, blendMode: CGBlendMode.Normal, alpha: 1)
 
 		let newImage = UIGraphicsGetImageFromCurrentImageContext()
 		UIGraphicsEndImageContext()
@@ -42,7 +42,7 @@ extension UIImage {
 		switch contentMode {
 
 			case UIViewContentMode.ScaleToFill:
-				self.drawInRect(CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height), blendMode: kCGBlendModeNormal, alpha: 1)
+				self.drawInRect(CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height), blendMode: CGBlendMode.Normal, alpha: 1)
 
 			case UIViewContentMode.ScaleAspectFit:
 				var scale = newSize.width / imageWidth
@@ -52,7 +52,7 @@ extension UIImage {
 				}
 
 				let center = CGPoint( x:newSize.width/2, y: newSize.height/2)
-				self.drawInRect(centeredRect( center, width: imageWidth*scale, height: imageHeight*scale), blendMode: kCGBlendModeNormal, alpha: 1)
+				self.drawInRect(centeredRect( center, width: imageWidth*scale, height: imageHeight*scale), blendMode: CGBlendMode.Normal, alpha: 1)
 
 			case UIViewContentMode.ScaleAspectFill:
 				var scale = newSize.width / imageWidth
@@ -61,11 +61,11 @@ extension UIImage {
 					scale *= newSize.height / (imageHeight*scale)
 				}
 				let center = CGPoint( x:newSize.width/2, y: newSize.height/2)
-				self.drawInRect(centeredRect( center, width: imageWidth*scale, height: imageHeight*scale), blendMode: kCGBlendModeNormal, alpha: 1)
+				self.drawInRect(centeredRect( center, width: imageWidth*scale, height: imageHeight*scale), blendMode: CGBlendMode.Normal, alpha: 1)
 
 			case UIViewContentMode.Center:
 				let center = CGPoint( x:newSize.width/2, y: newSize.height/2)
-				self.drawInRect(centeredRect( center, width: newSize.width, height: newSize.height), blendMode: kCGBlendModeNormal, alpha: 1)
+				self.drawInRect(centeredRect( center, width: newSize.width, height: newSize.height), blendMode: CGBlendMode.Normal, alpha: 1)
 
 			default:
 				assertionFailure("Unsupported contentMode, sorry")

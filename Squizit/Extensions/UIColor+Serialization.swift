@@ -35,13 +35,13 @@ extension MutableBinaryCoder {
 extension UIColor {
 
 	var hasRGBComponents:Bool {
-		var m:CGColorSpaceModel = CGColorSpaceGetModel(CGColorGetColorSpace(self.CGColor))
-		return ( m.value == kCGColorSpaceModelMonochrome.value || m.value == kCGColorSpaceModelRGB.value )
+		let m:CGColorSpaceModel = CGColorSpaceGetModel(CGColorGetColorSpace(self.CGColor))
+		return ( m.rawValue == CGColorSpaceModel.Monochrome.rawValue || m.rawValue == CGColorSpaceModel.RGB.rawValue )
 	}
 
 	var isMonochrome:Bool {
-		var m:CGColorSpaceModel = CGColorSpaceGetModel(CGColorGetColorSpace(self.CGColor))
-		return m.value == kCGColorSpaceModelMonochrome.value
+		let m:CGColorSpaceModel = CGColorSpaceGetModel(CGColorGetColorSpace(self.CGColor))
+		return m.rawValue == CGColorSpaceModel.Monochrome.rawValue
 	}
 
 	func colorComponentAtIndex( var i:Int ) -> CGFloat {

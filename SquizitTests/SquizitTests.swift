@@ -26,7 +26,7 @@ private func randomColor() -> UIColor {
 }
 
 private func randomPoint() -> CGPoint {
-	return CGPoint(x: randRange(-100, 100), y: randRange(-100, 100))
+	return CGPoint(x: randRange(-100, max: 100), y: randRange(-100, max: 100))
 }
 
 class BinaryCoderTests: XCTestCase {
@@ -40,7 +40,7 @@ class BinaryCoderTests: XCTestCase {
     }
 
 	func testUInt8Coding() {
-		var coder = MutableBinaryCoder(order: nativeOrder())
+		let coder = MutableBinaryCoder(order: nativeOrder())
 
 		let ints:[UInt8] = [0,1,2,3,4,5,6,7,8]
 		for i in ints {
@@ -56,20 +56,20 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testUInt8ArrayCoding() {
-		var coder = MutableBinaryCoder(order: nativeOrder())
+		let coder = MutableBinaryCoder(order: nativeOrder())
 
 		let ints:[UInt8] = [0,1,2,3,4,5,6,7,8]
 		coder.putUInt8(ints)
 		coder.rewind()
 
 		let deserialized:[UInt8] = coder.getUInt8(ints.count)
-		for (index,value) in enumerate(ints) {
+		for (index,value) in ints.enumerate() {
 			XCTAssertEqual(value, deserialized[index], "Deserialized UInt8s should be same")
 		}
 	}
 
 	func testUInt16Coding() {
-		var coder = MutableBinaryCoder(order: nativeOrder())
+		let coder = MutableBinaryCoder(order: nativeOrder())
 		let ints:[UInt16] = [UInt16.min,1000,1001,1002,1003,UInt16.max]
 		for i in ints {
 			coder.putUInt16(i)
@@ -84,20 +84,20 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testUInt16ArrayCoding() {
-		var coder = MutableBinaryCoder(order: nativeOrder())
+		let coder = MutableBinaryCoder(order: nativeOrder())
 
 		let ints:[UInt16] = [UInt16.min,1000,1001,1002,1003,UInt16.max]
 		coder.putUInt16(ints)
 		coder.rewind()
 
 		let deserialized:[UInt16] = coder.getUInt16(ints.count)
-		for (index,value) in enumerate(ints) {
+		for (index,value) in ints.enumerate() {
 			XCTAssertEqual(value, deserialized[index], "Deserialized UInt8s should be same")
 		}
 	}
 
 	func testUInt32Coding() {
-		var coder = MutableBinaryCoder(order: nativeOrder())
+		let coder = MutableBinaryCoder(order: nativeOrder())
 		let ints:[UInt32] = [UInt32.min,1000000,1000001,1000002,1000003,UInt32.max]
 		for i in ints {
 			coder.putUInt32(i)
@@ -112,20 +112,20 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testUInt32ArrayCoding() {
-		var coder = MutableBinaryCoder(order: nativeOrder())
+		let coder = MutableBinaryCoder(order: nativeOrder())
 
 		let ints:[UInt32] = [UInt32.min,1000000,1000001,1000002,1000003,UInt32.max]
 		coder.putUInt32(ints)
 		coder.rewind()
 
 		let deserialized:[UInt32] = coder.getUInt32(ints.count)
-		for (index,value) in enumerate(ints) {
+		for (index,value) in ints.enumerate() {
 			XCTAssertEqual(value, deserialized[index], "Deserialized UInt32s should be same")
 		}
 	}
 
 	func testFloat32Coding() {
-		var coder = MutableBinaryCoder(order: nativeOrder())
+		let coder = MutableBinaryCoder(order: nativeOrder())
 
 		var floats:[Float32] = []
 		for i in 0 ..< 100 {
@@ -145,7 +145,7 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testFloat32ArrayCoding() {
-		var coder = MutableBinaryCoder(order: nativeOrder())
+		let coder = MutableBinaryCoder(order: nativeOrder())
 
 		var floats:[Float32] = []
 		for i in 0 ..< 100 {
@@ -156,13 +156,13 @@ class BinaryCoderTests: XCTestCase {
 		coder.rewind()
 
 		let deserialized:[Float32] = coder.getFloat32(floats.count)
-		for (index,value) in enumerate(floats) {
+		for (index,value) in floats.enumerate() {
 			XCTAssertEqual(value, deserialized[index], "Deserialized Float32s should be same")
 		}
 	}
 
 	func testFloat64Coding() {
-		var coder = MutableBinaryCoder(order: nativeOrder())
+		let coder = MutableBinaryCoder(order: nativeOrder())
 
 		var floats:[Float64] = []
 		for i in 0 ..< 100 {
@@ -182,7 +182,7 @@ class BinaryCoderTests: XCTestCase {
 	}
 
 	func testFloat64ArrayCoding() {
-		var coder = MutableBinaryCoder(order: nativeOrder())
+		let coder = MutableBinaryCoder(order: nativeOrder())
 
 		var floats:[Float64] = []
 		for i in 0 ..< 100 {
@@ -193,13 +193,13 @@ class BinaryCoderTests: XCTestCase {
 		coder.rewind()
 
 		let deserialized:[Float64] = coder.getFloat64(floats.count)
-		for (index,value) in enumerate(floats) {
+		for (index,value) in floats.enumerate() {
 			XCTAssertEqual(value, deserialized[index], "Deserialized Float64s should be same")
 		}
 	}
 
 	func testUTF8Encoding() {
-		var coder = MutableBinaryCoder(order: nativeOrder())
+		let coder = MutableBinaryCoder(order: nativeOrder())
 		let str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
 		coder.putTerminatedUTF8(str)
@@ -215,16 +215,22 @@ class SquizitTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-		NSFileManager.defaultManager().removeItemAtPath(drawingSaveFile, error: nil)
+		do {
+			try NSFileManager.defaultManager().removeItemAtPath(drawingSaveFile)
+		} catch _ {
+		}
 	}
 
     override func tearDown() {
-		NSFileManager.defaultManager().removeItemAtPath(drawingSaveFile, error: nil)
+		do {
+			try NSFileManager.defaultManager().removeItemAtPath(drawingSaveFile)
+		} catch _ {
+		}
         super.tearDown()
     }
 
 	func testControlPointSerialization() {
-		var buffer = MutableBinaryCoder(order: BigEndian())
+		let buffer = MutableBinaryCoder(order: BigEndian())
 
 		let cpA = ControlPoint(position: CGPoint(x: 0, y: 0), control: CGPoint(x: 100, y: 100))
 
@@ -239,13 +245,13 @@ class SquizitTests: XCTestCase {
     
     func testStrokeSerialization() {
 
-		var buffer = MutableBinaryCoder(order: BigEndian())
+		let buffer = MutableBinaryCoder(order: BigEndian())
 
-		var strokeA = Stroke(fill: Fill.Pencil)
+		let strokeA = Stroke(fill: Fill.Pencil)
 		srand48(123)
 
-		for i in 0 ..< 20 {
-			var chunk = Stroke.Chunk(
+		for _ in 0 ..< 20 {
+			let chunk = Stroke.Chunk(
 				start: Stroke.Chunk.Spar(
 					a: ControlPoint(position: randomPoint(), control: randomPoint()),
 					b: ControlPoint(position: randomPoint(), control: randomPoint())),
@@ -269,10 +275,10 @@ class SquizitTests: XCTestCase {
 
 	func testColorSerialization() {
 		let count = 33
-		var buffer = MutableBinaryCoder(order: BigEndian())
+		let buffer = MutableBinaryCoder(order: BigEndian())
 
 		var colors:[UIColor] = []
-		for i in 0 ..< count {
+		for _ in 0 ..< count {
 			let color = randomColor()
 			colors.append(color)
 			buffer.putColor(color)
@@ -281,7 +287,7 @@ class SquizitTests: XCTestCase {
 		buffer.rewind()
 
 		for i in 0 ..< count {
-			var maybeColorPrime = buffer.getColor()
+			let maybeColorPrime = buffer.getColor()
 			XCTAssertNotNil(maybeColorPrime, "Expect to deserialize a color")
 
 			if let colorPrime:UIColor = maybeColorPrime {
@@ -314,9 +320,9 @@ class SquizitTests: XCTestCase {
 			return Stroke.Chunk.Spar(a: ControlPoint(position: ap, control: ac), b: ControlPoint(position: bp, control: bc))
 		}
 
-		var stroke = Stroke(fill: .Pencil)
-		var radians:CGFloat = 0;
-		for i in 0 ..< steps {
+		let stroke = Stroke(fill: .Pencil)
+		let radians:CGFloat = 0;
+		for _ in 0 ..< steps {
 			let nextRadians = radians + radianIncrement
 			stroke.chunks.append(Stroke.Chunk( start: spar(radians), end:spar(nextRadians)))
 		}
@@ -326,35 +332,42 @@ class SquizitTests: XCTestCase {
 		return drawing
 	}
 
-	var drawingSaveFile:String = NSTemporaryDirectory().stringByAppendingPathComponent("test-drawing.bin")
+	var drawingSaveFile:String = (NSTemporaryDirectory() as NSString).stringByAppendingPathComponent("test-drawing.bin")
 
 	func testDrawingSerialization() {
 
-		var drawing = newDrawing()
-		var buffer = MutableBinaryCoder(order: BigEndian())
+		let drawing = newDrawing()
+		let buffer = MutableBinaryCoder(order: BigEndian())
 		buffer.putDrawing(drawing)
 
 		XCTAssertGreaterThan(buffer.length, 0, "Expect serialized drawing to take up more than zero bytes")
 
 		buffer.rewind()
-		var drawingPrimeResult = buffer.getDrawing()
+		let drawingPrimeResult = buffer.getDrawing()
 		XCTAssert(drawingPrimeResult.error == nil, "Expect to successfully deserialize drawing from buffer")
 
-		var drawingPrime = drawingPrimeResult.value
+		let drawingPrime = drawingPrimeResult.value
 
 		// check if strokes are the same
 		XCTAssertEqual(drawing.strokes.count, drawingPrime.strokes.count, "Expect deserialized drawing to have same # of strokes")
 
-		for (i,stroke) in enumerate(drawing.strokes){
+		for (i,stroke) in drawing.strokes.enumerate(){
 			XCTAssertEqual(stroke, drawingPrime.strokes[i], "Expect strokes to be equal")
 		}
 
 		let viewport = CGRect(x: 0, y: 0, width: 512, height: 512)
-		var drawingImage = drawing.render(viewport)
-		var drawingImagePrime = drawingPrimeResult.value.render(viewport)
+		let drawingImage = drawing.render(viewport)
+		let drawingImagePrime = drawingPrimeResult.value.render(viewport)
 
-		var drawingImageData = UIImagePNGRepresentation(drawingImage.image)
-		var drawingImageDataPrime = UIImagePNGRepresentation(drawingImagePrime.image)
+		guard let drawingImageData = UIImagePNGRepresentation(drawingImage.image) else {
+			XCTAssert(false, "Expect to get image PNG data from drawingImage")
+			return
+		}
+
+		guard let drawingImageDataPrime = UIImagePNGRepresentation(drawingImagePrime.image) else {
+			XCTAssert(false, "Expect to get image PNG data from drawingImagePrime")
+			return
+		}
 
 		XCTAssert(drawingImageData.length > 0, "Expect rendered drawing's PNG data rep to have > 0 length")
 		XCTAssert(drawingImageDataPrime.length > 0, "Expect deserialized rendered drawing's PNG data rep to have > 0 length")

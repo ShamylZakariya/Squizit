@@ -11,8 +11,8 @@ import UIKit
 
 class UniversalMatchViewPresenterView : UIView {
 
-	private var currentPanTranslation = CGPoint.zeroPoint
-	private var initialPanTranslation = CGPoint.zeroPoint
+	private var currentPanTranslation = CGPoint.zero
+	private var initialPanTranslation = CGPoint.zero
 
 	/**
 		Set the insets for the presented match view. 
@@ -72,15 +72,15 @@ class UniversalMatchViewPresenterView : UIView {
 	}
 
 	func resetPanTranslation() {
-		currentPanTranslation = CGPoint.zeroPoint
-		initialPanTranslation = CGPoint.zeroPoint
+		currentPanTranslation = CGPoint.zero
+		initialPanTranslation = CGPoint.zero
 	}
 
 	var drawingSize:CGSize {
 		if let drawingView = matchView {
 			return drawingView.controller!.viewport.size
 		} else {
-			return CGSize.zeroSize
+			return CGSize.zero
 		}
 	}
 
@@ -107,7 +107,7 @@ class UniversalMatchViewPresenterView : UIView {
 			return (size:scaledSize,scale:scale)
 		}
 
-		return (size:CGSize.zeroSize,scale:0)
+		return (size:CGSize.zero,scale:0)
 	}
 
 	var matchView:UniversalMatchView? {
@@ -131,17 +131,17 @@ class UniversalMatchViewPresenterView : UIView {
 		commonInit()
 	}
 
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
 		commonInit()
 	}
 
 	private func commonInit() {
-		var pgr = UIPanGestureRecognizer(target: self, action: "onPan:")
+		let pgr = UIPanGestureRecognizer(target: self, action: "onPan:")
 		pgr.minimumNumberOfTouches = 2
 		addGestureRecognizer(pgr)
 
-		var tgr = UITapGestureRecognizer(target: self, action: "onTogglePanning:")
+		let tgr = UITapGestureRecognizer(target: self, action: "onTogglePanning:")
 		tgr.numberOfTouchesRequired = 1
 		tgr.numberOfTapsRequired = 2
 		addGestureRecognizer(tgr)
@@ -166,20 +166,20 @@ class UniversalMatchViewPresenterView : UIView {
 	}
 	*/
 
-	override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+	override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
 		// forward input events to allow user to start a stroke off-canvas
 		matchView?.touchesBegan(touches, withEvent: event)
 	}
 
-	override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+	override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
 		matchView?.touchesMoved(touches, withEvent: event)
 	}
 
-	override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+	override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
 		matchView?.touchesEnded(touches, withEvent: event)
 	}
 
-	override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent) {
+	override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
 		matchView?.touchesCancelled(touches, withEvent: event)
 	}
 
@@ -346,7 +346,7 @@ class UniversalMatchView : UIView {
 		commonInit()
 	}
 
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
 		commonInit()
 	}
@@ -355,60 +355,61 @@ class UniversalMatchView : UIView {
 
 	override func drawRect(rect: CGRect) {
 
-		if let match = match {
+		guard let match = match else {
+			return
+		}
 
-			// clip to dirty rect and fill with drawing background color
-			let ctx = UIGraphicsGetCurrentContext()
-			CGContextClipToRect(ctx, rect)
+		guard let ctx = UIGraphicsGetCurrentContext() else {
+			return
+		}
 
-			drawingSurfaceBackgroundColor.set()
-			UIRectFill(rect)
+		CGContextClipToRect(ctx, rect)
 
-			// set offset to position current match at 0,0
-			CGContextSaveGState(ctx)
-			let offset = match.viewports[turn].origin.y
-			CGContextTranslateCTM(ctx, 0, -offset)
+		drawingSurfaceBackgroundColor.set()
+		UIRectFill(rect)
 
-			// draw all drawings
-			for controller in controllers {
-				let viewport = controller.viewport.rectByOffsetting(dx: 0, dy: -offset)
-				if viewport.intersects(rect) || rect.isEmpty || rect.isNull {
-					if useExperimentalResolutionIndependantRenderPipeline {
-						controller.drawUsingImmediatePipeline(rect, context: ctx)
-					} else {
-						controller.drawUsingBitmapPipeline(ctx)
-					}
+		// set offset to position current match at 0,0
+		CGContextSaveGState(ctx)
+		let offset = match.viewports[turn].origin.y
+		CGContextTranslateCTM(ctx, 0, -offset)
+
+		// draw all drawings
+		for controller in controllers {
+			let viewport = controller.viewport.offsetBy(dx: 0, dy: -offset)
+			if viewport.intersects(rect) || rect.isEmpty || rect.isNull {
+				if useExperimentalResolutionIndependantRenderPipeline {
+					controller.drawUsingImmediatePipeline(rect, context: ctx)
+				} else {
+					controller.drawUsingBitmapPipeline(ctx)
 				}
 			}
+		}
 
-			CGContextRestoreGState(ctx)
+		CGContextRestoreGState(ctx)
 
-			if showDirtyRectUpdates {
-				UIColor.redColor().colorWithAlphaComponent(0.5).set()
-				UIRectFrameUsingBlendMode(rect, kCGBlendModeNormal)
-			}
+		if showDirtyRectUpdates {
+			UIColor.redColor().colorWithAlphaComponent(0.5).set()
+			UIRectFrameUsingBlendMode(rect, CGBlendMode.Normal)
 		}
 	}
 
-	override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-		let offset = CGPoint(x:0, y:currentMatchOffset)
-		controller?.touchesBegan(touches, withEvent: event)
+	override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+		controller?.touchesBegan(touches, withEvent: event!)
 		notifyDrawingDidChange()
 	}
 
-	override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
-		let offset = CGPoint(x:0, y:currentMatchOffset)
-		controller?.touchesMoved(touches, withEvent: event)
+	override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+		controller?.touchesMoved(touches, withEvent: event!)
 		notifyDrawingDidChange()
 	}
 
-	override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
-		controller?.touchesEnded(touches, withEvent: event)
+	override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+		controller?.touchesEnded(touches, withEvent: event!)
 		notifyDrawingDidChange()
 	}
 
-	override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent) {
-		controller?.touchesEnded(touches, withEvent: event)
+	override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+		controller?.touchesEnded(touches ?? Set<UITouch>(), withEvent: event!)
 		notifyDrawingDidChange()
 	}
 
@@ -432,7 +433,7 @@ class UniversalMatchView : UIView {
 		var controllers:[DrawingInputController] = []
 
 		if let match = match {
-			for (i,drawing) in enumerate(match.drawings) {
+			for (i,drawing) in match.drawings.enumerate() {
 				let controller = DrawingInputController()
 				controller.drawing = drawing
 				controller.view = self
@@ -463,7 +464,7 @@ class UniversalMatchView : UIView {
 
 			if renderTopZigzags || renderBottomZigzags {
 
-				var bezierPath = UIBezierPath(rect: CGRect(x: 0, y: triangleHeight, width: viewport.width, height: viewport.height - 2*triangleHeight))
+				let bezierPath = UIBezierPath(rect: CGRect(x: 0, y: triangleHeight, width: viewport.width, height: viewport.height - 2*triangleHeight))
 				bezierPath.moveToPoint(CGPoint(x: 0, y: 0))
 
 				// we will start with top left corner, and go clockwise around

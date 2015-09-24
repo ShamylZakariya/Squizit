@@ -134,7 +134,7 @@ class BinaryCoder : NSCopying, NSMutableCopying {
 		return BinaryCoder(order: _order, data: data.copyWithZone(zone) as! NSData)
 	}
 
-	@objc func mutableCopyWithZone(zone: NSZone) -> AnyObject? {
+	@objc func mutableCopyWithZone(zone: NSZone) -> AnyObject {
 		return MutableBinaryCoder(order: _order, mutableData: data.mutableCopyWithZone(zone) as! NSMutableData)
 	}
 
@@ -279,11 +279,7 @@ class BinaryCoder : NSCopying, NSMutableCopying {
 			}
 		}
 
-		var string = String()
-		string.reserveCapacity(characters.count)
-		string.extend(characters)
-		
-		return string
+		return String(characters)
 	}
 
 
@@ -296,7 +292,7 @@ class BinaryCoder : NSCopying, NSMutableCopying {
 	func getArray<T>(count: Int, getter: () -> T) -> Array<T> {
 		var array = Array<T>()
 		array.reserveCapacity(count)
-		for index in 0..<count { array.append(getter()) }
+		for _ in 0..<count { array.append(getter()) }
 		return array
 	}
 
@@ -379,7 +375,7 @@ class MutableBinaryCoder : BinaryCoder {
 
 	func putUInt8(value: UInt8) {
 		mutableData.increaseLengthBy(sizeof(UInt8))
-		var bytes = UnsafeMutablePointer<UInt8>(mutableData.mutableBytes)
+		let bytes = UnsafeMutablePointer<UInt8>(mutableData.mutableBytes)
 		bytes[position++] = value
 	}
 
@@ -428,7 +424,7 @@ class MutableBinaryCoder : BinaryCoder {
 	func putUInt8(source: Array<UInt8>) {
 		mutableData.increaseLengthBy(sizeof(UInt8) * source.count )
 
-		var bytes = UnsafeMutablePointer<UInt8>(mutableData.mutableBytes)
+		let bytes = UnsafeMutablePointer<UInt8>(mutableData.mutableBytes)
 		for v in source {
 			bytes[position++] = v
 		}
@@ -469,7 +465,7 @@ class MutableBinaryCoder : BinaryCoder {
 		UnsafeMutablePointer<T>(_bits).memory = value
 
 		mutableData.increaseLengthBy(sizeof(T))
-		var bytes = UnsafeMutablePointer<UInt8>(mutableData.mutableBytes)
+		let bytes = UnsafeMutablePointer<UInt8>(mutableData.mutableBytes)
 		for index in 0..<sizeof(T) {
 			bytes[position++] = _bits[index]
 		}

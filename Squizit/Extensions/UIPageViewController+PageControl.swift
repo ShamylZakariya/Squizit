@@ -22,7 +22,7 @@ extension UIPageViewController {
 		}
 
 		for subview in view.subviews {
-			if let pageControl = findPageControl(subview as! UIView) {
+			if let pageControl = findPageControl(subview ) {
 				return pageControl
 			}
 		}
