@@ -77,12 +77,12 @@ class GalleryDetailPageViewController : UIPageViewController, UIPageViewControll
 		//	Set up share buttons - a generic share, and a specific direct-to-twitter action if Twitter is available on this device
 		//
 
-		let shareAction = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "shareDrawing:")
+		let shareAction = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: #selector(GalleryDetailPageViewController.shareDrawing(_:)))
 
 		if SLComposeViewController.isAvailableForServiceType(SLServiceTypeTwitter) {
 
 			let twitterIcon = UIImage(named: "gallery-detail-twitter-export-icon")!.imageWithRenderingMode(.AlwaysTemplate)
-			let shareToTwitterAction = UIBarButtonItem(image: twitterIcon, style: .Plain, target: self, action: "shareDrawingToTwitter:")
+			let shareToTwitterAction = UIBarButtonItem(image: twitterIcon, style: .Plain, target: self, action: #selector(GalleryDetailPageViewController.shareDrawingToTwitter(_:)))
 
 			self.navigationItem.rightBarButtonItems = [ shareAction, shareToTwitterAction ]
 		} else {

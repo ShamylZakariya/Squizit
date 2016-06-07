@@ -55,9 +55,9 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 		dataSource = self
 		delegate = self
 
-		skipBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: "onDoneTapped:")
-		nextBarButtonItem = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.Done, target: self, action: "onNextTapped:")
-		doneBarButtonItem = UIBarButtonItem(title: "Got it", style: UIBarButtonItemStyle.Done, target: self, action: "onDoneTapped:")
+		skipBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(UniversalHowToPlayViewController.onDoneTapped(_:)))
+		nextBarButtonItem = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.Done, target: self, action: #selector(UniversalHowToPlayViewController.onNextTapped(_:)))
+		doneBarButtonItem = UIBarButtonItem(title: "Got it", style: UIBarButtonItemStyle.Done, target: self, action: #selector(UniversalHowToPlayViewController.onDoneTapped(_:)))
 
 		navigationItem.leftBarButtonItem = skipBarButtonItem
 		navigationItem.rightBarButtonItem = nextBarButtonItem
@@ -160,7 +160,7 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 
 	private func stepForward() {
 		if currentIndex < count - 1 {
-			currentIndex++
+			currentIndex += 1
 			setViewControllers([vend(currentIndex)], direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
 		}
 	}

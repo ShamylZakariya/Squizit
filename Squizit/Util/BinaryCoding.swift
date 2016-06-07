@@ -187,7 +187,9 @@ class BinaryCoder : NSCopying, NSMutableCopying {
 	}
 
 	func getUInt8() -> UInt8 {
-		return UnsafePointer<UInt8>(data.bytes)[position++]
+		let v = UnsafePointer<UInt8>(data.bytes)[position]
+		position += 1
+		return v
 	}
 
 	func getUInt16() -> UInt16 {
@@ -260,14 +262,15 @@ class BinaryCoder : NSCopying, NSMutableCopying {
 		return decodeCodeUnits(getTerminatedUInt8(terminator), codec: UTF8())
 	}
 
-	func decodeCodeUnits<C : UnicodeCodecType>(codeUnits: Array<C.CodeUnit>, var codec: C) -> String {
+	func decodeCodeUnits<C : UnicodeCodecType>(codeUnits: Array<C.CodeUnit>, codec: C) -> String {
+		var cd = codec // cd.decode is a mutating function, so we need to make a copy...
 		var generator = codeUnits.generate()
 		var characters = Array<Character>()
 		characters.reserveCapacity(codeUnits.count)
 		var done = false
 
 		while (!done) {
-			switch codec.decode(&generator) {
+			switch cd.decode(&generator) {
 			case .Result(let scalar):
 				characters.append(Character(scalar))
 
@@ -321,7 +324,8 @@ class BinaryCoder : NSCopying, NSMutableCopying {
 
 		let bytes = UnsafePointer<UInt8>(data.bytes)
 		for index in 0..<sizeof(T) {
-			_bits[index] = bytes[position++]
+			_bits[index] = bytes[position]
+			position += 1
 		}
 
 		return UnsafePointer<T>(_bits).memory
@@ -376,7 +380,8 @@ class MutableBinaryCoder : BinaryCoder {
 	func putUInt8(value: UInt8) {
 		mutableData.increaseLengthBy(sizeof(UInt8))
 		let bytes = UnsafeMutablePointer<UInt8>(mutableData.mutableBytes)
-		bytes[position++] = value
+		bytes[position] = value
+		position += 1
 	}
 
 	func putUInt16(value: UInt16) {
@@ -426,7 +431,8 @@ class MutableBinaryCoder : BinaryCoder {
 
 		let bytes = UnsafeMutablePointer<UInt8>(mutableData.mutableBytes)
 		for v in source {
-			bytes[position++] = v
+			bytes[position] = v
+			position += 1
 		}
 	}
 
@@ -467,7 +473,8 @@ class MutableBinaryCoder : BinaryCoder {
 		mutableData.increaseLengthBy(sizeof(T))
 		let bytes = UnsafeMutablePointer<UInt8>(mutableData.mutableBytes)
 		for index in 0..<sizeof(T) {
-			bytes[position++] = _bits[index]
+			bytes[position] = _bits[index]
+			position += 1
 		}
 	}
 

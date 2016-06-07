@@ -147,7 +147,7 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 	}
 
 	dynamic func stepForward() {
-		step++
+		step += 1
 	}
 
 	/**
@@ -177,20 +177,20 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 
 		finishTurnButtonOverlay = UIView(frame: CGRect.zero)
 		finishTurnButtonOverlay.userInteractionEnabled = false
-		finishTurnButtonOverlay.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "onFinishTurnOverlayTapped:"))
+		finishTurnButtonOverlay.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(UniversalMatchViewController.onFinishTurnOverlayTapped(_:))))
 
 		drawingToolSelector = DrawingToolSelector(frame: CGRect.zero)
 		drawingToolSelector.addTool("Pencil", icon: UIImage(named: "tool-pencil")!)
 		drawingToolSelector.addTool("Brush", icon: UIImage(named: "tool-brush")!)
 		drawingToolSelector.addTool("Eraser", icon: UIImage(named: "tool-eraser")!)
-		drawingToolSelector.addTarget(self, action: "onDrawingToolSelected:", forControlEvents: .ValueChanged)
+		drawingToolSelector.addTarget(self, action: #selector(UniversalMatchViewController.onDrawingToolSelected(_:)), forControlEvents: .ValueChanged)
 		drawingToolSelector.toolSeparation = isSmallScreen ? 8 : 20
 
 		undoButton = SquizitGameTextButton.create(NSLocalizedString("Undo", comment:"UndoButtonTitle"), compact: isSmallScreen)
-		undoButton.addTarget(self, action: "onUndo:", forControlEvents: .TouchUpInside)
+		undoButton.addTarget(self, action: #selector(UniversalMatchViewController.onUndo(_:)), forControlEvents: .TouchUpInside)
 
 		clearButton = SquizitGameTextButton.create(NSLocalizedString("Clear", comment:"ClearButtonTitle"), compact: isSmallScreen)
-		clearButton.addTarget(self, action: "onClear:", forControlEvents: .TouchUpInside)
+		clearButton.addTarget(self, action: #selector(UniversalMatchViewController.onClear(_:)), forControlEvents: .TouchUpInside)
 
 		matchPresenterView = UniversalMatchViewPresenterView(frame: CGRect.zero)
 
@@ -224,18 +224,18 @@ class UniversalMatchViewController : UIViewController, SaveToGalleryDelegate {
 		view.addSubview(quitGameButton)
 
 
-		finishTurnButton.addTarget(self, action: "onFinishTurnTapped:", forControlEvents: .TouchUpInside)
-		quitGameButton.addTarget(self, action: "onQuitTapped:", forControlEvents: .TouchUpInside)
+		finishTurnButton.addTarget(self, action: #selector(UniversalMatchViewController.onFinishTurnTapped(_:)), forControlEvents: .TouchUpInside)
+		quitGameButton.addTarget(self, action: #selector(UniversalMatchViewController.onQuitTapped(_:)), forControlEvents: .TouchUpInside)
 
 		drawingToolSelector.selectedToolIndex = 0
 
 		// subscribe to notifications
 		let ns = NSNotificationCenter.defaultCenter()
-		ns.addObserver(self, selector: "onDrawingDidChange", name: UniversalMatchView.Notifications.DrawingDidChange, object: matchView)
-		ns.addObserver(self, selector: "onTurnDidChange", name: UniversalMatchView.Notifications.TurnDidChange, object: matchView)
+		ns.addObserver(self, selector: #selector(UniversalMatchViewController.onDrawingDidChange), name: UniversalMatchView.Notifications.DrawingDidChange, object: matchView)
+		ns.addObserver(self, selector: #selector(UniversalMatchViewController.onTurnDidChange), name: UniversalMatchView.Notifications.TurnDidChange, object: matchView)
 
 		// this will be enabled only when the match is complete
-		endOfMatchGestureRecognizer = UITapGestureRecognizer(target: self, action: "stepForward")
+		endOfMatchGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UniversalMatchViewController.stepForward))
 		endOfMatchGestureRecognizer.numberOfTapsRequired = 1
 		endOfMatchGestureRecognizer.enabled = false
 		view.addGestureRecognizer(endOfMatchGestureRecognizer)

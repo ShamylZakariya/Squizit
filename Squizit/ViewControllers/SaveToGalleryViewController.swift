@@ -72,8 +72,8 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 		playerTwoNameInputField.delegate = self
 		playerThreeNameInputField.delegate = self
 
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SaveToGalleryViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SaveToGalleryViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
 	}
 
 	private var _visible:Bool = false
@@ -162,7 +162,7 @@ class SaveToGalleryViewController : UIViewController, UITextFieldDelegate {
 			if name.isEmpty {
 				name = NSLocalizedString("Anonymous", comment: "AnonymousPlayerIdentifier")
 			} else {
-				namesEnteredByUser++
+				namesEnteredByUser += 1
 			}
 
 			names.append( name )

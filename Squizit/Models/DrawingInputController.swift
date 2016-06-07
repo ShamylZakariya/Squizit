@@ -83,7 +83,8 @@ class DrawingInputController {
 		if let drawing = drawing {
 			let locationInDrawing = screenToDrawing( locationInView )
 
-			_points[++_pointsTop] = locationInDrawing;
+			_pointsTop += 1
+			_points[_pointsTop] = locationInDrawing;
 
 			if _pointsTop == 4 {
 
@@ -146,7 +147,7 @@ class DrawingInputController {
 		let MAX:CGFloat = fillSize.1
 
 		var ls = [LineSegment](count:4,repeatedValue:LineSegment())
-		for var i = 0; i < pointsBuffer.count; i+=4 {
+		for i in 0.stride(to: pointsBuffer.count, by: 4) {
 
 			if ( _isFirstPoint ) {
 				ls[0] = LineSegment(firstPoint: pointsBuffer[0], secondPoint: pointsBuffer[0])

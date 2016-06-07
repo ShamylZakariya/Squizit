@@ -137,11 +137,11 @@ class UniversalMatchViewPresenterView : UIView {
 	}
 
 	private func commonInit() {
-		let pgr = UIPanGestureRecognizer(target: self, action: "onPan:")
+		let pgr = UIPanGestureRecognizer(target: self, action: #selector(UniversalMatchViewPresenterView.onPan(_:)))
 		pgr.minimumNumberOfTouches = 2
 		addGestureRecognizer(pgr)
 
-		let tgr = UITapGestureRecognizer(target: self, action: "onTogglePanning:")
+		let tgr = UITapGestureRecognizer(target: self, action: #selector(UniversalMatchViewPresenterView.onTogglePanning(_:)))
 		tgr.numberOfTouchesRequired = 1
 		tgr.numberOfTapsRequired = 2
 		addGestureRecognizer(tgr)

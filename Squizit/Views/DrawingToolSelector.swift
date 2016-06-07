@@ -101,7 +101,7 @@ class DrawingToolSelector : UIControl {
 		addSubview(tool)
 		_tools.append(tool)
 
-		let tgr = UITapGestureRecognizer(target: self, action: "toolWasTapped:")
+		let tgr = UITapGestureRecognizer(target: self, action: #selector(DrawingToolSelector.toolWasTapped(_:)))
 		tgr.numberOfTapsRequired = 1
 		tool.addGestureRecognizer(tgr)
 

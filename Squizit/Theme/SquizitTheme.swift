@@ -296,7 +296,7 @@ class SquizitThemeSearchField : UITextField {
 		let closeImage = UIImage(named: "gallery-clear-search-button")!.imageWithRenderingMode(.AlwaysTemplate)
 		clearButton.setImage(closeImage, forState: .Normal)
 		clearButton.frame = CGRect(x: 0, y: 0, width: closeImage.size.width, height: closeImage.size.height)
-		clearButton.addTarget(self, action: "clearButtonTapped:", forControlEvents: .TouchUpInside)
+		clearButton.addTarget(self, action: #selector(SquizitThemeSearchField.clearButtonTapped(_:)), forControlEvents: .TouchUpInside)
 
 		rightView = clearButton
 		rightViewMode = .WhileEditing

@@ -44,8 +44,8 @@ extension UIColor {
 		return m.rawValue == CGColorSpaceModel.Monochrome.rawValue
 	}
 
-	func colorComponentAtIndex( var i:Int ) -> CGFloat {
-		i = min( max( i, 0 ), Int(CGColorGetNumberOfComponents(self.CGColor)))
+	func colorComponentAtIndex( ci:Int ) -> CGFloat {
+		let i = min( max( ci, 0 ), Int(CGColorGetNumberOfComponents(self.CGColor)))
 		let components = CGColorGetComponents(self.CGColor)
 		return components[i]
 	}

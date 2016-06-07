@@ -81,10 +81,10 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 		imageView.layer.shadowOpacity = 1
 		imageView.layer.shadowRadius = 4
 
-		addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPress:"))
+		addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(GalleryCollectionViewCell.longPress(_:))))
 
 		deleteButton.userInteractionEnabled = true
-		deleteButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "deleteButtonTapped:"))
+		deleteButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(GalleryCollectionViewCell.deleteButtonTapped(_:))))
 
 		// common initialization
 		prepareForReuse()
@@ -195,7 +195,7 @@ class GalleryCollectionViewCell : UICollectionViewCell {
 
 
 	func startWiggling() {
-		wiggleAnimationDisplayLink = CADisplayLink(target: self, selector: "updateWiggleAnimation")
+		wiggleAnimationDisplayLink = CADisplayLink(target: self, selector: #selector(GalleryCollectionViewCell.updateWiggleAnimation))
 		wiggleAnimationDisplayLink!.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSRunLoopCommonModes)
 	}
 
@@ -429,7 +429,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 			[weak self] ( inEditMode:Bool ) -> Void in
 			if let sself = self {
 				if inEditMode {
-					sself.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: sself, action: "onDoneEditing:")
+					sself.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: sself, action: #selector(GalleryViewController.onDoneEditing(_:)))
 				} else {
 					sself.navigationItem.rightBarButtonItem = nil
 				}
@@ -443,7 +443,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 			}
 		}
 
-		self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close", style: .Done, target: self, action: "onClose:")
+		self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close", style: .Done, target: self, action: #selector(GalleryViewController.onClose(_:)))
 
 
 		//
@@ -453,7 +453,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		searchField.delegate = self
 		searchField.placeholder = "Who drew..."
 		searchField.returnKeyType = UIReturnKeyType.Search
-		searchField.addTarget(self, action: "searchTextChanged:", forControlEvents: UIControlEvents.EditingChanged)
+		searchField.addTarget(self, action: #selector(GalleryViewController.searchTextChanged(_:)), forControlEvents: UIControlEvents.EditingChanged)
 
 		fixedHeaderView.addSubview(searchField)
 		view.addSubview(fixedHeaderView)
@@ -471,7 +471,7 @@ class GalleryViewController : UIViewController, UITextFieldDelegate {
 		//	keyboard dismiss key. I want the search field to lose focus
 		//
 
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardDidDismiss:", name: UIKeyboardDidHideNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GalleryViewController.keyboardDidDismiss(_:)), name: UIKeyboardDidHideNotification, object: nil)
 	}
 
 	private var suggestedItemWidth:CGFloat {
