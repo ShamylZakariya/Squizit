@@ -117,7 +117,7 @@ class RootViewController : UIViewController, GalleryViewControllerDelegate {
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 
-		let destinationVC = segue.destinationViewController as! UIViewController
+		let destinationVC = segue.destinationViewController 
 
 		if UseCustomTransitions {
 			destinationVC.modalPresentationStyle = UIModalPresentationStyle.FullScreen

@@ -38,8 +38,8 @@
 		63B44AF519990DA100AE7B62 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECBB19967B0C00F6E2B3 /* Stroke.swift */; };
 		63B44AF619990DA100AE7B62 /* Drawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBECB519967ACC00F6E2B3 /* Drawing.swift */; };
 		63B44AF719990DA100AE7B62 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
-		63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */; };
-		63B44AFD199A66B400AE7B62 /* UIColor_Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */; };
+		63B44AFC199A66AB00AE7B62 /* UIColor+Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B44AFA199A5DFD00AE7B62 /* UIColor+Serialization.swift */; };
+		63B44AFD199A66B400AE7B62 /* UIColor+Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B44AFA199A5DFD00AE7B62 /* UIColor+Serialization.swift */; };
 		63B5252519D73F5D00BB550F /* ShareToTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B5252419D73F5D00BB550F /* ShareToTwitter.m */; };
 		63B7B70D19A4EB1A00F280AB /* DrawingToolSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B7B70C19A4EB1A00F280AB /* DrawingToolSelector.swift */; };
 		63BBEC9019967A2300F6E2B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBEC8F19967A2300F6E2B3 /* AppDelegate.swift */; };
@@ -54,10 +54,10 @@
 		63EBB87319AEC0DD003C3EC2 /* GalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87219AEC0DD003C3EC2 /* GalleryStore.swift */; };
 		63EBB87619AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87419AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld */; };
 		63EBB87D19AEC49C003C3EC2 /* GalleryStoreEntities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB87C19AEC49C003C3EC2 /* GalleryStoreEntities.m */; };
-		63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */; };
+		63EBB88119AF79BB003C3EC2 /* UIImage+Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88019AF79BB003C3EC2 /* UIImage+Sizing.swift */; };
 		63EBB88319B0CBE6003C3EC2 /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */; };
 		63EFB1AD19D06C8100253560 /* CancelableAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EFB1AC19D06C8100253560 /* CancelableAction.swift */; };
-		63FAAC3C1B3F48B100B9C5CC /* UIImage_Alpha.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FAAC3B1B3F48B100B9C5CC /* UIImage_Alpha.swift */; };
+		63FAAC3C1B3F48B100B9C5CC /* UIImage+Alpha.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FAAC3B1B3F48B100B9C5CC /* UIImage+Alpha.swift */; };
 		63FAAC3E1B42E2D200B9C5CC /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FAAC3D1B42E2D200B9C5CC /* RootViewController.swift */; };
 		63FDE7321998249A0006B7E4 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FDE7311998249A0006B7E4 /* Result.swift */; };
 /* End PBXBuildFile section */
@@ -100,7 +100,7 @@
 		6394BA991B8A4E7300E9434F /* InstructionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
 		6394BA9B1B8A4EA100E9434F /* InstructionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InstructionView.xib; sourceTree = "<group>"; };
 		63A4B7F219D5C03400975048 /* SaveToGalleryTransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveToGalleryTransitionManager.swift; sourceTree = "<group>"; };
-		63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor_Serialization.swift; sourceTree = "<group>"; };
+		63B44AFA199A5DFD00AE7B62 /* UIColor+Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Serialization.swift"; sourceTree = "<group>"; };
 		63B5252219D73F0E00BB550F /* ShareToTwitter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShareToTwitter.h; sourceTree = "<group>"; };
 		63B5252419D73F5D00BB550F /* ShareToTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareToTwitter.m; sourceTree = "<group>"; };
 		63B7B70C19A4EB1A00F280AB /* DrawingToolSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingToolSelector.swift; sourceTree = "<group>"; };
@@ -122,10 +122,10 @@
 		63EBB87719AEC49A003C3EC2 /* Squizit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Squizit-Bridging-Header.h"; path = "Models/Squizit-Bridging-Header.h"; sourceTree = "<group>"; };
 		63EBB87B19AEC49C003C3EC2 /* GalleryStoreEntities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GalleryStoreEntities.h; sourceTree = "<group>"; };
 		63EBB87C19AEC49C003C3EC2 /* GalleryStoreEntities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GalleryStoreEntities.m; sourceTree = "<group>"; };
-		63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage_sizing.swift; sourceTree = "<group>"; };
+		63EBB88019AF79BB003C3EC2 /* UIImage+Sizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Sizing.swift"; sourceTree = "<group>"; };
 		63EBB88219B0CBE6003C3EC2 /* GalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		63EFB1AC19D06C8100253560 /* CancelableAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CancelableAction.swift; sourceTree = "<group>"; };
-		63FAAC3B1B3F48B100B9C5CC /* UIImage_Alpha.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage_Alpha.swift; sourceTree = "<group>"; };
+		63FAAC3B1B3F48B100B9C5CC /* UIImage+Alpha.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Alpha.swift"; sourceTree = "<group>"; };
 		63FAAC3D1B42E2D200B9C5CC /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		63FDE7311998249A0006B7E4 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -179,10 +179,10 @@
 			isa = PBXGroup;
 			children = (
 				6394BA911B89352000E9434F /* UIPageViewController+PageControl.swift */,
-				63B44AFA199A5DFD00AE7B62 /* UIColor_Serialization.swift */,
-				63EBB88019AF79BB003C3EC2 /* UIImage_sizing.swift */,
+				63B44AFA199A5DFD00AE7B62 /* UIColor+Serialization.swift */,
+				63EBB88019AF79BB003C3EC2 /* UIImage+Sizing.swift */,
 				636BFA9619B3DDD100A90A75 /* GCD.swift */,
-				63FAAC3B1B3F48B100B9C5CC /* UIImage_Alpha.swift */,
+				63FAAC3B1B3F48B100B9C5CC /* UIImage+Alpha.swift */,
 				6394BA931B8A471100E9434F /* UIView+AnchorPoint.swift */,
 			);
 			path = Extensions;
@@ -358,7 +358,9 @@
 		63BBEC8219967A2300F6E2B3 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Shamyl Zakariya";
 				TargetAttributes = {
 					63BBEC8919967A2300F6E2B3 = {
@@ -441,8 +443,8 @@
 				6394BA961B8A4C5100E9434F /* UniversalHowToPlayViewController.swift in Sources */,
 				63A4B7ED19D46C9700975048 /* Images.xcassets in Sources */,
 				6394BA941B8A471100E9434F /* UIView+AnchorPoint.swift in Sources */,
-				63EBB88119AF79BB003C3EC2 /* UIImage_sizing.swift in Sources */,
-				63B44AFC199A66AB00AE7B62 /* UIColor_Serialization.swift in Sources */,
+				63EBB88119AF79BB003C3EC2 /* UIImage+Sizing.swift in Sources */,
+				63B44AFC199A66AB00AE7B62 /* UIColor+Serialization.swift in Sources */,
 				636CEA24199E586400BEBF53 /* DrawingInputController.swift in Sources */,
 				6376756119F00F9F00AAB604 /* BinaryCoding.swift in Sources */,
 				635F86E11A66CC1300A67981 /* TurnBasedMatchHelper.swift in Sources */,
@@ -478,7 +480,7 @@
 				63EBB87619AEC2C7003C3EC2 /* GalleryStore.xcdatamodeld in Sources */,
 				635DFA8519BA033B00102B6A /* BasicGalleryCollectionViewDataSource.swift in Sources */,
 				63EBB84119ACD26F003C3EC2 /* SaveToGalleryViewController.swift in Sources */,
-				63FAAC3C1B3F48B100B9C5CC /* UIImage_Alpha.swift in Sources */,
+				63FAAC3C1B3F48B100B9C5CC /* UIImage+Alpha.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -487,7 +489,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63EBB83819A65C45003C3EC2 /* Geometry.swift in Sources */,
-				63B44AFD199A66B400AE7B62 /* UIColor_Serialization.swift in Sources */,
+				63B44AFD199A66B400AE7B62 /* UIColor+Serialization.swift in Sources */,
 				63B44AF519990DA100AE7B62 /* Stroke.swift in Sources */,
 				63B44AF619990DA100AE7B62 /* Drawing.swift in Sources */,
 				63B44AF719990DA100AE7B62 /* Result.swift in Sources */,
@@ -538,6 +540,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -605,8 +608,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Squizit/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-DDEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zakariya.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Squizit/Models/Squizit-Bridging-Header.h";
@@ -623,8 +628,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Squizit/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zakariya.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Squizit/Models/Squizit-Bridging-Header.h";
@@ -646,6 +653,7 @@
 				);
 				INFOPLIST_FILE = SquizitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zakariya.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Squizit.app/Squizit";
 			};
@@ -661,6 +669,7 @@
 				);
 				INFOPLIST_FILE = SquizitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zakariya.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Squizit.app/Squizit";
 			};

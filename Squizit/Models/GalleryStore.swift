@@ -48,25 +48,28 @@ class GalleryStore {
 	*/
 
 	func loadArtist( name:String, create:Bool ) -> GalleryArtist? {
-		var fr = NSFetchRequest()
+		let fr = NSFetchRequest()
 		fr.entity = NSEntityDescription.entityForName(GalleryArtist.entityName(), inManagedObjectContext: self.managedObjectContext!)
 		fr.predicate = NSPredicate(format: "name BEGINSWITH[cd] \"\(name)\"")
 
-		var sd = NSSortDescriptor(key: "name", ascending: true)
+		let sd = NSSortDescriptor(key: "name", ascending: true)
 		fr.sortDescriptors = [sd]
 
-		var error: NSError? = nil
-		if let results = self.managedObjectContext?.executeFetchRequest(fr, error: &error ) {
-
-			if !results.isEmpty {
-				return results.first as! GalleryArtist?
+		do {
+			if let results = try self.managedObjectContext?.executeFetchRequest(fr) {
+				if !results.isEmpty {
+					return results.first as! GalleryArtist?
+				}
 			}
+
+		} catch let error as NSError {
+			fatalError("GalleryStore::loadArtist error:\(error)")
 		}
 
 		// no such artist exists, so add and return
 
 		if create {
-			var newArtist = GalleryArtist.newInstanceInManagedObjectContext(self.managedObjectContext)
+			let newArtist = GalleryArtist.newInstanceInManagedObjectContext(self.managedObjectContext)
 			newArtist.name = name
 
 			self.save()
@@ -81,13 +84,15 @@ class GalleryStore {
 		return an array of GalleryArtist whos names start with `partialName
 	*/
 	func artists( partialName:String ) -> [GalleryArtist] {
-		var fr = NSFetchRequest()
+		let fr = NSFetchRequest()
 		fr.entity = NSEntityDescription.entityForName(GalleryArtist.entityName(), inManagedObjectContext: self.managedObjectContext!)
 		fr.predicate = NSPredicate(format: "name BEGINSWITH[cd] \"\(partialName)\"")
 
-		var error: NSError? = nil
-		if let results = self.managedObjectContext?.executeFetchRequest(fr, error: &error ) {
+		do {
+			let results = try self.managedObjectContext?.executeFetchRequest(fr)
 			return results as! [GalleryArtist]
+		} catch let error as NSError {
+			fatalError("GalleryStore::loadArtist error:\(error)")
 		}
 
 		return []
@@ -100,18 +105,18 @@ class GalleryStore {
 	*/
 	func allArtists() -> [GalleryArtist] {
 
-		var fr = NSFetchRequest()
+		let fr = NSFetchRequest()
 		fr.entity = NSEntityDescription.entityForName(GalleryArtist.entityName(), inManagedObjectContext: self.managedObjectContext!)
 
-		var sd = NSSortDescriptor(key: "name", ascending: true)
+		let sd = NSSortDescriptor(key: "name", ascending: true)
 		fr.sortDescriptors = [sd]
 
-		var error: NSError? = nil
-		if let results = self.managedObjectContext?.executeFetchRequest(fr, error: &error ) {
-
-			if !results.isEmpty {
+		do {
+			if let results = try self.managedObjectContext?.executeFetchRequest(fr) {
 				return results as! [GalleryArtist]
 			}
+		} catch let error as NSError {
+			fatalError("GalleryStore::allArtists error:\(error)")
 		}
 
 		return []
@@ -123,18 +128,18 @@ class GalleryStore {
 		to page result batch sizes efficiently
 	*/
 	func allDrawings() -> [GalleryDrawing] {
-		var fr = NSFetchRequest()
+		let fr = NSFetchRequest()
 		fr.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: self.managedObjectContext!)
 
-		var sd = NSSortDescriptor(key: "date", ascending: true)
+		let sd = NSSortDescriptor(key: "date", ascending: true)
 		fr.sortDescriptors = [sd]
 
-		var error: NSError? = nil
-		if let results = self.managedObjectContext?.executeFetchRequest(fr, error: &error ) {
-
-			if !results.isEmpty {
+		do {
+			if let results = try self.managedObjectContext?.executeFetchRequest(fr) {
 				return results as! [GalleryDrawing]
 			}
+		} catch let error as NSError {
+			fatalError("GalleryStore::allDrawings error:\(error)")
 		}
 
 		return []
@@ -153,7 +158,10 @@ class GalleryStore {
 	    let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("GalleryStore.sqlite")
 	    var error: NSError? = nil
 	    var failureReason = "There was an error creating or loading the application's saved data."
-	    if coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil, error: &error) == nil {
+	    do {
+			try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+		} catch var error1 as NSError {
+			error = error1
 	        coordinator = nil
 
 	        // Report any error we got.
@@ -177,7 +185,9 @@ class GalleryStore {
 	        NSLog("Unresolved error \(error), \(error!.userInfo)")
 
 	        abort()
-	    }
+	    } catch {
+			fatalError()
+		}
 	    
 	    return coordinator
 	}()
@@ -197,12 +207,17 @@ class GalleryStore {
 	func save () {
 	    if let moc = self.managedObjectContext {
 	        var error: NSError? = nil
-	        if moc.hasChanges && !moc.save(&error) {
-	            // Replace this implementation with code to handle the error appropriately.
-	            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-	            NSLog("Unresolved error \(error), \(error!.userInfo)")
-	            abort()
-	        }
+	        if moc.hasChanges {
+				do {
+					try moc.save()
+				} catch let error1 as NSError {
+					error = error1
+					// Replace this implementation with code to handle the error appropriately.
+					// abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+					NSLog("Unresolved error \(error), \(error!.userInfo)")
+					abort()
+				}
+			}
 	    }
 	}
 
@@ -210,7 +225,7 @@ class GalleryStore {
 
 	private lazy var applicationDocumentsDirectory: NSURL = {
 	    let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-		return urls.last as! NSURL
+		return urls[urls.count-1]
 	}()
 
 

@@ -18,13 +18,13 @@ class CenteredImageView : UIView {
 		commonInit()
 	}
 
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		commonInit()
 	}
 
 	private func commonInit() {
-		imageView = UIImageView(frame: CGRect.zeroRect)
+		imageView = UIImageView(frame: CGRect.zero)
 		imageView.contentMode = UIViewContentMode.ScaleToFill
 		addSubview(imageView)
 	}
@@ -48,10 +48,10 @@ class CenteredImageView : UIView {
 			}
 
 			if scale < 1 {
-				imageView.frame = CGRect(center: bounds.center, size: CGSize(width: image.size.width * scale, height: image.size.height * scale)).integerRect
+				imageView.frame = CGRect(center: bounds.center, size: CGSize(width: image.size.width * scale, height: image.size.height * scale)).integral
 			} else {
 				// just center image
-				imageView.frame = CGRect(center: bounds.center, size: image.size).integerRect
+				imageView.frame = CGRect(center: bounds.center, size: image.size).integral
 			}
 
 			imageView.image = image.imageByScalingToSize(imageView.frame.size, scale: 0)

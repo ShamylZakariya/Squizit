@@ -38,7 +38,7 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 	}
 
 	var count:Int {
-		let info = self.fetchedResultsController.sections![0] as! NSFetchedResultsSectionInfo
+		let info = self.fetchedResultsController.sections![0] 
 		return info.numberOfObjects
 	}
 
@@ -49,7 +49,7 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 	}
 
 	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) as! UICollectionViewCell
+		let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) 
 		configureCell( cell, atIndexPath: indexPath )
 		return cell
 	}
@@ -66,7 +66,7 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 			return _fetchedResultsController!
 		}
 
-		var fetchRequest = NSFetchRequest()
+		let fetchRequest = NSFetchRequest()
 		fetchRequest.entity = NSEntityDescription.entityForName(GalleryDrawing.entityName(), inManagedObjectContext: _store.managedObjectContext! )
 
 		fetchRequest.sortDescriptors = self.sortDescriptors
@@ -111,7 +111,10 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 
 	private func performFetch() {
 		var error:NSError? = nil
-		if !fetchedResultsController.performFetch(&error) {
+		do {
+			try fetchedResultsController.performFetch()
+		} catch let error1 as NSError {
+			error = error1
 			NSLog("Unable to execute fetch, error: %@", error!.localizedDescription )
 			abort()
 		}
@@ -144,8 +147,6 @@ class BasicGalleryCollectionViewDataSource : NSObject, UICollectionViewDataSourc
 				}
 			case .Move:
 				_collectionView.moveItemAtIndexPath(indexPath!, toIndexPath: newIndexPath!)
-			default:
-				return
 		}
 	}
 

@@ -1,9 +1,10 @@
-# APPSTORE SUBMISSION TODO
-
-Screenshots for phones
-The buttons at the top of the phone layout are not receiving input events because of edge tracking. Need to move then down.
-
 #CURRENT
+
+- Swift 2 Conversion Bumps
+	- Gallery Filter textfield is broken
+
+- Quit Match button's default "Continue" tint is white, and illegible
+- Start Match in portrait, in match switch to landscape, exit match. Boom - fucked up home screen.
 
 - When toggle zoom/pan mode in UniversalMatchViewPresenterView, there's still a jump
 

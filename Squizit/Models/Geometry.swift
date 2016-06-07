@@ -103,8 +103,8 @@ struct LineSegment {
 	let secondPoint:CGPoint
 
 	init() {
-		self.firstPoint = CGPoint.zeroPoint
-		self.secondPoint = CGPoint.zeroPoint
+		self.firstPoint = CGPoint.zero
+		self.secondPoint = CGPoint.zero
 	}
 
 	init(firstPoint:CGPoint, secondPoint:CGPoint) {
@@ -129,7 +129,7 @@ struct LineSegment {
 		return LineSegment(firstPoint: CGPoint(x: xa, y: ya), secondPoint: CGPoint(x: xb, y: yb))
 	}
 
-	func perpendicular( #absoluteLength:CGFloat ) -> LineSegment {
+	func perpendicular( absoluteLength absoluteLength:CGFloat ) -> LineSegment {
 
 		let x0 = firstPoint.x
 		let y0 = firstPoint.y
@@ -198,13 +198,13 @@ struct CubicBezierInterpolator {
 	func bezierPoint_Geometry( T: CGFloat ) -> CGPoint {
 		// http://en.wikipedia.org/wiki/Bézier_curve
 
-		let Q0 = interpolate(points[0], points[1], T )
-		let Q1 = interpolate(points[1], points[2], T )
-		let Q2 = interpolate(points[2], points[3], T )
-		let R0 = interpolate(Q0,Q1,T)
-		let R1 = interpolate(Q1,Q2,T)
+		let Q0 = interpolate(points[0], b: points[1], t: T )
+		let Q1 = interpolate(points[1], b: points[2], t: T )
+		let Q2 = interpolate(points[2], b: points[3], t: T )
+		let R0 = interpolate(Q0,b: Q1,t: T)
+		let R1 = interpolate(Q1,b: Q2,t: T)
 
-		return interpolate(R0,R1,T)
+		return interpolate(R0,b: R1,t: T)
 	}
 
 

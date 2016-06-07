@@ -1,9 +1,9 @@
 //
 //  UIPageViewController+PageControl.swift
-//  CNLSecurities
+//  Squizit
 //
-//  Created by Zakariya, Shamyl on 6/10/15.
-//  Copyright (c) 2015 cnlsecurities. All rights reserved.
+//  Created by Shamyl Zakariya on 6/27/15.
+//  Copyright (c) 2015 Shamyl Zakariya. All rights reserved.
 //
 
 import Foundation
@@ -22,7 +22,7 @@ extension UIPageViewController {
 		}
 
 		for subview in view.subviews {
-			if let pageControl = findPageControl(subview as! UIView) {
+			if let pageControl = findPageControl(subview ) {
 				return pageControl
 			}
 		}

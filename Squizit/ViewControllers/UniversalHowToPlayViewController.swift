@@ -55,9 +55,9 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 		dataSource = self
 		delegate = self
 
-		skipBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: "onDoneTapped:")
-		nextBarButtonItem = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.Done, target: self, action: "onNextTapped:")
-		doneBarButtonItem = UIBarButtonItem(title: "Got it", style: UIBarButtonItemStyle.Done, target: self, action: "onDoneTapped:")
+		skipBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(UniversalHowToPlayViewController.onDoneTapped(_:)))
+		nextBarButtonItem = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.Done, target: self, action: #selector(UniversalHowToPlayViewController.onNextTapped(_:)))
+		doneBarButtonItem = UIBarButtonItem(title: "Got it", style: UIBarButtonItemStyle.Done, target: self, action: #selector(UniversalHowToPlayViewController.onDoneTapped(_:)))
 
 		navigationItem.leftBarButtonItem = skipBarButtonItem
 		navigationItem.rightBarButtonItem = nextBarButtonItem
@@ -93,8 +93,8 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 
 	// MARK: - UIPageViewControllerDelegate
 
-	func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [AnyObject], transitionCompleted completed: Bool) {
-		let pageVc = pageViewController.viewControllers.first as! ManagedIndexedViewViewController
+	func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+		let pageVc = pageViewController.viewControllers!.first as! ManagedIndexedViewViewController
 		currentIndex = pageVc.index
 	}
 
@@ -119,7 +119,7 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 
 
 		if let message = messages[index] {
-			var page = InstructionView.create()
+			let page = InstructionView.create()
 
 			page.label.attributedText = NSAttributedString(string: message, attributes: [
 				NSForegroundColorAttributeName: UIColor.whiteColor(),
@@ -135,7 +135,7 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 			return ManagedIndexedViewViewController(view: page, index: index, respectsTopLayoutGuide:true)
 		} else {
 
-			let iv = CenteredImageView(frame: CGRect.zeroRect)
+			let iv = CenteredImageView(frame: CGRect.zero)
 			iv.image = images[index]
 
 			return ManagedIndexedViewViewController(view: iv, index: index, respectsTopLayoutGuide:true)
@@ -160,7 +160,7 @@ class UniversalHowToPlayViewController : UIPageViewController, UIPageViewControl
 
 	private func stepForward() {
 		if currentIndex < count - 1 {
-			currentIndex++
+			currentIndex += 1
 			setViewControllers([vend(currentIndex)], direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
 		}
 	}

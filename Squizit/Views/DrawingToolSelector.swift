@@ -27,7 +27,7 @@ class ToolIconView : UIView {
 		addSubview(imageView)
 	}
 
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 	    fatalError("init(coder:) has not been implemented")
 	}
 
@@ -41,7 +41,7 @@ class ToolIconView : UIView {
 
 	override func drawRect(rect: CGRect) {
 		if !active {
-			let backdrop = UIBezierPath(ovalInRect: self.bounds.rectByInsetting(dx: 1, dy: 1).rectByOffsetting(dx: 0.5, dy: 0.5))
+			let backdrop = UIBezierPath(ovalInRect: self.bounds.insetBy(dx: 1, dy: 1).offsetBy(dx: 0.5, dy: 0.5))
 			tintColor.colorWithAlphaComponent(0.5).set()
 			backdrop.lineWidth = 1
 			backdrop.stroke()
@@ -57,7 +57,7 @@ class DrawingToolSelector : UIControl {
 	private var _tools:[ToolIconView] = []
 	private var _highlighter:UIView!
 
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		commonInit()
 	}
@@ -95,13 +95,13 @@ class DrawingToolSelector : UIControl {
 
 	func addTool( name:String, icon:UIImage ) {
 
-		var tool = ToolIconView(frame: CGRectZero, icon: icon)
+		let tool = ToolIconView(frame: CGRectZero, icon: icon)
 		tool.userInteractionEnabled = true
 		tool.multipleTouchEnabled = false
 		addSubview(tool)
 		_tools.append(tool)
 
-		var tgr = UITapGestureRecognizer(target: self, action: "toolWasTapped:")
+		let tgr = UITapGestureRecognizer(target: self, action: #selector(DrawingToolSelector.toolWasTapped(_:)))
 		tgr.numberOfTapsRequired = 1
 		tool.addGestureRecognizer(tgr)
 
@@ -152,7 +152,7 @@ class DrawingToolSelector : UIControl {
 		let size = round(min( min(bounds.height,toolSize), maxButtonSize ))
 		let contentWidth = CGFloat(_tools.count) * size + (CGFloat(_tools.count) - 1.0) * toolSeparation;
 		var x = width/2 - contentWidth/2
-		var y = bounds.height/2 - size/2
+		let y = bounds.height/2 - size/2
 
 		for tool in _tools {
 			let frame = CGRect(x: round(x), y: round(y), width: size, height: size)
@@ -167,7 +167,7 @@ class DrawingToolSelector : UIControl {
 			_highlighter.alpha = 1
 			_highlighter.layer.cornerRadius = min( _highlighter.frame.width, _highlighter.frame.height ) / 2
 
-			for ( i,tool ) in enumerate(_tools) {
+			for ( i,tool ) in _tools.enumerate() {
 				tool.active = i==idx
 			}
 
@@ -185,7 +185,7 @@ class DrawingToolSelector : UIControl {
 			return
 		}
 
-		for (i,tool) in enumerate(_tools) {
+		for (i,tool) in _tools.enumerate() {
 			if tool == tgr.view {
 				selectedToolIndex = i
 				return
@@ -202,7 +202,7 @@ class DrawingToolSelector : UIControl {
 		let delay:NSTimeInterval = 0
 		let damping:CGFloat = 0.7
 		let initialSpringVelocity:CGFloat = 0
-		let options:UIViewAnimationOptions = UIViewAnimationOptions(0)
+		let options:UIViewAnimationOptions = UIViewAnimationOptions(rawValue: 0)
 
 		UIView.animateWithDuration(duration,
 			delay: delay,
@@ -215,7 +215,7 @@ class DrawingToolSelector : UIControl {
 			completion: nil)
 
 		if let idx = selectedToolIndex {
-			for (i,tool) in enumerate(_tools) {
+			for (i,tool) in _tools.enumerate() {
 				if i == idx {
 					tool.tintColor = UIColor.blackColor()
 				} else {

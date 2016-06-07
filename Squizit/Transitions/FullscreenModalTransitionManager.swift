@@ -18,7 +18,7 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 	func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
 
 		// get reference to our fromView, toView and the container view that we should perform the transition in
-		let container = transitionContext.containerView()
+		let container = transitionContext.containerView()!
 		let fromView = transitionContext.viewForKey(UITransitionContextFromViewKey)!
 		let toView = transitionContext.viewForKey(UITransitionContextToViewKey)!
 
@@ -63,7 +63,7 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 			delay: 0.0,
 			usingSpringWithDamping: 0.7,
 			initialSpringVelocity: 0,
-			options: nil,
+			options: [],
 			animations: {
 
 				if presenting {
@@ -84,7 +84,7 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 			delay: duration/6,
 			usingSpringWithDamping: 0.7,
 			initialSpringVelocity: 0.5,
-			options: nil,
+			options: [],
 			animations: {
 				toView.transform = CGAffineTransformIdentity
 				toView.alpha = 1
@@ -95,7 +95,7 @@ class FullscreenModalTransitionManager: NSObject, UIViewControllerAnimatedTransi
 	}
 
 	// return how many seconds the transiton animation will take
-	func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
+	func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
 		return 0.5
 	}
 

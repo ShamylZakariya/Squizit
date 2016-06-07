@@ -17,7 +17,7 @@ func delay(delay:Double, closure:()->()) {
         dispatch_get_main_queue(), closure)
 }
 
-func debounce( delay:NSTimeInterval, #queue:dispatch_queue_t, action: (()->()) ) -> ()->() {
+func debounce( delay:NSTimeInterval, queue:dispatch_queue_t, action: (()->()) ) -> ()->() {
 	
 	var lastFireTime:dispatch_time_t = 0
 	let dispatchDelay = Int64(delay * Double(NSEC_PER_SEC))
@@ -40,7 +40,7 @@ func debounce( delay:NSTimeInterval, #queue:dispatch_queue_t, action: (()->()) )
 }
 
 func debounce( delay:NSTimeInterval, action: (()->()) ) -> ()->() {
-	return debounce( delay, queue: dispatch_get_main_queue(), action )
+	return debounce( delay, queue: dispatch_get_main_queue(), action: action )
 }
 
 func dispatch_main( closure:()->()) {

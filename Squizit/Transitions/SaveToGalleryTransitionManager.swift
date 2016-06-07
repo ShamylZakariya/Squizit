@@ -18,14 +18,13 @@ class SaveToGalleryTransitionManager: NSObject, UIViewControllerAnimatedTransiti
 		let scale:CGFloat = 1.075
 		let bigScale = CGAffineTransformMakeScale(scale, scale)
 
-		let container = transitionContext.containerView()
+		let container = transitionContext.containerView()!
 		let baseView = transitionContext.viewForKey(presenting ? UITransitionContextFromViewKey : UITransitionContextToViewKey)!
 		let dialogView = transitionContext.viewForKey(presenting ? UITransitionContextToViewKey : UITransitionContextFromViewKey)!
 		let dialogViewController = transitionContext.viewControllerForKey(presenting ? UITransitionContextToViewControllerKey : UITransitionContextFromViewControllerKey)! as! SaveToGalleryViewController
 
 		container.addSubview(baseView)
 		container.addSubview(dialogView)
-
 
 		if presenting {
 			dialogView.alpha = 0
@@ -38,7 +37,7 @@ class SaveToGalleryTransitionManager: NSObject, UIViewControllerAnimatedTransiti
 			delay: 0.0,
 			usingSpringWithDamping: 0.7,
 			initialSpringVelocity: 0,
-			options: nil,
+			options: [],
 			animations: {
 
 				if presenting {
@@ -54,7 +53,7 @@ class SaveToGalleryTransitionManager: NSObject, UIViewControllerAnimatedTransiti
 			delay: duration/6,
 			usingSpringWithDamping: 0.7,
 			initialSpringVelocity: 0.5,
-			options: nil,
+			options: [],
 			animations: {
 				if presenting {
 					dialogViewController.dialogView.transform = CGAffineTransformIdentity
@@ -70,7 +69,7 @@ class SaveToGalleryTransitionManager: NSObject, UIViewControllerAnimatedTransiti
 
 
     // return how many seconds the transiton animation will take
-    func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
+    func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
         return 0.5
     }
     

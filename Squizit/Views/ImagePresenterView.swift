@@ -16,7 +16,7 @@ class ImagePresenterView : UIView {
 		commonInit()
 	}
 
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		super.init( coder: aDecoder )
 		commonInit()
 	}
@@ -46,8 +46,8 @@ class ImagePresenterView : UIView {
 		}
 	}
 
-	private (set) var placeholderImageView:UIImageView = UIImageView(frame: CGRect.zeroRect)
-	private (set) var imageView:UIImageView = UIImageView(frame: CGRect.zeroRect)
+	private (set) var placeholderImageView:UIImageView = UIImageView(frame: CGRect.zero)
+	private (set) var imageView:UIImageView = UIImageView(frame: CGRect.zero)
 
 	override func layoutSubviews() {
 		placeholderImageView.frame = self.bounds
@@ -69,7 +69,7 @@ class ImagePresenterView : UIView {
 		if animate {
 			let duration:NSTimeInterval = 0.15
 
-			if let image = self.image {
+			if let _ = self.image {
 
 				UIView.animateWithDuration(duration) {
 					placeholderImageView.alpha = 0
@@ -84,7 +84,7 @@ class ImagePresenterView : UIView {
 
 			}
 		} else {
-			if let image = self.image {
+			if let _ = self.image {
 				placeholderImageView.alpha = 0
 				imageView.alpha = 1
 			} else {

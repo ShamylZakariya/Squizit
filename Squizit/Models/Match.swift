@@ -21,7 +21,7 @@ class Match {
 	private var _players:Int = 0
 	private var _drawings:[Drawing] = []
 	private var _viewports:[CGRect] = []
-	private var _stageSize = CGSize.zeroSize
+	private var _stageSize = CGSize.zero
 	private var _overlap:CGFloat = 0
 
 	init(){}
@@ -44,7 +44,7 @@ class Match {
 	var overlap:CGFloat { return _overlap }
 
 	class func load( fileUrl:NSURL ) -> Result<Match> {
-		var reader = BinaryCoder(order: BigEndian(), contentsOfURL: fileUrl )
+		let reader = BinaryCoder(order: BigEndian(), contentsOfURL: fileUrl )
 		return reader.getMatch()
 	}
 
@@ -52,7 +52,7 @@ class Match {
 
 		// first try native byte ordering
 		var reader = BinaryCoder(order:nativeOrder(), data: data)
-		var readResult = reader.getMatch()
+		let readResult = reader.getMatch()
 		switch readResult {
 			case .Success( let value ):
 				return .Success(value)
@@ -95,9 +95,9 @@ class Match {
 		let rect = CGRect(x: 0, y: 0, width: _stageSize.width, height: _stageSize.height)
 
 		UIColor.whiteColor().set()
-		UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
+		UIRectFillUsingBlendMode(rect, CGBlendMode.Normal)
 
-		for (i,drawing) in enumerate(_drawings) {
+		for (i,drawing) in _drawings.enumerate() {
 			let viewport = _viewports[i]
 
 			CGContextSaveGState(context)
@@ -114,9 +114,9 @@ class Match {
 			let margin = _stageSize.width * 0.025
 			let scale = _stageSize.width * 0.1 / watermark.size.width
 			let size = CGSize( width: watermark.size.width * scale, height: watermark.size.height * scale )
-			let watermarkRect = CGRect( x: _stageSize.width - margin - size.width, y: _stageSize.height - margin - size.height, width: size.width, height: size.height ).integerRect
+			let watermarkRect = CGRect( x: _stageSize.width - margin - size.width, y: _stageSize.height - margin - size.height, width: size.width, height: size.height ).integral
 
-			watermark.drawInRect( watermarkRect, blendMode: kCGBlendModeNormal, alpha: 1)
+			watermark.drawInRect( watermarkRect, blendMode: CGBlendMode.Normal, alpha: 1)
 		}
 
 
@@ -132,9 +132,9 @@ class Match {
 			UIGraphicsBeginImageContextWithOptions(_stageSize, true, scale)
 
 			backgroundColor.set()
-			UIRectFillUsingBlendMode(rect, kCGBlendModeNormal)
+			UIRectFillUsingBlendMode(rect, CGBlendMode.Normal)
 
-			rendering.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: kCGBlendModeMultiply, alpha: 1)
+			rendering.drawAtPoint(CGPoint(x: 0, y: 0), blendMode: CGBlendMode.Multiply, alpha: 1)
 
 			rendering = UIGraphicsGetImageFromCurrentImageContext()
 			UIGraphicsEndImageContext()
@@ -186,7 +186,7 @@ extension BinaryCoder {
 
 	private func inflate_V0() -> Result<Match> {
 
-		var match = Match()
+		let match = Match()
 
 		let stageSize = CGSize(width: CGFloat(getFloat64()), height: CGFloat(getFloat64()))
 		match._stageSize = stageSize
